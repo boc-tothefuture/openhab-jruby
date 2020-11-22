@@ -9,6 +9,7 @@ require 'core/dsl/rule/guard'
 require 'core/dsl/items'
 require 'core/dsl/entities'
 require 'core/dsl/actions'
+require 'core/dsl/time_of_day'
 
 module Rule
   class RuleConfig
@@ -35,6 +36,7 @@ module Rule
     prop_array :delay, array_name: :run_queue, wrapper: Delay
     prop :name
     prop :enabled
+    prop :between
 
     def initialize(caller_binding)
       @triggers = []
@@ -73,7 +75,7 @@ module Rule
     logger.trace { "Guard: #{guard.should_run?} Runs: #{config.run} on_start: #{config.on_start?}" }
 
     if config.enabled
-      rule = Rule.new(name: config.name, run_queue: config.run_queue, guard: guard)
+      rule = Rule.new(name: config.name, run_queue: config.run_queue, guard: guard, between: config.between)
       rule.set_triggers(config.triggers)
       am = $scriptExtension.get('automationManager')
       am.addRule(rule)
@@ -86,19 +88,28 @@ module Rule
   class Rule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
     include Actions
     include Logging
+    include OpenHAB::Core::DSL::Tod
 
-    def initialize(name:, run_queue:, guard:)
+    using OpenHAB::Core::DSL::Tod::TimeOfDayRange
+
+    def initialize(name:, run_queue:, guard:, between:)
       super()
       setName(name)
       @run_queue = run_queue
       @guard = guard
+      @between = between || OpenHAB::Core::DSL::Tod::TimeOfDayRange::ALL_DAY
     end
 
     def execute(mod, inputs)
       if @guard.should_run?
-        process_queue(@run_queue.dup, mod, inputs)
+        now = TimeOfDay.now
+        if @between.cover? now
+          process_queue(@run_queue.dup, mod, inputs)
+        else
+          logger.trace("Skipped execution of rule #{name} because the current time #{now} is not between #{@between.begin} and #{@between.end}")
+        end
       else
-        logging.trace("Skipped execution of rule #{name} because of guard #{@guard}")
+        logger.trace("Skipped execution of rule #{name} because of guard #{@guard}")
       end
     end
 

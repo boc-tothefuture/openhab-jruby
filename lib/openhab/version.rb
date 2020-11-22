@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-module Openhab
-  module Scripting
-    VERSION = '0.1.0'
-  end
+module OpenHAB
+  VERSION = '0.0.1'
 end

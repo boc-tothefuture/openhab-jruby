@@ -13,7 +13,6 @@ java_import org.openhab.core.library.items.NumberItem
 # Doesn't work for String or Number...
 Switch = SwitchItem
 Dimmer = DimmerItem
-Contact = ContactItem
 
 module Bus
   include Logging
@@ -73,6 +72,14 @@ class Java::OrgOpenhabCoreLibraryItems::ContactItem
     else
       super
     end
+  end
+
+  def to_s
+    label
+  end
+
+  def ===(_obj)
+    puts 'Called here'
   end
 end
 
