@@ -1,14 +1,23 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'set'
 require 'core/dsl/monkey_patch/things'
+require 'core/dsl/group'
 
 # Automation lookup and injection of OpenHab entities
+java_import org.openhab.core.items.GroupItem
 
 # rubocop: disable Style/GlobalVars
 def lookup_item(name)
   name = name.to_s if name.is_a? Symbol
-  $ir.get(name)
+  item = $ir.get(name)
+  if item.is_a? GroupItem
+    group = item
+    item = OpenHAB::Core::DSL::Groups::Group.new(Set.new(item.all_members))
+    item.group = group
+  end
+  item
 end
 # rubocop: enable Style/GlobalVars
 
@@ -22,8 +31,6 @@ def lookup_thing(name)
 
   name = name.gsub('_', ':')
   $things.get(Java::OrgOpenhabCoreThing::ThingUID.new(name))
-  # We monkey patch here on the object because of class loader issues with ThingImpl
-  #  thing&.extend(Things)
 end
 # rubocop: enable Style/GlobalVars
 

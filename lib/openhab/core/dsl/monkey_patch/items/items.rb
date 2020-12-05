@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
 require 'java'
-require 'core/log'
+require 'openhab/core/log'
 
-# Monkey patch types
-require 'core/dsl/monkey_patch/type/open_closed_type'
+# Monkey patch items
+require 'openhab/core/dsl/monkey_patch/items/contact_item'
+require 'openhab/core/dsl/monkey_patch/items/dimmer_item'
+require 'openhab/core/dsl/monkey_patch/items/switch_item'
 
 # rubocop:disable Style/ClassAndModuleChildren
 class Java::OrgOpenhabCoreItems::GenericItem
   # rubocop:enable Style/ClassAndModuleChildren
   include Logging
   java_import org.openhab.core.model.script.actions.BusEvent
+  java_import org.openhab.core.types.UnDefType
 
   def command(command)
     logger.trace "Sending Command #{command} to #{self}"
@@ -19,6 +22,10 @@ class Java::OrgOpenhabCoreItems::GenericItem
 
   def state=(command)
     command(command)
+  end
+
+  def item_defined?
+    state != UnDefType::UNDEF && state != UnDefType::NULL
   end
 
   def to_s
