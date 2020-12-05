@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 # First patch the $LOAD_PATH to include lib dir
-require "#{__dir__}/core/patch_load_path.rb"
+require 'openhab/core/patch_load_path'
 
-require 'core/startup_delay'
-require 'core/log'
-require 'core/debug'
-require 'core/dsl'
-require 'core/dsl/items'
+require 'openhab/core/startup_delay'
+require 'openhab/core/log'
+require 'openhab/core/debug'
+require 'openhab/core/dsl'
+require 'openhab/core/dsl/items'
 
 module OpenHAB
   def self.extended(base)

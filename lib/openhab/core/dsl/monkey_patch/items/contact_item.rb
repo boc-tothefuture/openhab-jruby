@@ -3,6 +3,7 @@
 require 'java'
 
 # Alias for is_a? testing
+java_import org.openhab.core.library.items.ContactItem
 Contact = ContactItem
 
 # rubocop:disable Style/ClassAndModuleChildren

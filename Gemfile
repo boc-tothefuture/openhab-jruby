@@ -5,13 +5,15 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in openhab-scripting.gemspec
 gemspec
 
-group :development do
-  gem 'guard'
-  gem 'guard-rake'
-  gem 'guard-rspec', require: false
-  gem 'guard-rubocop'
-  gem 'rake', '~> 12.0'
+group :test do
+  gem 'cucumber'
+  gem 'httparty'
+  gem 'persistent_httparty'
   gem 'rspec'
+end
+
+group :development do
+  gem 'rake', '~> 12.0'
   gem 'rubocop', '~> 1.3'
   gem 'yard'
 end

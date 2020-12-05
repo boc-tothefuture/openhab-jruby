@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'classpath_helper'
 require 'java'
 
-require 'openhab/core/dsl/monkey_patch/type/open_closed_type'
+require 'openhab/core/dsl/monkey_patch/types/open_closed_type'
 
 module OpenHAB
   module Core

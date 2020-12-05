@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'configuration'
+require 'openhab/configuration'
 require 'java'
 require 'pp'
 
@@ -75,13 +75,20 @@ module Logging
     end
 
     def logger_for(classname)
-      @loggers[classname] ||= configure_logger_for(classname)
+      # @loggers[classname] ||= configure_logger_for(classname)
+      configure_logger_for(classname)
     end
 
     def configure_logger_for(_classname)
+      caller = caller_locations.map(&:path)
+                               .grep_v(%r{openhab/core/})
+                               .grep_v(/rubygems/)
+                               .grep_v(%r{lib/ruby})
+                               .first
+
       log_prefix = Configuration.log_prefix
-      log_caller = File.basename(caller_locations.first.path, '.*')
-      log_prefix += ".#{log_caller}" unless log_caller == 'log'
+      log_caller = File.basename(caller, '.*')
+      log_prefix += ".#{log_caller}"
       Logger.new(log_prefix)
     end
  end

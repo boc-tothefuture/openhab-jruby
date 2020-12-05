@@ -3,6 +3,8 @@
 require 'core/duration'
 
 class Integer
+  include OpenHAB::Core
+
   def seconds
     Duration.new(temporal_unit: :SECONDS, amount: self)
   end

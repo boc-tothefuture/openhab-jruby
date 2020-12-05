@@ -10,4 +10,8 @@ module Actions
   def after(duration, &block)
     ScriptExecution.createTimer(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(duration.to_ms)), block)
   end
+
+  #  def notify(user:, msg:); end
+
+  #  def notifyAll(message); end
 end
