@@ -26,10 +26,10 @@ end
 RSpec::Core::RakeTask.new(:spec)
 
 desc 'Run Cucumber Features'
-task features: 'openhab:setup'  do
-Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = '--tags "not @wip and not @not_implemented" --format pretty' # Any valid command line option can go here.
-end
+task features: 'openhab:setup' do
+  Cucumber::Rake::Task.new(:features) do |t|
+    t.cucumber_opts = '--tags "not @wip and not @not_implemented" --format pretty' # Any valid command line option can go here.
+  end
 end
 
 PACKAGE_DIR = 'pkg'
@@ -40,7 +40,9 @@ CLOBBER << OPENHAB_DIR
 CLEAN << PACKAGE_DIR
 
 OPENHAB_VERSION = '3.0.0.RC2'
+JRUBY_BUNDLE = File.realpath(Dir.glob('bundle/*.jar').first)
 
+zip_path = ''
 desc 'Package for release'
 task :package do
   mkdir_p PACKAGE_DIR
@@ -48,6 +50,13 @@ task :package do
   zip_path = File.join(PACKAGE_DIR, zip_filename)
   target_dir = 'lib/'
   sh 'zip', '-r', zip_path, target_dir
+end
+
+namespace :gh do
+  desc 'Package for release'
+  task release: :package do
+    sh 'gh', 'release', 'create', OpenHAB::VERSION, '-p', '-F', 'CHANGELOG.md', zip_path, JRUBY_BUNDLE
+  end
 end
 
 namespace :openhab do
@@ -95,13 +104,12 @@ namespace :openhab do
   desc 'Install JRuby Bundle'
   task install: %i[download rubylib] do
     ensure_openhab_running
-    bundle = File.realpath(Dir.glob('bundle/*.jar').first)
     Dir.chdir(OPENHAB_DIR) do
       if `#{karaf_client} "bundle:list --no-format org.openhab.automation.jrubyscripting"`.include?('Active')
         puts 'Bundle Active, no action taken'
       else
         unless `#{karaf_client} "bundle:list --no-format org.openhab.automation.jrubyscripting"`.include?('Installed')
-          `#{karaf_client} bundle:install file://#{bundle}`
+          `#{karaf_client} bundle:install file://#{JRUBY_BUNDLE}`
         end
         bundle_id = `#{karaf_client} "bundle:list --no-format org.openhab.automation.jrubyscripting"`.lines.last[/^\d\d\d/].chomp
         `#{karaf_client} bundle:start #{bundle_id}`
