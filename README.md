@@ -88,9 +88,9 @@ end
 | not_if    | Item or Item Array, or Block                 | Multiple      |                                       |         | Do **NOT** execute rule if any of the supplied items or blocks returns true | BedroomLightSwitch                                                                                                                                                                                                    |
 | enabled   | Boolean                                      | Single        |                                       | true    | Enable or disable the rule from executing                                   |                                                                                                                                                                                                                       |
 
-*Italics indicate not yet developed - syntax likely to change*
-Last means that last value for the property is used
-Multiple indicates that multiple entries of the same property can be used in aggregate
+*Italics indicate not yet developed - syntax likely to change* <br>
+Last means that last value for the property is used <br>
+Multiple indicates that multiple entries of the same property can be used in aggregate 
 
 
 #### Property Values
