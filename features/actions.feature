@@ -3,6 +3,7 @@ Feature:  Openhab Action Support
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
+  @not_implemented
   Scenario: send notification to a user
     Given a rule
       """
@@ -18,6 +19,7 @@ Feature:  Openhab Action Support
     When I deploy the rule
     Then It should log 'Notified user@openhab.com' within 5 seconds
 
+  @not_implemented
   Scenario: send to all users
     Given a rule
       """

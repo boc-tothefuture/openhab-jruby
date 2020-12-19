@@ -10,11 +10,23 @@ Given('Clean OpenHAB with latest Ruby Libraries') do
   truncate_log
 end
 
-Then('It should log {string} within {int} seconds') do |string, seconds|
-  wait_until(seconds: seconds, msg: "'#{string}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
+Then(/^It should log "([^"]*)" within (\d+) seconds$/) do |string, seconds|
+  wait_until(seconds: seconds.to_i, msg: "'#{string}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
     check_log(string)
   end
 end
+
+Then(/^It should log '([^']*)' within (\d+) seconds$/) do |string, seconds|
+  wait_until(seconds: seconds.to_i, msg: "'#{string}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
+    check_log(string)
+  end
+end
+
+# Then('It should log {string} within {int} seconds') do |string, seconds|
+#  wait_until(seconds: seconds, msg: "'#{string}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
+#    check_log(string)
+#  end
+# end
 
 Then('It should not log {string} within {int} seconds') do |string, seconds|
   not_for(seconds: seconds, msg: "'#{string}'' found in log file (#{openhab_log}) within #{seconds} seconds") do
@@ -37,16 +49,38 @@ Given('groups:') do |table|
   end
 end
 
+def nil_if_blank(str)
+  str = nil if str&.strip == ''
+  str
+end
+
 Given(/(?: I add)?items:/) do |table|
   table.hashes.each do |row|
     type = row['type']
     name = row['name']
-    label = row['label']
+    label = nil_if_blank(row['label'])
     groups = [row['group']]
     groups << row['groups']&.split(',')
     groups = groups&.flatten
+    state = nil_if_blank(row['state'])
+    pattern = nil_if_blank(row['pattern'])
+    add_item(type: type, name: name, state: state, label: label, groups: groups, pattern: pattern)
+  end
+end
+
+Given('item states:') do |table|
+  table.hashes.each do |row|
+    item = row['item']
     state = row['state']
-    add_item(type: type, name: name, state: state, label: label, groups: groups)
+    Rest.set_item_state(item, state)
+  end
+end
+
+Given('item updates:') do |table|
+  table.hashes.each do |row|
+    item = row['item']
+    state = row['state']
+    openhab_client("openhab:update #{item} #{state}")
   end
 end
 
@@ -59,7 +93,9 @@ When('update state for item {string} to {string}') do |item, state|
 end
 
 Then('{string} should be in state {string} within {int} seconds') do |item, state, seconds|
-  wait_until(seconds: seconds, msg: "'#{item}' did not get set to (#{state}) within #{seconds} seconds") do
+  msg = -> { "'#{item}' did not get set to (#{state}) was (#{Rest.item_state(item)}) within #{seconds} seconds" }
+
+  wait_until(seconds: seconds, msg: msg) do
     Rest.item_state(item) == state
   end
 end

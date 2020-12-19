@@ -10,17 +10,17 @@ Feature:  Rule languages supports groups
       | Sensors      | House       |
       | Temperatures | Sensors     |
     And items:
-      | type   | name            | label                   | groups                    |
-      | Number | Livingroom_Temp | Living Room temperature | Livingroom, Temperatures  |
-      | Number | Bedroom_Temp    | Bedroom temperature     | GroundFloor, Temperatures |
-      | Number | Den_Temp        | Den temperature         | GroundFloor, Temperatures |
+      | type   | name            | label                   | state | groups                    |
+      | Number | Livingroom_Temp | Living Room temperature | 70    | Livingroom, Temperatures  |
+      | Number | Bedroom_Temp    | Bedroom temperature     | 50    | GroundFloor, Temperatures |
+      | Number | Den_Temp        | Den temperature         | 30    | GroundFloor, Temperatures |
 
 
   Scenario: Ability to operate on the items in a group using enumerable methods
     Given code in a rules file
       """
       logger.info("Total Temperatures: #{Temperatures.count}")
-      logger.info("Temperatures: #{House.sort_by{|item| item.label}.join(', ')}")
+      logger.info("Temperatures: #{House.sort_by(&:label).map(&:label).join(', ')}")
       """
     When I deploy the rules file
     Then It should log 'Total Temperatures: 3' within 5 seconds
@@ -40,7 +40,7 @@ Feature:  Rule languages supports groups
     Given code in a rules file
       """
       logger.info("House Count: #{House.count}")
-      logger.info("Items: #{House.sort_by{|item| item.label}.join(', ')}")
+      logger.info("Items: #{House.sort_by(&:label).map(&:label).join(', ')}")
       """
     When I deploy the rules file
     Then It should log 'House Count: 3' within 5 seconds
@@ -50,7 +50,7 @@ Feature:  Rule languages supports groups
     Given code in a rules file
       """
       logger.info("House Sub Groups: #{House.groups.count}")
-      logger.info("Groups: #{House.groups.sort_by{|item| item.label}.join(', ')}")
+      logger.info("Groups: #{House.groups.sort_by(&:id).map(&:id).join(', ')}")
       """
     When I deploy the rules file
     Then It should log 'House Sub Groups: 2' within 5 seconds
@@ -59,7 +59,20 @@ Feature:  Rule languages supports groups
   Scenario: Fetch Group by name
     And code in a rules file
       """
-      logger.info("Sensors Group: #{groups['Sensors']}")
+      logger.info("Sensors Group: #{groups['Sensors'].name}")
       """
     When I deploy the rules file
     Then It should log 'Sensors Group: Sensors' within 5 seconds
+
+
+  Scenario: Groups have enumerable based math functions
+    Given code in a rules file
+      """
+      logger.info("Max is #{Temperatures.max}")
+      logger.info("Min is #{Temperatures.min}")
+      """
+    When I deploy the rules file
+    Then It should log "Max is 70" within 5 seconds
+    And It should log "Min is 30" within 5 seconds
+
+

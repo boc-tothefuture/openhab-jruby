@@ -3,23 +3,27 @@ Feature:  Rule Conversions from DSL and Python
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
+  @not_implemented
+  @conversion
   Scenario: Turn on office heater
     Given a rule
       """
       rule 'Use supplemental heat in office' do
         changed Office_Temperature, Thermostats_Upstairs_Temp, Office_Occupied, OfficeDoor
-        run { Lights_Office_Outlet << ON }, :always
+        run { Lights_Office_Outlet << ON }
         otherwise { Lights_Office_Outlet << OFF if Lights_Office_Outlet.on? }
         only_if Office_Occupied
         only_if { OfficeDoor == CLOSED }
         only_if { Thermostate_Upstairs_Heat_Set > Office_Temperature }
-        only_if { (Thermostat_Upstairs_Temp - Office_Temperature) > 2) }
+        only_if { unit(°F') { Thermostat_Upstairs_Temp - Office_Temperature > 2 } }
       end
       """
     And item "Office_Occupied" state is changed to "ON"
     Then "Lights_Office_Outlet" should be in state "ON" within 5 seconds
 
 
+  @conversion
+  @not_implemented
   Scenario: Notify TV
     Given a rule
       """
@@ -31,6 +35,8 @@ Feature:  Rule Conversions from DSL and Python
       """
     Then NOT_IMPLEMENTED
 
+  @not_implemented
+  @conversion
   Scenario: Notify Garage Doors
     Given a rule
       """
@@ -60,6 +66,8 @@ Feature:  Rule Conversions from DSL and Python
       """
     Then NOT_IMPLEMENTED
 
+  @not_implemented
+  @conversion
   Scenario: Get Lock States
     Given a rule
       """
@@ -68,13 +76,10 @@ Feature:  Rule Conversions from DSL and Python
           triggered do |item|
             logger.warn("LastVoiceCommand received [#{item}]")
 
-
           end
 
         end
       """
     Then NOT_IMPLEMENTED
-
-
 
 

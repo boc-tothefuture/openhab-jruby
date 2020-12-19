@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+require 'rake/packagetask'
 require 'rubocop/rake_task'
 require 'rspec/core/rake_task'
 require 'bundler/gem_tasks'
 require 'yard'
 require 'English'
 require 'time'
+require 'cucumber'
+require 'cucumber/rake/task'
+require_relative 'lib/openhab/version'
 
 task default: %w[lint:auto_correct openhab]
 
@@ -21,12 +25,30 @@ end
 
 RSpec::Core::RakeTask.new(:spec)
 
+desc 'Run Cucumber Features'
+task features: 'openhab:setup'  do
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = '--tags "not @wip and not @not_implemented" --format pretty' # Any valid command line option can go here.
+end
+end
+
+PACKAGE_DIR = 'pkg'
 OPENHAB_PATH = 'tmp/openhab'
 mkdir_p OPENHAB_PATH
 OPENHAB_DIR = File.realpath OPENHAB_PATH
 CLOBBER << OPENHAB_DIR
+CLEAN << PACKAGE_DIR
 
-OPENHAB_VERSION = '3.0.0.M2'
+OPENHAB_VERSION = '3.0.0.RC2'
+
+desc 'Package for release'
+task :package do
+  mkdir_p PACKAGE_DIR
+  zip_filename = "OpenHABJRuby-#{OpenHAB::VERSION}.zip"
+  zip_path = File.join(PACKAGE_DIR, zip_filename)
+  target_dir = 'lib/'
+  sh 'zip', '-r', zip_path, target_dir
+end
 
 namespace :openhab do
   karaf_client_path = File.join(OPENHAB_DIR, 'runtime/bin/client')
@@ -97,6 +119,21 @@ namespace :openhab do
     sh(*karaf_client_args, 'log:set TRACE org.openhab.core.automation')
     sh(*karaf_client_args, 'openhab:users add foo foo administrator')
     sh 'rsync', '-aih', 'config/userdata/', File.join(OPENHAB_DIR, 'userdata')
+  end
+
+  desc 'Start OpenHAB'
+  task :start do
+    Dir.chdir(OPENHAB_DIR) do
+      pid = spawn('./start.sh')
+      Process.detach(pid)
+    end
+  end
+
+  desc 'Stop OpenHAB'
+  task :stop do
+    Dir.chdir(OPENHAB_DIR) do
+      sh('runtime/bin/stop')
+    end
   end
 
   desc 'Setup local Openhab'

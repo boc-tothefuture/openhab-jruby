@@ -75,7 +75,7 @@ Feature:  Rule languages supports changed item features
       """
       rule 'Execute rule when item is changed to any state' do
         changed Switches
-        triggered { |item| logger.info("Group #{item} changed")}
+        triggered { |item| logger.info("Group #{item.id} changed")}
       end
       """
     When item "Switch1" state is changed to "ON"
@@ -90,7 +90,7 @@ Feature:  Rule languages supports changed item features
       """
       rule 'Execute rule when item is changed to any state' do
         changed Switches.items
-        triggered { |item| logger.info("Switch #{item} changed")}
+        triggered { |item| logger.info("Switch #{item.id} changed")}
       end
       """
     When item "Switch1" state is changed to "ON"
@@ -105,7 +105,7 @@ Feature:  Rule languages supports changed item features
       """
       rule 'Execute rule when item is changed to any state' do
         changed Switches.items
-        triggered { |item| logger.info("Switch #{item} changed")}
+        triggered { |item| logger.info("Switch #{item.id} changed")}
       end
       """
     When I add items:

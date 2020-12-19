@@ -10,8 +10,17 @@ module OpenHAB
         module Guard
           include DSLProperty
 
-          prop_array :only_if
-          prop_array :not_if
+          prop_array(:only_if) do |item|
+            unless item.is_a?(Proc) || item.respond_to?(:truthy?)
+              raise "Object passed to only_if must respond_to 'truthy?'"
+            end
+          end
+
+          prop_array(:not_if) do |item|
+            unless item.is_a?(Proc) || item.respond_to?(:truthy?)
+              raise "Object passed to not_if must respond_to 'truthy?'"
+            end
+          end
 
           class Guard
             include Logging
@@ -25,26 +34,26 @@ module OpenHAB
               "only_if: #{@only_if}, not_if: #{@not_if}"
             end
 
-            def should_run?
+            def should_run?(event)
               logger.trace("Checking guards #{self}")
-              check(@only_if, check_type: :only_if) && check(@not_if, check_type: :not_if)
+              check(@only_if, check_type: :only_if, event: event) && check(@not_if, check_type: :not_if, event: event)
             end
 
             private
 
-            def check(conditions, check_type:)
+            def check(conditions, check_type:, event:)
               return true if conditions.nil? || conditions.empty?
 
               procs, items = conditions.flatten.partition { |condition| condition.is_a? Proc }
               logger.trace("Procs: #{procs} Items: #{items}")
 
-              items.each { |item| logger.trace("#{item} active? #{item.active?}") }
+              items.each { |item| logger.trace("#{item} truthy? #{item.truthy?}") }
 
               case check_type
               when :only_if
-                items.all?(&:active?) && procs.all?(&:call)
+                items.all?(&:truthy?) && procs.all? { |proc| proc.call(event) }
               when :not_if
-                items.none?(&:active?) && procs.none?(&:call)
+                items.none?(&:truthy?) && procs.none? { |proc| proc.call(event) }
               else
                 raise "Unexpected check type: #{check_type}"
               end

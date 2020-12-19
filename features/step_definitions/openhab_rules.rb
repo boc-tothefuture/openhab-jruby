@@ -14,7 +14,7 @@ def append_identifying_log_line_to_rule(uid)
   @rule += %[\n\nlogger.info("#{identifying_log_line(uid)}")\n\n]
 end
 
-def deploy_rule(filename: nil)
+def deploy_rule(filename: nil, check: true)
   FileUtils.mkdir_p rules_dir
   uid = SecureRandom.uuid
 
@@ -23,7 +23,7 @@ def deploy_rule(filename: nil)
   deploy_path = File.join(rules_dir, filename)
   append_identifying_log_line_to_rule(uid)
   File.write(File.join(deploy_path), @rule)
-  wait_until(seconds: 30, msg: 'Rule not added') { check_log(identifying_log_line(uid)) }
+  wait_until(seconds: 30, msg: 'Rule not added') { check_log(identifying_log_line(uid)) } if check
 end
 
 Given('a rule') do |doc_string|
@@ -41,6 +41,10 @@ end
 
 When('I deploy the rule') do
   deploy_rule
+end
+
+When('I deploy a rule with an error') do
+  deploy_rule(check: false)
 end
 
 Given('code in a rules file') do |doc_string|

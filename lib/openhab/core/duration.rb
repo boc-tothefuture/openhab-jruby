@@ -5,6 +5,8 @@ require 'openhab/core/cron'
 module OpenHAB
   module Core
     class Duration
+      include OpenHAB::Core::Cron
+
       TEMPORAL_UNITS = %i[MILLISECONDS SECONDS MINUTES HOURS].freeze
 
       def initialize(temporal_unit:, amount:)

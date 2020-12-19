@@ -27,16 +27,16 @@ module OpenHAB
             sunday: 'SUN'
           }.freeze
 
-          DAY_OF_WEEK_EXPRESSION_MAP = DAY_OF_WEEK_MAP.transform_values { |v| cron_expression_hash.merge(dow: v) }
+          DAY_OF_WEEK_EXPRESSION_MAP = DAY_OF_WEEK_MAP.transform_values { |v| cron_expression_map.merge(dow: v) }
 
           EXPRESSION_MAP = {
-            second: cron_expression_hash,
-            minute: cron_expression_hash.merge(second: '0'),
-            hour: cron_expression_hash.merge(second: '0', minute: '0'),
-            day: cron_expression_hash.merge(second: '0', minute: '0', hour: '0'),
-            week: cron_expression_hash.merge(second: '0', minute: '0', hour: '0', dow: 'MON'),
-            month: cron_expression_hash.merge(second: '0', minute: '0', hour: '0', dom: '1'),
-            year: cron_expression_hash.merge(second: '0', minute: '0', hour: '0', dom: '1', month: '1')
+            second: cron_expression_map,
+            minute: cron_expression_map.merge(second: '0'),
+            hour: cron_expression_map.merge(second: '0', minute: '0'),
+            day: cron_expression_map.merge(second: '0', minute: '0', hour: '0'),
+            week: cron_expression_map.merge(second: '0', minute: '0', hour: '0', dow: 'MON'),
+            month: cron_expression_map.merge(second: '0', minute: '0', hour: '0', dom: '1'),
+            year: cron_expression_map.merge(second: '0', minute: '0', hour: '0', dom: '1', month: '1')
           }.merge(DAY_OF_WEEK_EXPRESSION_MAP)
                            .freeze
 
@@ -54,15 +54,16 @@ module OpenHAB
           end
 
           def every(value, at: nil)
-            expression_map = case value
-                             when Symbol then EXPRESSION_MAP[value]
-                             when Duration then cron(value.cron_expression)
-                             end
-
-            raise 'Unknown interval' unless expression_map
-
-            expression_map = at_condition(expression_map, at) if at
-            cron(map_to_cron(expression_map))
+            case value
+            when Symbol
+              expression_map = EXPRESSION_MAP[value]
+              expression_map = at_condition(expression_map, at) if at
+              cron(map_to_cron(expression_map))
+            when Duration
+              cron(map_to_cron(value.cron_map))
+            else
+              raise 'Unknown interval' unless expression_map
+            end
           end
 
           def time_of_day(tod)

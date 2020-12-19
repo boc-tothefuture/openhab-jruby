@@ -29,4 +29,3 @@ rescue LoadError
     end
   end
 end
-

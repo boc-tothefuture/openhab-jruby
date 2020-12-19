@@ -9,6 +9,7 @@ end
 
 def openhab_client(command)
   karaf_client_path = File.join(openhab_dir, 'runtime/bin/client')
+  # Kernel.puts `#{karaf_client_path} -p habopen "#{command}"`
   `#{karaf_client_path} -p habopen "#{command}"`
   abort("OpenHAB command (#{command}) failed.") unless $CHILD_STATUS == 0
 end
@@ -31,15 +32,15 @@ def ensure_openhab_running
 end
 
 def check_log(entry)
-  File.foreach(openhab_log).grep(/#{entry}/).any?
+  File.foreach(openhab_log).grep(/#{Regexp.escape(entry)}/).any?
 end
 
 def add_group(name:, group_type: nil, groups: nil, function: nil, params: nil)
   Rest.add_item(type: 'Group', name: name, groups: groups, group_type: group_type, function: function, params: params)
 end
 
-def add_item(type:, name:, state: nil, label: nil, groups: nil)
-  Rest.add_item(type: type, name: name, state: state, label: label, groups: groups)
+def add_item(type:, name:, state: nil, label: nil, groups: nil, pattern: nil)
+  Rest.add_item(type: type, name: name, state: state, label: label, groups: groups, pattern: pattern)
 end
 
 def truncate_log

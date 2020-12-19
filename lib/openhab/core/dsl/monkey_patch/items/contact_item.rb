@@ -12,16 +12,16 @@ class Java::OrgOpenhabCoreLibraryItems::ContactItem
   # rubocop:enable Style/ClassAndModuleChildren
 
   def open?
-    item_defined? && state == OpenClosedType::OPEN
+    state? && state == OpenClosedType::OPEN
   end
 
   def closed?
-    item_defined? && state == OpenClosedType::CLOSED
+    state? && state == OpenClosedType::CLOSED
   end
 
   def ==(other)
     if other.is_a? OpenClosedType
-      item_defined? && state == other
+      state? && state == other
     else
       super
     end
