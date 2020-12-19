@@ -3,7 +3,7 @@
 module OpenHAB
   module Core
     module Cron
-      def cron_expression_hash
+      def cron_expression_map
         {
           second: '*',
           minute: '*',

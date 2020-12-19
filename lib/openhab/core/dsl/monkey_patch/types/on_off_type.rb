@@ -6,6 +6,11 @@ require 'java'
 class Java::OrgOpenhabCoreLibraryTypes::OnOffType
   # rubocop:enable Style/ClassAndModuleChildren
 
+  def !
+    return OFF if self == ON
+    return ON if self == OFF
+  end
+
   def ===(other)
     # rubocop:disable Style/CaseLikeIf
     if self == ON

@@ -14,17 +14,19 @@ class Java::OrgOpenhabCoreLibraryItems::DimmerItem
   #  include ItemCheck
 
   def +(other)
-    brighten(other)
-    self
+    return unless state?
+
+    state.to_big_decimal.intValue + other
   end
 
   def -(other)
-    dim(other)
-    self
+    return unless state?
+
+    state.to_big_decimal.intValue - other
   end
 
   def dim(amount = 1)
-    return unless item_defined?
+    return unless state?
 
     target = [state.to_big_decimal.intValue - amount, 0].max
 
@@ -38,7 +40,7 @@ class Java::OrgOpenhabCoreLibraryItems::DimmerItem
   end
 
   def brighten(amount = 1)
-    return unless item_defined?
+    return unless state?
 
     target = state.to_big_decimal.intValue + amount
 
@@ -50,8 +52,8 @@ class Java::OrgOpenhabCoreLibraryItems::DimmerItem
     target
   end
 
-  def active?
-    item_defined? && state != DecimalType::ZERO
+  def truthy?
+    state? && state != DecimalType::ZERO
   end
 
   def to_int
@@ -63,10 +65,10 @@ class Java::OrgOpenhabCoreLibraryItems::DimmerItem
   end
 
   def on?
-    item_defined? && state.to_big_decimal.intValue.positive?
+    state? && state.to_big_decimal.intValue.positive?
   end
 
   def off?
-    item_defined? && state.to_big_decimal.intValue.zero?
+    state? && state.to_big_decimal.intValue.zero?
   end
 end

@@ -6,6 +6,7 @@ def wait_until(seconds:, msg:)
 
     sleep 1
   end
+  msg = msg.call if msg.is_a? Proc
   raise msg
 end
 

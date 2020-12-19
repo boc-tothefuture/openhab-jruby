@@ -66,30 +66,36 @@ module Logging
   # Return a logger with the configured log prefix plus the calling scripts name
 
   def logger
-    Logging.logger
+    Logging.logger(self.class.name)
   end
 
   class << self
-    def logger
-      @logger ||= Logging.logger_for(self.class.name)
+    def logger(name)
+      name ||= self.class.name
+      @loggers[name] ||= Logging.logger_for(name)
     end
 
     def logger_for(classname)
-      # @loggers[classname] ||= configure_logger_for(classname)
       configure_logger_for(classname)
     end
 
-    def configure_logger_for(_classname)
-      caller = caller_locations.map(&:path)
-                               .grep_v(%r{openhab/core/})
-                               .grep_v(/rubygems/)
-                               .grep_v(%r{lib/ruby})
-                               .first
-
+    def configure_logger_for(classname)
       log_prefix = Configuration.log_prefix
-      log_caller = File.basename(caller, '.*')
-      log_prefix += ".#{log_caller}"
+      log_prefix += if classname
+                      ".#{classname}"
+                    else
+                      ".#{log_caller}"
+                    end
       Logger.new(log_prefix)
+    end
+
+    def log_caller
+      caller_locations.map(&:path)
+                      .grep_v(%r{openhab/core/})
+                      .grep_v(/rubygems/)
+                      .grep_v(%r{lib/ruby})
+                      .first
+                      .yield_self { |caller| File.basename(caller, '.*') }
     end
  end
 
@@ -97,7 +103,7 @@ module Logging
   def self.included(base)
     class << base
       def logger
-        Logging.logger
+        Logging.logger(self.class.name)
       end
     end
   end

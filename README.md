@@ -1,46 +1,56 @@
-# JRuby 
+# JRuby OpenHAB Scripting
 
 ## Design points
 - Create an intuitive method of defining rules and automation
 	- Rule language should "flow" in a way that you can read the rules out loud
 - Abstract away complexities of OpenHAB (Timers, Item.state vs Item)
 - Enable all the power of Ruby and OpenHAB
-- Create a 'Frictionless' experience for building automation
+- Create a Frictionless experience for building automation
 - The common, yet tricky tasks are abstracted and made easy. e.g. Running a rule between only certain hours of the day
 - Tested
 	- Designed and tested using (Behavior Driven Development)[https://en.wikipedia.org/wiki/Behavior-driven_development] with (Cucumber)[https://cucumber.io/]
+	- Current tests are [here](https://github.com/boc-tothefuture/openhab-jruby/tree/main/features)  Reviewing them is a great way to explore the language features
 - Extensible
 	- Anyone should be able to customize and add/remove core language features
 - Easy access to the Ruby ecosystem in rules through ruby gems. 
 
 ## Why Ruby?
-- It was designed for programmer productivity with the idea that programming should be fun for programmers.
-- It emphasizes the necessity for software to be understood by humans first and computers second.
-- For me, automation is a hobby, I want to enjoy writing automation not fight compilers.
+- Ruby is designed for programmer productivity with the idea that programming should be fun for programmers.
+- Ruby emphasizes the necessity for software to be understood by humans first and computers second.
+- For me, automation is a hobby, I want to enjoy writing automation not fight compilers and interpreters 
 - Rich ecosystem of tools, including things like Rubocop to help developers create good code and cucumber to test the libraries
--  Ruby is really good at letting one express yourself and creating a DSL within ruby  to make expression easier.
-
-
-## Design Decisions / Core Language Features:
-- All items, groups and things are automatically available, no need to "getItem", etc.
-- *channels are available as "dot notation" on things*
-- List of items are available as "items" and do not include groups
-- List of groups are available as "groups"
+-  Ruby is really good at letting one express intent and creating a DSL within ruby to make that expression easier.
 
 
 ## Prerequisites
 1. OpenHAB 3
-2. Install the JRuby Scripting Language Addon
-3. Install scripting library
-4. Place Ruby files in `conf/automation/jsr223/ruby/personal/` subdirectory
-5. Place `require 'OpenHAB'` at the top of any Ruby based rules file.
+2. The JRuby Scripting Language Addon
+3. This scripting library
+
+## State
+This is an alpha and syntax and all elements are subject to change as the library evolves.
 
 ## Installation
+1. Install the Jruby Scripting Language Addon from [here](https://github.com/boc-tothefuture/openhab-jruby/releases/download/0.0.1/org.openhab.automation.jrubyscripting-3.0.0-SNAPSHOT.jar)
+2. Create directory for JRuby Libraries `<openhab_base_dir>/conf/automation/lib/ruby/lib`
+3. Create directory for Ruby Gems `<openhab_base_dir>/conf/automation/lib/ruby/gem_home`
+4. Download JRuby Libraries from [here](https://github.com/boc-tothefuture/openhab-jruby/releases/download/0.0.1/OpenHABJRuby-0.0.1.zip)
+5. Install libraries in `<openhab_base_dir>/conf/automation/lib/ruby/lib`
+6. Update OpenHAB start.sh with the following environment variables so that the library can be loaded and gems can be installed
+```
+export RUBYLIB=<openhab_base_dir>/conf/automation/lib/ruby/lib
+export GEM_HOME=<openhab_base_dir>/conf/automation/lib/ruby/gem_home
+```
+7. Restart OpenHAB
 
 
+## Rules Requirements
+1. Place Ruby rules files in `USERDATA/automation/jsr223/ruby/personal/` subdirectory
+2. Put `require 'OpenHAB'` at the top of any Ruby based rules file.
 
-## RubyGems
-[Bundler](https://bundler.io/) is integrated, enabling any [Rubygem](https://rubygems.org/) compatible with JRuby to be used within rules. This permits easy access to the vast ecosystem libraries within the ruby community.  It would also create easy reuse of automation libraries within the OpenHAB community, any library published as a gem can be easily pulled into rules. 
+
+## Ruby Gems
+[Bundler](https://bundler.io/) is integrated, enabling any [Ruby gem](https://rubygems.org/) compatible with JRuby to be used within rules. This permits easy access to the vast ecosystem libraries within the ruby community.  It would also create easy reuse of automation libraries within the OpenHAB community, any library published as a gem can be easily pulled into rules. 
 
 
 ##  Rule Syntax
@@ -49,57 +59,59 @@ require 'OpenHAB'
 
 rule 'name' do
    <zero or more triggers>
-   run do
-      <automation code goes here>
-   end
+   <zero or more execution blocks>
    <zero or more guards>
 end
 ```
 
 ### All of the properties that are available to the rule resource are
 
-| Property  | Type                                         | Single/Multiple | Options                               | Default | Description                                                                 | Examples                                                                                                                                       |
-| --------- | -------------------------------------------- | --------------- | ------------------------------------- | ------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| every     | Symbol or Duration                           | Multiple        | at: String or TimeOfDay               |         | When to execute rule                                                        | Symbol (:second, :minute, :hour, :day, :week, :month, :year, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday) or duration (5.minutes, 20.seconds, 14.hours), at: '5:15' or TimeOfDay(h:5, m:15) | 
-| cron      | String                                       | Multiple        |                                       |         | OpenHAB Style Cron Expression                                               | '* * * * * * ?'                                                                                                                                |
-| changed   | Item or Item Array[] or Group or Group.items | Multiple        | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch from: OFF to ON                                                                                                             |
-| *updated* | Item or Item Array[] or Group or Group.items | Multiple        |                                       |         | Execute rule on item update                                                 | BedroomLightSwitch                                                                                                                             |
-| *command* | Item or Item Array[] or Group or Group.items | Multiple        | command:                              |         | Execute rule on item command                                                | BedroomLightSwitch command: ON                                                                                                                 |
-| *channel* | Channel                                      | Multiple        | event:                                |         | Execute rule on channel trigger                                             | astro_sun_home.rise_event, event: 'START'                                                                                                      |
-| on_start  | Boolean                                      | Single          |                                       | false   | Execute rule on system start                                                | on_start                                                                                                                                       |
-| run       | Block passed event                           | Multiple        |                                       |         | Code to execute on rule trigger                                             |                                                                                                                                                |
-| triggered | Block passed item                            | Multiple        |                                       |         | Code with triggering item to execute on rule trigger                        |                                                                                                                                                |
-| delay     | Duration                                     | Multiple        |                                       |         | Duration to wait between or after run blocks                                | delay 5.seconds                                                                                                                                |
-| between   | Range of TimeOfDay or String Objects         | Single          |                                       |         | Only execute rule if current time is between supplied time ranges           | '6:05'..'14:05:05' (Include end) or '6:05'...'14:05:05' (Excludes end second) or TimeOfDay.new(h:6,m:5)..TimeOfDay.new(h:14,m:15,s:5)          |
-| only_if   | Item or Item Array, or Block                 | Multiple        |                                       |         | Only execute rule if all supplied items are "On" and/or block returns true  | BedroomLightSwitch, BackyardLightSwitch or {BedroomLightSwitch.state == ON}                                                                    |
-| not_if    | Item or Item Array, or Block                 | Multiple        |                                       |         | Do **NOT** execute rule if any of the supplied items or blocks returns true | BedroomLightSwitch                                                                                                                             |
-| enabled   | Boolean                                      | Single          |                                       | true    | Enable or disable the rule from executing                                   |                                                                                                                                                |
+| Property  | Type                                         | Last/Multiple | Options                               | Default | Description                                                                 | Examples                                                                                                                                                                                                              |
+| --------- | -------------------------------------------- | ------------- | ------------------------------------- | ------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| every     | Symbol or Duration                           | Multiple      | at: String or TimeOfDay               |         | When to execute rule                                                        | Symbol (:second, :minute, :hour, :day, :week, :month, :year, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday) or duration (5.minutes, 20.seconds, 14.hours), at: '5:15' or TimeOfDay(h:5, m:15) |
+| cron      | String                                       | Multiple      |                                       |         | OpenHAB Style Cron Expression                                               | '* * * * * * ?'                                                                                                                                                                                                       |
+| changed   | Item or Item Array[] or Group or Group.items | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch from: OFF to ON                                                                                                                                                                                    |
+| *updated* | Item or Item Array[] or Group or Group.items | Multiple      |                                       |         | Execute rule on item update                                                 | BedroomLightSwitch                                                                                                                                                                                                    |
+| *command* | Item or Item Array[] or Group or Group.items | Multiple      | command:                              |         | Execute rule on item command                                                | BedroomLightSwitch command: ON                                                                                                                                                                                        |
+| *channel* | Channel                                      | Multiple      | event:                                |         | Execute rule on channel trigger                                             | astro_sun_home.rise_event, event: 'START'                                                                                                                                                                             |
+| on_start  | Boolean                                      | Single        |                                       | false   | Execute rule on system start                                                | on_start                                                                                                                                                                                                              |
+| run       | Block passed event                           | Multiple      |                                       |         | Code to execute on rule trigger                                             |                                                                                                                                                                                                                       |
+| triggered | Block passed item                            | Multiple      |                                       |         | Code with triggering item to execute on rule trigger                        |                                                                                                                                                                                                                       |
+| delay     | Duration                                     | Multiple      |                                       |         | Duration to wait between or after run blocks                                | delay 5.seconds                                                                                                                                                                                                       |
+| otherwise | Block passed event                           | Multiple      |                                       |         | Code to execute on rule trigger if guards are not satisfied                 |                                                                                                                                                                                                                       |
+| between   | Range of TimeOfDay or String Objects         | Single        |                                       |         | Only execute rule if current time is between supplied time ranges           | '6:05'..'14:05:05' (Include end) or '6:05'...'14:05:05' (Excludes end second) or TimeOfDay.new(h:6,m:5)..TimeOfDay.new(h:14,m:15,s:5)                                                                                 |
+| only_if   | Item or Item Array, or Block                 | Multiple      |                                       |         | Only execute rule if all supplied items are "On" and/or block returns true  | BedroomLightSwitch, BackyardLightSwitch or {BedroomLightSwitch.state == ON}                                                                                                                                           |
+| not_if    | Item or Item Array, or Block                 | Multiple      |                                       |         | Do **NOT** execute rule if any of the supplied items or blocks returns true | BedroomLightSwitch                                                                                                                                                                                                    |
+| enabled   | Boolean                                      | Single        |                                       | true    | Enable or disable the rule from executing                                   |                                                                                                                                                                                                                       |
 
-*Not yet developed - syntax likely to change*
-		
+*Italics indicate not yet developed - syntax likely to change*
+Last means that last value for the property is used
+Multiple indicates that multiple entries of the same property can be used in aggregate
+
+
 #### Property Values
 
 ##### Every
 
-| Value             | Description                              | Example    |     |     |
-| ----------------- | ---------------------------------------- | ---------- | --- | --- |
-| :second           | Execute rule every second                | :second    |     |     |
-| :minute           | Execute rule very minute                 | :minute    |     |     |
-| :hour             | Execute rule every hour                  | :hour      |     |     |
-| :day              | Execute rule every day                   | :day       |     |     |
-| :week             | Execute rule every week                  | :week      |     |     |
-| :month            | Execute rule every month                 | :month     |     |     |
-| :year             | Execute rule one a year                  | :year      |     |     |
-| :monday           | Execute rule every Monday at midnight    | :monday    |     |     |
-| :tuesday          | Execute rule every Tuesday at midnight   | :tuesday   |     |     |
-| :wednesday        | Execute rule every Wednesday at midnight | :wednesday |     |     |
-| :thursday         | Execute rule every Thursday at midnight  | :thursday  |     |     |
-| :friday           | Execute rule every Friday at midnight    | :friday    |     |     |
-| :saturday         | Execute rule every Saturday at midnight  | :saturday  |     |     |
-| :sunday           | Execute rule every Sunday at midnight    | :sunday    |     |     |
-| [Integer].seconds | Execute a rule every X seconds           | 5.seconds  |     |     |
-| [Integer].minutes | Execute rule every X minutes             | 3.minutes  |     |     |
-| [Integer].hours   | Execute rule every X minutes             | 10.hours   |     |     |
+| Value             | Description                              | Example    |
+| ----------------- | ---------------------------------------- | ---------- |
+| :second           | Execute rule every second                | :second    |
+| :minute           | Execute rule very minute                 | :minute    |
+| :hour             | Execute rule every hour                  | :hour      |
+| :day              | Execute rule every day                   | :day       |
+| :week             | Execute rule every week                  | :week      |
+| :month            | Execute rule every month                 | :month     |
+| :year             | Execute rule one a year                  | :year      |
+| :monday           | Execute rule every Monday at midnight    | :monday    |
+| :tuesday          | Execute rule every Tuesday at midnight   | :tuesday   |
+| :wednesday        | Execute rule every Wednesday at midnight | :wednesday |
+| :thursday         | Execute rule every Thursday at midnight  | :thursday  |
+| :friday           | Execute rule every Friday at midnight    | :friday    |
+| :saturday         | Execute rule every Saturday at midnight  | :saturday  |
+| :sunday           | Execute rule every Sunday at midnight    | :sunday    |
+| [Integer].seconds | Execute a rule every X seconds           | 5.seconds  |
+| [Integer].minutes | Execute rule every X minutes             | 3.minutes  |
+| [Integer].hours   | Execute rule every X minutes             | 10.hours   |
 
 | Option | Description                                                                                          | Example                                        |
 | ------ | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
@@ -109,13 +121,21 @@ end
 ##### Examples
 
 ```
+rule 'Log an entry every minute' do
+  every :minute
+  run { logger.info "Rule #{name} executed" }
+end
+```
+
+
+```
 rule 'Log an entry at 11:21' do
   every :day, at: '11:21'
   run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
 end
-```
-Which is the same as
-```
+
+# The above rule could also be expressed using TimeOfDay class as below
+
 rule 'Log an entry at 11:21' do
   every :day, at: TimeOfDay.new(h: 11, m: 21)
   run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
@@ -131,6 +151,13 @@ end
 ```
 
 
+```
+rule 'Every 5 seconds' do
+  every 5.seconds
+  run { logger.info "Rule #{name} executed" }
+end
+```
+
 
 ##### Changed
 | Value | Description                                            | Example         |
@@ -139,7 +166,8 @@ end
 | :to   | Only execute rule if new state matches from state      | :to ON          |
 | :for  | Only execute rule if value stays changed for duration  | :for 10.seconds | 
 
-The for parameter provides a method of only executing the rule if the value is changed for a specific duration.  This provides a built-in method of delaying rule execution with the need to create dummy objects with the expire binding or make or manage your own times. 
+
+The from and to values operate exactly as they do in the DSL and Python rules. The for parameter provides a method of only executing the rule if the value is changed for a specific duration.  This provides a built-in method of only executing a rule if a condition is true for a period of time without the need to create dummy objects with the expire binding or make or manage your own timers.
 
 For example, the code in [this design pattern](https://community.openhab.org/t/design-pattern-expire-binding-based-timers/32634) becomes (with no need to create the dummy object):
 ```
@@ -161,30 +189,15 @@ Real world example:
 ```
 rule 'Log (or notify) when an exterior door is left open for more than 5 minutes' do
   changed ExteriorDoors, to: OPEN, for: 5.minutes
-  triggered {|door| logger.info("#{door} has been left open!")}
+  triggered {|door| logger.info("#{door.id} has been left open!")}
 end
 ```
 
+
+### Execution Blocks
 
 #### Run
-The run property is the automation code that is run when a rule is triggered.  This property accepts a block of code and executes it.  The block is automatically passed an event object which can be used to access multiple properties about the triggering event.  The code for the automation can be entirely within the run block can call methods defined in the ruby script.
-
-```
-run { |event| }
-
-or
-
-run do |event| 
-
-end
-
-
-```
-
-```
-
-```
-
+The run property is the automation code that is executed when a rule is triggered.  This property accepts a block of code and executes it. The block is automatically passed an event object which can be used to access multiple properties about the triggering event.  The code for the automation can be entirely within the run block can call methods defined in the ruby script.
 
 ##### Event Properties
 | Property | Description                      |
@@ -194,25 +207,106 @@ end
 | last     | Last state of triggering item    | 
 
 
-### Execution Blocks
+
+{} Style used for single line blocks
+```
+rule 'Access Event Properties' do
+  changed TestSwitch
+  run { |event| logger.info("#{event.item} triggered from #{event.last} to #{event.state}") }
+end
+```
+
+do/end style used for multi-line blocks
+```
+rule 'Multi Line Run Block' do
+  changed TestSwitch
+  run do |event|
+    logger.info("#{event.item} triggered")
+    logger.info("from #{event.last}") if event.last
+    logger.info("to #{event.last"}) if event.state
+   end
+end
+```
+
+Rules can have multiple run blocks and they are executed in order, Useful when used in combination with delay
+```
+rule 'Multiple Run Blocks' do
+  changed TestSwitch
+  run { |event| logger.info("#{event.item} triggered") }
+  run { |event| logger.info("from #{event.last}") if event.last }
+  run { |event| logger.info("to #{event.last}") if event.state  }
+end
+
+```
+
 
 #### Triggered
 This property is the same as the run property except rather than passing an event object to the automation block the triggered item is passed. This enables optimizations for simple cases and supports ruby's [pretzel colon `&:` operator.](https://medium.com/@dcjones/the-pretzel-colon-75df46dde0c7) 
 
 ##### Examples
+```
+rule 'Triggered has access directly to item triggered' do
+  changed TestSwitch
+  triggered { |item| logger.info("#{item.id} triggered") }
+end
 
 ```
+
+Triggered items are highly useful when working with groups
+```
+#Switches is a group of Switch items
+
+rule 'Triggered item is item changed when a group item is changed.' do
+  changed Switches.items
+  triggered { |item| logger.info("Switch #{item.id} changed to #{item}")}
+end
+
+
 rule 'Turn off any switch that changes' do
   changed Switches.items
   triggered(&:off)
 end
+
 ```
 
+Like other execution blocks, multiple triggered blocks are supported in a single rule
+```
+rule 'Turn a switch off and log it, 5 seconds after turning it on' do
+  changed Switches.items, to: ON
+  delay 5.seconds
+  triggered(&:off)
+  triggered {|item| logger.info("#{item.label} turned off") }
+end
+```
 
 
 #### Delay
 The delay property is a non thread-blocking element that is executed after, before, or between run blocks. 
 
+```
+rule 'Delay sleeps between execution elements' do
+  on_start
+  run { logger.info("Sleeping") }
+  delay 5.seconds
+  run { logger.info("Awake") }
+end
+```
+
+Like other execution blocks, multiple can exist in a single rule.
+
+```
+rule 'Multiple delays can exist in a rule' do
+  on_start
+  run { logger.info("Sleeping") }
+  delay 5.seconds
+  run { logger.info("Sleeping Again") }
+  delay 5.seconds
+  run { logger.info("Awake") }
+end
+```
+
+
+You can use ruby code in your rule across multiple execution blocks like a run and a delay. 
 ```
 rule 'Dim a switch on system startup over 100 seconds' do
    on_start
@@ -224,9 +318,135 @@ rule 'Dim a switch on system startup over 100 seconds' do
 
 ```
 
+
+#### Otherwise
+The otherwise property is the automation code that is executed when a rule is triggered and guards are not satisfied.  This property accepts a block of code and executes it. The block is automatically passed an event object which can be used to access multiple properties about the triggering event. 
+
+##### Event Properties
+| Property | Description                      |
+| -------- | -------------------------------- |
+| item     | Triggering item                  |
+| state    | Changed state of triggering item |
+| last     | Last state of triggering item    | 
+
+```
+rule 'Turn switch ON or OFF based on value of another switch' do
+  on_start
+  run { TestSwitch << ON }
+  otherwise { TestSwitch << OFF }
+  only_if { OtherSwitch == ON }
+end
+```
+
+
+
 ### Guards
 
-#### Between
+Guards exist to only permit rules to run if certain conditions are satisfied. Think of these as declarative if statements that keep the run block free of conditional logic, although you can of course still use conditional logic in run blocks if you prefer. 
+
+only_if and not_if guards that are provided objects rather than blocks automatically check for the 'truthyness' of the supplied object.  
+
+Truthyness for Item types:
+
+| Item    | Truthy when |
+| ------- | ----------- |
+| Switch  | state == ON |
+| Dimmer  | state != 0  |
+| Contact | Not Defined |
+
+#### only_if
+ only_if allows rule execution when result is true and prevents when false.
+ 
+```
+rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also ON' do
+  changed LightSwitch, to: ON
+  run { OutsideDimmer << 50 }
+  only_if { OtherSwitch == ON }
+end
+```
+
+Because only_if uses 'truthy?' on objects that are provided that are not blocks the above rule can also be written like this:
+
+```
+rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also ON' do
+  changed LightSwitch, to: ON
+  run { OutsideDimmer << 50 }
+  only_if OtherSwitch
+end
+```
+
+multiple only_if statements can be used and **all** must be true for the rule to run.
+
+```
+rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also ON and Door is closed' do
+  changed LightSwitch, to: ON
+  run { OutsideDimmer << 50 }
+  only_if OtherSwitch
+  only_if { Door == CLOSED }
+end
+```
+
+
+#### not_if
+
+not_if allows prevents execution of rules when result is false and prevents when true
+
+```
+ rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF' do
+        changed LightSwitch, to: ON
+        run { OutsideDimmer << 50 }
+        not_if { OtherSwitch == ON }
+      end
+```
+
+Because not_if also uses 'truthy?' on objects that are provided that are not blocks the above rule can also be written like this:
+
+```
+rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF' do
+  changed LightSwitch, to: ON
+  run { OutsideDimmer << 50 }
+  not_if OtherSwitch
+end
+```
+
+Multiple not_if statements can be used and if **any** of them are not satisfied the rule will not run. This is different than the behavior from only_if.
+
+```
+rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF and Door is not CLOSED' do
+  changed LightSwitch, to: ON
+  run { OutsideDimmer << 50 }
+  not_if OtherSwitch
+  not_if { Door == CLOSED }
+end
+```
+
+#### Guard Combination
+
+only_if and not_if can be used on the same rule, both be satisfied for a rule to execute.
+
+```
+rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF and Door is CLOSED' do
+  changed LightSwitch, to: ON
+  run { OutsideDimmer << 50 }
+  only_if { Door == CLOSED }
+  not_if OtherSwitch
+end
+```
+
+
+#### Guard Event Access
+Guards have access to event information.
+
+```
+rule 'Set OutsideDimmer to 50% if any switch in group Switches starting with Outside is switched On' do
+  changed Switches.items, to: ON
+  run { OutsideDimmer << 50 }
+  only_if { |event| event.item.name.start_with? 'Outside' }
+end
+```
+
+
+#### between
 Only runs the rule if the current time is in the provided range
 
 ```
@@ -269,7 +489,7 @@ Switch SwitchTest "Test Switch"
 
 ```
 logger.info("Item Count: #{items.count}")  # Item Count: 2
-logger.info("Items: #{items.sort_by{|item| item.name}.join(', ')}")  #Items: Test Dimmer, Test Switch' 
+logger.info("Items: #{items.sort_by(&:label).map(&:label).join(', ')}")  #Items: Test Dimmer, Test Switch' 
 ```
 
 ```
@@ -279,36 +499,104 @@ rule 'Use dynamic item lookup to increase related dimmer brightness when switch 
 end
 ```
 
-
-All methods of the OpenHAB item are available plus the additional methods described below.
-
-
-| Method | Description                             | Example                    |     |     |
-| ------ | --------------------------------------- | -------------------------- | --- | --- |
-| <<     | sends command to item, alias for state= | `VirtualSwich << ON`       |     |     |
-| state= | sends command to item                   | `VirtualSwitch.state = ON` |     |     |
-|        |                                         |                            |     |     |
+#### All Items
+Item types have methods added to them to make it flow naturally within the a ruby context.  All methods of the OpenHAB item are available plus the additional methods described below.
 
 
+| Method  | Description                                       | Example                                                      |
+| ------- | ------------------------------------------------- | ------------------------------------------------------------ |
+| <<      | Sends command to item                             | `VirtualSwich << ON`                                         |
+| command | alias for shovel operator (<<)                    | `VirtualSwich.command(ON)`                                   |
+| id      | Returns label or item name if no label            | `logger.info(#{item.id})`                                    |
+| undef?  | Returns true if the state of the item is UNDEF    | `logger.info("SwitchTest is UNDEF") if SwitchTest.undef?`    |
+| null?   | Returns true if the state of the item is NULL     | `logger.info("SwitchTest is NULL") if SwitchTest.null?`      |
+| state?  | Returns true if the state is not UNDEF or NULL    | `logger.info("SwitchTest has a state") if SwitchTest.state?` |
+| state   | Returns state of the item or nil if UNDEF or NULL | `logger.info("SwitchTest state #{SwitchTest.state}")`        |
+| to_s    | Returns state in string format                    | `logger.info(#{item.id}: #{item})`                           |
+
+State returns nil instead of UNDEF or NULL so that it can be used with with [Ruby safe navigation operator](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html) `&.`  Use `undef?` or `null?` to check for those states.
+
+To operate across an arbitrary collection of items you can place them in an [array](https://ruby-doc.org/core-2.5.0/Array.html) and execute methods against the array.
+
+```
+number_items = [Livingroom_Temp, Bedroom_Temp]
+logger.info("Max is #{number_items.max}")
+logger.info("Min is #{number_items.min}")
+```
 
 
-Each item type has methods added to it to make it flow naturally within the a ruby context.
-
-#### SwitchItem
+#### Switch Item
 This class is aliased to **Switch** so you can compare compare item types using ` item.is_a? Switch or grep(Switch)`
 
 | Method  | Description                               | Example                                         |
 | ------- | ----------------------------------------- | ----------------------------------------------- |
-| active? | Item is not undefined, not null and is ON | `puts "#{item.name} is active" if item.active?` |
+| truthy? | Item is not undefined, not null and is ON | `puts "#{item.name} is truthy" if item.truthy?` |
 | on      | Send command to turn item ON              | `item.on`                                       |
 | off     | Send command to turn item OFF             | `item.off`                                      |
 | on?     | Returns true if item state == ON          | `puts "#{item.name} is on." if item.on?`        |
 | off?    | Returns true if item state == OFF         | `puts "#{item.name} is off." if item.off?`      |
+| !       | Return the inverted state of the item     | `item << !item`                                                |
+
+
+Switches respond to `on` and `off`
 
 ```
- # Invert all switches
- items.grep(Switch)
-      .each { |item| if item.off? then item.on else item.off end}
+# Turn on all switches in a group called Switches
+Switches.each(&:on)
+```
+
+Check state with `off?` and `on?`
+
+```
+# Turn on all switches in a group called Switches that are off
+Switches.select(&:off?).each(&:on)
+```
+
+Switches can be selected in an enumerable with grep.
+
+```
+items.grep(Switch)
+     .each { |switch| logger.info("Switch #{switch.id} found") }
+```
+
+Switch states also work in grep.
+```
+# Log all switch items set to ON
+items.grep(Switch)
+     .grep(ON)
+     .each { |switch| logger.info("#{switch.id} ON") }
+
+# Log all switch items set to OFF
+items.grep(Switch)
+     .grep(OFF)
+     .each { |switch| logger.info("#{switch.id} OFF") }
+```
+
+Switch states also work in case statements.
+```
+items.grep(Switch)
+     .each do |switch|
+        case switch
+        when ON
+          logger.info("#{switch.id} ON")
+        when OFF
+          logger.info("#{switch.id} OFF")
+         end
+      end
+```
+
+
+Other examples
+```
+# Invert all switches
+items.grep(Switch)
+     .each { |item| if item.off? then item.on else item.off end}
+
+# Or using not operator
+
+items.grep(Switch)
+     .each { |item| item << !item } 
+
 ```
 
 
@@ -316,17 +604,94 @@ This class is aliased to **Switch** so you can compare compare item types using 
 #### DimmerItem
 This class is aliased to **Dimmer** so you can compare compare item types using ` item.is_a? Dimmer or grep(Dimmer)`
 
-| Method       | Parameters         | Description                               | Example                                         |
-| ------------ | ------------------ | ----------------------------------------- | ----------------------------------------------- |
-| active?      |                    | Item is not undefined, not null and is ON | `puts "#{item.name} is active" if item.active?` |
-| on           |                    | Send command to turn item ON              | `item.on`                                       |
-| off          |                    | Send command to turn item OFF             | `item.off`                                      |
-| on?          |                    | Returns true if item state == ON          | `puts "#{item.name} is on." if item.on?`        |
-| off?         |                    | Returns true if item state == OFF         | `puts "#{item.name} is off." if item.off?`      |
-| dim, -=      | amount (default 1) | Dim the switch the specified amount      | `DimmerSwitch.dim` or `DimmerSwitch -= 5`       |
-| brighten, += | amount (default 1) | Brighten the switch the specified amount | `DimmerSwitch.brighten` or `DimmerSwitch += 5`  |
+| Method   | Parameters         | Description                                  | Example                                         |
+| -------- | ------------------ | -------------------------------------------- | ----------------------------------------------- |
+| truthy?  |                    | Item state not UNDEF, not NULL and is ON     | `puts "#{item.name} is truthy" if item.truthy?` |
+| on       |                    | Send command to turn item ON                 | `item.on`                                       |
+| off      |                    | Send command to turn item OFF                | `item.off`                                      |
+| on?      |                    | Returns true if item state == ON             | `puts "#{item.name} is on." if item.on?`        |
+| off?     |                    | Returns true if item state == OFF            | `puts "#{item.name} is off." if item.off?`      |
+| dim      | amount (default 1) | Dim the switch the specified amount          | `DimmerSwitch.dim`                              |
+| -        | amount             | Subtract the supplied amount from DimmerItem | `DimmerSwitch << DimmerSwitch - 5`              |
+| brighten | amount (default 1) | Brighten the switch the specified amount     | `DimmerSwitch.brighten`                         |
+| +        | amount             | Add the supplied amount from the DimmerItem  | `DimmerSwitch << DimmerSwitch + 5`              | 
+
 
 ##### Examples
+
+```
+DimmerOne << DimmerOne - 5
+DimmerOne << 100 - DimmerOne
+
+```
+
+`on`/`off` sends commands to a Dimmer
+
+```
+# Turn on all dimmers in group
+Dimmers.each(&:on)
+
+# Turn off all dimmers in group
+Dimmers.each(&:off)
+```
+
+ `on?`/`off?` Checks state of dimmer
+
+```
+# Turn on switches that are off
+Dimmers.select(&:off?).each(&:on)
+	  
+# Turn off switches that are on
+Dimmers.select(&:on?).each(&:off)
+```
+
+`dim` dims the specified amount, defaulting to 1. If 1 is the increments, the decrease command is sent, otherwise the final number is sent as a command.
+
+```
+DimmerOne.dim
+DimmerOne.dim 2
+```
+
+`brighten` brightens the specified amount, defaulting to 1. If 1 is the increments, the decrease command is sent, otherwise the final number is sent as a command.
+
+```
+DimmerOne.brighten
+DimmerOne.brighten 2   
+```
+
+Dimmers can be selected in an enumerable with grep.
+
+```
+# Get all dimmers
+items.grep(Dimmer)
+     .each { |dimmer| logger.info("#{dimmer.id} is a Dimmer") }
+```
+
+Dimmers work with ranges and can be used in grep.
+
+```
+# Get dimmers with a state of less than 50
+items.grep(Dimmer)
+     .grep(0...50)
+     .each { |item| logger.info("#{item.id} is less than 50") }
+```
+
+Dimmers can also be used in case statements with ranges.
+```
+#Log dimmer states partioning aat 50%
+items.grep(Dimmer)
+     .each do |dimmer|
+       case dimmer
+       when (0..50)
+         logger.info("#{dimmer.id} is less than 50%")
+        when (51..100)
+         logger.info("#{dimmer.id} is greater than 50%")
+         end
+end
+```
+
+Other examples
+
 ```
 rule 'Dim a switch on system startup over 100 seconds' do
   on_start
@@ -334,7 +699,7 @@ rule 'Dim a switch on system startup over 100 seconds' do
     run { DimmerSwitch.dim }
     delay 1.second
   end
- end
+end
 
 ```
 
@@ -345,9 +710,8 @@ rule 'Dim a switch on system startup by 5, pausing every second' do
      run { DimmerSwitch << level }
      delay 1.second
    end
- end
+end
 ```
-
 
 ```
  rule 'Turn off any dimmers curently on at midnight' do
@@ -356,33 +720,82 @@ rule 'Dim a switch on system startup by 5, pausing every second' do
      items.grep(Dimmer)
           .select(&:on?)
           .each(&:off)
-     end
- end
+    end
+end
 ```
 
 ```
- rule 'Turn off any dimmers set to less than 50 at midnight' do
+rule 'Turn off any dimmers set to less than 50 at midnight' do
    every :day
    run do
      items.grep(Dimmer)
           .grep(1...50)
           .each(&:off)
      end
- end
+end
 ```
 
 
 
 #### Contact Item
 
+This class is aliased to **Contact** so you can compare compare item types using ` item.is_a? Contact or grep(Contact)`
+
+
 | Method  | Description                               | Example                                    |
 | ------- | ----------------------------------------- | ------------------------------------------ |
-| active? | Item is not undefined, not null and is ON | `puts "#{item} is active" if item.active?` |
 | open?   | Returns true if item state == OPEN        | `puts "#{item} is closed." if item.open?`  |
 | closed? | Returns true if item state == CLOSED      | `puts "#{item} is off." if item.closed`    |
 
 
 ##### Examples
+
+`open?`/`closed?` checks state of contact
+
+```
+# Log open contacts
+Contacts.select(&:open?).each { |contact| logger.info("Contact #{contact.id} is open")}
+
+# Log closed contacts
+Contacts.select(&:closed?).each { |contact| logger.info("Contact #{contact.id} is closed")}
+
+```
+
+Contacts can be selected in an enumerable with grep.
+
+```
+# Get all Contacts
+items.grep(Contact)
+     .each { |contact| logger.info("#{contact.id} is a Contact") }
+```
+
+Contacts states work in grep.
+
+```
+# Log all open contacts in a group
+Contacts.grep(OPEN)
+        .each { |contact| logger.info("#{contact.id} is in #{contact}") }
+
+# Log all closed contacts in a group
+Contacts.grep(CLOSED)
+        .each { |contact| logger.info("#{contact.id} is in #{contact}") }
+
+```
+
+Contact states work in case statements.
+
+```
+#Log if contact is open or closed
+case TestContact
+when (OPEN)
+  logger.info("#{TestContact.id} is open")
+when (CLOSED)
+  logger.info("#{TestContact.id} is closed")
+end
+```
+
+
+Other examples
 
 ```
 rule 'Log state of all doors on system startup' do
@@ -390,9 +803,9 @@ rule 'Log state of all doors on system startup' do
   run do
     Doors.each do |door|
       case door
-      when OPEN then logger.info("#{door} is Open")
-      when CLOSED then logger.info("#{door} is Open")
-      else logger.info("#{door} is not initialized")
+      when OPEN then logger.info("#{door.id} is Open")
+      when CLOSED then logger.info("#{door.id} is Open")
+      else logger.info("#{door.id} is not initialized")
       end
     end
   end
@@ -400,7 +813,260 @@ end
 
 ```
 
+#### Number Item
 
+| Method          | Parameters | Description                                                                                                                                              | Example                                                                      |
+| --------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| truthy?         |            | Item state not UNDEF, not NULL and is not Zero                                                                                                           | `puts "#{item.name} is truthy" if item.truthy?`                              |
+| +,-,\*,/        | amount     | Perform the operation between the state of the number item and the supplied value*                                                                       | `NumberItem << NumberItem - 5` or `NumberItem << 10 + NumberItem`            |
+| \|              | unit       | Convert the supplied NumberItem to the supplied unit. Unit can either be a Unit class or string representation of the symbol, returns a Quantity object. | `NumberItem` &#124; `ImperialUnits::FAHRENHEIT` or `NumberItem `&#124;`'°F'` |
+| to_d            |            | Returns the state as a BigDecimal or nil if state is UNEF or NULL                                                                                        | `NumberOne.to_d`                                                             |
+| to_i            |            | Returns the state as an Integer or nil if state is UNEF or NULL                                                                                          | `NumberOne.to_i`                                                             |
+| to_f            |            | Returns the state as a Float or nil if state is UNEF or NULL                                                                                             | `NumberOne.to_f`                                                             |
+| dimension       |            | Returns the dimension of the Number Item, nil if the number is dimensionless                                                                             | `Numberone.dimension`                                                        |
+| Numeric Methods |            | All methods for [Ruby Numeric](https://ruby-doc.org/core-2.5.0/Numeric.html)                                                                             |                                                                              |
+
+ Math operations for dimensionless numbers return a type of [Ruby BigDecimal](https://ruby-doc.org/stjjdlib-2.5.1/libdoc/bigdecimal/rdoc/BigDecimal.html).  Check [Quantities section](#### Quantities ) for details of how math operations impact dimensioned numbers. 
+
+
+##### Examples
+
+Math operations can be performed directly on the NumberItem
+
+```
+# Add 5 to a number item
+NumberOne << NumberOne + 5
+
+# Add Number item to 5
+NumberOne << 5 + NumberOne
+
+```
+
+Number Items can be selected in an enumerable with grep.
+
+```
+# Get all NumberItems
+items.grep(NumberItem)
+      .each { |number| logger.info("#{number.id} is a Number Item") }
+```
+
+Number Item work with ranges and can be used in grep.
+
+```
+# Get numbers in group Numbers with a state of less than 50
+      # Get all NumberItems less than 50
+      Numbers.grep(0...50)
+           .each { |number| logger.info("#{number.id} is less than 50") }
+```
+
+Number Items can also be used in case statements with ranges.
+```
+#Check if number items is less than 50
+case NumberOne
+when (0...50)
+  logger.info("#{NumberOne.id} is less than 50")
+when (50..100)
+  logger.info("#{NumberOne.id} is greater than 50")
+end
+```
+
+
+#### Quantities 
+Quantities are part of the [Units of Measurement](https://www.openhab.org/docs/concepts/units-of-measurement.html) framework in OpenHAB.  The quantity object acts as ruby wrapper around the OpenHAB QuantityType.
+
+| Method             | Parameters | Description                                                                                                                | Example                                                                      |
+| ------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| +,-,\*,/,-(negate) | amount     | Perform the operation between the state of the number item and the supplied value*                                         | `NumberItem << NumberItem - 5` or `NumberItem << 10 + NumberItem`            |
+| \|                 | unit       | Convert the supplied Quantity to the supplied unit. Unit can either be a Unit class or string representation of the symbol | `NumberItem` &#124; `ImperialUnits::FAHRENHEIT` or `NumberItem `&#124;`'°F'` |
+| quantity           |            | Returns the underlying OpenHAB QuantityType object                                                                         | `Numberone.dimension`                                                        |
+| Numeric Methods    |            | All methods for [Ruby Numeric](https://ruby-doc.org/core-2.5.0/Numeric.html)                                               |                                                                              |
+
+###### Examples
+
+Quantity types can perform math operations between them.  
+```
+Quantity.new('50 °F') + -Quantity.new('25 °F') = 25.0 °F
+Quantity.new('100 °F') / Quantity.new('2 °F') = 50
+Quantity.new('50 °F') * Quantity.new('2 °F') = 100 °F
+Quantity.new('50 °F') - Quantity.new('25 °F') = 25 °F
+Quantity.new('50 °F') + Quantity.new('50 °F') = 100 °F
+```
+
+If the operand is a string it will be automatically converted into a Quantity. 
+```
+Quantity.new('100 °F') / '2 °F' = 50
+Quantity.new('50 °F') * '2 °F' = 100 °F
+Quantity.new('50 °F') - '25 °F' = 25 °F
+Quantity.new('50 °F') + '50 °F' = 100 °F
+```
+
+If the operand is a number, it will be unit-less, but the result of the operation will have a unit.  This only works for multiplication and division. 
+```
+Quantity.new('50 °F')  * 2 = 100 °F
+Quantity.new('100 °F') / 2 = 50 °F 
+```
+
+If the operand is a dimensioned NumberItem it will automatically be converted to a quantity for the operation.
+```
+# NumberF = '2 °F'
+# NumberC = '2 °C'
+
+Quantity.new('50 °F') + NumberF # = 52.0 °F
+Quantity.new('50 °F') + NumberC # = 85.60 °F 
+```
+
+If the operand is a non-dimensioned NumberItem it can be used only in multiplication and division operations.
+
+```
+# Number Dimensionless = 2
+
+Quantity.new('50 °F') * Dimensionless # = 100 °F   
+Quantity.new('50 °F') / Dimensionless # = 25 °F    
+```
+
+Quantities can be compared, if they have comparable units.
+```
+Quantity.new('50 °F') >  Quantity.new('25 °F')  
+Quantity.new('50 °F') >  Quantity.new('525 °F') 
+Quantity.new('50 °F') >= Quantity.new('50 °F')  
+Quantity.new('50 °F') == Quantity.new('50 °F')  
+Quantity.new('50 °F') <  Quantity.new('25 °C')  
+```
+
+If the compare-to is a string, it will be automatically converted into a quantity.
+```
+Quantity.new('50 °F') == '50 °F' 
+Quantity.new('50 °F') <  '25 °C'
+```
+
+Dimensioned Number Items can be converted to quantities with other units using the \| operator
+
+```
+# NumberC = '23 °C'
+
+# Using a unit 
+logger.info("In Fahrenheit #{NumberC| ImperialUnits::FAHRENHEIT }")
+
+# Using a string
+logger.info("In Fahrenheit #{NumberC | '°F'}")
+
+```
+
+Dimensionless Number Items can be converted to quantities with units using the \| operator
+
+```
+# Dimensionless = 70
+
+# Using a unit 
+logger.info("In Fahrenheit #{Dimensionless| ImperialUnits::FAHRENHEIT }")
+
+# Using a string
+logger.info("In Fahrenheit #{Dimensionless | '°F'}")
+
+```
+
+Dimensioned Number Items automatically use their units and convert automatically for math operations
+
+```
+# Number:Temperature NumberC = 23 °C
+# Number:Temperature NumberF = 70 °F
+
+NumberC - NumberF # = 1.88 °C
+NumberF + NumberC # = 143.40 °F 
+```
+
+Dimensionless Number Items can be used for multiplication and division. 
+
+```
+# Number Dimensionless = 2
+# Number:Temperature NumberF = 70 °F
+
+NumberF * Dimensionless # = 140.0 °F 
+NumberF / Dimensionless # = 35.0 °F
+Dimensionless * NumberF # = 140.0 °F 
+2 * NumberF             # = 140.0 °F 
+```
+
+Comparisons work on dimensioned number items with different, but comparable units.
+```
+# Number:Temperature NumberC = 23 °C
+# Number:Temperature NumberF = 70 °F
+
+NumberC > NumberF # = true
+```
+
+Comparisons work with dimensioned numbers and strings representing quantities
+```
+# Number:Temperature NumberC = 23 °C
+# Number:Temperature NumberF = 70 °F
+
+NumberC > NumberF # = true
+```
+
+For certain unit types, such as temperature, all unit needs to be normalized to the comparator for all operations when combining comparison operators with dimensioned numbers.
+
+```
+(NumberC |'°F') - (NumberF |'°F') < '4 °F' 
+```
+
+To facilitate conversion of multiple dimensioned and dimensionless numbers the unit block may be used.  The unit block attempts to do the _right thing_ based on the mix of dimensioned and dimensionless items within the block.  Specifically all dimensionless items are converted to the supplied unit, except when they are used for multiplication or division. 
+
+```
+# Number:Temperature NumberC = 23 °C
+# Number:Temperature NumberF = 70 °F
+# Number Dimensionless = 2
+
+unit('°F') { NumberC - NumberF < 4 }               					#= true   
+unit('°F') { NumberC - '24 °C' < 4 }               					#= true   
+unit('°F') { Quantity.new('24 °C') - NumberC < 4 }					#= true   
+unit('°C') { NumberF - '20 °C' < 2 }               					#= true   
+unit('°C') { NumberF - Dimensionless }             					#= 19.11 °C
+unit('°C') { NumberF - Dimensionless < 20 }        					#= true   
+unit('°C') { Dimensionless + NumberC == 25 }       					#= true     unit('°C') { 2 + NumberC == 25 }                   					#= true
+unit('°C') { Dimensionless * NumberC == 46 }       					#= true      unit('°C') { 2 * NumberC == 46 }                   				 #= true
+unit('°C') { ( (2 * (NumberF + NumberC) ) / Dimensionless ) < 45} 	#= true      unit('°C') { [NumberC, NumberF, Dimensionless].min }              	 #= 2       
+```
+
+#### String Item
+
+| Method          | Parameters | Description                                                                | Example                                         |
+| --------------- | ---------- | -------------------------------------------------------------------------- | ----------------------------------------------- |
+| truthy?         |            | Item state not UNDEF, not NULL and is not blank ('') when trimmed.         | `puts "#{item.name} is truthy" if item.truthy?` |
+| String methods* |            | All methods for [Ruby String](https://ruby-doc.org/core-2.5.1/String.html) | `StringOne << StringOne + ' World!'`            |
+| blank?          |            | True if state is UNDEF, NULL, string is empty or contains only whitepspace | `StringOne << StringTwo unless StringTwo.blank?` |                                               |
+
+* All String methods returns a copy of the current state as a string.  Methods that modify a string in place, do not modify the underlying state string. 
+ 
+ 
+##### Examples
+
+String operations can be performed directly on the StringItem
+
+```
+# StringOne has a current state of "Hello"
+StringOne << StringOne + " World!"
+# StringOne will eventually have a state of 'Hello World!'
+
+# Add Number item to 5
+NumberOne << 5 + NumberOne
+
+```
+
+String Items can be selected in an enumerable with grep.
+
+```
+# Get all StringItems
+items.grep(StringItem)
+     .each { |string| logger.info("#{string.id} is a String Item") }
+```
+
+String Item values can be matched against regular expressions
+
+```
+# Get all Strings that start with an H
+Strings.grep(/^H/)
+        .each { |string| logger.info("#{string.id} starts with an H") }
+```
 
 ### Groups
 
@@ -441,19 +1107,18 @@ The following are log lines and the output after the comment
 ```
 #Operate on items in a group using enumerable methods
 logger.info("Total Temperatures: #{Temperatures.count}")     #Total Temperatures: 3'
-logger.info("Temperatures: #{House.sort_by{|item| item.label}.join(', ')}") #Temperatures: Bedroom temperature, Den temperature, Living Room temperature' 
+logger.info("Temperatures: #{House.sort_by(&:label).map(&:label).join(', ')}") #Temperatures: Bedroom temperature, Den temperature, Living Room temperature' 
 
 #Access to the group object via the 'group' method
 logger.info("Group: #{Temperatures.group.name}" # Group: Temperatures'
 
 #Operates on items in nested groups using enumerable methods
 logger.info("House Count: #{House.count}")           # House Count: 3
-logger.info("Items: #{House.sort_by{|item| item.label}.join(', ')}")  # Items: Bedroom temperature, Den temperature, Living Room temperature
+llogger.info("Items: #{House.sort_by(&:label).map(&:label).join(', ')}")  # Items: Bedroom temperature, Den temperature, Living Room temperature
 
 #Access to sub groups using the 'groups' method
 logger.info("House Sub Groups: #{House.groups.count}")  # House Sub Groups: 2
-logger.info("Groups: #{House.groups.sort_by{|item| item.label}.join(', ')}")  # Groups: GroundFloor, Sensors
-
+logger.info("Groups: #{House.groups.sort_by(&:id).map(&:id).join(', ')}")  # Groups: GroundFloor, Sensors
 
 ```
 
@@ -464,6 +1129,13 @@ rule 'Turn off any switch that changes' do
   triggered &:off
 end
 ```
+
+Built in [enumerable](https://ruby-doc.org/core-2.5.1/Enumerable.html)/[set](https://ruby-doc.org/stdlib-2.5.1/libdoc/set/rdoc/Set.html) functions can be applied to groups.  
+```
+logger.info("Max is #{Temperatures.max}")
+logger.info("Min is #{Temperatures.min}")
+```
+
 
 
 ### Logging
@@ -517,7 +1189,7 @@ rule 'Log whenever a Virtual Switch Changes' do
          changed item
        end
 
-  run { |event| logger.info "#{event.item} changed from #{event.last} to #{event.state}" }
+  run { |event| logger.info "#{event.item.id} changed from #{event.last} to #{event.state}" }
 end
 ```
 
@@ -528,7 +1200,7 @@ virtual_switches = items.select { |item| item.is_a? Switch }
 
 rule 'Log whenever a Virtual Switch Changes 2' do
   changed virtual_switches
-  run { |event| logger.info "#{event.item} changed from #{event.last} to #{event.state} 2" }
+  run { |event| logger.info "#{event.item.id} changed from #{event.last} to #{event.state} 2" }
 end
 ```
 
@@ -540,7 +1212,7 @@ virtual_switches = items.select { |item| item.is_a? Switch }
 virtual_switches.each do |switch|
   rule "Log whenever a #{switch.label} Changes" do
     changed switch
-    run { |event| logger.info "#{event.item} changed from #{event.last} to #{event.state} 2" }
+    run { |event| logger.info "#{event.item.id} changed from #{event.last} to #{event.state} 2" }
   end
 end
 ```
@@ -591,26 +1263,88 @@ rule 'Snap Fan to preset percentages' do
               when 67...100 then 100
               end
     if snapped
-       logger.info("Snapping fan #{item} to #{snapped}")
+       logger.info("Snapping fan #{item.id} to #{snapped}")
       item << snapped
     else
-      logger.info("#{item} set to snapped percentage, no action taken.")
+      logger.info("#{item.id} set to snapped percentage, no action taken.")
     end
   end
 end
 ```
 
+Python
+```
+@rule("Use Supplemental Heat In Office")
+@when("Item Office_Temperature changed")
+@when("Item Thermostats_Upstairs_Temp changed")
+@when("Item Office_Occupied changed")
+@when("Item OfficeDoor changed")
+def office_heater(event):
+  office_temp = ir.getItem("Office_Temperature").getStateAs(QuantityType).toUnit(ImperialUnits.FAHRENHEIT).floatValue()
+  hall_temp = items["Thermostats_Upstairs_Temp"].floatValue()
+  therm_status = items["Thermostats_Upstairs_Status"].intValue()
+  heat_set = items["Thermostats_Upstairs_Heat_Set"].intValue()
+  occupied = items["Office_Occupied"]
+  door = items["OfficeDoor"]
+  difference = hall_temp - office_temp
+  logging.warn("Office Temperature: {} Upstairs Hallway Temperature: {} Differnce: {}".format(office_temp,hall_temp,difference))
+  logging.warn("Themostat Status: {} Heat Set: {}".format(therm_status,heat_set))
+  logging.warn("Office Occupied: {}".format(occupied))
+  logging.warn("Office Door: {}".format(door))
+  degree_difference = 2.0
+  trigger = False
+  if heat_set > office_temp:
+    if difference > degree_difference:
+     if occupied == ON:
+      if True:
+          if therm_status == 0:
+            if door == CLOSED:
+                trigger = True
+            else:
+               logging.warn("Door Open, no action taken")
+          else:
+            logging.warn("HVAC on, no action taken")
+      else:
+        logging.warn("Office unoccupied, no action taken")
+    else:
+      logging.warn("Thermstat and office temperature difference {} is less than {} degrees, no action taken".format(difference, degree_difference))
+  else:
+    logging.warn("Heat set lower than office temp, no action taken".format(difference, degree_difference))
 
 
+  if trigger:
+    logging.warn("Turning on heater")
+    events.sendCommand("Lights_Office_Outlet","ON")
+  else:
+    logging.warn("Turning off heater")
+    events.sendCommand("Lights_Office_Outlet","OFF")
+```
+
+
+Ruby
+```
+rule 'Use supplemental heat in office' do
+  changed Office_Temperature, Thermostats_Upstairs_Temp, Office_Occupied, OfficeDoor
+  run { Lights_Office_Outlet << ON }
+  only_if Office_Occupied
+  only_if { OfficeDoor == CLOSED }
+  only_if { Thermostate_Upstairs_Heat_Set > Office_Temperature }
+  only_if { unit(°F') { Thermostat_Upstairs_Temp - Office_Temperature > 2 } }
+  otherwise { Lights_Office_Outlet << OFF if Lights_Office_Outlet.on? }
+end
+```
 
 ## To Do
-1. Internal restructuring of modules/classes
-2. Rubocop fixes
-3. Add support for missing rule operations
-4. Add support for missing item types
-5. Add support for missing operations (update, etc)
-6. Logging normalization and cleanup
-7. Add support for actions (including notify)
-8. Add support for transformations
-9. Modify based on feedback from the community
-10. Provide more conversions examples as more missing elements are added to the language
+1. CI/CD Automated Testing
+2. Internal restructuring of modules/classes
+3. Rubocop fixes
+4. Method/Class Documentation 
+5. Add support for missing rule operations
+6. Add support for missing item types
+7. Add support for Things/Channels
+8. Add support for missing operations (update, etc)
+9. Logging normalization and cleanup
+10. Add support for actions (including notify)
+11. Add support for transformations
+12. Modify based on feedback from the community
+13. Provide more conversions examples as more missing elements are added to the language

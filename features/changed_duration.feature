@@ -37,7 +37,7 @@ Feature:  Rule languages supports changed item features
       """
       rule "Execute rule when item is changed and is modified during specified duration" do
         changed Alarm_Mode, for: 20.seconds
-        triggered { |item| logger.info("Alarm Mode Updated to #{item.state}")}
+        triggered { |item| logger.info("Alarm Mode Updated to #{item}")}
       end
       """
     When item "Alarm_Mode" state is changed to "14"
@@ -58,7 +58,7 @@ Feature:  Rule languages supports changed item features
       """
       rule "Execute rule when group item is changed" do
         <rule>
-        triggered { |item| logger.info("#{item} Changed")}
+        triggered { |item| logger.info("#{item.id} Changed")}
       end
       """
     When item "Alarm_Two_Mode" state is changed to "<to>"
@@ -86,7 +86,7 @@ Feature:  Rule languages supports changed item features
       """
       rule "Execute rule when group is changed" do
         <rule>
-        triggered { |item| logger.info("#{item} Changed")}
+        triggered { |item| logger.info("#{item.id} Changed")}
       end
       """
     When item "Switch_Two" state is changed to "<to>"
@@ -103,4 +103,6 @@ Feature:  Rule languages supports changed item features
       | OFF  | ON  | changed Switches, from: ON, to: ON, for: 10.seconds  | should not |
 
 
+  @not_implemented
   Scenario: Rule deleted, timers should be cancelled
+    Then NOT_IMPLEMENTED

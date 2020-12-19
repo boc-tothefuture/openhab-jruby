@@ -10,7 +10,7 @@ class Java::OrgOpenhabCoreLibraryItems::SwitchItem
   java_import org.openhab.core.library.types.OnOffType
   # rubocop:enable Style/ClassAndModuleChildren
 
-  def active?
+  def truthy?
     on?
   end
 
@@ -23,28 +23,22 @@ class Java::OrgOpenhabCoreLibraryItems::SwitchItem
   end
 
   def on?
-    item_defined? && state == OnOffType::ON
+    state? && state == OnOffType::ON
   end
 
   def off?
-    item_defined? && state == OnOffType::OFF
+    state? && state == OnOffType::OFF
+  end
+
+  def !
+    !state if state?
   end
 
   def ==(other)
     if other.is_a? OnOffType
-      item_defined? && state == other
+      state? && state == other
     else
       super
     end
-  end
-end
-
-# rubocop:disable Style/ClassAndModuleChildren
-class Java::OrgOpenhabCoreLibraryItems::NumberItem
-  # rubocop:enable Style/ClassAndModuleChildren
-  java_import org.openhab.core.library.types.DecimalType
-
-  def active?
-    item_defined? && state != DecimalType::ZERO
   end
 end

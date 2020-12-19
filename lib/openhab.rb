@@ -7,7 +7,6 @@ require 'openhab/core/startup_delay'
 require 'openhab/core/log'
 require 'openhab/core/debug'
 require 'openhab/core/dsl'
-require 'openhab/core/dsl/items'
 
 module OpenHAB
   def self.extended(base)
@@ -16,7 +15,10 @@ module OpenHAB
     base.extend DSL
     base.extend EntityLookup
     base.extend OpenHAB::Core::DSL::Tod
+
     base.send :include, OpenHAB::Core::DSL::Tod
+    base.send :include, OpenHAB::Core::DSL::Items
+    base.send :include, OpenHAB::Core::DSL::Types
   end
 end
 

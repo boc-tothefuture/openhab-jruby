@@ -27,7 +27,7 @@ Feature:  Rule language generic support
     And code in a rules file
       """
       open_doors = GarageDoors.select(&:open?)
-      open_doors.each { | door | logger.warn("Garage Door #{door} is OPEN") }
+      open_doors.each { | door | logger.warn("Garage Door #{door.id} is OPEN") }
       """
     When I deploy the rules file
     Then It should log 'Garage Door Left Door is OPEN' within 5 seconds
@@ -40,11 +40,11 @@ Feature:  Rule language generic support
       """
       case TestDimmer
       when 0...50
-       logger.info("#{TestDimmer} Less than 50")
+       logger.info("#{TestDimmer.id} Less than 50")
       when 50..100
-       logger.info("#{TestDimmer} More than 50")
+       logger.info("#{TestDimmer.id} More than 50")
       else
-       logger.info("#{TestDimmer.state} Not matched")
+       logger.info("#{TestDimmer} Not matched")
       end
       """
     When I deploy the rules file
@@ -66,12 +66,24 @@ Feature:  Rule language generic support
     Then It should log 'Found Dimmer Switch' within 5 seconds
 
 
-  Scenario: Rule supports executing if guards block execution
-    Given a rule
+  @wip
+  Scenario: Rule supports executing different block if guards are not satisfied
+    Given items:
+      | type   | name       | state |
+      | Switch | TestSwitch | ON    |
+    And a rule
       """
-      rule 'Execute block if guards fail' do
-        run :always, { Lights_Office_Outlet << ON } .  # We need to pass in a boolean if guards failed?
-        otherwise { Lights_Office_Outlet << OFF if Lights_Office_Outlet.on? } #  How do otherwise interact with each other and or delays? Are delays linked? you could want to skip delays if otherwise?
+      rule 'Execute otherwise if guard is not satisfied' do
+        on_start
+        run { TestSwitch << ON }
+        otherwise { TestSwitch << OFF }
+        only_if { false }
       end
       """
-    Then It should log 'Not Implemented' within 5 seconds
+    When I deploy the rule
+    Then "TestSwitch" should be in state "OFF" within 5 seconds
+
+
+  @not_implemented
+  Scenario: It logs the versions of the library on start
+    Then NOT_IMPLEMENTED

@@ -43,11 +43,11 @@ class Rest
     { 'Content-Type' => 'text/plain' }
   end
 
-  def self.add_item(type:, name:, state: nil, label: nil, groups: nil, group_type: nil, function: nil, params: nil)
+  def self.add_item(type:, name:, state: nil, label: nil, groups: nil, group_type: nil, function: nil, params: nil, pattern: nil)
     body = {}
     body[:type] = type
     body[:name] = name
-    body[:label] = label if label
+    body[:label] = label if label && label.strip != ''
     groups = [*groups].compact.map(&:strip).grep_v('')
     body[:groupNames] = groups unless groups.empty?
     body[:groupType] = group_type unless group_type.to_s.empty?
@@ -58,6 +58,14 @@ class Rest
       body[:function] = function_body
     end
     put("/rest/items/#{name}", headers: json, body: body.to_json)
+
+    if pattern
+      pattern_body = {}
+      pattern_body[:value] = ' '
+      pattern_body[:config] = { pattern: pattern }
+      put("/rest/items/#{name}/metadata/stateDescription", headers: json, body: pattern_body.to_json)
+    end
+
     state ||= 'UNDEF'
     set_item_state(name, state)
   end
