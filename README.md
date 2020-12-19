@@ -212,7 +212,7 @@ The run property is the automation code that is executed when a rule is triggere
 
 
 
-{} Style used for single line blocks
+`{}` Style used for single line blocks
 ```
 rule 'Access Event Properties' do
   changed TestSwitch
@@ -220,7 +220,7 @@ rule 'Access Event Properties' do
 end
 ```
 
-do/end style used for multi-line blocks
+`do/end` style used for multi-line blocks
 ```
 rule 'Multi Line Run Block' do
   changed TestSwitch
@@ -357,6 +357,9 @@ Truthyness for Item types:
 | Switch  | state == ON |
 | Dimmer  | state != 0  |
 | Contact | Not Defined |
+| String  | Not Blank   |
+| Number  | state != 0  |
+
 
 #### only_if
  only_if allows rule execution when result is true and prevents when false.
@@ -369,7 +372,7 @@ rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also 
 end
 ```
 
-Because only_if uses 'truthy?' on objects that are provided that are not blocks the above rule can also be written like this:
+Because only_if uses 'truthy?' on non-block objects the above rule can also be written like this:
 
 ```
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also ON' do
@@ -403,7 +406,7 @@ not_if allows prevents execution of rules when result is false and prevents when
       end
 ```
 
-Because not_if also uses 'truthy?' on objects that are provided that are not blocks the above rule can also be written like this:
+Because not_if uses 'truthy?' on non-block objects the above rule can also be written like this:
 
 ```
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF' do
@@ -413,7 +416,7 @@ rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF' 
 end
 ```
 
-Multiple not_if statements can be used and if **any** of them are not satisfied the rule will not run. This is different than the behavior from only_if.
+Multiple not_if statements can be used and if **any** of them are not satisfied the rule will not run. 
 
 ```
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF and Door is not CLOSED' do
@@ -473,7 +476,7 @@ end
 
 
 ### Items
-Items can be directly accessed, compared, etc, without any special accessors. You may use the Item name anywhere within the code and it will automatically be loaded.
+Items can be directly accessed, compared, etc, without any special accessors. You may use the item name anywhere within the code and it will automatically be loaded.
 
 All items can be accessed as an enumerable the `items` method. 
 
@@ -649,14 +652,14 @@ Dimmers.select(&:off?).each(&:on)
 Dimmers.select(&:on?).each(&:off)
 ```
 
-`dim` dims the specified amount, defaulting to 1. If 1 is the increments, the decrease command is sent, otherwise the final number is sent as a command.
+`dim` dims the specified amount, defaulting to 1. If 1 is the amount, the decrease command is sent, otherwise the current state - amount is sent as a command.
 
 ```
 DimmerOne.dim
 DimmerOne.dim 2
 ```
 
-`brighten` brightens the specified amount, defaulting to 1. If 1 is the increments, the decrease command is sent, otherwise the final number is sent as a command.
+`brighten` brightens the specified amount, defaulting to 1. If 1 is the amount, the increase command is sent, otherwise the current state + amount is sent as a command.
 
 ```
 DimmerOne.brighten
@@ -1037,7 +1040,7 @@ unit('°C') { ( (2 * (NumberF + NumberC) ) / Dimensionless ) < 45} 	#= true     
 | --------------- | ---------- | -------------------------------------------------------------------------- | ----------------------------------------------- |
 | truthy?         |            | Item state not UNDEF, not NULL and is not blank ('') when trimmed.         | `puts "#{item.name} is truthy" if item.truthy?` |
 | String methods* |            | All methods for [Ruby String](https://ruby-doc.org/core-2.5.1/String.html) | `StringOne << StringOne + ' World!'`            |
-| blank?          |            | True if state is UNDEF, NULL, string is empty or contains only whitepspace | `StringOne << StringTwo unless StringTwo.blank?` |                                               |
+| blank?          |            | True if state is UNDEF, NULL, string is empty or contains only whitepspace | `StringOne << StringTwo unless StringTwo.blank?`|                                               
 
 * All String methods returns a copy of the current state as a string.  Methods that modify a string in place, do not modify the underlying state string. 
  
