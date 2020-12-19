@@ -22,6 +22,13 @@
 -  Ruby is really good at letting one express intent and creating a DSL within ruby to make that expression easier.
 
 
+## Source
+JRuby Scripting OpenHAB is GitHub repo is [here](https://github.com/boc-tothefuture/openhab-jruby).  Code is under the eclipse v2 license.
+
+Please feel free to open issues, PRs welcome! 
+
+
+
 ## Prerequisites
 1. OpenHAB 3
 2. The JRuby Scripting Language Addon
@@ -44,13 +51,10 @@ export GEM_HOME=<openhab_base_dir>/conf/automation/lib/ruby/gem_home
 7. Restart OpenHAB
 
 
+
 ## Rules Requirements
 1. Place Ruby rules files in `USERDATA/automation/jsr223/ruby/personal/` subdirectory
 2. Put `require 'OpenHAB'` at the top of any Ruby based rules file.
-
-
-## Ruby Gems
-[Bundler](https://bundler.io/) is integrated, enabling any [Ruby gem](https://rubygems.org/) compatible with JRuby to be used within rules. This permits easy access to the vast ecosystem libraries within the ruby community.  It would also create easy reuse of automation libraries within the OpenHAB community, any library published as a gem can be easily pulled into rules. 
 
 
 ##  Rule Syntax
@@ -1150,7 +1154,10 @@ logger.error('Test logging at error') # 2020-12-03 18:06:02.021 [ERROR] [jsr223.
 ```
 
 ### Ruby Gems
+[Bundler](https://bundler.io/) is integrated, enabling any [Ruby gem](https://rubygems.org/) compatible with JRuby to be used within rules. This permits easy access to the vast ecosystem libraries within the ruby community.  It would also create easy reuse of automation libraries within the OpenHAB community, any library published as a gem can be easily pulled into rules. 
+
 Gems are available using the [inline bundler syntax](https://bundler.io/guides/bundler_in_a_single_file_ruby_script.html). The require statement can be omitted. 
+
 
 ```
 gemfile do
@@ -1161,7 +1168,6 @@ end
 
 logger.info("The nap gem is at version #{REST::VERSION}")     
 ```
-
 
 
 ## Examples
