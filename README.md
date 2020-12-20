@@ -74,8 +74,8 @@ end
 | --------- | -------------------------------------------- | ------------- | ------------------------------------- | ------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | every     | Symbol or Duration                           | Multiple      | at: String or TimeOfDay               |         | When to execute rule                                                        | Symbol (:second, :minute, :hour, :day, :week, :month, :year, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday) or duration (5.minutes, 20.seconds, 14.hours), at: '5:15' or TimeOfDay(h:5, m:15) |
 | cron      | String                                       | Multiple      |                                       |         | OpenHAB Style Cron Expression                                               | '* * * * * * ?'                                                                                                                                                                                                       |
-| changed   | Item or Item Array[] or Group or Group.items | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch from: OFF to ON                                                                                                                                                                                    |
-| *updated* | Item or Item Array[] or Group or Group.items | Multiple      |                                       |         | Execute rule on item update                                                 | BedroomLightSwitch                                                                                                                                                                                                    |
+| changed   | Item or Item Array[] or Group or Group.items | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch, from: OFF to ON                                                                                                                                                                                    |
+| updated   | Item or Item Array[] or Group or Group.items | Multiple      | to: State                             |         | Execute rule on item update                                                 | BedroomLightSwitch, to: ON                                                                                                                                                                                                   |
 | *command* | Item or Item Array[] or Group or Group.items | Multiple      | command:                              |         | Execute rule on item command                                                | BedroomLightSwitch command: ON                                                                                                                                                                                        |
 | *channel* | Channel                                      | Multiple      | event:                                |         | Execute rule on channel trigger                                             | astro_sun_home.rise_event, event: 'START'                                                                                                                                                                             |
 | on_start  | Boolean                                      | Single        |                                       | false   | Execute rule on system start                                                | on_start                                                                                                                                                                                                              |
@@ -194,6 +194,63 @@ Real world example:
 rule 'Log (or notify) when an exterior door is left open for more than 5 minutes' do
   changed ExteriorDoors, to: OPEN, for: 5.minutes
   triggered {|door| logger.info("#{door.id} has been left open!")}
+end
+```
+
+
+##### Updated
+| Value | Description                                        | Example                 |
+| ----- | -------------------------------------------------- | ----------------------- |
+| :to   | Only execute rule if update state matches to state | `:to 7` or `:to [7,14]` | 
+
+The to value restricts the rule from running to only if the updated state matches. 
+
+The examples below assume the following background:
+```
+| type   | name             | group      | state |
+| Number | Alarm_Mode       | AlarmModes | 7     |
+| Number | Alarm_Mode_Other | AlarmModes | 7     |
+```
+
+```
+rule 'Execute rule when item is updated to any value' do
+  updated Alarm_Mode
+  run { logger.info("Alarm Mode Updated") }
+end
+```
+
+```
+rule 'Execute rule when item is updated to specific number' do
+  updated Alarm_Mode, to: 7
+  run { logger.info("Alarm Mode Updated") }
+end
+```
+
+```
+rule 'Execute rule when item is updated to one of many specific states' do
+  updated Alarm_Mode, to: [7,14]
+  run { logger.info("Alarm Mode Updated")}
+end
+```
+
+```
+rule 'Execute rule when group is updated to any state' do
+  updated AlarmModes
+  triggered { |item| logger.info("Group #{item.id} updated")}
+end  
+```
+
+```
+rule 'Execute rule when member of group is changed to any state' do
+  updated AlarmModes.items
+  triggered { |item| logger.info("Group item #{item.id} updated")}
+end 
+```
+
+```
+rule 'Execute rule when member of group is changed to one of many states' do
+  updated AlarmModes.items, to: [7,14]
+  triggered { |item| logger.info("Group item #{item.id} updated")}
 end
 ```
 
