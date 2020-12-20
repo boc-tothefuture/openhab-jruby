@@ -34,6 +34,23 @@ module OpenHAB
             @trigger_delays = { trigger.id => TriggerDelay.new(to: to, from: from, duration: duration) }
           end
 
+          def updated(*items, to: nil)
+            items.flatten.each do |item|
+              logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
+              [to].flatten.each do |to_state|
+                if item.is_a? GroupItems
+                  config = { 'groupName' => item.group.name }
+                  trigger = Trigger::GROUP_STATE_UPDATE
+                else
+                  config = { 'itemName' => item.name }
+                  trigger = Trigger::ITEM_STATE_UPDATE
+                end
+                config['state'] = to_state.to_s unless to_state.nil?
+                @triggers << Trigger.trigger(type: trigger, config: config)
+              end
+            end
+          end
+
           def changed(*items, to: nil, from: nil, for: nil)
             items.flatten.each do |item|
               item = item.group if item.is_a? Group
