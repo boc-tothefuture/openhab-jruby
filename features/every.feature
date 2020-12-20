@@ -6,13 +6,13 @@ Feature:  Rule languages supports cron features
   Scenario: Using cron shortcuts ':minute'
     Given a rule
       """
-      rule 'Log an entry every minute' do
+      rule 'Log the rule name every minute' do
         every :minute
-        run { logger.info "Rule #{name} executed" }
+        run { logger.info "Rule '#{name}' executed" }
       end
       """
     When I deploy the rule
-    Then It should log 'Rule Log an entry every minute executed' within 60 seconds
+    Then It should log "Rule 'Log the rule name every minute' executed" within 60 seconds
 
   Scenario Outline: Cron support days of the week and time of day
     Given a rule template:
