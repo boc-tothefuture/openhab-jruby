@@ -8,7 +8,7 @@
 - Create a Frictionless experience for building automation
 - The common, yet tricky tasks are abstracted and made easy. e.g. Running a rule between only certain hours of the day
 - Tested
-	- Designed and tested using (Behavior Driven Development)[https://en.wikipedia.org/wiki/Behavior-driven_development] with (Cucumber)[https://cucumber.io/]
+	- Designed and tested using [Behavior Driven Development](https://en.wikipedia.org/wiki/Behavior-driven_development) with [Cucumber](https://cucumber.io/)
 	- Current tests are [here](https://github.com/boc-tothefuture/openhab-jruby/tree/main/features)  Reviewing them is a great way to explore the language features
 - Extensible
 	- Anyone should be able to customize and add/remove core language features
@@ -125,9 +125,9 @@ Multiple indicates that multiple entries of the same property can be used in agg
 ##### Examples
 
 ```
-rule 'Log an entry every minute' do
+rule 'Log the rule name every minute' do
   every :minute
-  run { logger.info "Rule #{name} executed" }
+  run { logger.info "Rule '#{name}' executed" }
 end
 ```
 
