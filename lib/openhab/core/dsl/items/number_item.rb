@@ -52,7 +52,7 @@ module OpenHAB
             case other
             when NumberItem
               if other.dimension
-                logger.trace("Other is dimensioned, converting self and other to QuantityTypes to compare")
+                logger.trace('Other is dimensioned, converting self and other to QuantityTypes to compare')
                 to_qt <=> other.to_qt
               else
                 @number_item.state <=> other.state
