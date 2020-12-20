@@ -163,6 +163,18 @@ end
 ```
 
 
+##### Cron
+Utilizes [OpenHAB style cron expressions](https://www.openhab.org/docs/configuration/rules-dsl.html#time-based-triggers) to trigger rules.  This property can be utilized when you need to represent complex expressions not possible with the simpler [every](##### Every) syntax.
+
+```
+rule 'Using Cron Syntax' do
+  cron '43 46 13 ? * ?'
+  run { logger.info "Cron rule executed" }
+end
+```
+
+
+
 ##### Changed
 | Value | Description                                            | Example         |
 | ----- | ------------------------------------------------------ | --------------- |
