@@ -583,6 +583,7 @@ Item types have methods added to them to make it flow naturally within the a rub
 | ------- | ------------------------------------------------- | ------------------------------------------------------------ |
 | <<      | Sends command to item                             | `VirtualSwich << ON`                                         |
 | command | alias for shovel operator (<<)                    | `VirtualSwich.command(ON)`                                   |
+| update  | Sends update to an item                           | `VirtualSwitch.update(ON)`                                                              |
 | id      | Returns label or item name if no label            | `logger.info(#{item.id})`                                    |
 | undef?  | Returns true if the state of the item is UNDEF    | `logger.info("SwitchTest is UNDEF") if SwitchTest.undef?`    |
 | null?   | Returns true if the state of the item is NULL     | `logger.info("SwitchTest is NULL") if SwitchTest.null?`      |

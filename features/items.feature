@@ -146,3 +146,19 @@ Feature:  Rule languages supports groups
     When I deploy the rules file
     Then It should log "Max is 70" within 5 seconds
     And It should log "Min is 50" within 5 seconds
+
+
+  Scenario: Send update to an item
+    Given a deployed rule:
+      """
+      rule 'Item Updated' do
+        updated SwitchTest, to: OFF
+        run { logger.info("SwitchTest Received Update") }
+      end
+      """
+    And code in a rules file
+      """
+      SwitchTest.update OFF
+      """
+    When I deploy the rules file
+    Then It should log "SwitchTest Received Update" within 5 seconds
