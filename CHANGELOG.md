@@ -7,6 +7,10 @@ Commit convention is based on [Conventional Commits](http://conventionalcommits.
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
 
+## Unreleased
+### Added
+- Ability to send updates from item objects
+
 ## 0.1.0
 ### Added
 - Support for item updates within rules languages

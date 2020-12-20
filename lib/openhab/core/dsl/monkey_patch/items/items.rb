@@ -30,6 +30,11 @@ module OpenHAB
               command(command)
             end
 
+            def update(update)
+              logger.trace "Sending Update #{update} to #{id}"
+              BusEvent.postUpdate(self, update.to_s)
+            end
+
             def undef?
               # Need to explicitly call the super method version because this state will never return UNDEF
               method(:state).super_method.call == UnDefType::UNDEF
