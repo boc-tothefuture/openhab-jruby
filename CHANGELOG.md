@@ -10,6 +10,8 @@ Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <b
 ## 0.1.0
 ### Added
 - Support for item updates within rules languages
+### Changed
+- Installation instructions to specify using latest release rather than a specific version
 
 ## 0.0.1 
 - Initial release
