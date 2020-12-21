@@ -1413,17 +1413,4 @@ rule 'Use supplemental heat in office' do
 end
 ```
 
-## To Do
-1. CI/CD Automated Testing
-2. Internal restructuring of modules/classes
-3. Rubocop fixes
-4. Method/Class Documentation 
-5. Add support for missing rule operations
-6. Add support for missing item types
-7. Add support for Things/Channels
-8. Add support for missing operations (update, etc)
-9. Logging normalization and cleanup
-10. Add support for actions (including notify)
-11. Add support for transformations
-12. Modify based on feedback from the community
-13. Provide more conversions examples as more missing elements are added to the language
+
