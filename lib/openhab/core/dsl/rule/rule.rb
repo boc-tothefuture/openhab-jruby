@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'pp'
 require 'core/dsl/property'
 require 'core/dsl/rule/cron'
 require 'core/dsl/rule/triggers'
@@ -161,7 +162,8 @@ module OpenHAB
           end
 
           def execute(mod, inputs)
-            logger.trace("Execute called with mod (#{mod}) and inputs (#{inputs})")
+            logger.trace { "Execute called with mod (#{mod.to_string}) and inputs (#{inputs.pretty_inspect}" }
+            logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs.key?('event')
             if trigger_delay inputs
               process_trigger_delay(mod, inputs)
             else
@@ -217,6 +219,22 @@ module OpenHAB
                 task.block.call(event)
 
               end
+            end
+          end
+
+          private
+
+          def inspect_hash(hash)
+            hash.each_with_object({}) do |(key, value), new_hash|
+              new_hash[inspect_item(key)] = inspect_item(value)
+            end
+          end
+
+          def inspect_item(item)
+            if item.respond_to? :to_string
+              item.to_string
+            elsif item.respond_to? :to_str
+              item.to_str
             end
           end
         end

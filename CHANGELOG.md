@@ -7,9 +7,13 @@ Commit convention is based on [Conventional Commits](http://conventionalcommits.
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
 
-## Unreleased
+## 0.2.0
 ### Added
+- Ability to execute rules based on commands sent to items, groups and group members
 - Ability to send updates from item objects
+
+### Changed
+- Fixed documentation for comparing dimensioned items against strings
 
 ## 0.1.0
 ### Added

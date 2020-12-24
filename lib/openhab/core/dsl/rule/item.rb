@@ -34,6 +34,23 @@ module OpenHAB
             @trigger_delays = { trigger.id => TriggerDelay.new(to: to, from: from, duration: duration) }
           end
 
+          def commanded(*items, only: nil)
+            items.flatten.each do |item|
+              logger.trace("Creating received command trigger for item(#{item}) only(#{only})")
+              [only].flatten.each do |command|
+                if item.is_a? GroupItems
+                  config = { 'groupName' => item.group.name }
+                  trigger = Trigger::GROUP_COMMAND
+                else
+                  config = { 'itemName' => item.name }
+                  trigger = Trigger::ITEM_COMMAND
+                end
+                config['command'] = command.to_s unless command.nil?
+                @triggers << Trigger.trigger(type: trigger, config: config)
+              end
+            end
+          end
+
           def updated(*items, to: nil)
             items.flatten.each do |item|
               logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
