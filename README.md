@@ -76,7 +76,7 @@ end
 | cron      | String                                       | Multiple      |                                       |         | OpenHAB Style Cron Expression                                               | '* * * * * * ?'                                                                                                                                                                                                       |
 | changed   | Item or Item Array[] or Group or Group.items | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch, from: OFF to ON                                                                                                                                                                                    |
 | updated   | Item or Item Array[] or Group or Group.items | Multiple      | to: State                             |         | Execute rule on item update                                                 | BedroomLightSwitch, to: ON                                                                                                                                                                                                   |
-| *command* | Item or Item Array[] or Group or Group.items | Multiple      | command:                              |         | Execute rule on item command                                                | BedroomLightSwitch command: ON                                                                                                                                                                                        |
+| commanded | Item or Item Array[] or Group or Group.items | Multiple      | command:                              |         | Execute rule on item command                                                | BedroomLightSwitch command: ON                                                                                                                                                                                        |
 | *channel* | Channel                                      | Multiple      | event:                                |         | Execute rule on channel trigger                                             | astro_sun_home.rise_event, event: 'START'                                                                                                                                                                             |
 | on_start  | Boolean                                      | Single        |                                       | false   | Execute rule on system start                                                | on_start                                                                                                                                                                                                              |
 | run       | Block passed event                           | Multiple      |                                       |         | Code to execute on rule trigger                                             |                                                                                                                                                                                                                       |
@@ -267,18 +267,83 @@ end
 ```
 
 
+##### Commanded
+| Value | Description                                                          | Example                     |
+| ----- | -------------------------------------------------------------------- | --------------------------- |
+| :only | Only execute rule if the command matches this/these command/commands | `:only 7` or `:only [7,14]` | 
+
+The only value restricts the rule from running to only if the command matches
+
+The examples below assume the following background:
+```
+| type   | name             | group      | state |
+| Number | Alarm_Mode       | AlarmModes | 7     |
+| Number | Alarm_Mode_Other | AlarmModes | 7     |
+```
+
+```
+rule 'Execute rule when item received command' do
+  commanded Alarm_Mode
+  run { |event| logger.info("Item received command: #{event.command}" ) }
+end
+```
+
+```
+rule 'Execute rule when item receives specific command' do
+  commanded Alarm_Mode, only: 7
+  run { |event| logger.info("Item received command: #{event.command}" ) }
+end
+```
+
+```
+rule 'Execute rule when item receives one of many specific commands' do
+  commanded Alarm_Mode, only: [7,14]
+  run { |event| logger.info("Item received command: #{event.command}" ) }
+end
+```
+
+```
+rule 'Execute rule when group receives a specific command' do
+  commanded AlarmModes
+  triggered { |item| logger.info("Group #{item.id} received command")}
+end
+```
+
+```
+rule 'Execute rule when member of group receives any command' do
+  commanded AlarmModes.items
+  triggered { |item| logger.info("Group item #{item.id} received command")}
+end
+```
+
+```
+rule 'Execute rule when member of group is changed to one of many states' do
+  commanded AlarmModes.items, only: [7,14]
+  triggered { |item| logger.info("Group item #{item.id} received command")}
+end
+```
+
+
 ### Execution Blocks
 
 #### Run
 The run property is the automation code that is executed when a rule is triggered.  This property accepts a block of code and executes it. The block is automatically passed an event object which can be used to access multiple properties about the triggering event.  The code for the automation can be entirely within the run block can call methods defined in the ruby script.
 
-##### Event Properties
+##### State/Update Event Properties
+The following properties exist when a run block is triggered from an [updated](##### Updated) or [changed](##### Changed) trigger. 
+
 | Property | Description                      |
 | -------- | -------------------------------- |
 | item     | Triggering item                  |
 | state    | Changed state of triggering item |
-| last     | Last state of triggering item    | 
+| last     | Last state of triggering item    |
 
+##### Command Event Properties
+The following properties exist when a run block is triggered from an [commanded](##### Commanded)
+
+| Property | Description                      |
+| -------- | -------------------------------- |
+| command  | Command sent to item             | 
 
 
 `{}` Style used for single line blocks

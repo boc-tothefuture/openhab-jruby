@@ -11,10 +11,14 @@ module OpenHAB
           java_import org.openhab.core.automation.util.TriggerBuilder
           java_import org.openhab.core.config.core.Configuration
 
+          ITEM_COMMAND = 'core.ItemCommandTrigger'
           ITEM_STATE_UPDATE = 'core.ItemStateUpdateTrigger'
           ITEM_STATE_CHANGE = 'core.ItemStateChangeTrigger'
+
           GROUP_STATE_CHANGE = 'core.GroupStateChangeTrigger'
           GROUP_STATE_UPDATE = 'core.GroupStateUpdateTrigger'
+          GROUP_COMMAND = 'core.GroupCommandTrigger'
+
           TIME_OF_DAY = 'timer.TimeOfDayTrigger'
           CRON = 'timer.GenericCronTrigger'
 
