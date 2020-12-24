@@ -1077,7 +1077,8 @@ Comparisons work with dimensioned numbers and strings representing quantities
 # Number:Temperature NumberC = 23 °C
 # Number:Temperature NumberF = 70 °F
 
-NumberC > NumberF # = true
+NumberC > '4 °F'   #= true 
+NumberC == '23 °C' #= true  
 ```
 
 For certain unit types, such as temperature, all unit needs to be normalized to the comparator for all operations when combining comparison operators with dimensioned numbers.
