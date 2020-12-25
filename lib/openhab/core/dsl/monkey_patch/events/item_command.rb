@@ -5,5 +5,4 @@ class Java::OrgOpenhabCoreItemsEvents::ItemCommandEvent
   # rubocop:enable Style/ClassAndModuleChildren
 
   alias command item_command
-
 end

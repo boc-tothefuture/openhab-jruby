@@ -267,12 +267,13 @@ end
 ```
 
 
-##### Commanded
-| Value | Description                                                          | Example                     |
-| ----- | -------------------------------------------------------------------- | --------------------------- |
-| :only | Only execute rule if the command matches this/these command/commands | `:only 7` or `:only [7,14]` | 
+##### Received Command
+| Value     | Description                                                          | Example                            |
+| --------- | -------------------------------------------------------------------- | ---------------------------------- |
+| :command  | Only execute rule if the command matches this/these command/commands | `:command 7` or `:commands [7,14]` |
+| :commands | Alias of command, may be used if matching more than one command      | `:commands [7,14]`                 | 
 
-The only value restricts the rule from running to only if the command matches
+The `command` value restricts the rule from running to only if the command matches
 
 The examples below assume the following background:
 ```
@@ -283,42 +284,42 @@ The examples below assume the following background:
 
 ```
 rule 'Execute rule when item received command' do
-  commanded Alarm_Mode
+  received_command Alarm_Mode
   run { |event| logger.info("Item received command: #{event.command}" ) }
 end
 ```
 
 ```
 rule 'Execute rule when item receives specific command' do
-  commanded Alarm_Mode, only: 7
+  received_command Alarm_Mode, only: 7
   run { |event| logger.info("Item received command: #{event.command}" ) }
 end
 ```
 
 ```
 rule 'Execute rule when item receives one of many specific commands' do
-  commanded Alarm_Mode, only: [7,14]
+  received_command Alarm_Mode, only: [7,14]
   run { |event| logger.info("Item received command: #{event.command}" ) }
 end
 ```
 
 ```
 rule 'Execute rule when group receives a specific command' do
-  commanded AlarmModes
+  received_command AlarmModes
   triggered { |item| logger.info("Group #{item.id} received command")}
 end
 ```
 
 ```
 rule 'Execute rule when member of group receives any command' do
-  commanded AlarmModes.items
+  received_command AlarmModes.items
   triggered { |item| logger.info("Group item #{item.id} received command")}
 end
 ```
 
 ```
 rule 'Execute rule when member of group is changed to one of many states' do
-  commanded AlarmModes.items, only: [7,14]
+  received_command AlarmModes.items, only: [7,14]
   triggered { |item| logger.info("Group item #{item.id} received command")}
 end
 ```
@@ -339,7 +340,7 @@ The following properties exist when a run block is triggered from an [updated](#
 | last     | Last state of triggering item    |
 
 ##### Command Event Properties
-The following properties exist when a run block is triggered from an [commanded](##### Commanded)
+The following properties exist when a run block is triggered from a [received_command](##### Received Command) trigger.
 
 | Property | Description                      |
 | -------- | -------------------------------- |
