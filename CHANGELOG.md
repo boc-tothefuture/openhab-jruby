@@ -6,6 +6,9 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 1.0.0
+### Changed
+- **Breaking:** Changed commanded method for rules to received_command
 
 ## 0.2.0
 ### Added

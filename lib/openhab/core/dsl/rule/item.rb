@@ -34,10 +34,19 @@ module OpenHAB
             @trigger_delays = { trigger.id => TriggerDelay.new(to: to, from: from, duration: duration) }
           end
 
-          def commanded(*items, only: nil)
+          def received_command(*items, command: nil, commands: nil)
             items.flatten.each do |item|
-              logger.trace("Creating received command trigger for item(#{item}) only(#{only})")
-              [only].flatten.each do |command|
+              logger.trace("Creating received command trigger for item(#{item}) command(#{command}) commands(#{commands})")
+
+              # Combine command and commands, doing union so only a singel nil will be in the combined array.
+              combined_commands = ([command] | [commands]).flatten
+
+              # If either command or commands has a value and one is nil, we need to remove nil from the array.
+              # If it is only now a single nil value, we leave the nil in place, so that we create a trigger
+              # That isn't looking for a specific command.
+              combined_commands = combined_commands.compact unless combined_commands.all?(&:nil?)
+
+              combined_commands.each do |cmd|
                 if item.is_a? GroupItems
                   config = { 'groupName' => item.group.name }
                   trigger = Trigger::GROUP_COMMAND
@@ -45,7 +54,7 @@ module OpenHAB
                   config = { 'itemName' => item.name }
                   trigger = Trigger::ITEM_COMMAND
                 end
-                config['command'] = command.to_s unless command.nil?
+                config['command'] = cmd.to_s unless cmd.nil?
                 @triggers << Trigger.trigger(type: trigger, config: config)
               end
             end
