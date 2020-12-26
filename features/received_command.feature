@@ -1,4 +1,4 @@
-Feature:  Rule languages supports changed item features
+Feature:  Rule languages supports received command features
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
