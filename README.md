@@ -38,7 +38,7 @@ Please feel free to open issues, PRs welcome!
 This is an alpha and syntax and all elements are subject to change as the library evolves.
 
 ## Installation
-1. Install the latest Jruby Scripting Language Addon from [here](https://github.com/boc-tothefuture/openhab-jruby/releases/)
+1. Install the latest Jruby Scripting Language Addon from [here](https://github.com/boc-tothefuture/openhab-jruby/releases/) to the folder `<openhab_base_dir>/addons/`
 2. Create directory for JRuby Libraries `<openhab_base_dir>/conf/automation/lib/ruby/lib`
 3. Create directory for Ruby Gems `<openhab_base_dir>/conf/automation/lib/ruby/gem_home`
 4. Download latest JRuby Libraries from [here](https://github.com/boc-tothefuture/openhab-jruby/releases/)
@@ -54,12 +54,12 @@ export GEM_HOME=<openhab_base_dir>/conf/automation/lib/ruby/gem_home
 
 ## Rules Requirements
 1. Place Ruby rules files in `USERDATA/automation/jsr223/ruby/personal/` subdirectory
-2. Put `require 'OpenHAB'` at the top of any Ruby based rules file.
+2. Put `require 'openhab'` at the top of any Ruby based rules file.
 
 
 ##  Rule Syntax
 ```
-require 'OpenHAB'
+require 'openhab'
 
 rule 'name' do
    <zero or more triggers>
