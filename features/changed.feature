@@ -114,3 +114,23 @@ Feature:  Rule languages supports changed item features
     And item "Switch2" state is changed to "ON"
     Then It should log 'Switch Switch Number Two changed' within 5 seconds
 
+  Scenario Outline: Item changed fires for appropriate state changes
+    Given items:
+      | type   | name       | state           |
+      | Switch | TestSwitch | <initial_state> |
+    And a rule
+      """
+      rule 'Execute rule when item is changed from one state to another' do
+        changed TestSwitch
+        run { logger.info("Switch Changed")}
+      end
+      """
+    When I deploy the rule
+    And item "TestSwitch" state is changed to "<state>"
+    Then It <should> log 'Switch Changed' within 5 seconds
+    Examples:
+      | initial_state | state | should     |
+      | OFF           | OFF   | should not |
+      | OFF           | ON    | should     |
+      | ON            | ON    | should not |
+      | ON            | OFF   | should     |
