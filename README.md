@@ -53,7 +53,7 @@ export GEM_HOME=<openhab_base_dir>/conf/automation/lib/ruby/gem_home
 
 
 ## Rules Requirements
-1. Place Ruby rules files in `USERDATA/automation/jsr223/ruby/personal/` subdirectory
+1. Place Ruby rules files in `ruby/personal/` subdirectory for OpenHAB scripted automation.  See [OpenHAB documentation](https://www.openhab.org/docs/configuration/jsr223.html#script-locations) for parent directory location.
 2. Put `require 'openhab'` at the top of any Ruby based rules file.
 
 
