@@ -9,7 +9,7 @@ end
 
 def openhab_client(command)
   karaf_client_path = File.join(openhab_dir, 'runtime/bin/client')
-  # Kernel.puts `#{karaf_client_path} -p habopen "#{command}"`
+   #Kernel.puts `#{karaf_client_path} -p habopen "#{command}"`
   `#{karaf_client_path} -p habopen "#{command}"`
   abort("OpenHAB command (#{command}) failed.") unless $CHILD_STATUS == 0
 end

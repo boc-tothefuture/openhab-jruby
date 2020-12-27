@@ -11,6 +11,8 @@ module OpenHAB
           java_import org.openhab.core.automation.util.TriggerBuilder
           java_import org.openhab.core.config.core.Configuration
 
+          CHANNEL_EVENT = 'core.ChannelEventTrigger'
+
           ITEM_COMMAND = 'core.ItemCommandTrigger'
           ITEM_STATE_UPDATE = 'core.ItemStateUpdateTrigger'
           ITEM_STATE_CHANGE = 'core.ItemStateChangeTrigger'

@@ -6,6 +6,7 @@ require 'core/dsl/property'
 require 'core/dsl/rule/cron'
 require 'core/dsl/rule/triggers'
 require 'core/dsl/rule/item'
+require 'core/dsl/rule/channel'
 require 'core/dsl/rule/guard'
 require 'core/dsl/items/items'
 require 'core/dsl/entities'
@@ -21,6 +22,7 @@ module OpenHAB
           include OpenHAB::Core::DSL::Rule::Cron
           include Guard
           include Item
+          include Channel
           include Items
           include DSLProperty
           include Actions

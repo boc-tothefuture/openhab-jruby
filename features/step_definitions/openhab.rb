@@ -92,6 +92,14 @@ When('update state for item {string} to {string}') do |item, state|
   openhab_client("openhab:update #{item} #{state}")
 end
 
+When('channel {string} is triggered') do |channel|
+  openhab_client("openhab:things trigger #{channel}")
+end
+
+When('channel {string} is triggered with {string}') do |channel, event|
+  openhab_client("openhab:things trigger #{channel} #{event}")
+end
+
 Then('{string} should be in state {string} within {int} seconds') do |item, state, seconds|
   msg = -> { "'#{item}' did not get set to (#{state}) was (#{Rest.item_state(item)}) within #{seconds} seconds" }
 
