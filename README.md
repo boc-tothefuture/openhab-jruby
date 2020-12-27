@@ -74,10 +74,10 @@ end
 | --------- | -------------------------------------------- | ------------- | ------------------------------------- | ------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | every     | Symbol or Duration                           | Multiple      | at: String or TimeOfDay               |         | When to execute rule                                                        | Symbol (:second, :minute, :hour, :day, :week, :month, :year, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday) or duration (5.minutes, 20.seconds, 14.hours), at: '5:15' or TimeOfDay(h:5, m:15) |
 | cron      | String                                       | Multiple      |                                       |         | OpenHAB Style Cron Expression                                               | '* * * * * * ?'                                                                                                                                                                                                       |
-| changed   | Item or Item Array[] or Group or Group.items | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch, from: OFF to ON                                                                                                                                                                                    |
-| updated   | Item or Item Array[] or Group or Group.items | Multiple      | to: State                             |         | Execute rule on item update                                                 | BedroomLightSwitch, to: ON                                                                                                                                                                                                   |
+| changed   | Item or Item Array[] or Group or Group.items | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch, from: OFF to ON                                                                                                                                                                                   |
+| updated   | Item or Item Array[] or Group or Group.items | Multiple      | to: State                             |         | Execute rule on item update                                                 | BedroomLightSwitch, to: ON                                                                                                                                                                                            |
 | commanded | Item or Item Array[] or Group or Group.items | Multiple      | command:                              |         | Execute rule on item command                                                | BedroomLightSwitch command: ON                                                                                                                                                                                        |
-| *channel* | Channel                                      | Multiple      | event:                                |         | Execute rule on channel trigger                                             | astro_sun_home.rise_event, event: 'START'                                                                                                                                                                             |
+| channel   | Channel                                      | Multiple      | triggered:                            |         | Execute rule on channel trigger                                             | `'astro:sun:home:rise#event', triggered: 'START'`                                                                                                                                                                             |
 | on_start  | Boolean                                      | Single        |                                       | false   | Execute rule on system start                                                | on_start                                                                                                                                                                                                              |
 | run       | Block passed event                           | Multiple      |                                       |         | Code to execute on rule trigger                                             |                                                                                                                                                                                                                       |
 | triggered | Block passed item                            | Multiple      |                                       |         | Code with triggering item to execute on rule trigger                        |                                                                                                                                                                                                                       |
@@ -176,11 +176,11 @@ end
 
 
 ##### Changed
-| Value | Description                                            | Example         |
-| ----- | ------------------------------------------------------ | --------------- |
-| :from | Only execute rule if previous state matches from state | :from OFF       |
-| :to   | Only execute rule if new state matches from state      | :to ON          |
-| :for  | Only execute rule if value stays changed for duration  | :for 10.seconds | 
+| Options | Description                                            | Example         |
+| ------- | ------------------------------------------------------ | --------------- |
+| from    | Only execute rule if previous state matches from state | from: OFF       |
+| to      | Only execute rule if new state matches from state      | to: ON          |
+| for     | Only execute rule if value stays changed for duration  | for: 10.seconds | 
 
 
 The from and to values operate exactly as they do in the DSL and Python rules. The for parameter provides a method of only executing the rule if the value is changed for a specific duration.  This provides a built-in method of only executing a rule if a condition is true for a period of time without the need to create dummy objects with the expire binding or make or manage your own timers.
@@ -211,9 +211,9 @@ end
 
 
 ##### Updated
-| Value | Description                                        | Example                 |
-| ----- | -------------------------------------------------- | ----------------------- |
-| :to   | Only execute rule if update state matches to state | `:to 7` or `:to [7,14]` | 
+| Options | Description                                        | Example                 |
+| ------- | -------------------------------------------------- | ----------------------- |
+| to      | Only execute rule if update state matches to state | `to: 7` or `to: [7,14]` | 
 
 The to value restricts the rule from running to only if the updated state matches. 
 
@@ -268,10 +268,10 @@ end
 
 
 ##### Received Command
-| Value     | Description                                                          | Example                            |
-| --------- | -------------------------------------------------------------------- | ---------------------------------- |
-| :command  | Only execute rule if the command matches this/these command/commands | `:command 7` or `:commands [7,14]` |
-| :commands | Alias of command, may be used if matching more than one command      | `:commands [7,14]`                 | 
+| Options  | Description                                                          | Example                            |
+| -------- | -------------------------------------------------------------------- | ---------------------------------- |
+| command  | Only execute rule if the command matches this/these command/commands | `command: 7` or `commands: [7,14]` | 
+| commands | Alias of command, may be used if matching more than one command      | `commands: [7,14]`                 |
 
 The `command` value restricts the rule from running to only if the command matches
 
@@ -324,6 +324,51 @@ rule 'Execute rule when member of group is changed to one of many states' do
 end
 ```
 
+
+##### channel
+| Option    | Description                                                                   | Example                                                |
+| --------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
+| triggered | Only execute rule if the event on the channel matches this/these event/events | `triggered: 'START' ` or `triggered: ['START','STOP']` |
+| thing     | Thing for specified channels                                                  | `thing: 'astro:sun:home'`                              |
+
+The channel trigger executes rule when a specific channel is triggered.  The syntax supports one or more channels with one or more triggers.   For `thing` is an optional parameter that makes it easier to set triggers on multiple channels on the same thing.
+
+
+```
+rule 'Execute rule when channel is triggered' do
+  channel 'astro:sun:home:rise#event'      
+  run { logger.info("Channel triggered") }
+end
+
+# The above is the same as the below
+
+rule 'Execute rule when channel is triggered' do
+  channel 'rise#event', thing: 'astro:sun:home'   
+  run { logger.info("Channel triggered") }
+end
+
+```
+
+```
+rule 'Rule provides access to channel trigger events in run block' do
+  channel 'astro:sun:home:rise#event', triggered: 'START'
+  run { |trigger| logger.info("Channel(#{trigger.channel}) triggered event: #{trigger.event}") }
+end
+```
+
+```
+rule 'Rules support multiple channels' do
+  channel ['rise#event','set#event'], thing: 'astro:sun:home' 
+  run { logger.info("Channel triggered") }
+end
+```
+
+```
+rule 'Rules support multiple channels and triggers' do
+  channel ['rise#event','set#event'], thing: 'astro:sun:home', triggered: ['START', 'STOP'] 
+  run { logger.info("Channel triggered") }
+end
+```
 
 ### Execution Blocks
 
