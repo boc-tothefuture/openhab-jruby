@@ -1403,7 +1403,7 @@ end
 ```
 
 ```
-# Timers can be rescheduled to run again
+# Timers can be rescheduled to run again, waiting the original duration
 after(3.seconds) do |timer|
   logger.info("Timer Fired")
   timer.reschedule
