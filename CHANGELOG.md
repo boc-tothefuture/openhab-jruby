@@ -6,6 +6,14 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 2.0.0
+### Added
+- Timer delegate for `after` method that supports reschedule
+
+### Changed
+- **Breaking:** `after` now returns a ruby Timer delegate
+
+
 ## 1.1.0
 ### Added
 - Added support for channels triggers to rules
