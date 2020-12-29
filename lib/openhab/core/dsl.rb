@@ -9,6 +9,7 @@ require 'core/dsl/monkey_patch/items/items'
 require 'core/dsl/monkey_patch/types/types'
 require 'core/dsl/rule/rule'
 require 'core/dsl/actions'
+require 'core/dsl/timers'
 require 'core/dsl/group'
 require 'core/dsl/items/items'
 require 'core/dsl/items/number_item'
@@ -23,6 +24,7 @@ module DSL
   include OpenHAB::Core::DSL::Types
   include OpenHAB::Core::DSL::Groups
   include OpenHAB::Core::DSL::Units
-  include Actions
+  include OpenHAB::Core::DSL::Actions
+  include OpenHAB::Core::DSL::Timers
   include Things
 end

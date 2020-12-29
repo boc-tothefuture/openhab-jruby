@@ -3,15 +3,14 @@
 require 'java'
 require 'core/duration'
 
-module Actions
-  java_import org.openhab.core.model.script.actions.ScriptExecution
-  java_import java.time.ZonedDateTime
+module OpenHAB
+  module Core
+    module DSL
+      module Actions
+        #  def notify(user:, msg:); end
 
-  def after(duration, &block)
-    ScriptExecution.createTimer(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(duration.to_ms)), block)
+        #  def notifyAll(message); end
+      end
+    end
   end
-
-  #  def notify(user:, msg:); end
-
-  #  def notifyAll(message); end
 end

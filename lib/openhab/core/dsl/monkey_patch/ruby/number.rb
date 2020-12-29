@@ -32,6 +32,7 @@ module OpenHAB
 
             alias second seconds
             alias millisecond milliseconds
+            alias ms milliseconds
             alias minute minutes
             alias hour hours
           end

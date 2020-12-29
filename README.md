@@ -1354,6 +1354,70 @@ end
 logger.info("The nap gem is at version #{REST::VERSION}")     
 ```
 
+### Duration
+[Ruby integers](https://ruby-doc.org/core-2.5.0/Integer.html) are extended with several methods to support durations.  These methods create a new duration object that is used by the [Every trigger](##### Every), the [for option](##### Changed) and [timers](### Timers). 
+
+Extended Methods
+
+| Method                            | Description                    |
+| --------------------------------- | ------------------------------ |
+| hour or hours                     | Convert number to hours        |
+| minute or minutes                 | Convert number to minutes      |
+| second or seconds                 | Convert number to seconds      |
+| millisecond or milliseconds or ms | Convert number to milliseconds |
+
+
+### Timers
+Timers are created using the `after` method. 
+
+After method parameters
+
+| Parameter | Description                                                        |
+| --------- | ------------------------------------------------------------------ |
+| duration  | Duration for timer                                                 |
+| block     | Block to execute after duration, block will be passed timer object | 
+
+Timer Object
+The timer object has all of the methods of the [OpenHAB Timer](https://www.openhab.org/docs/configuration/actions.html#timers) with a change to the reschedule method to enable it to operate Ruby context. 
+
+
+`reschedule` method parameters
+
+| Parameter | Description                                                                         |
+| --------- | ----------------------------------------------------------------------------------- |
+| duration  | Optional [duration](### Duration) if unspecified original duration supplied to after method is used | 
+
+
+
+```
+after(5.seconds) do
+  logger.info("Timer Fired")
+end
+```
+
+```
+# Timers delegate methods to OpenHAB timer objects
+after(1.seconds) do |timer|
+  logger.info("Timer is active? #{timer.is_active}")
+end
+```
+
+```
+# Timers can be rescheduled to run again
+after(3.seconds) do |timer|
+  logger.info("Timer Fired")
+  timer.reschedule
+end
+```
+
+```
+# Timers can be rescheduled for different durations
+after(3.seconds) do |timer|
+  logger.info("Timer Fired")
+  timer.reschedule 5.seconds
+end
+```
+
 
 ## Examples
 
