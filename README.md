@@ -1390,21 +1390,21 @@ The timer object has all of the methods of the [OpenHAB Timer](https://www.openh
 
 
 ```
-after(5.seconds) do
+after 5.seconds  do
   logger.info("Timer Fired")
 end
 ```
 
 ```
 # Timers delegate methods to OpenHAB timer objects
-after(1.seconds) do |timer|
+after 1.second do |timer|
   logger.info("Timer is active? #{timer.is_active}")
 end
 ```
 
 ```
 # Timers can be rescheduled to run again, waiting the original duration
-after(3.seconds) do |timer|
+after 3.seconds do |timer|
   logger.info("Timer Fired")
   timer.reschedule
 end
@@ -1412,7 +1412,7 @@ end
 
 ```
 # Timers can be rescheduled for different durations
-after(3.seconds) do |timer|
+after 3.seconds do |timer|
   logger.info("Timer Fired")
   timer.reschedule 5.seconds
 end

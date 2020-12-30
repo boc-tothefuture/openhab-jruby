@@ -12,8 +12,8 @@ module OpenHAB
   def self.extended(base)
     base.extend Logging
     base.extend Debug
-    base.extend DSL
     base.extend EntityLookup
+    base.extend OpenHAB::Core::DSL
     base.extend OpenHAB::Core::DSL::Tod
 
     base.send :include, OpenHAB::Core::DSL::Tod

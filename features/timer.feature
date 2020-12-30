@@ -6,7 +6,7 @@ Feature:  Openhab Timer Support
   Scenario: Timers can be created with `after`
     Given code in a rules file
       """
-      after(5.seconds) do
+      after 5.seconds do
         logger.info("Timer Fired")
       end
       """
@@ -15,10 +15,29 @@ Feature:  Openhab Timer Support
     But if I wait 2 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
+  Scenario: Timers work inside of rules
+    Given a rule
+      """
+      rule 'test timers' do
+      on_start
+      run do
+       after 5.seconds do
+         logger.info("Timer Fired")
+       end
+      end
+      end
+      """
+    When I deploy the rules file
+    Then It should not log 'Timer Fired' within 4 seconds
+    But if I wait 2 seconds
+    Then It should log 'Timer Fired' within 5 seconds
+
+
+
   Scenario: Timers have access to OpenHAB timer methods
     Given code in a rules file
       """
-      after(1.seconds) do |timer|
+      after 1.second do |timer|
         logger.info("Timer is active? #{timer.is_active}")
       end
       """
@@ -30,7 +49,7 @@ Feature:  Openhab Timer Support
     Given code in a rules file
       """
       count = 0
-      after(3.seconds) do |timer|
+      after 3.seconds do |timer|
         if count > 0
           logger.info("Timer Fired")
         else
@@ -50,7 +69,7 @@ Feature:  Openhab Timer Support
     Given code in a rules file
       """
       count = 0
-      after(3.seconds) do |timer|
+      after 3.seconds do |timer|
         if count > 0
           logger.info("Timer Fired")
         else
