@@ -8,10 +8,10 @@ require 'core/dsl/rule/triggers'
 require 'core/dsl/rule/item'
 require 'core/dsl/rule/channel'
 require 'core/dsl/rule/guard'
-require 'core/dsl/items/items'
 require 'core/dsl/entities'
-require 'core/dsl/actions'
 require 'core/dsl/time_of_day'
+require 'core/dsl'
+require 'core/dsl/timers'
 
 module OpenHAB
   module Core
@@ -23,10 +23,9 @@ module OpenHAB
           include Guard
           include Item
           include Channel
-          include Items
           include DSLProperty
-          include Actions
           include Logging
+          extend OpenHAB::Core::DSL
 
           java_import org.openhab.core.library.items.SwitchItem
 
@@ -93,7 +92,6 @@ module OpenHAB
         end
 
         class Rule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
-          include Actions
           include Logging
           include OpenHAB::Core::DSL::Tod
           java_import java.time.ZonedDateTime
@@ -164,8 +162,8 @@ module OpenHAB
           end
 
           def execute(mod, inputs)
-            logger.trace { "Execute called with mod (#{mod.to_string}) and inputs (#{inputs.pretty_inspect}" }
-            logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs.key?('event')
+            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect}" }
+            logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
             if trigger_delay inputs
               process_trigger_delay(mod, inputs)
             else

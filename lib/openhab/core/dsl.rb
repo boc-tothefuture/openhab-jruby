@@ -18,13 +18,21 @@ require 'core/dsl/gems'
 require 'core/dsl/units'
 require 'core/dsl/types/quantity'
 
-module DSL
-  include OpenHAB::Core::DSL::Rule
-  include OpenHAB::Core::DSL::Items
-  include OpenHAB::Core::DSL::Types
-  include OpenHAB::Core::DSL::Groups
-  include OpenHAB::Core::DSL::Units
-  include OpenHAB::Core::DSL::Actions
-  include OpenHAB::Core::DSL::Timers
-  include Things
+module OpenHAB
+  module Core
+    module DSL
+
+      # Extend the calling module/class with the DSL
+      def self.extended(base)
+        base.send :include, OpenHAB::Core::DSL::Rule
+        base.send :include, OpenHAB::Core::DSL::Items
+        base.send :include, OpenHAB::Core::DSL::Types
+        base.send :include, OpenHAB::Core::DSL::Groups
+        base.send :include, OpenHAB::Core::DSL::Units
+        base.send :include, OpenHAB::Core::DSL::Actions
+        base.send :include, OpenHAB::Core::DSL::Timers
+        base.send :include, Things
+      end
+    end
+  end
 end
