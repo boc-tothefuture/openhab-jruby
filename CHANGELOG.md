@@ -6,6 +6,10 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 2.1.0 
+### Added
+- Timer delegate for 'active?', 'running?', 'terminated?'
+
 ## 2.0.1
 ### Fixed
 - Logging of mod and/or inputs can cause an exception of they are nil

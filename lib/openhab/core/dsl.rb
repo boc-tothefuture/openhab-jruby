@@ -21,7 +21,6 @@ require 'core/dsl/types/quantity'
 module OpenHAB
   module Core
     module DSL
-
       # Extend the calling module/class with the DSL
       def self.extended(base)
         base.send :include, OpenHAB::Core::DSL::Rule
