@@ -7,12 +7,16 @@ Commit convention is based on [Conventional Commits](http://conventionalcommits.
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
 
-## Unreleased
+## 2.2.0
 ### Added
 - Support for thing triggers in rules
 
 ### Changed
 - Updated docs to point to OpenHAB document for script locations
+
+## 2.1.0 
+### Added
+- Timer delegate for 'active?', 'running?', 'terminated?'
 
 ## 2.0.1
 ### Fixed

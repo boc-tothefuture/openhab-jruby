@@ -15,6 +15,23 @@ Feature:  Openhab Timer Support
     But if I wait 2 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
+  Scenario: Timers support 'active?', 'running?' and 'terminated?'
+    Given code in a rules file
+      """
+      timer = after 1.ms do |timer|
+        logger.info("Timer Active: #{timer.active?}")
+        logger.info("Timer Running: #{timer.running?}")
+      end
+      after 2.second do
+        logger.info("Timer Terminated: #{timer.terminated?}")
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'Timer Active: true' within 5 seconds
+    Then It should log 'Timer Running: true' within 5 seconds
+    Then It should log 'Timer Terminated: true' within 5 seconds
+
+
   Scenario: Timers work inside of rules
     Given a rule
       """
@@ -31,8 +48,6 @@ Feature:  Openhab Timer Support
     Then It should not log 'Timer Fired' within 4 seconds
     But if I wait 2 seconds
     Then It should log 'Timer Fired' within 5 seconds
-
-
 
   Scenario: Timers have access to OpenHAB timer methods
     Given code in a rules file
@@ -86,4 +101,14 @@ Feature:  Openhab Timer Support
     And if I wait 2 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
+
+  Scenario: Timers can be created without using the after syntax
+    Given code in a rules file
+      """
+      Timer.new(duration: 1.second) do |timer|
+        logger.info("Timer is active? #{timer.is_active}")
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'Timer is active? true' within 5 seconds
 
