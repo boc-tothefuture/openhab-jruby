@@ -2,6 +2,41 @@
 
 # require "#{__dir__}/../conf/automation/lib/ruby/openhab"
 require 'openhab'
+
+def bathtub_timer
+  @bathtub_timer ||= Timer.new(duration: 15.minutes) do |timer|
+    if BathTub_Light.on? && MasterBathRoom_ExhaustFan.on? 
+      timer.reschedule
+    elsif BathTub_Light.on?
+      BathTub_Light.off 
+      @bathtub_timer = nil
+    else 
+      @bathtub_timer = nil
+    end
+  end
+end
+
+rule 'Bathtub Light Auto-Off' do
+  changed BathTub_Light
+  run do |event|
+    case event.state
+    when ON then bathtub_timer.reschedule
+    when OFF 
+      @bathtub_timer&.cancel
+      @bathtub_timer = nil
+  end
+end
+
+rule 'Reset Bathtub Timer' do
+  changed MasterBathRoom_ExhaustFan, to: OFF
+  changed [MasterBedRoom_Motion, MasterBathRoom_Motion], to: OPEN
+  run { @bathtub_timer&.reschedule }
+  only_if BathTub_Light
+end
+
+
+
+
 # extend OpenHAB
 
 # rubocop:disable Style/BlockComments
