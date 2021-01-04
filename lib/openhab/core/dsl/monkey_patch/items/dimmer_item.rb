@@ -56,19 +56,17 @@ class Java::OrgOpenhabCoreLibraryItems::DimmerItem
     state? && state != DecimalType::ZERO
   end
 
-  def to_int
-    state
+  def to_i
+    state&.to_big_decimal&.intValue
   end
 
-  def to_i
-    state
-  end
+  alias to_int to_i
 
   def on?
-    state? && state.to_big_decimal.intValue.positive?
+    state&.to_big_decimal&.intValue&.positive?
   end
 
   def off?
-    state? && state.to_big_decimal.intValue.zero?
+    state&.to_big_decimal&.intValue&.zero?
   end
 end
