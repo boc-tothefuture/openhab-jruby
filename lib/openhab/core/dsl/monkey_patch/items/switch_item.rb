@@ -31,7 +31,9 @@ class Java::OrgOpenhabCoreLibraryItems::SwitchItem
   end
 
   def !
-    !state if state?
+    return !state if state?
+
+    OnOffType::ON
   end
 
   def ==(other)
