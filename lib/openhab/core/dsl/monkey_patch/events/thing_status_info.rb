@@ -13,7 +13,7 @@ end
 
 # rubocop:disable Style/ClassAndModuleChildren
 class Java::OrgOpenhabCoreThingEvents::ThingStatusInfoEvent
-# rubocop:enable Style/ClassAndModuleChildren
+  # rubocop:enable Style/ClassAndModuleChildren
 
   alias uid get_thing_uid
   alias status status_info

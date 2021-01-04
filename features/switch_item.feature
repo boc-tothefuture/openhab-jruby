@@ -36,6 +36,7 @@ Feature:  Rule languages supports Switches
       | initial_state | final_state |
       | ON            | OFF         |
       | OFF           | ON          |
+      | NULL          | ON          |
 
   Scenario: Switches respond to grep
     Given items:
