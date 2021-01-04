@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'pp'
 require 'httparty'
 require 'persistent_httparty'
 
@@ -41,6 +42,17 @@ class Rest
 
   def self.text
     { 'Content-Type' => 'text/plain' }
+  end
+
+  def self.add_thing(id:, uid:, thing_type_uid:, label:, config: nil)
+    body = {}
+    body['ID'] = id
+    body['UID'] = uid
+    body['thingTypeUID'] = thing_type_uid
+    body[:channels] = []
+    body[:label] = label
+    body[:configuration] = config if config
+    post('/rest/things', headers: json, body: body.to_json)
   end
 
   def self.add_item(type:, name:, state: nil, label: nil, groups: nil, group_type: nil, function: nil, params: nil, pattern: nil)

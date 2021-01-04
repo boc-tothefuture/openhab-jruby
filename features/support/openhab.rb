@@ -47,6 +47,10 @@ def truncate_log
   File.open(openhab_log, File::TRUNC) {}
 end
 
+def delete_things
+  openhab_client('openhab:things clear')
+end
+
 def delete_rules
   FileUtils.rm Dir.glob(File.join(rules_dir, '*.rb'))
   Rest.rules.each do |rule|

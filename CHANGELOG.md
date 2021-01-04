@@ -6,9 +6,13 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
-## 2.1.0 
+
+## Unreleased
 ### Added
-- Timer delegate for 'active?', 'running?', 'terminated?'
+- Support for thing triggers in rules
+
+### Changed
+- Updated docs to point to OpenHAB document for script locations
 
 ## 2.0.1
 ### Fixed
@@ -25,14 +29,12 @@ Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <b
 ### Changed
 - **Breaking:** `after` now returns a ruby Timer delegate
 
-
 ## 1.1.0
 ### Added
 - Added support for channels triggers to rules
  
 ### Changed
 - Fixed documentation for changed/updated/receive_command options
-
 
 ## 1.0.0
 ### Changed

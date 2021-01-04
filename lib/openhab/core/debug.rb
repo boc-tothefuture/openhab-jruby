@@ -6,7 +6,7 @@ require 'core/dsl/things'
 
 module Debug
   include Logging
-  include Things
+  include OpenHAB::Core::DSL::Things
 
   def debug_variables
     pp "Instance #{instance_variables}"

@@ -3,7 +3,6 @@
 require 'pp'
 require 'java'
 require 'set'
-require 'core/dsl/monkey_patch/things'
 require 'core/dsl/group'
 require 'core/dsl/items/number_item'
 require 'core/dsl/items/string_item'

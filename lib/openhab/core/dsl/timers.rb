@@ -2,7 +2,6 @@
 
 require 'java'
 require 'delegate'
-require 'forwardable'
 
 require 'core/duration'
 
@@ -19,13 +18,7 @@ module OpenHAB
         # @author Brian O'Connell
         # @since 2.0.0
         class Timer < SimpleDelegator
-          extend Forwardable
-
-          def_delegator :@timer, :is_active, :active?
-          def_delegator :@timer, :is_running, :running?
-          def_delegator :@timer, :has_terminated, :terminated?
-
-          def initialize(duration:, &block)
+          def initialize(duration:, block:)
             @duration = duration
             @block = proc do
               block.call(self)
@@ -41,8 +34,12 @@ module OpenHAB
         end
 
         def after(duration, &block)
-          Timer.new(duration: duration, &block)
+          Timer.new(duration: duration, block: block)
         end
+
+        #  def notify(user:, msg:); end
+
+        #  def notifyAll(message); end
       end
     end
   end
