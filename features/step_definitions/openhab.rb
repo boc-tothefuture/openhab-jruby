@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 require 'securerandom'
+require 'json'
 
 Given('Clean OpenHAB with latest Ruby Libraries') do
   system('rake openhab:deploy 1>/dev/null 2>/dev/null') || raise('Error Deploying Libraries')
   ensure_openhab_running
   delete_rules
   delete_items
+  delete_things
   truncate_log
 end
 
@@ -68,6 +70,24 @@ Given(/(?: I add)?items:/) do |table|
   end
 end
 
+Given('things:') do |table|
+  table.hashes.each do |row|
+    id = row['id']
+    thing_type_uid = row['thing_uid']
+    label = row['label']
+    uid = [thing_type_uid, id].join(':')
+    config = nil_if_blank(row['config'])
+    config = JSON.parse(config) if config
+    Rest.add_thing(id: id, uid: uid, thing_type_uid: thing_type_uid, label: label, config: config)
+    status = nil_if_blank(row['status'])
+    openhab_client("openhab:things #{status} #{uid}") if status
+  end
+end
+
+When('thing {string} is disabled') do |thing|
+  openhab_client("openhab:things disable #{thing}")
+end
+
 Given('item states:') do |table|
   table.hashes.each do |row|
     item = row['item']
@@ -94,6 +114,10 @@ end
 
 When('channel {string} is triggered') do |channel|
   openhab_client("openhab:things trigger #{channel}")
+end
+
+Given('feature {string} installed') do |feature|
+  openhab_client("feature:install #{feature}")
 end
 
 When('channel {string} is triggered with {string}') do |channel, event|

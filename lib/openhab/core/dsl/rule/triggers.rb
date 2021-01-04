@@ -13,6 +13,9 @@ module OpenHAB
 
           CHANNEL_EVENT = 'core.ChannelEventTrigger'
 
+          THING_CHANGE = 'core.ThingStatusChangeTrigger'
+          THING_UPDATE = 'core.ThingStatusUpdateTrigger'
+
           ITEM_COMMAND = 'core.ItemCommandTrigger'
           ITEM_STATE_UPDATE = 'core.ItemStateUpdateTrigger'
           ITEM_STATE_CHANGE = 'core.ItemStateChangeTrigger'

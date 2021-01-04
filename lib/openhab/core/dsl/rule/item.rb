@@ -2,6 +2,7 @@
 
 require 'core/log'
 require 'core/dsl/group'
+require 'core/dsl/things'
 require 'core/dsl/rule/triggers'
 require 'openhab/core/dsl/rule/triggers'
 
@@ -13,6 +14,7 @@ module OpenHAB
           include Logging
           include OpenHAB::Core::DSL::Rule
           include OpenHAB::Core::DSL::Groups
+          include OpenHAB::Core::DSL::Things
 
           TriggerDelay = Struct.new(:to, :from, :duration, :timer, :tracking_to, keyword_init: true)
 
@@ -29,8 +31,7 @@ module OpenHAB
               trigger = Trigger::ITEM_STATE_CHANGE
             end
             logger.trace("Creating Changed Wait Change Trigger for #{config}")
-            trigger = Trigger.trigger(type: trigger, config: config)
-            @triggers << trigger
+            trigger = append_trigger(trigger, config)
             @trigger_delays = { trigger.id => TriggerDelay.new(to: to, from: from, duration: duration) }
           end
 
@@ -55,7 +56,7 @@ module OpenHAB
                   trigger = Trigger::ITEM_COMMAND
                 end
                 config['command'] = cmd.to_s unless cmd.nil?
-                @triggers << Trigger.trigger(type: trigger, config: config)
+                append_trigger(trigger, config)
               end
             end
           end
@@ -64,15 +65,19 @@ module OpenHAB
             items.flatten.each do |item|
               logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
               [to].flatten.each do |to_state|
-                if item.is_a? GroupItems
+                case item
+                when GroupItems
                   config = { 'groupName' => item.group.name }
+                  config['state'] = to_state.to_s unless to_state.nil?
                   trigger = Trigger::GROUP_STATE_UPDATE
+                when Thing
+                  trigger, config = trigger_for_thing(item, Trigger::THING_UPDATE, to_state)
                 else
                   config = { 'itemName' => item.name }
+                  config['state'] = to_state.to_s unless to_state.nil?
                   trigger = Trigger::ITEM_STATE_UPDATE
                 end
-                config['state'] = to_state.to_s unless to_state.nil?
-                @triggers << Trigger.trigger(type: trigger, config: config)
+                append_trigger(trigger, config)
               end
             end
           end
@@ -80,27 +85,51 @@ module OpenHAB
           def changed(*items, to: nil, from: nil, for: nil)
             items.flatten.each do |item|
               item = item.group if item.is_a? Group
-              logger.trace("Creating changed trigger for item(#{item}), to(#{to}), from(#{from})")
+              logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
               # for is a reserved word in ruby, so use local_variable_get :for
               if (wait_duration = binding.local_variable_get(:for))
                 changed_wait(item, to: to, from: from, duration: wait_duration)
               else
                 # Place in array and flatten to support multiple to elements or single or nil
                 [to].flatten.each do |to_state|
-                  if item.is_a? GroupItems
+                  case item
+                  when GroupItems
                     config = { 'groupName' => item.group.name }
+                    config['state'] = to_state.to_s if to_state
+                    config['previousState'] = from.to_s if from
                     trigger = Trigger::GROUP_STATE_CHANGE
+                  when Thing
+                    trigger, config = trigger_for_thing(item, Trigger::THING_CHANGE, to_state, from)
                   else
                     config = { 'itemName' => item.name }
+                    config['state'] = to_state.to_s if to_state
+                    config['previousState'] = from.to_s if from
                     trigger = Trigger::ITEM_STATE_CHANGE
                   end
-                  config['state'] = to_state.to_s unless to_state.nil?
-                  config['previousState'] = from.to_s unless from.nil?
-                  logger.trace("Creating Change Trigger for #{config}")
-                  @triggers << Trigger.trigger(type: trigger, config: config)
+                  append_trigger(trigger, config)
                 end
               end
             end
+          end
+
+          private
+
+          def append_trigger(trigger, config)
+            logger.trace("Creating trigger of type #{trigger} for #{config}")
+            trigger = Trigger.trigger(type: trigger, config: config)
+            @triggers << trigger
+            trigger
+          end
+
+          def trigger_for_thing(thing, trigger, to = nil, from = nil)
+            config = { 'thingUID' => thing.uid.to_s }
+            config['status'] = trigger_state_from_symbol(to).to_s if to
+            config['previousStatus'] = trigger_state_from_symbol(from).to_s if from
+            [trigger, config]
+          end
+
+          def trigger_state_from_symbol(sym)
+            sym.to_s.upcase if (sym.is_a? Symbol) || sym
           end
         end
       end
