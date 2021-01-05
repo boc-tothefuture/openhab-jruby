@@ -70,23 +70,23 @@ end
 
 ### All of the properties that are available to the rule resource are
 
-| Property  | Type                                                                    | Last/Multiple | Options                               | Default | Description                                                                 | Examples                                                                                                                                                                                                              |
-| --------- | ----------------------------------------------------------------------- | ------------- | ------------------------------------- | ------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| every     | Symbol or Duration                                                      | Multiple      | at: String or TimeOfDay               |         | When to execute rule                                                        | Symbol (:second, :minute, :hour, :day, :week, :month, :year, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday) or duration (5.minutes, 20.seconds, 14.hours), at: '5:15' or TimeOfDay(h:5, m:15) |
-| cron      | String                                                                  | Multiple      |                                       |         | OpenHAB Style Cron Expression                                               | '* * * * * * ?'                                                                                                                                                                                                       |
-| changed   | Item or Item Array[] or Group or Group.items or Thing or Thing Array [] | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch, from: OFF to ON                                                                                                                                                                                   |
-| updated   | Item or Item Array[] or Group or Group.items or Thing or Thing Array [] | Multiple      | to: State                             |         | Execute rule on item update                                                 | BedroomLightSwitch, to: ON                                                                                                                                                                                            |
-| commanded | Item or Item Array[] or Group or Group.items                            | Multiple      | command:                              |         | Execute rule on item command                                                | BedroomLightSwitch command: ON                                                                                                                                                                                        |
-| channel   | Channel                                                                 | Multiple      | triggered:                            |         | Execute rule on channel trigger                                             | `'astro:sun:home:rise#event', triggered: 'START'`                                                                                                                                                                     |
-| on_start  | Boolean                                                                 | Single        |                                       | false   | Execute rule on system start                                                | on_start                                                                                                                                                                                                              |
-| run       | Block passed event                                                      | Multiple      |                                       |         | Code to execute on rule trigger                                             |                                                                                                                                                                                                                       |
-| triggered | Block passed item                                                       | Multiple      |                                       |         | Code with triggering item to execute on rule trigger                        |                                                                                                                                                                                                                       |
-| delay     | Duration                                                                | Multiple      |                                       |         | Duration to wait between or after run blocks                                | delay 5.seconds                                                                                                                                                                                                       |
-| otherwise | Block passed event                                                      | Multiple      |                                       |         | Code to execute on rule trigger if guards are not satisfied                 |                                                                                                                                                                                                                       |
-| between   | Range of TimeOfDay or String Objects                                    | Single        |                                       |         | Only execute rule if current time is between supplied time ranges           | '6:05'..'14:05:05' (Include end) or '6:05'...'14:05:05' (Excludes end second) or TimeOfDay.new(h:6,m:5)..TimeOfDay.new(h:14,m:15,s:5)                                                                                 |
-| only_if   | Item or Item Array, or Block                                            | Multiple      |                                       |         | Only execute rule if all supplied items are "On" and/or block returns true  | BedroomLightSwitch, BackyardLightSwitch or {BedroomLightSwitch.state == ON}                                                                                                                                           |
-| not_if    | Item or Item Array, or Block                                            | Multiple      |                                       |         | Do **NOT** execute rule if any of the supplied items or blocks returns true | BedroomLightSwitch                                                                                                                                                                                                    |
-| enabled   | Boolean                                                                 | Single        |                                       | true    | Enable or disable the rule from executing                                   |                                                                                                                                                                                                                       |
+| Property         | Type                                                                    | Last/Multiple | Options                               | Default | Description                                                                 | Examples                                                                                                                                                                                                              |
+| ---------------- | ----------------------------------------------------------------------- | ------------- | ------------------------------------- | ------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| every            | Symbol or Duration                                                      | Multiple      | at: String or TimeOfDay               |         | When to execute rule                                                        | Symbol (:second, :minute, :hour, :day, :week, :month, :year, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday) or duration (5.minutes, 20.seconds, 14.hours), at: '5:15' or TimeOfDay(h:5, m:15) |
+| cron             | String                                                                  | Multiple      |                                       |         | OpenHAB Style Cron Expression                                               | '* * * * * * ?'                                                                                                                                                                                                       |
+| changed          | Item or Item Array[] or Group or Group.items or Thing or Thing Array [] | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch, from: OFF to ON                                                                                                                                                                                   |
+| updated          | Item or Item Array[] or Group or Group.items or Thing or Thing Array [] | Multiple      | to: State                             |         | Execute rule on item update                                                 | BedroomLightSwitch, to: ON                                                                                                                                                                                            |
+| received_command | Item or Item Array[] or Group or Group.items                            | Multiple      | command:                              |         | Execute rule on item command                                                | BedroomLightSwitch command: ON                                                                                                                                                                                        |
+| channel          | Channel                                                                 | Multiple      | triggered:                            |         | Execute rule on channel trigger                                             | `'astro:sun:home:rise#event', triggered: 'START'`                                                                                                                                                                     |
+| on_start         | Boolean                                                                 | Single        |                                       | false   | Execute rule on system start                                                | on_start                                                                                                                                                                                                              |
+| run              | Block passed event                                                      | Multiple      |                                       |         | Code to execute on rule trigger                                             |                                                                                                                                                                                                                       |
+| triggered        | Block passed item                                                       | Multiple      |                                       |         | Code with triggering item to execute on rule trigger                        |                                                                                                                                                                                                                       |
+| delay            | Duration                                                                | Multiple      |                                       |         | Duration to wait between or after run blocks                                | delay 5.seconds                                                                                                                                                                                                       |
+| otherwise        | Block passed event                                                      | Multiple      |                                       |         | Code to execute on rule trigger if guards are not satisfied                 |                                                                                                                                                                                                                       |
+| between          | Range of TimeOfDay or String Objects                                    | Single        |                                       |         | Only execute rule if current time is between supplied time ranges           | '6:05'..'14:05:05' (Include end) or '6:05'...'14:05:05' (Excludes end second) or TimeOfDay.new(h:6,m:5)..TimeOfDay.new(h:14,m:15,s:5)                                                                                 |
+| only_if          | Item or Item Array, or Block                                            | Multiple      |                                       |         | Only execute rule if all supplied items are "On" and/or block returns true  | BedroomLightSwitch, BackyardLightSwitch or {BedroomLightSwitch.state == ON}                                                                                                                                           |
+| not_if           | Item or Item Array, or Block                                            | Multiple      |                                       |         | Do **NOT** execute rule if any of the supplied items or blocks returns true | BedroomLightSwitch                                                                                                                                                                                                    |
+| enabled          | Boolean                                                                 | Single        |                                       | true    | Enable or disable the rule from executing                                   |                                                                                                                                                                                                                       |
 
 Last means that last value for the property is used <br>
 Multiple indicates that multiple entries of the same property can be used in aggregate 
@@ -118,7 +118,7 @@ Multiple indicates that multiple entries of the same property can be used in agg
 
 | Option | Description                                                                                          | Example                                        |
 | ------ | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| :at    | Limit the execution to specific times of day. The value can either be a String or a TimeOfDay object | at: '16:45' or at: TimeOfDay.new(h: 16, m: 45) | 
+| :at    | Limit the execution to specific times of day. The value can either be a String or a TimeOfDay object | at: '16:45' or at: TimeOfDay.new(h: 16, m: 45) |
 
 
 ##### Examples
@@ -179,7 +179,7 @@ end
 | ------- | ------------------------------------------------------ | --------------- |
 | from    | Only execute rule if previous state matches from state | from: OFF       |
 | to      | Only execute rule if new state matches from state      | to: ON          |
-| for     | Only execute rule if value stays changed for duration  | for: 10.seconds | 
+| for     | Only execute rule if value stays changed for duration  | for: 10.seconds |
 
 Changed accepts Items, Things or Groups. 
 
@@ -224,7 +224,7 @@ end
 ##### Updated
 | Options | Description                                        | Example                 |
 | ------- | -------------------------------------------------- | ----------------------- |
-| to      | Only execute rule if update state matches to state | `to: 7` or `to: [7,14]` | 
+| to      | Only execute rule if update state matches to state | `to: 7` or `to: [7,14]` |
 
 Changed accepts Items, Things or Groups. 
 
@@ -291,7 +291,7 @@ end
 ##### Received Command
 | Options  | Description                                                          | Example                            |
 | -------- | -------------------------------------------------------------------- | ---------------------------------- |
-| command  | Only execute rule if the command matches this/these command/commands | `command: 7` or `commands: [7,14]` | 
+| command  | Only execute rule if the command matches this/these command/commands | `command: 7` or `commands: [7,14]` |
 | commands | Alias of command, may be used if matching more than one command      | `commands: [7,14]`                 |
 
 The `command` value restricts the rule from running to only if the command matches
@@ -408,9 +408,9 @@ The following properties exist when a run block is triggered from an [updated](#
 ##### Command Event Properties
 The following properties exist when a run block is triggered from a [received_command](##### Received Command) trigger.
 
-| Property | Description                      |
-| -------- | -------------------------------- |
-| command  | Command sent to item             | 
+| Property | Description          |
+| -------- | -------------------- |
+| command  | Command sent to item |
 
 ##### Thing Event Properties
 The following properties exist when a run block is triggered from an  [updated](##### Updated) or [changed](##### Changed) trigger on a Thing.
@@ -419,7 +419,7 @@ The following properties exist when a run block is triggered from an  [updated](
 | -------- | ----------------------------------------------------------------- |
 | uid      | UID of the triggered Thing                                        |
 | last     | Status before Change for thing (only valid on Change, not update) |
-| status   | Current status of the triggered Thing                                                                  |
+| status   | Current status of the triggered Thing                             |
 
 
 
@@ -438,7 +438,7 @@ rule 'Multi Line Run Block' do
   run do |event|
     logger.info("#{event.item} triggered")
     logger.info("from #{event.last}") if event.last
-    logger.info("to #{event.last"}) if event.state
+    logger.info("to #{event.state}") if event.state
    end
 end
 ```
@@ -449,7 +449,7 @@ rule 'Multiple Run Blocks' do
   changed TestSwitch
   run { |event| logger.info("#{event.item} triggered") }
   run { |event| logger.info("from #{event.last}") if event.last }
-  run { |event| logger.info("to #{event.last}") if event.state  }
+  run { |event| logger.info("to #{event.state}") if event.state  }
 end
 
 ```
@@ -542,7 +542,7 @@ The otherwise property is the automation code that is executed when a rule is tr
 | -------- | -------------------------------- |
 | item     | Triggering item                  |
 | state    | Changed state of triggering item |
-| last     | Last state of triggering item    | 
+| last     | Last state of triggering item    |
 
 ```
 rule 'Turn switch ON or OFF based on value of another switch' do
@@ -693,7 +693,7 @@ All items can be accessed as an enumerable the `items` method.
 
 | Method             | Description                                                                    |
 | ------------------ | ------------------------------------------------------------------------------ |
-| []                 | Get a specific item by name, this syntax can be used to dynamically load items | 
+| []                 | Get a specific item by name, this syntax can be used to dynamically load items |
 | enumerable methods | All methods [here](https://ruby-doc.org/core-2.5.0/Enumerable.html)            |
 
 #### Examples
@@ -725,7 +725,7 @@ Item types have methods added to them to make it flow naturally within the a rub
 | ------- | ------------------------------------------------- | ------------------------------------------------------------ |
 | <<      | Sends command to item                             | `VirtualSwich << ON`                                         |
 | command | alias for shovel operator (<<)                    | `VirtualSwich.command(ON)`                                   |
-| update  | Sends update to an item                           | `VirtualSwitch.update(ON)`                                                              |
+| update  | Sends update to an item                           | `VirtualSwitch.update(ON)`                                   |
 | id      | Returns label or item name if no label            | `logger.info(#{item.id})`                                    |
 | undef?  | Returns true if the state of the item is UNDEF    | `logger.info("SwitchTest is UNDEF") if SwitchTest.undef?`    |
 | null?   | Returns true if the state of the item is NULL     | `logger.info("SwitchTest is NULL") if SwitchTest.null?`      |
@@ -754,7 +754,7 @@ This class is aliased to **Switch** so you can compare compare item types using 
 | off     | Send command to turn item OFF             | `item.off`                                      |
 | on?     | Returns true if item state == ON          | `puts "#{item.name} is on." if item.on?`        |
 | off?    | Returns true if item state == OFF         | `puts "#{item.name} is off." if item.off?`      |
-| !       | Return the inverted state of the item     | `item << !item`                                                |
+| !       | Return the inverted state of the item     | `item << !item`                                 |
 
 
 Switches respond to `on` and `off`
@@ -833,7 +833,7 @@ This class is aliased to **Dimmer** so you can compare compare item types using 
 | dim      | amount (default 1) | Dim the switch the specified amount          | `DimmerSwitch.dim`                              |
 | -        | amount             | Subtract the supplied amount from DimmerItem | `DimmerSwitch << DimmerSwitch - 5`              |
 | brighten | amount (default 1) | Brighten the switch the specified amount     | `DimmerSwitch.brighten`                         |
-| +        | amount             | Add the supplied amount from the DimmerItem  | `DimmerSwitch << DimmerSwitch + 5`              | 
+| +        | amount             | Add the supplied amount from the DimmerItem  | `DimmerSwitch << DimmerSwitch + 5`              |
 
 
 ##### Examples
@@ -961,10 +961,10 @@ end
 This class is aliased to **Contact** so you can compare compare item types using ` item.is_a? Contact or grep(Contact)`
 
 
-| Method  | Description                               | Example                                    |
-| ------- | ----------------------------------------- | ------------------------------------------ |
-| open?   | Returns true if item state == OPEN        | `puts "#{item} is closed." if item.open?`  |
-| closed? | Returns true if item state == CLOSED      | `puts "#{item} is off." if item.closed`    |
+| Method  | Description                          | Example                                   |
+| ------- | ------------------------------------ | ----------------------------------------- |
+| open?   | Returns true if item state == OPEN   | `puts "#{item} is closed." if item.open?` |
+| closed? | Returns true if item state == CLOSED | `puts "#{item} is off." if item.closed`   |
 
 
 ##### Examples
@@ -1249,11 +1249,11 @@ unit('°C') { ( (2 * (NumberF + NumberC) ) / Dimensionless ) < 45} 	#= true     
 
 #### String Item
 
-| Method          | Parameters | Description                                                                | Example                                         |
-| --------------- | ---------- | -------------------------------------------------------------------------- | ----------------------------------------------- |
-| truthy?         |            | Item state not UNDEF, not NULL and is not blank ('') when trimmed.         | `puts "#{item.name} is truthy" if item.truthy?` |
-| String methods* |            | All methods for [Ruby String](https://ruby-doc.org/core-2.5.1/String.html) | `StringOne << StringOne + ' World!'`            |
-| blank?          |            | True if state is UNDEF, NULL, string is empty or contains only whitepspace | `StringOne << StringTwo unless StringTwo.blank?`|                                               
+| Method          | Parameters | Description                                                                | Example                                          |
+| --------------- | ---------- | -------------------------------------------------------------------------- | ------------------------------------------------ |
+| truthy?         |            | Item state not UNDEF, not NULL and is not blank ('') when trimmed.         | `puts "#{item.name} is truthy" if item.truthy?`  |
+| String methods* |            | All methods for [Ruby String](https://ruby-doc.org/core-2.5.1/String.html) | `StringOne << StringOne + ' World!'`             |
+| blank?          |            | True if state is UNDEF, NULL, string is empty or contains only whitepspace | `StringOne << StringTwo unless StringTwo.blank?` |
 
 * All String methods returns a copy of the current state as a string.  Methods that modify a string in place, do not modify the underlying state string. 
  
@@ -1299,7 +1299,7 @@ A group can be accessed directly by name, to access all groups use the `groups` 
 | ------------------ | ----------------------------------------------------------------------------------------------- |
 | group              | Access Group Item                                                                               |
 | items              | Used to inform a rule that you want it to operate on the items in the group (see example below) |
-| groups             | Direct subgroups of this group                                                                                                |
+| groups             | Direct subgroups of this group                                                                  |
 | set methods        | All methods [here](https://ruby-doc.org/stdlib-2.5.0/libdoc/set/rdoc/Set.html)                  |
 | enumerable methods | All methods [here](https://ruby-doc.org/core-2.5.0/Enumerable.html)                             |
 
@@ -1361,7 +1361,7 @@ Things can be access using the `things` method and subsequent operations on that
 
 | Method             | Description                                                         |
 | ------------------ | ------------------------------------------------------------------- |
-| things             | Return all things as a Ruby Set                                                                    |
+| things             | Return all things as a Ruby Set                                     |
 | []                 | Get a specific thing by name                                        |
 | enumerable methods | All methods [here](https://ruby-doc.org/core-2.5.0/Enumerable.html) |
 
@@ -1425,7 +1425,7 @@ After method parameters
 | Parameter | Description                                                        |
 | --------- | ------------------------------------------------------------------ |
 | duration  | Duration for timer                                                 |
-| block     | Block to execute after duration, block will be passed timer object | 
+| block     | Block to execute after duration, block will be passed timer object |
 
 Timer Object
 The timer object has all of the methods of the [OpenHAB Timer](https://www.openhab.org/docs/configuration/actions.html#timers) with a change to the reschedule method to enable it to operate Ruby context. 
@@ -1433,9 +1433,9 @@ The timer object has all of the methods of the [OpenHAB Timer](https://www.openh
 
 `reschedule` method parameters
 
-| Parameter | Description                                                                         |
-| --------- | ----------------------------------------------------------------------------------- |
-| duration  | Optional [duration](### Duration) if unspecified original duration supplied to after method is used | 
+| Parameter | Description                                                                                         |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| duration  | Optional [duration](### Duration) if unspecified original duration supplied to after method is used |
 
 
 

@@ -8,7 +8,7 @@ Feature:  Rule languages supports changed item features
       | Number | Alarm_Mode       | AlarmModes | 7     |
       | Number | Alarm_Mode_Other | AlarmModes | 7     |
 
-  Scenario: Rule supports commanded
+  Scenario: Rule supports received_command
     Given a deployed rule:
       """
       rule 'Execute rule when item received command' do
@@ -19,7 +19,7 @@ Feature:  Rule languages supports changed item features
     When item "Alarm_Mode" state is changed to "7"
     Then It should log 'Item received command: 7' within 5 seconds
 
-  Scenario Outline: Rule supports commanded with specific values
+  Scenario Outline: Rule supports received_command with specific values
     Given a deployed rule:
       """
       rule 'Execute rule when item receives specific command' do
@@ -34,7 +34,7 @@ Feature:  Rule languages supports changed item features
       | 7     | should     |
       | 14    | should not |
 
-  Scenario Outline: Rule supports commanded to one of many matching values
+  Scenario Outline: Rule supports received_command to one of many matching values
     Given a deployed rule:
       """
       rule 'Execute rule when item receives one of many specific commands' do
