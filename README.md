@@ -58,7 +58,7 @@ export GEM_HOME=<openhab_base_dir>/conf/automation/lib/ruby/gem_home
 
 
 ##  Rule Syntax
-```
+```ruby
 require 'openhab'
 
 rule 'name' do
@@ -123,7 +123,7 @@ Multiple indicates that multiple entries of the same property can be used in agg
 
 ##### Examples
 
-```
+```ruby
 rule 'Log the rule name every minute' do
   every :minute
   run { logger.info "Rule '#{name}' executed" }
@@ -131,7 +131,7 @@ end
 ```
 
 
-```
+```ruby
 rule 'Log an entry at 11:21' do
   every :day, at: '11:21'
   run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
@@ -146,7 +146,7 @@ end
 ```
 
 
-```
+```ruby
 rule 'Log an entry Wednesdays at 11:21' do
   every :wednesday, at: '11:21'
   run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
@@ -154,7 +154,7 @@ end
 ```
 
 
-```
+```ruby
 rule 'Every 5 seconds' do
   every 5.seconds
   run { logger.info "Rule #{name} executed" }
@@ -163,9 +163,9 @@ end
 
 
 ##### Cron
-Utilizes [OpenHAB style cron expressions](https://www.openhab.org/docs/configuration/rules-dsl.html#time-based-triggers) to trigger rules.  This property can be utilized when you need to represent complex expressions not possible with the simpler [every](##### Every) syntax.
+Utilizes [OpenHAB style cron expressions](https://www.openhab.org/docs/configuration/rules-dsl.html#time-based-triggers) to trigger rules.  This property can be utilized when you need to represent complex expressions not possible with the simpler [every](#Every) syntax.
 
-```
+```ruby
 rule 'Using Cron Syntax' do
   cron '43 46 13 ? * ?'
   run { logger.info "Cron rule executed" }
@@ -188,7 +188,7 @@ The from and to values operate exactly as they do in the DSL and Python rules wi
 The for parameter provides a method of only executing the rule if the value is changed for a specific duration.  This provides a built-in method of only executing a rule if a condition is true for a period of time without the need to create dummy objects with the expire binding or make or manage your own timers.
 
 For example, the code in [this design pattern](https://community.openhab.org/t/design-pattern-expire-binding-based-timers/32634) becomes (with no need to create the dummy object):
-```
+```ruby
 rule "Execute rule when item is changed for specified duration" do
   changed Alarm_Mode, for: 20.seconds
   run { logger.info("Alarm Mode Updated")}
@@ -196,7 +196,7 @@ end
 ```
 
 You can optionally provide from and to states to restrict the cases in which the rule executes:
-```
+```ruby
 rule 'Execute rule when item is changed to specific number, from specific number, for specified duration' do
   changed Alarm_Mode, from: 8, to: 14, for: 12.seconds
   run { logger.info("Alarm Mode Updated")}
@@ -204,7 +204,7 @@ end
 ```
 
 Works with things as well:
-```
+```ruby
 rule 'Execute rule when thing is changed' do
    changed things['astro:sun:home'], :from => :online, :to => :uninitialized
    run { |event| logger.info("Thing #{event.uid} status <trigger> to #{event.status}") }
@@ -213,7 +213,7 @@ end
 
 
 Real world example:
-```
+```ruby
 rule 'Log (or notify) when an exterior door is left open for more than 5 minutes' do
   changed ExteriorDoors, to: OPEN, for: 5.minutes
   triggered {|door| logger.info("#{door.id} has been left open!")}
@@ -231,48 +231,49 @@ Changed accepts Items, Things or Groups.
 The to value restricts the rule from running to only if the updated state matches. If the updated element being used as a trigger is a thing than the to and from values will accept symbols and strings, where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html). 
 
 The examples below assume the following background:
-```
+
 | type   | name             | group      | state |
+| ------ | ---------------- | ---------- | ----- |
 | Number | Alarm_Mode       | AlarmModes | 7     |
 | Number | Alarm_Mode_Other | AlarmModes | 7     |
-```
 
-```
+
+```ruby
 rule 'Execute rule when item is updated to any value' do
   updated Alarm_Mode
   run { logger.info("Alarm Mode Updated") }
 end
 ```
 
-```
+```ruby
 rule 'Execute rule when item is updated to specific number' do
   updated Alarm_Mode, to: 7
   run { logger.info("Alarm Mode Updated") }
 end
 ```
 
-```
+```ruby
 rule 'Execute rule when item is updated to one of many specific states' do
   updated Alarm_Mode, to: [7,14]
   run { logger.info("Alarm Mode Updated")}
 end
 ```
 
-```
+```ruby
 rule 'Execute rule when group is updated to any state' do
   updated AlarmModes
   triggered { |item| logger.info("Group #{item.id} updated")}
 end  
 ```
 
-```
+```ruby
 rule 'Execute rule when member of group is changed to any state' do
   updated AlarmModes.items
   triggered { |item| logger.info("Group item #{item.id} updated")}
 end 
 ```
 
-```
+```ruby
 rule 'Execute rule when member of group is changed to one of many states' do
   updated AlarmModes.items, to: [7,14]
   triggered { |item| logger.info("Group item #{item.id} updated")}
@@ -280,15 +281,15 @@ end
 ```
 
 Works with things as well:
-```
+```ruby
 rule 'Execute rule when thing is updated' do
    updated things['astro:sun:home'], :to => :uninitialized
    run { |event| logger.info("Thing #{event.uid} status <trigger> to #{event.status}") }
 end
 ```
 
+##### Received_Command
 
-##### Received Command
 | Options  | Description                                                          | Example                            |
 | -------- | -------------------------------------------------------------------- | ---------------------------------- |
 | command  | Only execute rule if the command matches this/these command/commands | `command: 7` or `commands: [7,14]` |
@@ -297,48 +298,49 @@ end
 The `command` value restricts the rule from running to only if the command matches
 
 The examples below assume the following background:
-```
+
 | type   | name             | group      | state |
+| ------ | ---------------- | ---------- | ----- |
 | Number | Alarm_Mode       | AlarmModes | 7     |
 | Number | Alarm_Mode_Other | AlarmModes | 7     |
-```
 
-```
+
+```ruby
 rule 'Execute rule when item received command' do
   received_command Alarm_Mode
   run { |event| logger.info("Item received command: #{event.command}" ) }
 end
 ```
 
-```
+```ruby
 rule 'Execute rule when item receives specific command' do
   received_command Alarm_Mode, only: 7
   run { |event| logger.info("Item received command: #{event.command}" ) }
 end
 ```
 
-```
+```ruby
 rule 'Execute rule when item receives one of many specific commands' do
   received_command Alarm_Mode, only: [7,14]
   run { |event| logger.info("Item received command: #{event.command}" ) }
 end
 ```
 
-```
+```ruby
 rule 'Execute rule when group receives a specific command' do
   received_command AlarmModes
   triggered { |item| logger.info("Group #{item.id} received command")}
 end
 ```
 
-```
+```ruby
 rule 'Execute rule when member of group receives any command' do
   received_command AlarmModes.items
   triggered { |item| logger.info("Group item #{item.id} received command")}
 end
 ```
 
-```
+```ruby
 rule 'Execute rule when member of group is changed to one of many states' do
   received_command AlarmModes.items, only: [7,14]
   triggered { |item| logger.info("Group item #{item.id} received command")}
@@ -355,7 +357,7 @@ end
 The channel trigger executes rule when a specific channel is triggered.  The syntax supports one or more channels with one or more triggers.   For `thing` is an optional parameter that makes it easier to set triggers on multiple channels on the same thing.
 
 
-```
+```ruby
 rule 'Execute rule when channel is triggered' do
   channel 'astro:sun:home:rise#event'      
   run { logger.info("Channel triggered") }
@@ -370,21 +372,21 @@ end
 
 ```
 
-```
+```ruby
 rule 'Rule provides access to channel trigger events in run block' do
   channel 'astro:sun:home:rise#event', triggered: 'START'
   run { |trigger| logger.info("Channel(#{trigger.channel}) triggered event: #{trigger.event}") }
 end
 ```
 
-```
+```ruby
 rule 'Rules support multiple channels' do
   channel ['rise#event','set#event'], thing: 'astro:sun:home' 
   run { logger.info("Channel triggered") }
 end
 ```
 
-```
+```ruby
 rule 'Rules support multiple channels and triggers' do
   channel ['rise#event','set#event'], thing: 'astro:sun:home', triggered: ['START', 'STOP'] 
   run { logger.info("Channel triggered") }
@@ -397,7 +399,7 @@ end
 The run property is the automation code that is executed when a rule is triggered.  This property accepts a block of code and executes it. The block is automatically passed an event object which can be used to access multiple properties about the triggering event.  The code for the automation can be entirely within the run block can call methods defined in the ruby script.
 
 ##### State/Update Event Properties
-The following properties exist when a run block is triggered from an [updated](##### Updated) or [changed](##### Changed) trigger. 
+The following properties exist when a run block is triggered from an [updated](#updated) or [changed](#changed) trigger. 
 
 | Property | Description                      |
 | -------- | -------------------------------- |
@@ -406,14 +408,14 @@ The following properties exist when a run block is triggered from an [updated](#
 | last     | Last state of triggering item    |
 
 ##### Command Event Properties
-The following properties exist when a run block is triggered from a [received_command](##### Received Command) trigger.
+The following properties exist when a run block is triggered from a [received_command](#received_command) trigger.
 
 | Property | Description          |
 | -------- | -------------------- |
 | command  | Command sent to item |
 
 ##### Thing Event Properties
-The following properties exist when a run block is triggered from an  [updated](##### Updated) or [changed](##### Changed) trigger on a Thing.
+The following properties exist when a run block is triggered from an  [updated](#updated) or [changed](#changed) trigger on a Thing.
 
 | Property | Description                                                       |
 | -------- | ----------------------------------------------------------------- |
@@ -424,7 +426,7 @@ The following properties exist when a run block is triggered from an  [updated](
 
 
 `{}` Style used for single line blocks
-```
+```ruby
 rule 'Access Event Properties' do
   changed TestSwitch
   run { |event| logger.info("#{event.item} triggered from #{event.last} to #{event.state}") }
@@ -432,7 +434,7 @@ end
 ```
 
 `do/end` style used for multi-line blocks
-```
+```ruby
 rule 'Multi Line Run Block' do
   changed TestSwitch
   run do |event|
@@ -444,7 +446,7 @@ end
 ```
 
 Rules can have multiple run blocks and they are executed in order, Useful when used in combination with delay
-```
+```ruby
 rule 'Multiple Run Blocks' do
   changed TestSwitch
   run { |event| logger.info("#{event.item} triggered") }
@@ -459,7 +461,7 @@ end
 This property is the same as the run property except rather than passing an event object to the automation block the triggered item is passed. This enables optimizations for simple cases and supports ruby's [pretzel colon `&:` operator.](https://medium.com/@dcjones/the-pretzel-colon-75df46dde0c7) 
 
 ##### Examples
-```
+```ruby
 rule 'Triggered has access directly to item triggered' do
   changed TestSwitch
   triggered { |item| logger.info("#{item.id} triggered") }
@@ -468,7 +470,7 @@ end
 ```
 
 Triggered items are highly useful when working with groups
-```
+```ruby
 #Switches is a group of Switch items
 
 rule 'Triggered item is item changed when a group item is changed.' do
@@ -485,7 +487,7 @@ end
 ```
 
 Like other execution blocks, multiple triggered blocks are supported in a single rule
-```
+```ruby
 rule 'Turn a switch off and log it, 5 seconds after turning it on' do
   changed Switches.items, to: ON
   delay 5.seconds
@@ -498,7 +500,7 @@ end
 #### Delay
 The delay property is a non thread-blocking element that is executed after, before, or between run blocks. 
 
-```
+```ruby
 rule 'Delay sleeps between execution elements' do
   on_start
   run { logger.info("Sleeping") }
@@ -509,7 +511,7 @@ end
 
 Like other execution blocks, multiple can exist in a single rule.
 
-```
+```ruby
 rule 'Multiple delays can exist in a rule' do
   on_start
   run { logger.info("Sleeping") }
@@ -522,7 +524,7 @@ end
 
 
 You can use ruby code in your rule across multiple execution blocks like a run and a delay. 
-```
+```ruby
 rule 'Dim a switch on system startup over 100 seconds' do
    on_start
    100.times do
@@ -544,7 +546,7 @@ The otherwise property is the automation code that is executed when a rule is tr
 | state    | Changed state of triggering item |
 | last     | Last state of triggering item    |
 
-```
+```ruby
 rule 'Turn switch ON or OFF based on value of another switch' do
   on_start
   run { TestSwitch << ON }
@@ -575,7 +577,7 @@ Truthyness for Item types:
 #### only_if
  only_if allows rule execution when result is true and prevents when false.
  
-```
+```ruby
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also ON' do
   changed LightSwitch, to: ON
   run { OutsideDimmer << 50 }
@@ -585,7 +587,7 @@ end
 
 Because only_if uses 'truthy?' on non-block objects the above rule can also be written like this:
 
-```
+```ruby
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also ON' do
   changed LightSwitch, to: ON
   run { OutsideDimmer << 50 }
@@ -595,7 +597,7 @@ end
 
 multiple only_if statements can be used and **all** must be true for the rule to run.
 
-```
+```ruby
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also ON and Door is closed' do
   changed LightSwitch, to: ON
   run { OutsideDimmer << 50 }
@@ -619,7 +621,7 @@ not_if allows prevents execution of rules when result is false and prevents when
 
 Because not_if uses 'truthy?' on non-block objects the above rule can also be written like this:
 
-```
+```ruby
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF' do
   changed LightSwitch, to: ON
   run { OutsideDimmer << 50 }
@@ -629,7 +631,7 @@ end
 
 Multiple not_if statements can be used and if **any** of them are not satisfied the rule will not run. 
 
-```
+```ruby
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF and Door is not CLOSED' do
   changed LightSwitch, to: ON
   run { OutsideDimmer << 50 }
@@ -642,7 +644,7 @@ end
 
 only_if and not_if can be used on the same rule, both be satisfied for a rule to execute.
 
-```
+```ruby
 rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF and Door is CLOSED' do
   changed LightSwitch, to: ON
   run { OutsideDimmer << 50 }
@@ -655,7 +657,7 @@ end
 #### Guard Event Access
 Guards have access to event information.
 
-```
+```ruby
 rule 'Set OutsideDimmer to 50% if any switch in group Switches starting with Outside is switched On' do
   changed Switches.items, to: ON
   run { OutsideDimmer << 50 }
@@ -667,7 +669,7 @@ end
 #### between
 Only runs the rule if the current time is in the provided range
 
-```
+```ruby
 rule 'Log an entry if started between 3:30:04 and midnight using strings' do
   on_start
   run { logger.info ("Started at #{TimeOfDay.now}")}
@@ -677,7 +679,7 @@ end
 
 or
 
-```
+```ruby
 rule 'Log an entry if started between 3:30:04 and midnight using TimeOfDay objects' do
   on_start
   run { logger.info ("Started at #{TimeOfDay.now}")}
@@ -710,7 +712,7 @@ logger.info("Item Count: #{items.count}")  # Item Count: 2
 logger.info("Items: #{items.sort_by(&:label).map(&:label).join(', ')}")  #Items: Test Dimmer, Test Switch' 
 ```
 
-```
+```ruby
 rule 'Use dynamic item lookup to increase related dimmer brightness when switch is turned on' do
   changed SwitchTest, to: ON
   triggered { |item| items[item.name.gsub('Switch','Dimmer')].brighten(10) }
@@ -737,7 +739,7 @@ State returns nil instead of UNDEF or NULL so that it can be used with with [Rub
 
 To operate across an arbitrary collection of items you can place them in an [array](https://ruby-doc.org/core-2.5.0/Array.html) and execute methods against the array.
 
-```
+```ruby
 number_items = [Livingroom_Temp, Bedroom_Temp]
 logger.info("Max is #{number_items.max}")
 logger.info("Min is #{number_items.min}")
@@ -759,27 +761,27 @@ This class is aliased to **Switch** so you can compare compare item types using 
 
 Switches respond to `on` and `off`
 
-```
+```ruby
 # Turn on all switches in a group called Switches
 Switches.each(&:on)
 ```
 
 Check state with `off?` and `on?`
 
-```
+```ruby
 # Turn on all switches in a group called Switches that are off
 Switches.select(&:off?).each(&:on)
 ```
 
 Switches can be selected in an enumerable with grep.
 
-```
+```ruby
 items.grep(Switch)
      .each { |switch| logger.info("Switch #{switch.id} found") }
 ```
 
 Switch states also work in grep.
-```
+```ruby
 # Log all switch items set to ON
 items.grep(Switch)
      .grep(ON)
@@ -792,7 +794,7 @@ items.grep(Switch)
 ```
 
 Switch states also work in case statements.
-```
+```ruby
 items.grep(Switch)
      .each do |switch|
         case switch
@@ -806,7 +808,7 @@ items.grep(Switch)
 
 
 Other examples
-```
+```ruby
 # Invert all switches
 items.grep(Switch)
      .each { |item| if item.off? then item.on else item.off end}
@@ -838,7 +840,7 @@ This class is aliased to **Dimmer** so you can compare compare item types using 
 
 ##### Examples
 
-```
+```ruby
 DimmerOne << DimmerOne - 5
 DimmerOne << 100 - DimmerOne
 
@@ -846,7 +848,7 @@ DimmerOne << 100 - DimmerOne
 
 `on`/`off` sends commands to a Dimmer
 
-```
+```ruby
 # Turn on all dimmers in group
 Dimmers.each(&:on)
 
@@ -856,7 +858,7 @@ Dimmers.each(&:off)
 
  `on?`/`off?` Checks state of dimmer
 
-```
+```ruby
 # Turn on switches that are off
 Dimmers.select(&:off?).each(&:on)
 	  
@@ -866,21 +868,21 @@ Dimmers.select(&:on?).each(&:off)
 
 `dim` dims the specified amount, defaulting to 1. If 1 is the amount, the decrease command is sent, otherwise the current state - amount is sent as a command.
 
-```
+```ruby
 DimmerOne.dim
 DimmerOne.dim 2
 ```
 
 `brighten` brightens the specified amount, defaulting to 1. If 1 is the amount, the increase command is sent, otherwise the current state + amount is sent as a command.
 
-```
+```ruby
 DimmerOne.brighten
 DimmerOne.brighten 2   
 ```
 
 Dimmers can be selected in an enumerable with grep.
 
-```
+```ruby
 # Get all dimmers
 items.grep(Dimmer)
      .each { |dimmer| logger.info("#{dimmer.id} is a Dimmer") }
@@ -888,7 +890,7 @@ items.grep(Dimmer)
 
 Dimmers work with ranges and can be used in grep.
 
-```
+```ruby
 # Get dimmers with a state of less than 50
 items.grep(Dimmer)
      .grep(0...50)
@@ -896,7 +898,7 @@ items.grep(Dimmer)
 ```
 
 Dimmers can also be used in case statements with ranges.
-```
+```ruby
 #Log dimmer states partioning aat 50%
 items.grep(Dimmer)
      .each do |dimmer|
@@ -911,7 +913,7 @@ end
 
 Other examples
 
-```
+```ruby
 rule 'Dim a switch on system startup over 100 seconds' do
   on_start
   100.times do
@@ -922,7 +924,7 @@ end
 
 ```
 
-```
+```ruby
 rule 'Dim a switch on system startup by 5, pausing every second' do
    on_start
    100.step(-5, 0) do | level |
@@ -932,8 +934,8 @@ rule 'Dim a switch on system startup by 5, pausing every second' do
 end
 ```
 
-```
- rule 'Turn off any dimmers curently on at midnight' do
+```ruby
+rule 'Turn off any dimmers curently on at midnight' do
    every :day
    run do
      items.grep(Dimmer)
@@ -943,7 +945,7 @@ end
 end
 ```
 
-```
+```ruby
 rule 'Turn off any dimmers set to less than 50 at midnight' do
    every :day
    run do
@@ -971,7 +973,7 @@ This class is aliased to **Contact** so you can compare compare item types using
 
 `open?`/`closed?` checks state of contact
 
-```
+```ruby
 # Log open contacts
 Contacts.select(&:open?).each { |contact| logger.info("Contact #{contact.id} is open")}
 
@@ -982,7 +984,7 @@ Contacts.select(&:closed?).each { |contact| logger.info("Contact #{contact.id} i
 
 Contacts can be selected in an enumerable with grep.
 
-```
+```ruby
 # Get all Contacts
 items.grep(Contact)
      .each { |contact| logger.info("#{contact.id} is a Contact") }
@@ -990,7 +992,7 @@ items.grep(Contact)
 
 Contacts states work in grep.
 
-```
+```ruby
 # Log all open contacts in a group
 Contacts.grep(OPEN)
         .each { |contact| logger.info("#{contact.id} is in #{contact}") }
@@ -1003,7 +1005,7 @@ Contacts.grep(CLOSED)
 
 Contact states work in case statements.
 
-```
+```ruby
 #Log if contact is open or closed
 case TestContact
 when (OPEN)
@@ -1016,7 +1018,7 @@ end
 
 Other examples
 
-```
+```ruby
 rule 'Log state of all doors on system startup' do
   on_start
   run do
@@ -1045,14 +1047,14 @@ end
 | dimension       |            | Returns the dimension of the Number Item, nil if the number is dimensionless                                                                             | `Numberone.dimension`                                                        |
 | Numeric Methods |            | All methods for [Ruby Numeric](https://ruby-doc.org/core-2.5.0/Numeric.html)                                                                             |                                                                              |
 
- Math operations for dimensionless numbers return a type of [Ruby BigDecimal](https://ruby-doc.org/stjjdlib-2.5.1/libdoc/bigdecimal/rdoc/BigDecimal.html).  Check [Quantities section](#### Quantities ) for details of how math operations impact dimensioned numbers. 
+ Math operations for dimensionless numbers return a type of [Ruby BigDecimal](https://ruby-doc.org/stjjdlib-2.5.1/libdoc/bigdecimal/rdoc/BigDecimal.html).  Check [Quantities section](#Quantities) for details of how math operations impact dimensioned numbers. 
 
 
 ##### Examples
 
 Math operations can be performed directly on the NumberItem
 
-```
+```ruby
 # Add 5 to a number item
 NumberOne << NumberOne + 5
 
@@ -1063,7 +1065,7 @@ NumberOne << 5 + NumberOne
 
 Number Items can be selected in an enumerable with grep.
 
-```
+```ruby
 # Get all NumberItems
 items.grep(NumberItem)
       .each { |number| logger.info("#{number.id} is a Number Item") }
@@ -1071,7 +1073,7 @@ items.grep(NumberItem)
 
 Number Item work with ranges and can be used in grep.
 
-```
+```ruby
 # Get numbers in group Numbers with a state of less than 50
       # Get all NumberItems less than 50
       Numbers.grep(0...50)
@@ -1079,7 +1081,7 @@ Number Item work with ranges and can be used in grep.
 ```
 
 Number Items can also be used in case statements with ranges.
-```
+```ruby
 #Check if number items is less than 50
 case NumberOne
 when (0...50)
@@ -1103,7 +1105,8 @@ Quantities are part of the [Units of Measurement](https://www.openhab.org/docs/c
 ###### Examples
 
 Quantity types can perform math operations between them.  
-```
+
+```ruby
 Quantity.new('50 °F') + -Quantity.new('25 °F') = 25.0 °F
 Quantity.new('100 °F') / Quantity.new('2 °F') = 50
 Quantity.new('50 °F') * Quantity.new('2 °F') = 100 °F
@@ -1112,7 +1115,7 @@ Quantity.new('50 °F') + Quantity.new('50 °F') = 100 °F
 ```
 
 If the operand is a string it will be automatically converted into a Quantity. 
-```
+```ruby
 Quantity.new('100 °F') / '2 °F' = 50
 Quantity.new('50 °F') * '2 °F' = 100 °F
 Quantity.new('50 °F') - '25 °F' = 25 °F
@@ -1120,13 +1123,13 @@ Quantity.new('50 °F') + '50 °F' = 100 °F
 ```
 
 If the operand is a number, it will be unit-less, but the result of the operation will have a unit.  This only works for multiplication and division. 
-```
+```ruby
 Quantity.new('50 °F')  * 2 = 100 °F
 Quantity.new('100 °F') / 2 = 50 °F 
 ```
 
 If the operand is a dimensioned NumberItem it will automatically be converted to a quantity for the operation.
-```
+```ruby
 # NumberF = '2 °F'
 # NumberC = '2 °C'
 
@@ -1136,7 +1139,7 @@ Quantity.new('50 °F') + NumberC # = 85.60 °F
 
 If the operand is a non-dimensioned NumberItem it can be used only in multiplication and division operations.
 
-```
+```ruby
 # Number Dimensionless = 2
 
 Quantity.new('50 °F') * Dimensionless # = 100 °F   
@@ -1144,7 +1147,7 @@ Quantity.new('50 °F') / Dimensionless # = 25 °F
 ```
 
 Quantities can be compared, if they have comparable units.
-```
+```ruby
 Quantity.new('50 °F') >  Quantity.new('25 °F')  
 Quantity.new('50 °F') >  Quantity.new('525 °F') 
 Quantity.new('50 °F') >= Quantity.new('50 °F')  
@@ -1153,14 +1156,14 @@ Quantity.new('50 °F') <  Quantity.new('25 °C')
 ```
 
 If the compare-to is a string, it will be automatically converted into a quantity.
-```
+```ruby
 Quantity.new('50 °F') == '50 °F' 
 Quantity.new('50 °F') <  '25 °C'
 ```
 
 Dimensioned Number Items can be converted to quantities with other units using the \| operator
 
-```
+```ruby
 # NumberC = '23 °C'
 
 # Using a unit 
@@ -1173,7 +1176,7 @@ logger.info("In Fahrenheit #{NumberC | '°F'}")
 
 Dimensionless Number Items can be converted to quantities with units using the \| operator
 
-```
+```ruby
 # Dimensionless = 70
 
 # Using a unit 
@@ -1186,7 +1189,7 @@ logger.info("In Fahrenheit #{Dimensionless | '°F'}")
 
 Dimensioned Number Items automatically use their units and convert automatically for math operations
 
-```
+```ruby
 # Number:Temperature NumberC = 23 °C
 # Number:Temperature NumberF = 70 °F
 
@@ -1196,7 +1199,7 @@ NumberF + NumberC # = 143.40 °F
 
 Dimensionless Number Items can be used for multiplication and division. 
 
-```
+```ruby
 # Number Dimensionless = 2
 # Number:Temperature NumberF = 70 °F
 
@@ -1207,7 +1210,7 @@ Dimensionless * NumberF # = 140.0 °F
 ```
 
 Comparisons work on dimensioned number items with different, but comparable units.
-```
+```ruby
 # Number:Temperature NumberC = 23 °C
 # Number:Temperature NumberF = 70 °F
 
@@ -1215,7 +1218,7 @@ NumberC > NumberF # = true
 ```
 
 Comparisons work with dimensioned numbers and strings representing quantities
-```
+```ruby
 # Number:Temperature NumberC = 23 °C
 # Number:Temperature NumberF = 70 °F
 
@@ -1225,13 +1228,13 @@ NumberC == '23 °C' #= true
 
 For certain unit types, such as temperature, all unit needs to be normalized to the comparator for all operations when combining comparison operators with dimensioned numbers.
 
-```
+```ruby
 (NumberC |'°F') - (NumberF |'°F') < '4 °F' 
 ```
 
 To facilitate conversion of multiple dimensioned and dimensionless numbers the unit block may be used.  The unit block attempts to do the _right thing_ based on the mix of dimensioned and dimensionless items within the block.  Specifically all dimensionless items are converted to the supplied unit, except when they are used for multiplication or division. 
 
-```
+```ruby
 # Number:Temperature NumberC = 23 °C
 # Number:Temperature NumberF = 70 °F
 # Number Dimensionless = 2
@@ -1262,7 +1265,7 @@ unit('°C') { ( (2 * (NumberF + NumberC) ) / Dimensionless ) < 45} 	#= true     
 
 String operations can be performed directly on the StringItem
 
-```
+```ruby
 # StringOne has a current state of "Hello"
 StringOne << StringOne + " World!"
 # StringOne will eventually have a state of 'Hello World!'
@@ -1274,7 +1277,7 @@ NumberOne << 5 + NumberOne
 
 String Items can be selected in an enumerable with grep.
 
-```
+```ruby
 # Get all StringItems
 items.grep(StringItem)
      .each { |string| logger.info("#{string.id} is a String Item") }
@@ -1282,7 +1285,7 @@ items.grep(StringItem)
 
 String Item values can be matched against regular expressions
 
-```
+```ruby
 # Get all Strings that start with an H
 Strings.grep(/^H/)
         .each { |string| logger.info("#{string.id} starts with an H") }
@@ -1324,7 +1327,7 @@ Number Den_Temp "Den temperature" (GroundFloor, Temperatures)
 
 The following are log lines and the output after the comment
 
-```
+```ruby
 #Operate on items in a group using enumerable methods
 logger.info("Total Temperatures: #{Temperatures.count}")     #Total Temperatures: 3'
 logger.info("Temperatures: #{House.sort_by(&:label).map(&:label).join(', ')}") #Temperatures: Bedroom temperature, Den temperature, Living Room temperature' 
@@ -1343,7 +1346,7 @@ logger.info("Groups: #{House.groups.sort_by(&:id).map(&:id).join(', ')}")  # Gro
 ```
 
 
-```
+```ruby
 rule 'Turn off any switch that changes' do
   changed Switches.items
   triggered &:off
@@ -1351,7 +1354,7 @@ end
 ```
 
 Built in [enumerable](https://ruby-doc.org/core-2.5.1/Enumerable.html)/[set](https://ruby-doc.org/stdlib-2.5.1/libdoc/set/rdoc/Set.html) functions can be applied to groups.  
-```
+```ruby
 logger.info("Max is #{Temperatures.max}")
 logger.info("Min is #{Temperatures.min}")
 ```
@@ -1365,11 +1368,11 @@ Things can be access using the `things` method and subsequent operations on that
 | []                 | Get a specific thing by name                                        |
 | enumerable methods | All methods [here](https://ruby-doc.org/core-2.5.0/Enumerable.html) |
 
-```
+```ruby
 things.each { |thing| logger.info("Thing: #{thing.uid}")}
 ```
 
-```
+```ruby
 logger.info("Thing: #{things['astro:sun:home'].uid}")
 ```
 
@@ -1380,7 +1383,7 @@ For thing objects now additional methods are provided, however the standard [JRu
 ### Logging
 Logging is available everywhere through the logger object.  The name of the rule file is automatically appended to the logger name. Pending [merge](https://github.com/openhab/openhab-core/pull/1885) into the core.
 
-```
+```ruby
 logger.trace('Test logging at trace') # 2020-12-03 18:05:20.903 [TRACE] [jsr223.jruby.log_test               ] - Test logging at trace
 logger.debug('Test logging at debug') # 2020-12-03 18:05:32.020 [DEBUG] [jsr223.jruby.log_test               ] - Test logging at debug
 logger.warn('Test logging at warn') # 2020-12-03 18:05:41.817 [WARN ] [jsr223.jruby.log_test               ] - Test logging at warn
@@ -1394,7 +1397,7 @@ logger.error('Test logging at error') # 2020-12-03 18:06:02.021 [ERROR] [jsr223.
 Gems are available using the [inline bundler syntax](https://bundler.io/guides/bundler_in_a_single_file_ruby_script.html). The require statement can be omitted. 
 
 
-```
+```ruby
 gemfile do
   source 'https://rubygems.org'
    gem 'json', require: false
@@ -1405,7 +1408,7 @@ logger.info("The nap gem is at version #{REST::VERSION}")
 ```
 
 ### Duration
-[Ruby integers](https://ruby-doc.org/core-2.5.0/Integer.html) are extended with several methods to support durations.  These methods create a new duration object that is used by the [Every trigger](##### Every), the [for option](##### Changed) and [timers](### Timers). 
+[Ruby integers](https://ruby-doc.org/core-2.5.0/Integer.html) are extended with several methods to support durations.  These methods create a new duration object that is used by the [Every trigger](#Every), the [for option](#Changed) and [timers](#Timers). 
 
 Extended Methods
 
@@ -1433,26 +1436,26 @@ The timer object has all of the methods of the [OpenHAB Timer](https://www.openh
 
 `reschedule` method parameters
 
-| Parameter | Description                                                                                         |
-| --------- | --------------------------------------------------------------------------------------------------- |
-| duration  | Optional [duration](### Duration) if unspecified original duration supplied to after method is used |
+| Parameter | Description                                                                                      |
+| --------- | ------------------------------------------------------------------------------------------------ |
+| duration  | Optional [duration](#Duration) if unspecified original duration supplied to after method is used |
 
 
 
-```
+```ruby
 after 5.seconds  do
   logger.info("Timer Fired")
 end
 ```
 
-```
+```ruby
 # Timers delegate methods to OpenHAB timer objects
 after 1.second do |timer|
   logger.info("Timer is active? #{timer.is_active}")
 end
 ```
 
-```
+```ruby
 # Timers can be rescheduled to run again, waiting the original duration
 after 3.seconds do |timer|
   logger.info("Timer Fired")
@@ -1460,7 +1463,7 @@ after 3.seconds do |timer|
 end
 ```
 
-```
+```ruby
 # Timers can be rescheduled for different durations
 after 3.seconds do |timer|
   logger.info("Timer Fired")
@@ -1473,7 +1476,7 @@ end
 
 ### Log "Rule *name* executed" an entry every minute
 
-```
+```ruby
 rule 'Simple' do
   every :minute
   run { logger.info "Rule #{name} executed" }
@@ -1486,7 +1489,7 @@ end
 
 Meaning you can use code itself to generate your rules*
 
-```
+```ruby
 rule 'Log whenever a Virtual Switch Changes' do
   items.select { |item| item.is_a? Switch }
        .select { |item| item.label&.include? 'Virtual' }
@@ -1499,7 +1502,7 @@ end
 ```
 
 Which is the same as
-```
+```ruby
 virtual_switches = items.select { |item| item.is_a? Switch }
                         .select { |item| item.label&.include? 'Virtual' }
 
@@ -1510,7 +1513,7 @@ end
 ```
 
 This will accomplish the same thing, but create a new rule for each virtual switch*
-```
+```ruby
 virtual_switches = items.select { |item| item.is_a? Switch }
                         .select { |item| item.label&.include? 'Virtual' }
 
@@ -1530,7 +1533,7 @@ end
 
 DSL
 
-```
+```ruby
 rule 'Snap Fan to preset percentages'
 when Member of CeilingFans changed
 then
@@ -1558,7 +1561,7 @@ end
 ```
 
 Ruby
-```
+```ruby
 rule 'Snap Fan to preset percentages' do
   changed(*CeilingFans)
   triggered do |item|
@@ -1578,7 +1581,7 @@ end
 ```
 
 Python
-```
+```python
 @rule("Use Supplemental Heat In Office")
 @when("Item Office_Temperature changed")
 @when("Item Thermostats_Upstairs_Temp changed")
@@ -1627,7 +1630,7 @@ def office_heater(event):
 
 
 Ruby
-```
+```ruby
 rule 'Use supplemental heat in office' do
   changed Office_Temperature, Thermostats_Upstairs_Temp, Office_Occupied, OfficeDoor
   run { Lights_Office_Outlet << ON }
