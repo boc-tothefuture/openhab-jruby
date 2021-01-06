@@ -314,14 +314,14 @@ end
 
 ```ruby
 rule 'Execute rule when item receives specific command' do
-  received_command Alarm_Mode, only: 7
+  received_command Alarm_Mode, command: 7
   run { |event| logger.info("Item received command: #{event.command}" ) }
 end
 ```
 
 ```ruby
 rule 'Execute rule when item receives one of many specific commands' do
-  received_command Alarm_Mode, only: [7,14]
+  received_command Alarm_Mode, commands: [7,14]
   run { |event| logger.info("Item received command: #{event.command}" ) }
 end
 ```
@@ -342,7 +342,7 @@ end
 
 ```ruby
 rule 'Execute rule when member of group is changed to one of many states' do
-  received_command AlarmModes.items, only: [7,14]
+  received_command AlarmModes.items, commands: [7,14]
   triggered { |item| logger.info("Group item #{item.id} received command")}
 end
 ```
