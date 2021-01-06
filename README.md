@@ -707,7 +707,7 @@ Switch SwitchTest "Test Switch"
 
 ```
 
-```
+```ruby
 logger.info("Item Count: #{items.count}")  # Item Count: 2
 logger.info("Items: #{items.sort_by(&:label).map(&:label).join(', ')}")  #Items: Test Dimmer, Test Switch' 
 ```
@@ -1443,7 +1443,7 @@ The timer object has all of the methods of the [OpenHAB Timer](https://www.openh
 
 
 ```ruby
-after 5.seconds  do
+after 5.seconds do
   logger.info("Timer Fired")
 end
 ```
