@@ -9,6 +9,7 @@ require 'English'
 require 'time'
 require 'cucumber'
 require 'cucumber/rake/task'
+require 'open-uri'
 require_relative 'lib/openhab/version'
 
 task default: %w[lint:auto_correct openhab]
@@ -76,7 +77,7 @@ namespace :openhab do
     next if File.exist? File.join(OPENHAB_DIR, 'start.sh')
 
     Dir.chdir(OPENHAB_DIR) do
-      sh 'wget', "https://openhab.jfrog.io/openhab/libs-milestone-local/org/openhab/distro/openhab/#{OPENHAB_VERSION}/openhab-#{OPENHAB_VERSION}.zip"
+      IO.copy_stream(open("https://openhab.jfrog.io/openhab/libs-milestone-local/org/openhab/distro/openhab/#{OPENHAB_VERSION}/openhab-#{OPENHAB_VERSION}.zip"), "openhab-#{OPENHAB_VERSION}.zip")
       sh 'unzip', "openhab-#{OPENHAB_VERSION}"
     end
   end
