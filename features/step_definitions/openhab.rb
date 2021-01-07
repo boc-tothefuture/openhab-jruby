@@ -96,6 +96,11 @@ Given('item states:') do |table|
   end
 end
 
+Then('The rule {string} should have {string} as its description') do |rule, description|
+  rule_details = Rest.rule(rule: rule)
+  raise "Rule #{rule} has description '#{rule_details['description']}' instead of '#{description}'" unless rule_details['description']&.chomp == description.chomp
+end
+
 Given('item updates:') do |table|
   table.hashes.each do |row|
     item = row['item']

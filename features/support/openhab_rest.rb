@@ -16,6 +16,10 @@ class Rest
     get('/rest/rules')
   end
 
+  def self.rule(rule: )
+    rules.first{ |r | rule&.name&.chomp == rule.chomp}
+  end
+
   def self.items
     get('/rest/items')
   end

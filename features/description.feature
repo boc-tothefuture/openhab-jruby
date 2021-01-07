@@ -7,8 +7,9 @@ Feature:  Rule languages supports description feature
     Given a rule:
       """
       rule 'Test rule' do
-      description 'This is the rule description'
-      on_start
+        description 'This is the rule description'
+        on_start
+        run {}
       end
       """
     When I deploy the rule
