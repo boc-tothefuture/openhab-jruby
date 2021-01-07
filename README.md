@@ -72,6 +72,7 @@ end
 
 | Property         | Type                                                                    | Last/Multiple | Options                               | Default | Description                                                                 | Examples                                                                                                                                                                                                              |
 | ---------------- | ----------------------------------------------------------------------- | ------------- | ------------------------------------- | ------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| description      | String                                                                  | Single        |                                       |         | Set the rule description                                                    |                                                                                                                                                                                                                       |
 | every            | Symbol or Duration                                                      | Multiple      | at: String or TimeOfDay               |         | When to execute rule                                                        | Symbol (:second, :minute, :hour, :day, :week, :month, :year, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday) or duration (5.minutes, 20.seconds, 14.hours), at: '5:15' or TimeOfDay(h:5, m:15) |
 | cron             | String                                                                  | Multiple      |                                       |         | OpenHAB Style Cron Expression                                               | '* * * * * * ?'                                                                                                                                                                                                       |
 | changed          | Item or Item Array[] or Group or Group.items or Thing or Thing Array [] | Multiple      | from: State, to: State, for: Duration |         | Execute rule on item state change                                           | BedroomLightSwitch, from: OFF to ON                                                                                                                                                                                   |
@@ -125,6 +126,7 @@ Multiple indicates that multiple entries of the same property can be used in agg
 
 ```ruby
 rule 'Log the rule name every minute' do
+  description 'This rule will create a log every minute'
   every :minute
   run { logger.info "Rule '#{name}' executed" }
 end
