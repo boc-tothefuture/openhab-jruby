@@ -429,7 +429,7 @@ The following properties exist when a run block is triggered from an  [updated](
 ```ruby
 rule 'Access Event Properties' do
   changed TestSwitch
-  run { |event| logger.info("#{event.item} triggered from #{event.last} to #{event.state}") }
+  run { |event| logger.info("#{event.item.id} triggered from #{event.last} to #{event.state}") }
 end
 ```
 
@@ -438,7 +438,7 @@ end
 rule 'Multi Line Run Block' do
   changed TestSwitch
   run do |event|
-    logger.info("#{event.item} triggered")
+    logger.info("#{event.item.id} triggered")
     logger.info("from #{event.last}") if event.last
     logger.info("to #{event.state}") if event.state
    end
@@ -449,7 +449,7 @@ Rules can have multiple run blocks and they are executed in order, Useful when u
 ```ruby
 rule 'Multiple Run Blocks' do
   changed TestSwitch
-  run { |event| logger.info("#{event.item} triggered") }
+  run { |event| logger.info("#{event.item.id} triggered") }
   run { |event| logger.info("from #{event.last}") if event.last }
   run { |event| logger.info("to #{event.state}") if event.state  }
 end
