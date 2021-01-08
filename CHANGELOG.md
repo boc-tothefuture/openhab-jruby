@@ -6,6 +6,10 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 2.3.0
+### Added
+- Support for rule description
+
 ## 2.2.1
 ### Fixed
 - `!` operator on SwitchItems now returns ON if item is UNDEF or NULL
