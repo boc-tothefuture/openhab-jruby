@@ -42,6 +42,7 @@ module OpenHAB
           prop_array :otherwise, array_name: :run_queue, wrapper: Otherwise
 
           prop :name
+          prop :description
           prop :enabled
           prop :between
 
@@ -81,7 +82,7 @@ module OpenHAB
           logger.trace { "Trigger Waits #{config.trigger_delays}" }
 
           if config.enabled
-            rule = Rule.new(name: config.name, run_queue: config.run_queue, guard: guard, between: config.between, trigger_delays: config.trigger_delays)
+            rule = Rule.new(name: config.name, description: config.description, run_queue: config.run_queue, guard: guard, between: config.between, trigger_delays: config.trigger_delays)
             rule.set_triggers(config.triggers)
             am = $scriptExtension.get('automationManager')
             am.addRule(rule)
@@ -98,9 +99,10 @@ module OpenHAB
 
           using OpenHAB::Core::DSL::Tod::TimeOfDayRange
 
-          def initialize(name:, run_queue:, guard:, between:, trigger_delays:)
+          def initialize(name:, description:, run_queue:, guard:, between:, trigger_delays:)
             super()
             setName(name)
+            setDescription(description)
             @run_queue = run_queue
             @guard = guard
             @between = between || OpenHAB::Core::DSL::Tod::TimeOfDayRange::ALL_DAY
