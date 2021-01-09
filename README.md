@@ -1537,8 +1537,6 @@ The returned states variable is a hash that supports some additional methods:
 | changed?        | Returns true if any of the stored items had changed states                               |
 | restore_changes | restores only items whose state had changed                                              |
 
-
-
 ## Examples
 
 ### Log "Rule *name* executed" an entry every minute
