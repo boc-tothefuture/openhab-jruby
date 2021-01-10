@@ -10,6 +10,7 @@ module OpenHAB
       # @since 0.0.1
       module Tod
         java_import java.time.LocalTime
+        java_import java.time.format.DateTimeFormatter
 
         # Class that encapsulates a Time of Day, often viewed as hour-minute-second
         # @author Brian O'Connell
@@ -45,16 +46,11 @@ module OpenHAB
 
           # Constructs a TimeOfDay representing the time when called
           # @since 0.0.1
-          # @param [String] String representation of TimeOfDay. Valid formats include "HH:MM:SS", "HH:MM", "H:MM", "HH", "H"
+          # @param [String] String representation of TimeOfDay. Valid formats include "HH:MM:SS", "HH:MM", "H:MM", "HH", "H", "H:MM am"
           # @return [TimeOfDay] Representing supplied string
           def self.parse(string)
-            # Support single digit hours
-            hour, minute, second = string.split(':')
-            hour = hour.rjust(2, '0') # Prepend zeros if necessary
-            minute ||= '00' # Create minutes if necessary to support format "HH" or "H"
-            adjusted_string = [hour, minute, second].compact.join(':') # "Put back together in format HH:MM[:SS]"
-
-            local_time = LocalTime.parse(adjusted_string)
+            format = /(am|pm)$/i.match?(string) ? 'h[:mm[:ss]][ ]a' : 'H[:mm[:ss]]'
+            local_time = LocalTime.parse(string.downcase, DateTimeFormatter.ofPattern(format))
             TimeOfDay.new(h: local_time.hour, m: local_time.minute, s: local_time.second)
           end
 
