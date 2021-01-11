@@ -2,7 +2,6 @@
 
 require 'rake/packagetask'
 require 'rubocop/rake_task'
-require 'rspec/core/rake_task'
 require 'bundler/gem_tasks'
 require 'yard'
 require 'English'
@@ -20,11 +19,9 @@ YARD::Rake::YardocTask.new do |t|
 end
 
 RuboCop::RakeTask.new(:lint) do |task|
-  task.patterns = ['lib/**/*.rb', 'test/**/*.rb', 'spec/**/*.rb']
+  task.patterns = ['lib/**/*.rb', 'test/**/*.rb']
   task.fail_on_error = false
 end
-
-RSpec::Core::RakeTask.new(:spec)
 
 desc 'Run Cucumber Features'
 task features: 'openhab:setup' do
