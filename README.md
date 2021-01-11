@@ -685,7 +685,7 @@ or
 rule 'Log an entry if started between 3:30:04 and midnight using TimeOfDay objects' do
   on_start
   run { logger.info ("Started at #{TimeOfDay.now}")}
-  between TimeOfDay.new(h: 3, m: 30, s: 4)..TimeOfDay.midnight
+  between TimeOfDay.new(h: 3, m: 30, s: 4)..TimeOfDay.MIDNIGHT
 end
 ```
 
@@ -1473,6 +1473,69 @@ after 3.seconds do |timer|
 end
 ```
 
+### TimeOfDay
+
+TimeOfDay class can be used in rules for time related logic. Methods:
+
+| Method      | Parameter | Description                                                 | Example                                                  |
+| ----------- | --------- | ----------------------------------------------------------- | -------------------------------------------------------- |
+| parse       | String    | Creates a TimeOfDay object with a given time string.        | curfew_start = TimeOfDay.parse '19:30'                   |
+| now         |           | Creates a TimeOfDay object that represents the current time | TimeOfDay.now > curfew_start, or TimeOfDay.now > '19:30' |
+| MIDNIGHT    |           | Creates a TimeOfDay object for 00:00                        | TimeOfDay.MIDNIGHT                                       |
+| NOON        |           | Creates a TimeOfDay object for 12:00                        | TimeOfDay.now < TimeOfDay.NOON                           |
+| constructor | h, m, s   | Creates a TimeOfDay with the given hour, minute, second     | TimeOfDay.new(h: 17, m: 30, s: 0)                        |
+| hour        |           | Returns the hour part of the object                         | TimeOfDay.now.hour                                       |
+| minute      |           | Returns the minute part of the object                       | TimeOfDay.now.minute                                     |
+| second      |           | Returns the second part of the object                       | TimeOfDay.now.second                                     |
+
+A TimeOfDay object can be compared against another TimeOfDay object or a parseable string representation of time.
+
+#### Examples
+
+```ruby
+#Create a TimeOfDay object
+break_time = TimeOfDay.NOON
+
+if TimeOfDay.now > TimeOfDay.new(h: 17, m: 30, s: 0) # comparing two TimeOfDay objects
+  # do something
+elsif TimeOfDay.now < '8:30' # comparison against a string
+  #do something
+end
+four_pm = TimeOfDay.parse '16:00'
+```
+
+### store_states
+
+store_states takes one or more items or groups and returns a map `{Item => State}` with the current state of each item. It is implemented by calling OpenHAB's [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
+
+```ruby
+states = store_states Item1, Item2 
+...
+states.restore
+```
+
+or in a block context:
+```ruby
+store_states Item1, Item2 do
+...
+end # the states will be restored here
+```
+
+It can take an array of items:
+```ruby
+items_to_store = [ Item1, Item2 ]
+states = store_states items_to_store
+...
+states.restore_changes # restore only changed items
+```
+
+The returned states variable is a hash that supports some additional methods:
+
+| method          | description                                                                              |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| restore         | Restores the states of all the stored items by calling events.restoreStates() internally |
+| changed?        | Returns true if any of the stored items had changed states                               |
+| restore_changes | restores only items whose state had changed                                              |
 
 ## Examples
 

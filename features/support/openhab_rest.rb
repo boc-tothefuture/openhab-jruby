@@ -17,7 +17,7 @@ class Rest
   end
 
   def self.rule(rule:)
-    rules.first { |_r| rule&.name&.chomp == rule.chomp }
+    rules.first { |r| rule&.name&.chomp == r.chomp }
   end
 
   def self.items

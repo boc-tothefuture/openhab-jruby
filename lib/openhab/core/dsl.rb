@@ -17,6 +17,7 @@ require 'core/dsl/time_of_day'
 require 'core/dsl/gems'
 require 'core/dsl/units'
 require 'core/dsl/types/quantity'
+require 'core/dsl/states'
 
 module OpenHAB
   module Core
@@ -30,7 +31,11 @@ module OpenHAB
         base.send :include, OpenHAB::Core::DSL::Units
         base.send :include, OpenHAB::Core::DSL::Actions
         base.send :include, OpenHAB::Core::DSL::Timers
+<<<<<<< HEAD
         base.send :include, OpenHAB::Core::DSL::Tod
+=======
+        base.send :include, OpenHAB::Core::DSL::States
+>>>>>>> main
         base.send :include, Things
       end
     end
