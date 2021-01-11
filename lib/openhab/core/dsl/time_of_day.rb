@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'time'
+require 'date'
 
 module OpenHAB
   module Core
@@ -108,25 +110,28 @@ module OpenHAB
         end
 
         # Creates a range that can be compared against time of day objects or strings to see if they are within the range.
-          # @since 2.4.0
-          # @return Range object representing a TimeOfDay Range
-          def between(range)
-            raise 'Supplied object must be a range' unless range.is_a? Range
+        # @since 2.4.0
+        # @return Range object representing a TimeOfDay Range
+        def between(range)
+          puts "Between called with #{range}"
+          raise 'Supplied object must be a range' unless range.is_a? Range
 
-              start = range.begin
-              ending = range.end
+          start = range.begin
+          ending = range.end
 
-              start = TimeOfDay.parse(start) if start.is_a? String
-              ending = TimeOfDay.parse(ending) if ending.is_a? String
+          start = TimeOfDay.parse(start) if start.is_a? String
+          ending = TimeOfDay.parse(ending) if ending.is_a? String
 
-              start = start.local_time.to_second_of_day
-              ending = ending.local_time.to_second_of_day
-              ending += NUM_SECONDS_IN_DAY if ending < start
-              
-              start = TimeOfDayRangeElement.new(tod: start, range_begin: start.begin)
-              ending = TimeOfDayRangeElement.new(tod: ending, range_begin: start.begin)
-              range.exclude_end? ? (start...ending) : (start..ending)
-          end
+          start_sod = start.local_time.to_second_of_day
+          ending_sod = ending.local_time.to_second_of_day
+          ending_sod += NUM_SECONDS_IN_DAY if ending < start
+
+          puts "Creating range from #{start_sod}..#{ending_sod}"
+
+          start = TimeOfDayRangeElement.new(sod: start_sod, range_begin: start_sod)
+          ending = TimeOfDayRangeElement.new(sod: ending_sod, range_begin: start_sod)
+          range.exclude_end? ? (start...ending) : (start..ending)
+        end
 
         MIDNIGHT = '00:00'
         NOON = '12:00'
@@ -134,42 +139,51 @@ module OpenHAB
 
         # Modules that refines the Ruby Range object cover? and include? methods to support TimeOfDay ranges
         class TimeOfDayRangeElement
-          include comparable
+          include Comparable
 
           NUM_SECONDS_IN_DAY = (60 * 60 * 24)
 
-          def initializer(tod:, range_begin:)
-            @tod = tod
+          attr_reader :sod
+
+          def initialize(sod:, range_begin:)
+            @sod = sod
             @range_begin = range_begin
           end
 
-          # Returns the current time of day advanced by one second
-          # @since 0.0.1
-          # @return [TimeOfDay] Return current time of day advanced by one second
+          # Returns the current second of day advanced by 1 second
           def succ
-            next_time = @tod.local_time.plusSeconds(1)
-            TimeOfDay.new(next_time.hour, next_time.minute, next_time.second)
+            @sod + 1
           end
 
           # Compares one TimeOfDayRangeElement to another
           # @since 2.4.0
           # @return [Number, nil] -1,0,1 if other TimeOfDay is less than, equal to, or greater than this TimeOfDay
           def <=>(other)
-            raise 'Objects must be a TimeOfDay or String that can be parsed to TimeOfDay' unless other.is_a? TimeOfDay || other.is_a? String
+            other_second_of_day = case other
+                                  when TimeOfDay
+                                    puts "TOD: #{other} SOD: #{other.local_time.to_second_of_day}"
+                                    adjust_second_of_day(other.local_time.to_second_of_day)
+                                  when String
+                                    adjust_second_of_day(TimeOfDay.parse(other).local_time.to_second_of_day)
+                                  when Time
+                                    adjust_second_of_day(TimeOfDay.new(h: other.hour, m: other.min, s: other.sec).local_time.to_second_of_day)
+                                  when TimeOfDayRangeElement
+                                    other.sod
+                                  else
+                                    raise ArgumentError, 'Supplied argument cannot be converted into Time Of Day Object'
+                                  end
 
-            other = TimeOfDay.parse(other) if other.is_a? String # Convert to TimeOfDay if String
-            other_second_of_day = adjust_second_of_day(other.local_time.to_second_of_day)
+            puts "My SOD: #{sod} other: #{other_second_of_day}"
 
-            @local_time.compare_to(other.local_time)
+            puts "Results #{sod <=> other_second_of_day}"
+            sod <=> other_second_of_day
           end
 
-            private
+          private
 
-            def adjust_second_of_day(second_of_day)
-              second_of_day += NUM_SECONDS_IN_DAY if second_of_day < @range_begin
-              second_of_day
-            end
-
+          def adjust_second_of_day(second_of_day)
+            second_of_day += NUM_SECONDS_IN_DAY if second_of_day < @range_begin
+            second_of_day
           end
         end
       end

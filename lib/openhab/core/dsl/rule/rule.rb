@@ -97,8 +97,6 @@ module OpenHAB
           include OpenHAB::Core::DSL::Tod
           java_import java.time.ZonedDateTime
 
-          using OpenHAB::Core::DSL::Tod::TimeOfDayRange
-
           def initialize(name:, description:, run_queue:, guard:, between:, trigger_delays:)
             super()
             setName(name)
