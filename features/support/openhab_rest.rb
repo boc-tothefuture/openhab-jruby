@@ -16,8 +16,8 @@ class Rest
     get('/rest/rules')
   end
 
-  def self.rule(rule: )
-    rules.first{ |r | rule&.name&.chomp == rule.chomp}
+  def self.rule(rule:)
+    rules.first { |r| rule&.name&.chomp == r.chomp }
   end
 
   def self.items
