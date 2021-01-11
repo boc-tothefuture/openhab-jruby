@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'delegate'
 
 module OpenHAB
@@ -20,14 +22,14 @@ module OpenHAB
           end
         end
 
-        def store_states(*items, &block)
-          items = items.flatten.map {|item| item.is_a?(Group) ? item.group : item }
+        def store_states(*items)
+          items = items.flatten.map { |item| item.is_a?(Group) ? item.group : item }
           states = StateStorage.new(BusEvent.storeStates(*items).to_h)
           if block_given?
             yield
             states.restore
           end
-          return states
+          states
         end
       end
     end
