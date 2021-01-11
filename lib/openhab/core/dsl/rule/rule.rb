@@ -82,7 +82,12 @@ module OpenHAB
           logger.trace { "Trigger Waits #{config.trigger_delays}" }
 
           if config.enabled
-            rule = Rule.new(name: config.name, description: config.description, run_queue: config.run_queue, guard: guard, between: config.between, trigger_delays: config.trigger_delays)
+            # Convert between to correct range or nil if not set
+            between = config.between&.yield_self { between(config.between) }
+
+            rule = Rule.new(name: config.name, description: config.description, run_queue: config.run_queue,
+                            guard: guard, between: between, trigger_delays: config.trigger_delays)
+
             rule.set_triggers(config.triggers)
             am = $scriptExtension.get('automationManager')
             am.addRule(rule)
@@ -121,10 +126,10 @@ module OpenHAB
               if trigger_delay.to.nil? || trigger_delay.to == new_state
                 return true
               else
-                logger.trace("Skipped execution of rule #{name} because to state #{new_state} does not equal specified state(#{trigger_delay.to})")
+                logger.trace("Skipped execution of rule '#{name}' because to state #{new_state} does not equal specified state(#{trigger_delay.to})")
               end
             else
-              logger.trace("Skipped execution of rule #{name} because old state #{old_state} does not equal specified state(#{trigger_delay.from})")
+              logger.trace("Skipped execution of rule '#{name}' because old state #{old_state} does not equal specified state(#{trigger_delay.from})")
             end
             false
           end
@@ -185,10 +190,10 @@ module OpenHAB
               if @between.cover? now
                 return true
               else
-                logger.trace("Skipped execution of rule #{name} because the current time #{now} is not between #{@between.begin} and #{@between.end}")
+                logger.trace("Skipped execution of rule '#{name}' because the current time #{now} is not between #{@between.begin} and #{@between.end}")
               end
             else
-              logger.trace("Skipped execution of rule #{name} because of guard #{@guard}")
+              logger.trace("Skipped execution of rule '#{name}' because of guard #{@guard}")
             end
             false
           end
