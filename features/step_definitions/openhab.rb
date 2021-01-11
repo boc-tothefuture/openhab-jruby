@@ -98,7 +98,9 @@ end
 
 Then('The rule {string} should have {string} as its description') do |rule, description|
   rule_details = Rest.rule(rule: rule)
-  raise "Rule #{rule} has description '#{rule_details['description']}' instead of '#{description}'" unless rule_details['description']&.chomp == description.chomp
+  unless rule_details['description']&.chomp == description.chomp
+    raise "Rule #{rule} has description '#{rule_details['description']}' instead of '#{description}'"
+  end
 end
 
 Given('item updates:') do |table|
