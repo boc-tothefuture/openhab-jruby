@@ -21,11 +21,11 @@ module OpenHAB
         end
 
         def store_states(*items, &block)
-          items = items.flaten.map {|item| item.is_a?(Group) ? item.group : item }
+          items = items.flatten.map {|item| item.is_a?(Group) ? item.group : item }
           states = StateStorage.new(BusEvent.storeStates(*items).to_h)
           if block_given?
             yield
-            states.restore 
+            states.restore
           end
           return states
         end
