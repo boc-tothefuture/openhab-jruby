@@ -1,13 +1,25 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
 require 'securerandom'
 
+def require_openhab
+  "require 'openhab'"
+end
+
 def doc_string_to_rule(doc_string)
-  "require 'openhab'\n\n#{doc_string}\n"
+  "#{require_openhab}\n\n#{doc_string}\n"
+end
+
+def identifying_started_log_line(uid)
+  "Processing Started for #{uid}"
 end
 
 def identifying_log_line(uid)
   "Processing Complete for #{uid}"
+end
+
+def prepend_identifying_log_line_to_rule(uid)
+  @rule.insert require_openhab.length, %[\n\nlogger.info("#{identifying_started_log_line(uid)}")\n\n]
 end
 
 def append_identifying_log_line_to_rule(uid)
@@ -21,9 +33,10 @@ def deploy_rule(filename: nil, check: true)
   filename ||= "cucumber_test_#{uid}.rb"
 
   deploy_path = File.join(rules_dir, filename)
+  prepend_identifying_log_line_to_rule(uid)
   append_identifying_log_line_to_rule(uid)
   File.write(File.join(deploy_path), @rule)
-  wait_until(seconds: 30, msg: 'Rule not added') { check_log(identifying_log_line(uid)) } if check
+  wait_until(seconds: 30, msg: 'Rule not added') { check_log(identifying_started_log_line(uid)) } if check
 end
 
 Given('a rule(:)') do |doc_string|
