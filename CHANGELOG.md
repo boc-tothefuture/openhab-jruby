@@ -6,6 +6,11 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 2.5.1
+### Fixed
+- Corrected time of day parsing to be case insensitive
+- Merge conflict
+
 ## 2.5.0
 ### Added
 - `between` can be used throughout rules systems
