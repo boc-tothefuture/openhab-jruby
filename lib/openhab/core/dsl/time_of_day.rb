@@ -55,6 +55,8 @@ module OpenHAB
             format = /(am|pm)$/i.match?(string) ? 'h[:mm[:ss]][ ]a' : 'H[:mm[:ss]]'
             local_time = LocalTime.parse(string.downcase, DateTimeFormatter.ofPattern(format))
             TimeOfDay.new(h: local_time.hour, m: local_time.minute, s: local_time.second)
+          rescue java.time.format.DateTimeParseException => e
+            raise ArgumentError, e.message
           end
 
           # Constructs a TimeOfDay representing the time when called
