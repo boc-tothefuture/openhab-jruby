@@ -75,4 +75,5 @@ end
 class Java::OrgOpenhabCoreItems::GenericItem
   # rubocop:enable Style/ClassAndModuleChildren
   prepend OpenHAB::Core::DSL::MonkeyPatch::Items::ItemExtensions
+  prepend OpenHAB::Core::DSL::MonkeyPatch::Items::Metadata
 end
