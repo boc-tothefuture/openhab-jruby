@@ -1,5 +1,6 @@
 Feature:  Rule languages supports guards (only_if/not_if)
 
+
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
     And group "Switches"
