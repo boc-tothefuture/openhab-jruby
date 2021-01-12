@@ -13,7 +13,8 @@ module OpenHAB
       # @since 0.0.1
       module Tod
         java_import java.time.LocalTime
-        java_import java.time.format.DateTimeFormatter
+        java_import java.time.format.DateTimeFormatterBuilder
+        java_import java.util.Locale
 
         # Class that encapsulates a Time of Day, often viewed as hour-minute-second
         # @author Brian O'Connell
@@ -53,8 +54,11 @@ module OpenHAB
           # @return [TimeOfDay] Representing supplied string
           def self.parse(string)
             format = /(am|pm)$/i.match?(string) ? 'h[:mm[:ss]][ ]a' : 'H[:mm[:ss]]'
-            local_time = LocalTime.parse(string.downcase, DateTimeFormatter.ofPattern(format))
+            local_time = LocalTime.parse(string, DateTimeFormatterBuilder.new
+              .parseCaseInsensitive.appendPattern(format).toFormatter(Locale::ENGLISH))
             TimeOfDay.new(h: local_time.hour, m: local_time.minute, s: local_time.second)
+          rescue java.time.format.DateTimeParseException => e
+            raise ArgumentError, e.message
           end
 
           # Constructs a TimeOfDay representing the time when called
@@ -100,19 +104,14 @@ module OpenHAB
           # @since 0.0.1
           # @return [Number, nil] -1,0,1 if other TimeOfDay is less than, equal to, or greater than this TimeOfDay or nil if an object other than TimeOfDay is provided
           def <=>(other)
-<<<<<<< HEAD
-            if other.is_a? TimeOfDay
+            case other
+            when TimeOfDay
               @local_time.compare_to(other.local_time)
+            when String
+              @local_time.compare_to(TimeOfDay.parse(other).local_time)
             else
-              # Invert comparison if we don't know how to compare
               -(other <=> self)
             end
-=======
-            other = self.class.parse(other) if other.is_a? String
-            return unless other.is_a? TimeOfDay
-
-            @local_time.compare_to(other.local_time)
->>>>>>> main
           end
         end
 
