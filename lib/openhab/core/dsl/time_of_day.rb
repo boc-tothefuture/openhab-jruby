@@ -100,19 +100,14 @@ module OpenHAB
           # @since 0.0.1
           # @return [Number, nil] -1,0,1 if other TimeOfDay is less than, equal to, or greater than this TimeOfDay or nil if an object other than TimeOfDay is provided
           def <=>(other)
-<<<<<<< HEAD
-            if other.is_a? TimeOfDay
+            case other
+            when TimeOfDay
               @local_time.compare_to(other.local_time)
+            when String
+              @local_time.compare_to(TimeOfDay.parse(other).local_time)
             else
-              # Invert comparison if we don't know how to compare
               -(other <=> self)
             end
-=======
-            other = self.class.parse(other) if other.is_a? String
-            return unless other.is_a? TimeOfDay
-
-            @local_time.compare_to(other.local_time)
->>>>>>> main
           end
         end
 
