@@ -13,7 +13,6 @@ module OpenHAB
           java_import org.openhab.core.automation.util.TriggerBuilder
           java_import org.openhab.core.config.core.Configuration
 
-          using OpenHAB::Core::DSL::Tod::TimeOfDayRange
           include OpenHAB::Core::DSL::Rule
           extend OpenHAB::Core::Cron
 

@@ -31,7 +31,11 @@ module OpenHAB
         base.send :include, OpenHAB::Core::DSL::Units
         base.send :include, OpenHAB::Core::DSL::Actions
         base.send :include, OpenHAB::Core::DSL::Timers
+<<<<<<< HEAD
+        base.send :include, OpenHAB::Core::DSL::Tod
+=======
         base.send :include, OpenHAB::Core::DSL::States
+>>>>>>> main
         base.send :include, Things
       end
     end

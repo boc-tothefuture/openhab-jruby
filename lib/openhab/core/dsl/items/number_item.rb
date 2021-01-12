@@ -149,35 +149,3 @@ module OpenHAB
     end
   end
 end
-
-# rubocop:disable Style/BlockComments
-=begin
-class Java::OrgOpenhabCoreLibraryItems::NumberItem
-  java_import org.openhab.core.library.types.DecimalType
-
-  def truthy?
-    item_defined? && state != DecimalType::ZERO
-  end
-
-  def +(other)
-    command(state.to_big_decimal.intValue + other)
-    self
-  end
-
-  def -(other)
-    command(state.to_big_decimal.intValue - other)
-    self
-  end
-
-  def /(other)
-    command(state.to_big_decimal.intValue / other)
-    self
-  end
-
-  def *(other)
-    command(state.to_big_decimal.intValue * other)
-    self
-  end
-end
-=end
-# rubocop:enable Style/BlockComments

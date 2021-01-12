@@ -1504,6 +1504,27 @@ end
 four_pm = TimeOfDay.parse '16:00'
 ```
 
+### between
+ 
+ `between` creates a TimeOfDay range that can be used to check if another Time, TimeOfDay, or [TimeOfDay parsable string](### TimeOfDay) is within that range. 
+ 
+ ```ruby
+ logger.info("Within time range") if between('10:00'..'14:00').cover? Time.now
+ logger.info("Within time range") if between('10:00'..'14:00').include? TimeOfDay.now
+ 
+case Time.now
+
+when between('6:00'...'12:00')
+  logger.info("Morning Time")
+when between('12:00'..'15:00')
+  logger.info("Afternoon")
+else
+  logger.info("Not in time range")
+end  
+ ```
+ 
+ 
+
 ### store_states
 
 store_states takes one or more items or groups and returns a map `{Item => State}` with the current state of each item. It is implemented by calling OpenHAB's [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
