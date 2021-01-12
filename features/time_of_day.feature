@@ -21,24 +21,24 @@ Feature:  Rule languages supports comparing using TimeOfDay
     Scenario Outline: Parse strings into a TimeOfDay object
         Given a rule template:
             """
-            parsed = TimeOfDay.parse <template_time>
-            tod = TimeOfDay.new(h: <h>, m: <m>, s: <s>)
-            if parsed == tod
-                logger.info("TimeOfDay parser is correct")
+            begin
+              logger.info("TimeOfDay is #{TimeOfDay.parse <template_time>}")
+            rescue ArgumentError => e
+              logger.error("Error parsing time #{e}")
             end
             """
         When I deploy the rule
-        Then It <should> log "TimeOfDay parser is correct" within 2 seconds
+        Then It should log "<log_line>" within 5 seconds
         Examples:
-            | template_time | h  | m  | s  | should     |
-            | '1'           | 1  | 0  | 0  | should     |
-            | '02'          | 2  | 0  | 0  | should     |
-            | '1pm'         | 13 | 0  | 0  | should     |
-            | '12:30'       | 12 | 30 | 0  | should     |
-            | '12 am'       | 0  | 0  | 0  | should     |
-            | '7:00 AM'     | 7  | 0  | 0  | should     |
-            | '7:00 pm'     | 19 | 0  | 0  | should     |
-            | '7:30:20am'   | 7  | 30 | 20 | should     |
-            | '12  am'      | 0  | 0  | 0  | should not |
-            | '17:00pm'     | 17 | 0  | 0  | should not |
-            | '17:00am'     | 17 | 0  | 0  | should not |
+            | template_time | log_line              |
+            | '1'           | TimeOfDay is 01:00    |
+            | '02'          | TimeOfDay is 02:00    |
+            | '1pm'         | TimeOfDay is 13:00    |
+            | '12:30'       | TimeOfDay is 12:30    |
+            | '12 am'       | TimeOfDay is 00:00    |
+            | '7:00 AM'     | TimeOfDay is 07:00    |
+            | '7:00 pm'     | TimeOfDay is 19:00    |
+            | '7:30:20am'   | TimeOfDay is 07:30:20 |
+            | '12  am'      | Error parsing time    |
+            | '17:00pm'     | Error parsing time    |
+            | '17:00am'     | Error parsing time    |
