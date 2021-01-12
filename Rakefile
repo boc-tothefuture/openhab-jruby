@@ -37,7 +37,7 @@ OPENHAB_DIR = File.realpath OPENHAB_PATH
 CLOBBER << OPENHAB_DIR
 CLEAN << PACKAGE_DIR
 
-OPENHAB_VERSION = '3.0.0.RC2'
+OPENHAB_VERSION = '3.0.0'
 JRUBY_BUNDLE = File.realpath(Dir.glob('bundle/*.jar').first)
 
 zip_path = ''
@@ -74,7 +74,7 @@ namespace :openhab do
     next if File.exist? File.join(OPENHAB_DIR, 'start.sh')
 
     Dir.chdir(OPENHAB_DIR) do
-      IO.copy_stream(open("https://openhab.jfrog.io/openhab/libs-milestone-local/org/openhab/distro/openhab/#{OPENHAB_VERSION}/openhab-#{OPENHAB_VERSION}.zip"), "openhab-#{OPENHAB_VERSION}.zip")
+      IO.copy_stream(open("https://openhab.jfrog.io/openhab/libs-release/org/openhab/distro/openhab/#{OPENHAB_VERSION}/openhab-#{OPENHAB_VERSION}.zip"), "openhab-#{OPENHAB_VERSION}.zip")
       sh 'unzip', "openhab-#{OPENHAB_VERSION}"
     end
   end
