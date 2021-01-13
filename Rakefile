@@ -219,7 +219,6 @@ namespace :openhab do
 
   desc 'Start OpenHAB'
   task start: %i[download] do
-    fail_on_error('dfjaklfjakljdkl')
     start
   end
 
