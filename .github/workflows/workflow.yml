@@ -21,4 +21,4 @@ jobs:
         run: bundle exec rake features
       - name: Cucumber failed
         if: ${{ failure() }}
-        run: tmp/openhab/runtime/bin/client -p habopen 'system:version'
+        run: cat userdata/logs/openhab.log
