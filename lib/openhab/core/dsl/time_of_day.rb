@@ -72,6 +72,11 @@ module OpenHAB
             freeze
           end
 
+          # Returns true if the time falls within a range
+          def between?(range)
+            between(range).cover? self
+          end
+
           # Returns the hour of the TimeOfDay
           # @since 0.0.1
           # @return [Number] Hour of the day, from 0 to 23
