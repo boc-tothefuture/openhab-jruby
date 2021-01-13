@@ -13,6 +13,8 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install bundler
+        run: gem install bundler
       - name: Install gems
         run: bundle
       - name: Check code
