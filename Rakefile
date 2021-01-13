@@ -211,7 +211,7 @@ namespace :openhab do
     wait_for(20, 'OpenHAB to start') { running? }
     abort 'Unable to start OpenHAB' unless running?(fail_on_error: true)
 
-    wait_for(20, 'OpenHAB to become ready') { ready? }
+    wait_for(120, 'OpenHAB to become ready') { ready? }
     abort 'OpenHAB did not become ready' unless ready?(fail_on_error: true)
 
     puts 'OpenHAB started and ready'
