@@ -31,7 +31,7 @@ task features: %i[openhab:setup openhab:deploy] do
   Rake::Task['openhab:warmup'].execute
   Rake::Task['openhab:start'].execute
   Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = '--tags "not @wip and not @not_implemented" --format pretty'
+    t.cucumber_opts = '--fail-fast --tags "not @wip and not @not_implemented" --format pretty'
   end
 end
 
@@ -219,6 +219,7 @@ namespace :openhab do
 
   desc 'Start OpenHAB'
   task start: %i[download] do
+    fail_on_error('dfjaklfjakljdkl')
     start
   end
 

@@ -2,6 +2,7 @@
 
 require_relative 'openhab_rest'
 require 'English'
+require 'tty-command'
 
 def openhab_dir
   File.realpath 'tmp/openhab'
@@ -9,9 +10,8 @@ end
 
 def openhab_client(command)
   karaf_client_path = File.join(openhab_dir, 'runtime/bin/client')
-  # Kernel.puts `#{karaf_client_path} -p habopen "#{command}"`
-  `#{karaf_client_path} -p habopen "#{command}"`
-  abort("OpenHAB command (#{command}) failed.") unless $CHILD_STATUS == 0
+  cmd = TTY::Command.new(printer: :null)
+  cmd.run("#{karaf_client_path} -p habopen #{command}", only_output_on_error: true)
 end
 
 def items_dir
@@ -27,8 +27,8 @@ def openhab_log
 end
 
 def ensure_openhab_running
-  `#{File.join(openhab_dir, 'runtime/bin/status')}`
-  abort('Openhab not running') unless $CHILD_STATUS == 0
+  cmd = TTY::Command.new(printer: :null)
+  cmd.run(File.join(openhab_dir, 'runtime/bin/status'), only_output_on_error: true)
 end
 
 def check_log(entry)
