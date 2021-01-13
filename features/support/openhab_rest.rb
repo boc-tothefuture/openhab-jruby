@@ -28,6 +28,10 @@ class Rest
     put "/rest/items/#{name}/state", headers: text, body: state
   end
 
+  def self.add_metadata(item:, namespace:, config:)
+    put "/rest/items/#{item}/metadata/#{namespace}", headers: json,  body: config
+  end
+
   def self.item_state(name)
     (get "/rest/items/#{name}/state", headers: text, format: :text).chomp
   end

@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'openhab/core/log'
 
 module OpenHAB
   class OSGI
+    include Logging
+
     java_import org.openhab.core.model.script.actions.ScriptExecution
     java_import org.osgi.framework.FrameworkUtil
 
@@ -12,8 +15,12 @@ module OpenHAB
     end
 
     def self.service(name)
+
       ref = bundle_context.getServiceReference(name)
-      bundle_context.getService(ref) if ref
+      service = bundle_context.getService(ref) if ref
+      logger.trace "OSGI service(#{service}) found for '#{name}' using OSGI Service Reference #{ref}"
+
+      service
     end
 
     def self.action_service

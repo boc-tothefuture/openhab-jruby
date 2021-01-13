@@ -3,6 +3,7 @@
 require 'java'
 require 'openhab/core/log'
 require 'bigdecimal'
+require 'openhab/core/dsl/monkey_patch/items/metadata'
 
 # Monkey patch items
 require 'openhab/core/dsl/monkey_patch/items/contact_item'

@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'delegate'
+require 'pp'
+require 'forwardable'
 require 'openhab/osgi'
+require 'openhab/core/log'
 
 module OpenHAB
   module Core
@@ -9,66 +13,50 @@ module OpenHAB
       module MonkeyPatch
         module Items
           module Metadata
+            include Logging
+
             java_import org.openhab.core.items.Metadata
             java_import org.openhab.core.items.MetadataKey
 
-            def self.get_all
-              @@metadata_registry.getAll
-            end
-          end
+            class MetadataItem < SimpleDelegator
+              extend Forwardable
 
-          def meta
-            @meta ||= NamespaceAccessor.new(name)
-          end
+              def_delegator :@metadata, :value
 
-          class NamespaceAccessor
-            @registry = OpenHAB::OSGI.service('org.openhab.core.items.MetadataRegistry')
+              def initialize(metadata)
+                @metadata = metadata
+                super(metadata&.configuration)
+              end
 
-            def initialize(item_name:)
-              @item_name = item_name
             end
 
-            def [](namespace)
-              Namespace.new(@registry.get(MetadataKey.new(namespace, @item_name)))
-            end
+            class NamespaceAccessor
 
-            def []=(namespace_name, namespace)
-              @registry.get(MetadataKey.new(namespace, @item_name))
-            end
-          end
-
-          class Namespace < SimpleDelegator
-
-          end
-
-          module MetadataExtension
-            class MetadataHash < Hash
-              def initialize(item_name)
+              def initialize(item_name:)
                 @item_name = item_name
-                super()
               end
 
-              def [](key)
-                @metadata = Metadata.get_metadata(@item_name, key.to_s)
-                logger.info("META checking for #{key}")
-                return nil unless @metadata
-                if @metadata&.getConfiguration
-                  return Hash['value' => @metadata&.getValue, 'config' => @metadata&.getConfiguration]
-                end
-
-                @metadata&.getValue
+              def [](namespace)
+                logger.trace("Namespaces (#{registry.getAll})")
+                logger.trace("Namespace (#{registry.get(MetadataKey.new(namespace, @item_name))})")
+                MetadataItem.new(registry.get(MetadataKey.new(namespace, @item_name)))
               end
 
-              def []=(key, value)
-                # todo
+              def []=(_namespace_name, namespace)
+                registry.update(MetadataKey.new(namespace, @item_name))
               end
 
-              def each(&block)
-                Metadata.get_all.each do |meta|
-                  block.call(meta.uID.namespace, meta.value, meta.configuration) if meta.uID.itemName == @item_name
-                end
+              private 
+              def registry
+                @registry ||= OpenHAB::OSGI.service('org.openhab.core.items.MetadataRegistry')
               end
+
             end
+
+            def meta
+              @meta ||= NamespaceAccessor.new(item_name: name)
+            end
+            alias metadata meta
           end
         end
       end

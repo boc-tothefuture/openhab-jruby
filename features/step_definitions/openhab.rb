@@ -2,6 +2,7 @@
 
 require 'securerandom'
 require 'json'
+require 'pp'
 
 Given('Clean OpenHAB with latest Ruby Libraries') do
   system('rake openhab:deploy 1>/dev/null 2>/dev/null') || raise('Error Deploying Libraries')
@@ -24,11 +25,11 @@ Then(/^It should log '([^']*)' within (\d+) seconds$/) do |string, seconds|
   end
 end
 
-# Then('It should log {string} within {int} seconds') do |string, seconds|
-#  wait_until(seconds: seconds, msg: "'#{string}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
-#    check_log(string)
-#  end
-# end
+Given('metadata added to {string} in namespace {string}:') do |item, namespace, config|
+  response = Rest.add_metadata(item: item, namespace: namespace, config: config)
+  raise "Response #{response.pretty_inspect} Request #{response.request.pretty_inspect}" unless response.success?
+
+end
 
 Then('It should not log {string} within {int} seconds') do |string, seconds|
   not_for(seconds: seconds, msg: "'#{string}'' found in log file (#{openhab_log}) within #{seconds} seconds") do
