@@ -19,3 +19,6 @@ jobs:
         run: bundle
       - name: Check code
         run: bundle exec rake features
+      - name: Cucumber failed
+        if: ${{ failure() }}
+        run: tmp/openhab/runtime/bin/client -p habopen 'system:version'
