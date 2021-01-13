@@ -1,0 +1,19 @@
+
+env:
+  RUBY_VERSION: 2.4
+
+name: Openhab Scripting Tests
+on: [push,pull_request]
+jobs:
+ cucumber-test:
+    name: Cucumber
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install gems
+        run: bundle
+      - name: Check code
+        run: bundle exec rake features

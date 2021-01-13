@@ -13,7 +13,9 @@ group :test do
 end
 
 group :development do
+  gem 'process_exists'
   gem 'rake', '~> 12.0'
   gem 'rubocop', '~> 1.3'
+  gem 'tty-command'
   gem 'yard'
 end
