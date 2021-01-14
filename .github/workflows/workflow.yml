@@ -47,3 +47,6 @@ jobs:
         run: bundle
       - name: Execute Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
+      - name: Cat log
+        if: ${{ failure() }}
+        run: cat userdata/logs/openhab.log'
