@@ -27,11 +27,11 @@ RuboCop::RakeTask.new(:lint) do |task|
 end
 
 desc 'Run Cucumber Features'
-task features: %i[openhab:setup openhab:deploy] do
+task :features, [:feature] => %i[openhab:setup openhab:deploy] do |_, args|
   Rake::Task['openhab:warmup'].execute
   Rake::Task['openhab:start'].execute
   Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = '--fail-fast --tags "not @wip and not @not_implemented" --format pretty'
+    t.cucumber_opts = "--fail-fast --tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
   end
 end
 
@@ -263,7 +263,7 @@ namespace :openhab do
     file = File.join('openhab_rules', 'warmup.rb')
     dest_file = File.join(DEPLOY_DIR, "#{File.basename(file, '.rb')}_#{Time.now.to_i}.rb")
     cp file, dest_file
-    wait_for(20, 'OpenHAB to warmup') do 
+    wait_for(20, 'OpenHAB to warmup') do
       File.foreach(openhab_log).grep(/OpenHAB warmup complete/).any?
     end
     rm dest_file

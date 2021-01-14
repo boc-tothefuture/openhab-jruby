@@ -5,24 +5,45 @@ env:
 name: Openhab Scripting Tests
 on: [push,pull_request]
 jobs:
- cucumber-test:
-    name: Cucumber
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '11.0.8' 
-          java-package: jre
-      - name: Install bundler
-        run: gem install bundler
-      - name: Install gems
-        run: bundle
-      - name: Check code
-        run: bundle exec rake features
-      - name: Cucumber failed
-        if: ${{ failure() }}
-        run: cat tmp/openhab/userdata/logs/openhab.log
+ cucumber-matrix:
+   runs-on: ubuntu-18.04
+   outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+   steps: 
+     - uses: actions/checkout@v1
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - id: set-matrix
+       run: |
+         JSON = ruby -e '
+           require "json"
+           feature_maps = Dir["features/**/*.feature"].map { |feature| { feature: File.basename(feature,".feature"), file: feature } } 
+           include_map = {}
+           include_map["include"]= feature_maps
+           puts include_map.to_json
+         ' 
+         echo $JSON
+         echo "::set-output name=matrix::$( echo "$JSON")"
+
+
+# cucumber:
+#    needs: cucumber-matrix
+#    runs-on: ubuntu-18.04
+#    strategy:
+#      matrix:
+#    steps:
+#      - uses: actions/checkout@v1
+#      - uses: actions/setup-ruby@v1
+#        with:
+#          ruby-version: ${{ env.RUBY_VERSION }}
+#      - uses: actions/setup-java@v1
+#        with:
+#          java-version: '11.0.8' 
+#          java-package: jre
+#      - name: Install bundler
+#        run: gem install bundler
+#      - name: Install gems
+#        run: bundle
+#      - name: Execute Cucumber
+#        run: bundle exec rake features
