@@ -24,26 +24,25 @@ jobs:
            puts include_map.to_json
          ') 
          echo $JSON
-         echo "::set-output name=matrix::$( echo "$JSON")"
+         echo "::set-output name=matrix::$( echo "$JSON" )"
 
-
-# cucumber:
-#    needs: cucumber-matrix
-#    runs-on: ubuntu-18.04
-#    strategy:
-#      matrix:
-#    steps:
-#      - uses: actions/checkout@v1
-#      - uses: actions/setup-ruby@v1
-#        with:
-#          ruby-version: ${{ env.RUBY_VERSION }}
-#      - uses: actions/setup-java@v1
-#        with:
-#          java-version: '11.0.8' 
-#          java-package: jre
-#      - name: Install bundler
-#        run: gem install bundler
-#      - name: Install gems
-#        run: bundle
-#      - name: Execute Cucumber
-#        run: bundle exec rake features
+ cucumber:
+    needs: cucumber-matrix
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11.0.8' 
+          java-package: jre
+      - name: Install bundler
+        run: gem install bundler
+      - name: Install gems
+        run: bundle
+      - name: Execute Cucumber
+        run: bundle exec rake features[${{ matrix.file }}]
