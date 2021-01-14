@@ -79,8 +79,8 @@ jobs:
     needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-18.04
     continue-on-error: true
-    strategy:
-      matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
+    #strategy:
+    #  matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
@@ -107,7 +107,5 @@ jobs:
           path: tmp/
           key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
       - name: Execute Cucumber
-        run: bundle exec rake features[${{ matrix.file }}]
-      - name: Cat log
-        if: ${{ failure() }}
-        run: cat tmp/openhab/userdata/logs/openhab.log
+        #run: bundle exec rake features[${{ matrix.file }}]
+        run: bundle exec rake features
