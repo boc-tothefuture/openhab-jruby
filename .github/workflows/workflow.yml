@@ -108,8 +108,7 @@ jobs:
           key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
       - name: Cucumber
         #run: bundle exec rake features[${{ matrix.file }}]
-        #run: bundle exec rake features
-        run: bundle exec rake features[features/delay.feature]
+        run: bundle exec rake features
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
         if: failure()
