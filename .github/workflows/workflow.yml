@@ -6,6 +6,7 @@ name: Openhab Scripting Tests
 on: [push,pull_request]
 jobs:
  openhab-setup:
+   runs-on: ubuntu-18.04
    steps:
      - uses: actions/checkout@v1
      - uses: actions/setup-ruby@v1
