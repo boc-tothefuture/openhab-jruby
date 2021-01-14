@@ -5,6 +5,28 @@ env:
 name: Openhab Scripting Tests
 on: [push,pull_request]
 jobs:
+ openhab-setup:
+   steps:
+     - uses: actions/checkout@v1
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - uses: actions/setup-java@v1
+       with:
+         java-version: '11.0.8' 
+         java-package: jre
+     - name: Install bundler
+       run: gem install bundler
+     - name: Install gems
+       run: bundle
+     - name: Cache OpenHAB setup
+       uses: actions/cache@v2
+       with: 
+        path: tmp/
+        key: OpenHAB-setup-${{ GITHUB_WORKFLOW }}-${{ GITHUB_RUN_NUMBER }}
+     - name: Execute Cucumber
+       run: bundle exec rake openhab:setup
+ 
  cucumber-matrix:
    runs-on: ubuntu-18.04
    outputs:
@@ -27,7 +49,7 @@ jobs:
          echo "::set-output name=matrix::$( echo "$JSON" )"
 
  cucumber:
-    needs: cucumber-matrix
+    needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-18.04
     continue-on-error: true
     strategy:
@@ -45,6 +67,11 @@ jobs:
         run: gem install bundler
       - name: Install gems
         run: bundle
+      - name: Restore OpenHAB setup
+        uses: actions/cache@v2
+        with: 
+          path: tmp/
+          key: OpenHAB-setup-${{ GITHUB_WORKFLOW }}-${{ GITHUB_RUN_NUMBER }}
       - name: Execute Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Cat log
