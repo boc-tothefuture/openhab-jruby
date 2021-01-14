@@ -31,7 +31,7 @@ jobs:
        uses: actions/cache@v2
        with: 
         path: tmp/
-        key: OpenHAB-setup-${GITHUB_WORKFLOW}-${GITHUB_RUN_NUMBER}
+        key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
      - name: Setup OpenHAB
        run: bundle exec rake openhab:setup
  
@@ -82,13 +82,11 @@ jobs:
         run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-      - name: Install gems
-        run: bundle
       - name: Restore OpenHAB setup
         uses: actions/cache@v2
         with: 
           path: tmp/
-          key: OpenHAB-setup-${GITHUB_WORKFLOW}-${GITHUB_RUN_NUMBER}
+          key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
       - name: Execute Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Cat log
