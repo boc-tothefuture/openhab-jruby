@@ -22,41 +22,101 @@ module OpenHAB
               extend Forwardable
 
               def_delegator :@metadata, :value
+            
+              def initialize(metadata: nil, key: nil, value: nil, config: nil)
+                @metadata = metadata || Metadata.new(key || MetadataKey.new('', ''), value, config)
+                super(@metadata&.configuration)
+              end
 
-              def initialize(metadata)
-                @metadata = metadata
-                super(metadata&.configuration)
+              def []=(key, value)
+                configuration = Hash.new.merge(@metadata&.configuration || {}).merge({key => value})
+                metadata = Metadata.new(@metadata&.uID, @metadata&.value, configuration)
+                NamespaceAccessor.registry.update(metadata) if @metadata&.uID
+              end
+
+              def delete(key)
+                configuration = Hash.new.merge(@metadata&.configuration || {})
+                configuration.delete(key)
+                metadata = Metadata.new(@metadata&.uID, @metadata&.value, configuration)
+                NamespaceAccessor.registry.update(metadata) if @metadata&.uID
+              end
+
+              def value=(value)
+                raise ArgumentError, "Value must be a string" unless value.is_a? String
+                metadata = Metadata.new(@metadata&.uID, value, @metadata&.configuration)
+                NamespaceAccessor.registry.update(metadata) if @metadata&.uID
               end
 
             end
 
             class NamespaceAccessor
+              include Enumerable
 
               def initialize(item_name:)
                 @item_name = item_name
               end
 
               def [](namespace)
-                logger.trace("Namespaces (#{registry.getAll})")
-                logger.trace("Namespace (#{registry.get(MetadataKey.new(namespace, @item_name))})")
-                MetadataItem.new(registry.get(MetadataKey.new(namespace, @item_name)))
+                logger.trace("Namespaces (#{NamespaceAccessor.registry.getAll})")
+                logger.trace("Namespace (#{NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name))})")
+                metadata = NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name))
+                MetadataItem.new(metadata: metadata) if metadata
               end
 
-              def []=(_namespace_name, namespace)
-                registry.update(MetadataKey.new(namespace, @item_name))
+              def []=(namespace, value)
+                case value
+                when MetadataItem
+                  meta_value = value.value
+                  configuration = value.__getobj__
+                when Metadata
+                  meta_value = value.value
+                  configuration = value.configuration
+                when Hash
+                  meta_value = nil
+                  configuration = value
+                else
+                  meta_value = value
+                  configuration = nil
+                end
+
+                key = MetadataKey.new(namespace, @item_name)
+                metadata = Metadata.new(key, meta_value, configuration)
+                if NamespaceAccessor.registry.get(key)
+                  NamespaceAccessor.registry.update(metadata)
+                else
+                  NamespaceAccessor.registry.add(metadata)
+                end
               end
 
-              private 
-              def registry
-                @registry ||= OpenHAB::OSGI.service('org.openhab.core.items.MetadataRegistry')
+              def each(&block)
+                NamespaceAccessor.registry.getAll.each { |meta| block.call(meta.uID.namespace, meta.value, meta.configuration) if meta.uID.itemName == @item_name }
               end
 
+              def delete(namespace)
+                NamespaceAccessor.registry.remove(MetadataKey.new(namespace, @item_name))
+              end
+
+              def delete_all
+                NamespaceAccessor.registry.removeItemMetadata(@item_name)
+              end
+
+              def has_key?(namespace)
+                !NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name)).nil?
+              end
+
+              alias key? has_key?
+              alias include? has_key?
+
+              def self.registry
+                @@registry ||= OpenHAB::OSGI.service('org.openhab.core.items.MetadataRegistry')
+              end
             end
 
             def meta
               @meta ||= NamespaceAccessor.new(item_name: name)
             end
             alias metadata meta
+
           end
         end
       end

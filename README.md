@@ -1380,7 +1380,71 @@ logger.info("Thing: #{things['astro:sun:home'].uid}")
 
 For thing objects now additional methods are provided, however the standard [JRuby alternate names and bean convention applies](https://github.com/jruby/jruby/wiki/CallingJavaFromJRuby#alternative-names-and-beans-convention), such that `getUID` becomes `uid`.
 
+### Item Metadata
 
+Item metadata can be accessed through Item.meta variable.
+
+#### Examples
+
+With the following item definition:
+```
+Switch Item1 { namespace1="value" [ config1="foo", config2="bar" ] }
+```
+
+```ruby
+# Check namespace's existence
+Item1.meta['namespace'].nil?
+Item1.meta.key?('namespace')
+
+# Access item's metadata value
+Item1.meta['namespace1'].value
+
+# Access namespace1's configuration
+Item1.meta['namespace1']['config1']
+
+# Set item's metadata value, preserving its config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'].value = 'new value'
+# Item1's metadata after: { namespace1="new value" [ config1="foo", config2="bar" ] }
+
+# Update namespace1's existing configuration, preserving its value and other config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1']['config1'] = 'doo'
+# Item1's metadata will be: { namespace1="value" [ config1="doo", config2="bar" ] }
+
+# Add a new configuration to namespace1
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1']['config3'] = 'boo'
+# Item1's metadata after: { namespace1="value" [ config1="foo", config2="bar", config3="boo" ] }
+
+# Delete a config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'].delete('config2')
+# Item1's metadata after: { namespace1="value" [ config1="foo" ] }
+
+# Set item's metadata value and clear its previous config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'] = 'new value'
+# Item1's metadata after: { namespace1="value" }
+
+# Set item's metadata config, set its value to nil, and wiping out previous config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'] = { 'newconfig' => 'value' }
+# Item1's metadata after: { namespace1=nil [ config1="foo", config2="bar" ] }
+
+# Delete a namespace
+Item1.meta.delete('namespace1')
+
+# Add a namespace and set it to a value
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace2'] = 'qx'
+# Item1's metadata after: { namespace1="value" [ config1="foo", config2="bar" ], namespace2="qx" }
+
+# Set a namespace to a new value and config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'] = MetadataItem.new(value: 'new', config: {"x"=>"a", "y"=>"b"})
+# Item1's metadata after: { namespace1="new" [ x="a", y="b" ] }
+```
 
 ### Logging
 Logging is available everywhere through the logger object.  The name of the rule file is automatically appended to the logger name. Pending [merge](https://github.com/openhab/openhab-core/pull/1885) into the core.
