@@ -116,5 +116,6 @@ jobs:
           name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}
           path: |
             tmp/cucumber_logs
+            tmp/karaf.log
             tmp/openhab/userdata/logs
           retention-days: 2
