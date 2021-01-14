@@ -36,8 +36,7 @@ def deploy_rule(filename: nil, check: true)
   prepend_identifying_log_line_to_rule(uid)
   append_identifying_log_line_to_rule(uid)
   File.write(File.join(deploy_path), @rule)
-  wait_until(seconds: 30, msg: 'Rule not added') { check_log(identifying_log_line(uid)) } if check
-  sleep 1
+  wait_until(seconds: 60, msg: 'Rule not added') { check_log(identifying_log_line(uid)) } if check
 end
 
 Given('a rule(:)') do |doc_string|
