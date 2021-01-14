@@ -230,7 +230,10 @@ namespace :openhab do
     end
 
     env = ruby_env
-    env = env.merge({ 'KARAF_REDIRECT' => File.join(File.realpath(TMP_DIR), 'karaf.log') })
+    env = env.merge({ 'KARAF_REDIRECT' => File.join(File.realpath(TMP_DIR), 'karaf.log'),
+                      'EXTRA_JAVA_OPTS' => '-Xmx4g'
+      })
+
     Dir.chdir(OPENHAB_DIR) do
       puts 'Starting OpenHAB'
       pid = spawn(env, 'runtime/bin/start')

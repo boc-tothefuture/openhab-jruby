@@ -109,6 +109,9 @@ jobs:
       - name: Cucumber
         #run: bundle exec rake features[${{ matrix.file }}]
         run: bundle exec rake features
+      - name: Check params
+        #run: bundle exec rake features[${{ matrix.file }}]
+        run: ps -ef | grep java
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
         if: failure()
