@@ -14,7 +14,23 @@ require 'process_exists'
 
 require_relative 'lib/openhab/version'
 
-task default: %w[lint:auto_correct openhab]
+PACKAGE_DIR = 'pkg'
+TMP_DIR = 'tmp'
+OPENHAB_DIR = File.join(TMP_DIR, 'openhab')
+OPENHAB_VERSION = '3.0.0'
+JRUBY_BUNDLE = File.realpath(Dir.glob('bundle/*.jar').first)
+KARAF_CLIENT_PATH = File.join(OPENHAB_DIR, 'runtime/bin/client')
+KARAF_CLIENT_ARGS = [KARAF_CLIENT_PATH, '-p', 'habopen'].freeze
+KARAF_CLIENT = KARAF_CLIENT_ARGS.join(' ')
+
+DEPLOY_DIR = File.join(OPENHAB_DIR, 'conf/automation/jsr223/ruby/personal')
+LIB_DIR = File.join(OPENHAB_DIR, 'conf/automation/lib/ruby/lib/')
+STATE_DIR = File.join(OPENHAB_DIR, 'rake_state')
+CUCUMBER_LOGS = File.join(TMP_DIR, 'cucumber_logs')
+
+CLEAN << PACKAGE_DIR
+CLEAN << DEPLOY_DIR
+CLEAN << CUCUMBER_LOGS
 
 YARD::Rake::YardocTask.new do |t|
   t.files = ['lib/**/*.rb'] # optional
@@ -27,28 +43,14 @@ RuboCop::RakeTask.new(:lint) do |task|
 end
 
 desc 'Run Cucumber Features'
-task :features, [:feature] => %i[openhab:warmup openhab:deploy] do |_, args|
+task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|
   #Rake::Task['openhab:warmup'].execute
   Cucumber::Rake::Task.new(:features) do |t|
-    ##t.cucumber_opts = "--fail-fast --tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
-    t.cucumber_opts = "--tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
+    t.cucumber_opts = "--fail-fast --tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
+    #t.cucumber_opts = "--tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
   end
 end
 
-PACKAGE_DIR = 'pkg'
-OPENHAB_DIR = 'tmp/openhab'
-OPENHAB_VERSION = '3.0.0'
-JRUBY_BUNDLE = File.realpath(Dir.glob('bundle/*.jar').first)
-KARAF_CLIENT_PATH = File.join(OPENHAB_DIR, 'runtime/bin/client')
-KARAF_CLIENT_ARGS = [KARAF_CLIENT_PATH, '-p', 'habopen'].freeze
-KARAF_CLIENT = KARAF_CLIENT_ARGS.join(' ')
-
-DEPLOY_DIR = File.join(OPENHAB_DIR, 'conf/automation/jsr223/ruby/personal')
-LIB_DIR = File.join(OPENHAB_DIR, 'conf/automation/lib/ruby/lib/')
-STATE_DIR = File.join(OPENHAB_DIR, 'rake_state')
-
-CLEAN << PACKAGE_DIR
-CLEAN << DEPLOY_DIR
 
 namespace :gh do
   zip_path = ''
@@ -156,6 +158,7 @@ namespace :openhab do
   directory DEPLOY_DIR
   directory LIB_DIR
   directory STATE_DIR
+  directory CUCUMBER_LOGS
 
   desc 'Download Openhab and unzip it'
   task download: [OPENHAB_DIR] do |task|
@@ -295,7 +298,7 @@ namespace :openhab do
   end
 
   desc 'Prepare local Openhab'
-  task prepare: %i[download rubylib install configure deploy]
+  task prepare: [:download, :rubylib, :install, :configure, :deploy, CUCUMBER_LOGS]
 
   desc 'Setup local Openhab'
   task setup: %i[prepare stop]

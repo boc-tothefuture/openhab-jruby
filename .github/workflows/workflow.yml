@@ -78,7 +78,7 @@ jobs:
  cucumber:
     needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-18.04
-    continue-on-error: true
+    #continue-on-error: true
     #strategy:
     #  matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
@@ -106,6 +106,12 @@ jobs:
         with: 
           path: tmp/
           key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
-      - name: Execute Cucumber
+      - name: Cucumber
         #run: bundle exec rake features[${{ matrix.file }}]
         run: bundle exec rake features
+      - name: Upload OpenHAB Logs
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}
+          path: tmp/cucumber_logs
