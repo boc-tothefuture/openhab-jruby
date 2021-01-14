@@ -18,6 +18,11 @@ jobs:
          java-package: jre
      - name: Install bundler
        run: gem install bundler
+     - name: Cache OpenHAB setup
+       uses: actions/cache@v2
+       with: 
+        path: tmp/
+        key: OpenHAB-setup-${GITHUB_WORKFLOW}-${GITHUB_RUN_NUMBER}
      - name: Install gems
        run: bundle
      - name: Cache OpenHAB setup
@@ -25,7 +30,7 @@ jobs:
        with: 
         path: tmp/
         key: OpenHAB-setup-${GITHUB_WORKFLOW}-${GITHUB_RUN_NUMBER}
-     - name: Execute Cucumber
+     - name: Setup OpenHAB
        run: bundle exec rake openhab:setup
  
  cucumber-matrix:
