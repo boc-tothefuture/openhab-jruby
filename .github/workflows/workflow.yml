@@ -16,13 +16,13 @@ jobs:
          ruby-version: ${{ env.RUBY_VERSION }}
      - id: set-matrix
        run: |
-         JSON = ruby -e '
+         JSON=$(ruby -e '
            require "json"
            feature_maps = Dir["features/**/*.feature"].map { |feature| { feature: File.basename(feature,".feature"), file: feature } } 
            include_map = {}
            include_map["include"]= feature_maps
            puts include_map.to_json
-         ' 
+         ') 
          echo $JSON
          echo "::set-output name=matrix::$( echo "$JSON")"
 
