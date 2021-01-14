@@ -49,4 +49,4 @@ jobs:
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Cat log
         if: ${{ failure() }}
-        run: cat userdata/logs/openhab.log
+        run: cat tmp/openhab/userdata/logs/openhab.log
