@@ -1444,6 +1444,9 @@ Item1.meta['namespace2'] = 'qx'
 # Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
 Item1.meta['namespace1'] = MetadataItem.new(value: 'new', config: {"x"=>"a", "y"=>"b"})
 # Item1's metadata after: { namespace1="new" [ x="a", y="b" ] }
+
+# Enumerate Item1's namespaces
+Item1.meta.each { |namespace, value, config| logger.info("Item1's namespace: #{namespace}='#{value}' #{config}") }
 ```
 
 ### Logging
