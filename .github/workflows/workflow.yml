@@ -120,14 +120,7 @@ jobs:
         run: cat tmp/openhab/conf/automation/jsr223/ruby/personal/*.rb
         if: failure()
       - name: Generate OpenHAB Dump
-        shell: 'script -q -e -c "bash {0}"'
-        run: ${{ github.workspace }}/tmp/openhab/runtime/bin/client -r 10 -p habopen 'dev:dump-create'
-        if: failure()
-      - name: Wait for dump to complete
-        run: |
-          ls -ltrah tmp/openhab/userdata/*.zip || true
-          sleep 60
-          ls -ltrah tmp/openhab/userdata/*.zip || true
+        run: bundle exec rake openhab:dump
         if: failure()
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
