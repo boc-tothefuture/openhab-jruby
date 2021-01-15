@@ -108,7 +108,7 @@ jobs:
           key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
       - name: Cucumber
         #run: bundle exec rake features[${{ matrix.file }}]
-        run: bundle exec rake features
+        run: bundle exec rake features[features/states.feature:23]
       - name: Check params
         run: ps -ef | grep java
         if: always()
@@ -119,6 +119,7 @@ jobs:
         run: cat tmp/openhab/conf/automation/jsr223/ruby/personal/*.rb
         if: failure()
       - name: Generate OpenHAB Dump
+        shell: script -e -c {0}
         run: tmp/openhab/runtime/bin/client -p habopen 'dev:dump-create'
         if: failure()
       - name: Upload OpenHAB Logs
