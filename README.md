@@ -1442,7 +1442,7 @@ Item1.meta['namespace2'] = 'qx'
 
 # Set a namespace to a new value and config
 # Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
-Item1.meta['namespace1'] = 'new', {"x"=>"a", "y"=>"b"})
+Item1.meta['namespace1'] = 'new', {"x"=>"a", "y"=>"b"}
 # Item1's metadata after: { namespace1="new" [ x="a", y="b" ] }
 
 # Enumerate Item1's namespaces
