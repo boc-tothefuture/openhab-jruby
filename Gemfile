@@ -15,7 +15,7 @@ end
 group :development do
   gem 'process_exists'
   gem 'rake', '~> 12.0'
-  gem 'rubocop', '~> 1.3'
+  gem 'rubocop', '~> 1.8', require: false
   gem 'tty-command'
   gem 'yard'
 end
