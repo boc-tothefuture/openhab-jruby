@@ -27,11 +27,22 @@ module OpenHAB
 
           def initialize(duration:, &block)
             @duration = duration
+
+            # A semaphore is used to prevent a race condition in which calling the block from the timer thread
+            # occurs before the @timer variable can be set resulting in @timer being nil
+            semaphore = Mutex.new
+
             @block = proc do
-              block.call(self)
+              semaphore.synchronize {
+                block.call(self)
+              }
             end
-            @timer = ScriptExecution.createTimer(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(@duration.to_ms)), @block)
-            super(@timer)
+
+            semaphore.synchronize {
+              @timer = ScriptExecution.createTimer(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(@duration.to_ms)), @block)
+              super(@timer)
+            }
+
           end
 
           def reschedule(duration = nil)
