@@ -120,7 +120,7 @@ jobs:
         if: failure()
       - name: Generate OpenHAB Dump
         shell: script -e -c {0}
-        run: tmp/openhab/runtime/bin/client -p habopen 'dev:dump-create'
+        run: ${{ github.workspace }}/tmp/openhab/runtime/bin/client -p habopen 'dev:dump-create'
         if: failure()
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
