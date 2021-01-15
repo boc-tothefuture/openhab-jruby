@@ -119,7 +119,7 @@ Feature:  Items support accessing metadata
       """
     And code in a rules file:
       """
-      TestSwitch.meta['test']= OpenHAB::Core::DSL::MonkeyPatch::Items::Metadata::MetadataItem.new(value: 'bit', config: { 'x' => 'y' })
+      TestSwitch.meta['test']= 'bit', { 'x' => 'y' }
       logger.info("TestSwitch value for namespace test is: \"#{TestSwitch.meta['test'].value}\" #{TestSwitch.meta['test']}")
       """
     When I deploy the rules file
