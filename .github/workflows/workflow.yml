@@ -76,7 +76,8 @@ jobs:
          echo "::set-output name=matrix::$( echo "$JSON" )"
 
  cucumber:
-    needs: [cucumber-matrix, openhab-setup]
+#    needs: [cucumber-matrix, openhab-setup]
+    needs: [openhab-setup]
     runs-on: ubuntu-18.04
     #continue-on-error: true
     #strategy:
