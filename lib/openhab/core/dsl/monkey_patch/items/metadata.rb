@@ -74,6 +74,9 @@ module OpenHAB
                 when Hash
                   meta_value = nil
                   configuration = value
+                when Array
+                  meta_value = value[0]
+                  configuration = value[1]
                 else
                   meta_value = value
                   configuration = nil
