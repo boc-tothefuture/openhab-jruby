@@ -117,6 +117,12 @@ jobs:
         #run: bundle exec rake features[${{ matrix.file }}]
         run: cat tmp/karaf.log
         if: failure()
+      - name: Find the current test files
+        run: find tmp/openhab/conf/automation/jsr223/ruby/personal/ -name '*.rb'
+        if: failure()
+      - name: Output the current test files
+        run: find tmp/openhab/conf/automation/jsr223/ruby/personal/ -name '*.rb' | xargs cat
+        if: failure()
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
         if: failure()
