@@ -28,9 +28,17 @@ def append_identifying_log_line_to_rule(uid)
   @rule += %[\n\nlogger.info("#{identifying_log_line(uid)}")\n\n]
 end
 
-def deploy_rule(filename: '', check: true)
+def deploy_rule(filename: '', check_position: :end, check: true)
   FileUtils.mkdir_p rules_dir
   uid = SecureRandom.uuid
+
+  log_line = case check_position
+             when :start
+               identifying_started_log_line(uid)
+             when :end
+               identifying_log_line(uid)
+             else raise ArgumentError, "log_line can either be :start or :end"
+             end
 
   deploy_path = File.join(rules_dir, filename)
   prepend_identifying_log_line_to_rule(uid)
@@ -42,8 +50,7 @@ def deploy_rule(filename: '', check: true)
 
   FileUtils.move temp_file, deploy_path
 
-
-  wait_until(seconds: 60, msg: 'Rule not added') { check_log(identifying_log_line(uid)) } if check
+  wait_until(seconds: 60, msg: 'Rule not added') { check_log(log_line) } if check
 end
 
 Given('a rule(:)') do |doc_string|
@@ -65,6 +72,10 @@ end
 
 When('I deploy a rule with an error') do
   deploy_rule(check: false)
+end
+
+When('I start deploying the rule') do
+  deploy_rule(check_position: :start)
 end
 
 Given('code in a rules file(:)') do |doc_string|

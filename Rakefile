@@ -231,8 +231,7 @@ namespace :openhab do
 
     env = ruby_env
     env = env.merge({ 'KARAF_REDIRECT' => File.join(File.realpath(TMP_DIR), 'karaf.log'),
-                      'EXTRA_JAVA_OPTS' => '-Xmx4g'
-      })
+                      'EXTRA_JAVA_OPTS' => '-Xmx4g' })
 
     Dir.chdir(OPENHAB_DIR) do
       puts 'Starting OpenHAB'
@@ -295,7 +294,6 @@ namespace :openhab do
 
     karaf('dev:dump-create')
 
-
     wait_for(30, 'Dump to be created') do
       Dir[dumps].any?
     end
@@ -306,9 +304,7 @@ namespace :openhab do
       dump_sizes << File.size(dump)
       dump_sizes.last(10).uniq.length == 1
     end
-
   end
-
 
   desc 'Warmup OpenHab environment'
   task warmup: [:prepare, DEPLOY_DIR] do
