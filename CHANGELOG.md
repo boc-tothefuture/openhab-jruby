@@ -6,6 +6,10 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## Unreleased
+### Fixed
+- Reference in between to TimeOfDay::NUM_SECONDS_PER_DAY
+
 ## 2.6.0
 ### Added
 - `TimeOfDay.between?` to check if TimeOfDay object is between supplied range
