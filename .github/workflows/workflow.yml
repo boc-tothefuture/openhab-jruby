@@ -78,7 +78,6 @@ jobs:
  cucumber:
     needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-18.04
-    continue-on-error: true
     strategy:
       matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
