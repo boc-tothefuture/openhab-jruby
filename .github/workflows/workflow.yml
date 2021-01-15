@@ -10,12 +10,12 @@ jobs:
    runs-on: ubuntu-18.04
    continue-on-error: true
    steps:
-     - uses: actions/checkout@v1
+     - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
-       run: gem install bundler
+       run: gem install bundler -N
      - name: Install gems
        run: |
           bundle config path vendor/bundle
@@ -27,7 +27,7 @@ jobs:
  openhab-setup:
    runs-on: ubuntu-18.04
    steps:
-     - uses: actions/checkout@v1
+     - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
@@ -36,7 +36,7 @@ jobs:
          java-version: '11.0.8' 
          java-package: jre
      - name: Install bundler
-       run: gem install bundler
+       run: gem install bundler -N
      - name: Cache Gems 
        uses: actions/cache@v2
        with: 
@@ -59,7 +59,7 @@ jobs:
    outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
    steps: 
-     - uses: actions/checkout@v1
+     - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
@@ -76,8 +76,7 @@ jobs:
          echo "::set-output name=matrix::$( echo "$JSON" )"
 
  cucumber:
-#    needs: [cucumber-matrix, openhab-setup]
-    needs: [openhab-setup]
+    needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-18.04
     #continue-on-error: true
     #strategy:
@@ -92,7 +91,7 @@ jobs:
           java-version: '11.0.8' 
           java-package: jre
       - name: Install bundler
-        run: gem install bundler
+        run: gem install bundler -N
       - name: Restore Gems 
         uses: actions/cache@v2
         with: 
@@ -109,7 +108,7 @@ jobs:
           key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
       - name: Cucumber
         #run: bundle exec rake features[${{ matrix.file }}]
-        run: bundle exec rake features[features/states.feature:23]
+        run: bundle exec rake features
       - name: Check params
         run: ps -ef | grep java
         if: always()
