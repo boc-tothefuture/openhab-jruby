@@ -22,38 +22,39 @@ module OpenHAB
               extend Forwardable
 
               def_delegator :@metadata, :value
-            
+
               def initialize(metadata: nil, key: nil, value: nil, config: nil)
                 @metadata = metadata || Metadata.new(key || MetadataKey.new('', ''), value, config)
                 super(@metadata&.configuration)
               end
 
               def []=(key, value)
-                configuration = Hash.new.merge(@metadata&.configuration || {}).merge({key => value})
+                configuration = {}.merge(@metadata&.configuration || {}).merge({ key => value })
                 metadata = Metadata.new(@metadata&.uID, @metadata&.value, configuration)
                 NamespaceAccessor.registry.update(metadata) if @metadata&.uID
               end
 
               def delete(key)
-                configuration = Hash.new.merge(@metadata&.configuration || {})
+                configuration = {}.merge(@metadata&.configuration || {})
                 configuration.delete(key)
                 metadata = Metadata.new(@metadata&.uID, @metadata&.value, configuration)
                 NamespaceAccessor.registry.update(metadata) if @metadata&.uID
               end
 
               def value=(value)
-                raise ArgumentError, "Value must be a string" unless value.is_a? String
+                raise ArgumentError, 'Value must be a string' unless value.is_a? String
+
                 metadata = Metadata.new(@metadata&.uID, value, @metadata&.configuration)
                 NamespaceAccessor.registry.update(metadata) if @metadata&.uID
               end
 
               def config=(config)
                 raise ArgumentError, 'Configuration must be a hash' unless config.is_a? Hash
+
                 metadata = Metadata.new(@metadata&.uID, @metadata&.value, config)
                 NamespaceAccessor.registry.update(metadata) if @metadata&.uID
               end
               alias configuration= config=
-
             end
 
             class NamespaceAccessor
@@ -99,7 +100,16 @@ module OpenHAB
               end
 
               def each(&block)
-                NamespaceAccessor.registry.getAll.each { |meta| block.call(meta.uID.namespace, meta.value, meta.configuration) if meta.uID.itemName == @item_name }
+                NamespaceAccessor.registry.getAll.each do |meta|
+                  if meta.uID.itemName == @item_name
+                    block.call(meta.uID.namespace, meta.value,
+                               meta.configuration)
+                  end
+                end
+              end
+
+              def clear
+                NamespaceAccessor.registry.removeItemMetadata @item_name
               end
 
               def delete(namespace)
@@ -126,7 +136,6 @@ module OpenHAB
               @meta ||= NamespaceAccessor.new(item_name: name)
             end
             alias metadata meta
-
           end
         end
       end

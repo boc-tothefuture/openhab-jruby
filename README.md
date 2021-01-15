@@ -1412,7 +1412,22 @@ Item1.meta['namespace1'].value = 'new value'
 Item1.meta['namespace1'].config = { 'scooby'=>'doo' }
 # Item1's metadata after: { namespace1="value" [ scooby="doo" ] }
 
-# Update namespace1's existing configuration, preserving its value and other config
+# Set a namespace to a new value and config in one line
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'] = 'new value', { 'scooby'=>'doo' }
+# Item1's metadata after: { namespace1="new value" [ scooby="doo" ] }
+
+# Set item's metadata value and clear its previous config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'] = 'new value'
+# Item1's metadata after: { namespace1="value" }
+
+# Set item's metadata config, set its value to nil, and wiping out previous config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'] = { 'newconfig' => 'value' }
+# Item1's metadata after: { namespace1=nil [ config1="foo", config2="bar" ] }
+
+# Update namespace1's specific configuration, preserving its value and other config
 # Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
 Item1.meta['namespace1']['config1'] = 'doo'
 # Item1's metadata will be: { namespace1="value" [ config1="doo", config2="bar" ] }
@@ -1427,31 +1442,22 @@ Item1.meta['namespace1']['config3'] = 'boo'
 Item1.meta['namespace1'].delete('config2')
 # Item1's metadata after: { namespace1="value" [ config1="foo" ] }
 
-# Set item's metadata value and clear its previous config
-# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
-Item1.meta['namespace1'] = 'new value'
-# Item1's metadata after: { namespace1="value" }
-
-# Set item's metadata config, set its value to nil, and wiping out previous config
-# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
-Item1.meta['namespace1'] = { 'newconfig' => 'value' }
-# Item1's metadata after: { namespace1=nil [ config1="foo", config2="bar" ] }
-
-# Delete a namespace
-Item1.meta.delete('namespace1')
-
 # Add a namespace and set it to a value
 # Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
 Item1.meta['namespace2'] = 'qx'
 # Item1's metadata after: { namespace1="value" [ config1="foo", config2="bar" ], namespace2="qx" }
 
-# Set a namespace to a new value and config
-# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
-Item1.meta['namespace1'] = 'new', {"x"=>"a", "y"=>"b"}
-# Item1's metadata after: { namespace1="new" [ x="a", y="b" ] }
-
 # Enumerate Item1's namespaces
 Item1.meta.each { |namespace, value, config| logger.info("Item1's namespace: #{namespace}='#{value}' #{config}") }
+
+# Delete a namespace
+Item1.meta.delete('namespace1')
+
+# Delete all metadata of the item
+Item1.meta.clear
+
+# Does this item have any metadata?
+Item1.meta.any?
 ```
 
 ### Logging
