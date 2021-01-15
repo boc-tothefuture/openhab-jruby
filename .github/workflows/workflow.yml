@@ -125,9 +125,9 @@ jobs:
         if: failure()
       - name: Wait for dump to complete
         run: |
-          ls -ltrah tmp/openhab/userdata/*.zip
+          ls -ltrah tmp/openhab/userdata/*.zip || true
           sleep 60
-          ls -ltrah tmp/openhab/userdata/*.zip
+          ls -ltrah tmp/openhab/userdata/*.zip || true
         if: failure()
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
