@@ -108,9 +108,6 @@ jobs:
           key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
       - name: Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
-      - name: Check params
-        run: ps -ef | grep java
-        if: always()
       - name: Cat output log
         run: cat tmp/karaf.log
         if: failure()
