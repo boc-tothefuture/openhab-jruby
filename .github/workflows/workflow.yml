@@ -121,7 +121,7 @@ jobs:
         if: failure()
       - name: Generate OpenHAB Dump
         shell: 'script -q -e -c "bash {0}"'
-        run: ${{ github.workspace }}/tmp/openhab/runtime/bin/client -p habopen 'dev:dump-create'
+        run: ${{ github.workspace }}/tmp/openhab/runtime/bin/client -r 10 -p habopen 'dev:dump-create'
         if: failure()
       - name: Wait for dump to complete
         run: |
