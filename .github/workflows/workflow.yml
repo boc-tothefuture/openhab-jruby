@@ -113,6 +113,10 @@ jobs:
         #run: bundle exec rake features[${{ matrix.file }}]
         run: ps -ef | grep java
         if: always()
+      - name: Cat output log
+        #run: bundle exec rake features[${{ matrix.file }}]
+        run: cat tmp/karaf.log
+        if: failure()
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
         if: failure()
