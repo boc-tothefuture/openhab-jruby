@@ -1,5 +1,7 @@
 # frozen_string_literal: false
 
+require 'tempfile'
+require 'fileutils'
 require 'securerandom'
 
 def require_openhab
@@ -26,16 +28,21 @@ def append_identifying_log_line_to_rule(uid)
   @rule += %[\n\nlogger.info("#{identifying_log_line(uid)}")\n\n]
 end
 
-def deploy_rule(filename: nil, check: true)
+def deploy_rule(filename: '', check: true)
   FileUtils.mkdir_p rules_dir
   uid = SecureRandom.uuid
-
-  filename ||= "cucumber_test_#{uid}.rb"
 
   deploy_path = File.join(rules_dir, filename)
   prepend_identifying_log_line_to_rule(uid)
   append_identifying_log_line_to_rule(uid)
-  File.write(File.join(deploy_path), @rule)
+
+  temp_file = Tempfile.create(['cucumber_test', '.rb'])
+  temp_file.write(@rule)
+  temp_file.close
+
+  FileUtils.move temp_file, deploy_path
+
+
   wait_until(seconds: 60, msg: 'Rule not added') { check_log(identifying_log_line(uid)) } if check
 end
 

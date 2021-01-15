@@ -110,18 +110,16 @@ jobs:
         #run: bundle exec rake features[${{ matrix.file }}]
         run: bundle exec rake features
       - name: Check params
-        #run: bundle exec rake features[${{ matrix.file }}]
         run: ps -ef | grep java
         if: always()
       - name: Cat output log
-        #run: bundle exec rake features[${{ matrix.file }}]
         run: cat tmp/karaf.log
         if: failure()
-      - name: Find the current test files
-        run: find tmp/openhab/conf/automation/jsr223/ruby/personal/ -name '*.rb'
+      - name: Cat the current test files
+        run: cat tmp/openhab/conf/automation/jsr223/ruby/personal/*.rb
         if: failure()
-      - name: Output the current test files
-        run: find tmp/openhab/conf/automation/jsr223/ruby/personal/ -name '*.rb' | xargs cat
+      - name: Generate OpenHAB Dump
+        run: tmp/openhab/runtime/bin/client -p habopen 'dev:dump-create'
         if: failure()
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
@@ -132,4 +130,5 @@ jobs:
             tmp/cucumber_logs
             tmp/karaf.log
             tmp/openhab/userdata/logs
+            tmp/openhab/userdata/*.zip
           retention-days: 2
