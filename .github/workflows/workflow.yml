@@ -120,7 +120,7 @@ jobs:
         run: cat tmp/openhab/conf/automation/jsr223/ruby/personal/*.rb
         if: failure()
       - name: Generate OpenHAB Dump
-        shell: script -e -c {0}
+        shell: 'script -q -e -c "bash {0}"'
         run: ${{ github.workspace }}/tmp/openhab/runtime/bin/client -p habopen 'dev:dump-create'
         if: failure()
       - name: Upload OpenHAB Logs
