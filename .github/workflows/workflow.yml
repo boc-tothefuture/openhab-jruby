@@ -78,9 +78,9 @@ jobs:
  cucumber:
     needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-18.04
-    #continue-on-error: true
-    #strategy:
-    #  matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
+    continue-on-error: true
+    strategy:
+      matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
@@ -107,8 +107,7 @@ jobs:
           path: tmp/
           key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
       - name: Cucumber
-        #run: bundle exec rake features[${{ matrix.file }}]
-        run: bundle exec rake features
+        run: bundle exec rake features[${{ matrix.file }}]
       - name: Check params
         run: ps -ef | grep java
         if: always()
@@ -125,7 +124,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}
+          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.feature }}
           path: |
             tmp/cucumber_logs
             tmp/karaf.log
