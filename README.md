@@ -1407,6 +1407,11 @@ Item1.meta['namespace1']['config1']
 Item1.meta['namespace1'].value = 'new value'
 # Item1's metadata after: { namespace1="new value" [ config1="foo", config2="bar" ] }
 
+# Set item's metadata config, preserving its value
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace1'].config = { 'scooby'=>'doo' }
+# Item1's metadata after: { namespace1="value" [ scooby="doo" ] }
+
 # Update namespace1's existing configuration, preserving its value and other config
 # Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
 Item1.meta['namespace1']['config1'] = 'doo'

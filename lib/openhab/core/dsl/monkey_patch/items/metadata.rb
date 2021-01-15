@@ -47,6 +47,13 @@ module OpenHAB
                 NamespaceAccessor.registry.update(metadata) if @metadata&.uID
               end
 
+              def config=(config)
+                raise ArgumentError, 'Configuration must be a hash' unless config.is_a? Hash
+                metadata = Metadata.new(@metadata&.uID, @metadata&.value, config)
+                NamespaceAccessor.registry.update(metadata) if @metadata&.uID
+              end
+              alias configuration= config=
+
             end
 
             class NamespaceAccessor
