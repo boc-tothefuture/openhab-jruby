@@ -173,14 +173,16 @@ jobs:
      - name: Current Version 
        id: current_version
        run: |
-        bundle exec rake version
-        echo "::set-output name=version::$( bundle exec rake version )" 
+          bundle exec rake version
+          VERSION=$( bundle exec rake version )
+          echo "::set-output name=version::$( echo "$VERSION" )"
      - name: Gets latest created release info
        id: latest_release
        run: |
           git fetch --tags
           git tag | tail -1
-          echo "::set-output name=tag_name::$( git tag | tail -1)" 
+          TAG_NAME=$(git tag | tail -1)
+          echo "::set-output name=tag_name::$( echo "$TAG_NAME" )"
      - name: Execute Release
        #if:  ${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}}
        run: |
