@@ -200,15 +200,15 @@ jobs:
           echo "::set-output name=file::$( echo "$BUNDLE" )"
      - name: Create Release
        if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-        uses: actions/create-release@v1
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          prerelease: true
-          tag_name: ${{ steps.current_version.outputs.version }}
-          release_name: Release ${{ steps.current_version.outputs.version }}
-          body_path: CHANGELOG.md
+       uses: actions/create-release@v1
+       id: create_release
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         prerelease: true
+         tag_name: ${{ steps.current_version.outputs.version }}
+         release_name: Release ${{ steps.current_version.outputs.version }}
+         body_path: CHANGELOG.md
      - name: Upload OpenHAB JRuby Scripting Assets
        if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
        uses: actions/upload-release-asset@v1
