@@ -1,9 +1,11 @@
+name: Openhab Scripting Tests
+on: [pull_request]
 
 env:
   RUBY_VERSION: 2.5
+  GITHUB_TOKEN: ${{ github.token }}
 
-name: Openhab Scripting Tests
-on: [pull_request]
+
 jobs:
 
  rubocop:
