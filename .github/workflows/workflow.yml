@@ -148,23 +148,3 @@ jobs:
             tmp/openhab/conf/automation/jsr223/ruby/personal/
           retention-days: 2
 
-  release:
-   runs-on: ubuntu-18.04
-   outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-   steps: 
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - id: set-matrix
-       run: |
-         JSON=$(ruby -e '
-           require "json"
-           feature_maps = Dir["features/**/*.feature"].map { |feature| { feature: File.basename(feature,".feature"), file: feature } } 
-           include_map = {}
-           include_map["include"]= feature_maps
-           puts include_map.to_json
-         ') 
-         echo $JSON
-         echo "::set-output name=matrix::$( echo "$JSON" )"
