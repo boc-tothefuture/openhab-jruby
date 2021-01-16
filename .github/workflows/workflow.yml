@@ -186,9 +186,9 @@ jobs:
      - name: Execute Release
        #if:  ${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}}
        run: |
-          echo "Current Release ${{ steps.latest_release.tag_name }}" 
-          echo "Current Tag ${{ steps.current_tag.outputs.tag }}" 
-          echo "${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}} "
+          echo "Current Release: ${{ steps.latest_release.outputs.tag_name }}" 
+          echo "Current Tag: ${{ steps.current_version.outputs.tag }}" 
+          echo "${{ steps.current_version.outputs.tag != steps.latest_release.outputs.tag_name}} "
           echo "New version detected, preparing release"
 
 
