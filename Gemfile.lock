@@ -123,6 +123,7 @@ GEM
     tzinfo (1.2.8)
       thread_safe (~> 0.1)
     unicode-display_width (1.7.0)
+    yaml-lint (0.0.10)
     yard (0.9.25)
     zeitwerk (2.4.1)
 
@@ -141,6 +142,7 @@ DEPENDENCIES
   rspec
   rubocop (~> 1.3)
   tty-command
+  yaml-lint
   yard
 
 BUNDLED WITH

@@ -149,8 +149,7 @@ jobs:
             tmp/openhab/userdata/*.zip
             tmp/openhab/conf/automation/jsr223/ruby/personal/
           retention-days: 2
-
-release:
+ release:
 #   needs: cucumber 
    runs-on: ubuntu-18.04
    steps:
