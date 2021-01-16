@@ -72,6 +72,11 @@ module OpenHAB
             freeze
           end
 
+          # Returns true if the time falls within a range
+          def between?(range)
+            between(range).cover? self
+          end
+
           # Returns the hour of the TimeOfDay
           # @since 0.0.1
           # @return [Number] Hour of the day, from 0 to 23
@@ -177,7 +182,7 @@ module OpenHAB
 
           start_sod = start.local_time.to_second_of_day
           ending_sod = ending.local_time.to_second_of_day
-          ending_sod += NUM_SECONDS_IN_DAY if ending_sod < start_sod
+          ending_sod += TimeOfDayRangeElement::NUM_SECONDS_IN_DAY if ending_sod < start_sod
 
           start_range = TimeOfDayRangeElement.new(sod: start_sod, range_begin: start_sod)
           ending_range = TimeOfDayRangeElement.new(sod: ending_sod, range_begin: start_sod)

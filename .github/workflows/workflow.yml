@@ -1,0 +1,237 @@
+name: Openhab JRuby Scripting
+
+on: 
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  RUBY_VERSION: 2.5
+  GITHUB_TOKEN: ${{ github.token }}
+
+
+jobs:
+
+ rubocop:
+   runs-on: ubuntu-18.04
+   continue-on-error: true
+   steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Install bundler
+       run: gem install bundler -N
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+     - name: Rubocop 
+       run: bundle exec rubocop
+
+ cucumber-lint:
+   runs-on: ubuntu-18.04
+   continue-on-error: true
+   steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Install bundler
+       run: gem install bundler -N       
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+     - name: Cucumber Lint 
+       run: bundle exec cuke_linter
+ 
+
+ openhab-setup:
+   runs-on: ubuntu-18.04
+   steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - uses: actions/setup-java@v1
+       with:
+         java-version: '11.0.8' 
+         java-package: jre
+     - name: Install bundler
+       run: gem install bundler -N
+     - name: Cache Gems 
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+     - name: Cache OpenHAB setup
+       uses: actions/cache@v2
+       with: 
+        path: tmp/
+        key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
+     - name: Setup OpenHAB
+       run: bundle exec rake openhab:setup
+ 
+ cucumber-matrix:
+   runs-on: ubuntu-18.04
+   outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+   steps: 
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - id: set-matrix
+       run: |
+         JSON=$(ruby -e '
+           require "json"
+           feature_maps = Dir["features/**/*.feature"].map { |feature| { feature: File.basename(feature,".feature"), file: feature } } 
+           include_map = {}
+           include_map["include"]= feature_maps
+           puts include_map.to_json
+         ') 
+         echo $JSON
+         echo "::set-output name=matrix::$( echo "$JSON" )"
+
+ cucumber:
+    needs: [cucumber-matrix, openhab-setup]
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11.0.8' 
+          java-package: jre
+      - name: Install bundler
+        run: gem install bundler -N
+      - name: Restore Gems 
+        uses: actions/cache@v2
+        with: 
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Restore OpenHAB setup
+        uses: actions/cache@v2
+        with: 
+          path: tmp/
+          key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
+      - name: Cucumber
+        run: bundle exec rake features[${{ matrix.file }}]
+      - name: Generate OpenHAB Dump
+        run: bundle exec rake openhab:dump
+        if: failure()
+      - name: Upload OpenHAB Logs
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.feature }}
+          path: |
+            tmp/cucumber_logs
+            tmp/karaf.log
+            tmp/openhab/userdata/logs
+            tmp/openhab/userdata/*.zip
+            tmp/openhab/conf/automation/jsr223/ruby/personal/
+          retention-days: 2
+ release:
+   needs: cucumber 
+   if: github.ref == 'refs/heads/main'
+   runs-on: ubuntu-18.04
+   steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Install bundler
+       run: gem install bundler -N
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+     - name: Current Version 
+       id: current_version
+       run: |
+          bundle exec rake version
+          VERSION=$( bundle exec rake version )
+          echo "::set-output name=version::$( echo "$VERSION" )"
+     - name: Gets latest created release info
+       id: latest_release
+       run: |
+          git fetch --tags
+          git tag | tail -1
+          TAG_NAME=$(git tag | tail -1)
+          echo "::set-output name=tag_name::$( echo "$TAG_NAME" )"
+     - name: Prepare Release
+       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
+       run: |
+          echo "New version detected, preparing release"
+          echo "Released Version: ${{ steps.latest_release.outputs.tag_name }}" 
+          echo "Current Version: ${{ steps.current_version.outputs.version }}" 
+          bundle exec rake gh:package
+     - name: Get JRuby Bundle
+       id: jruby_bundle
+       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
+       run: |
+          echo "Finding JRuby Bundle"
+          BUNDLE=$(ls bundle/*.jar)
+          echo "Found: $BUNDLE"
+          echo "::set-output name=file::$( echo "$BUNDLE" )"
+     - name: Create Release
+       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
+       uses: actions/create-release@v1
+       id: create_release
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         prerelease: true
+         tag_name: ${{ steps.current_version.outputs.version }}
+         release_name: Release ${{ steps.current_version.outputs.version }}
+         body_path: CHANGELOG.md
+     - name: Upload OpenHAB JRuby Scripting Assets
+       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
+       uses: actions/upload-release-asset@v1
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         upload_url: ${{ steps.create_release.outputs.upload_url }} 
+         asset_path: ./pkg/OpenHABJRuby-${{steps.current_version.outputs.version}}.zip
+         asset_name: OpenHABJRuby-${{steps.current_version.outputs.version}}.zip
+         asset_content_type: application/zip
+     - name: Upload OpenHAB JRuby Bundle Assets
+       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
+       uses: actions/upload-release-asset@v1
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         upload_url: ${{ steps.create_release.outputs.upload_url }} 
+         asset_path: ${{ steps.jruby_bundle.outputs.file }}
+         asset_name: OpenHAB JRuby Bundle Jar
+         asset_content_type: application/jar

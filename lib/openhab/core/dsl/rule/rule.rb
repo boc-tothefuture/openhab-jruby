@@ -108,7 +108,7 @@ module OpenHAB
             setDescription(description)
             @run_queue = run_queue
             @guard = guard
-            @between = between || OpenHAB::Core::DSL::Tod::TimeOfDayRange::ALL_DAY
+            @between = between || OpenHAB::Core::DSL::Tod::ALL_DAY
             @trigger_delays = trigger_delays
           end
 
