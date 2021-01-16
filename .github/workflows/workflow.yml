@@ -36,6 +36,8 @@ jobs:
      - uses: actions/setup-ruby@v1
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Install bundler
+       run: gem install bundler -N       
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
