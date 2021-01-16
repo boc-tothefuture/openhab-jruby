@@ -6,9 +6,10 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
-## Unreleased
+## 2.6.1
 ### Fixed
-- Reference in between to TimeOfDay::NUM_SECONDS_PER_DAY
+- Race condition with `after` block
+- Unknown constant error in certain cases uses `between` blocks
 
 ## 2.6.0
 ### Added

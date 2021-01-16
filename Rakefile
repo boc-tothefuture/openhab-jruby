@@ -51,6 +51,11 @@ task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS
   end
 end
 
+desc 'Get OpenHAB-JRuby Version'
+task :version do
+  puts OpenHAB::VERSION
+end
+
 namespace :gh do
   zip_path = ''
 

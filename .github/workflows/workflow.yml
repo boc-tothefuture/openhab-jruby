@@ -150,3 +150,33 @@ jobs:
             tmp/openhab/conf/automation/jsr223/ruby/personal/
           retention-days: 2
 
+release:
+#   needs: cucumber 
+   runs-on: ubuntu-18.04
+   steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Install bundler
+       run: gem install bundler -N
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+     - name: Current Version 
+       id: current_version
+       run: echo "::set-output name=version::$( bundle exec rake version )" 
+     - name: 'Get Previous tag'
+        id: previous_tag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+     - name: 'Execute Release'
+        if:  ${{ steps.previous_tag.outputs.tag != steps.current_version.version}}
+        run: echo "New version detected, preparing release"
+
+
