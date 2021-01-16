@@ -1,5 +1,10 @@
-name: Openhab Scripting Tests
-on: [pull_request]
+name: Openhab JRuby Scripting
+
+on: 
+  - pull_request
+  - push:
+      branches:
+        - main
 
 env:
   RUBY_VERSION: 2.5
@@ -152,7 +157,8 @@ jobs:
             tmp/openhab/conf/automation/jsr223/ruby/personal/
           retention-days: 2
  release:
-#   needs: cucumber 
+   needs: cucumber 
+   if: github.ref == 'refs/heads/main'
    runs-on: ubuntu-18.04
    steps:
      - uses: actions/checkout@v2
@@ -227,5 +233,5 @@ jobs:
        with:
          upload_url: ${{ steps.create_release.outputs.upload_url }} 
          asset_path: ${{ steps.jruby_bundle.outputs.file }}
-         asset_name: OpenHAB JRuby Bundle 
+         asset_name: OpenHAB JRuby Bundle Jar
          asset_content_type: application/jar
