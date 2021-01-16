@@ -173,7 +173,7 @@ jobs:
        run: echo "::set-output name=version::$( bundle exec rake version )" 
      - name: Current Release
        id: latest_release
-       uses: thebritican/fetch-latest-release
+       uses: thebritican/fetch-latest-release@v2.0.0
      - name: Execute Release
        if:  ${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}}
        run: |
