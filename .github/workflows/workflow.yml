@@ -179,10 +179,11 @@ jobs:
           git fetch --tags
           echo "::set-output name=tag_name::$( git tag | tail -1)" 
      - name: Execute Release
-       if:  ${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}}
+       #if:  ${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}}
        run: |
           echo "Current Release ${{ steps.latest_release.tag_name }}" 
           echo "Current Tag ${{ steps.current_tag.outputs.tag }}" 
+          echo "${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}} "
           echo "New version detected, preparing release"
 
 
