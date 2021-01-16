@@ -175,7 +175,10 @@ jobs:
        run: echo "::set-output name=version::$( bundle exec rake version )" 
      - name: Gets latest created release info
        id: latest_release
-       uses: jossef/action-latest-release-info@v1.1.0
+       run: |
+          git fetch --tags
+          echo "::set-output name=tag_name::$( git tag | tail -1)" 
+     - name: Gets latest created release info
      - name: Execute Release
        if:  ${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}}
        run: |
