@@ -16,10 +16,35 @@ jobs:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
        run: gem install bundler -N
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
      - name: Install gems
        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
+     - name: Rubocop 
+       run: bundle exec rubocop
+
+ cucumber-lint:
+   runs-on: ubuntu-18.04
+   continue-on-error: true
+   steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 
      - name: Rubocop 
        run: bundle exec rubocop
  
@@ -122,3 +147,24 @@ jobs:
             tmp/openhab/userdata/*.zip
             tmp/openhab/conf/automation/jsr223/ruby/personal/
           retention-days: 2
+
+  release:
+   runs-on: ubuntu-18.04
+   outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+   steps: 
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - id: set-matrix
+       run: |
+         JSON=$(ruby -e '
+           require "json"
+           feature_maps = Dir["features/**/*.feature"].map { |feature| { feature: File.basename(feature,".feature"), file: feature } } 
+           include_map = {}
+           include_map["include"]= feature_maps
+           puts include_map.to_json
+         ') 
+         echo $JSON
+         echo "::set-output name=matrix::$( echo "$JSON" )"

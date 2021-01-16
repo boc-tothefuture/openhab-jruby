@@ -7,6 +7,7 @@ gemspec
 
 group :test do
   gem 'cucumber'
+  gem 'cuke_linter', '~> 1.2'
   gem 'httparty'
   gem 'persistent_httparty'
   gem 'rspec'
