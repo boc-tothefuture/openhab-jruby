@@ -28,7 +28,7 @@ Feature:  Rule languages supports storing and restoring states
               sleep 5
             end
             """
-        When I deploy the rule
+        When I start deploying the rule
         Then "Switch1" should be in state "ON" within 2 seconds
         But If I wait 5 seconds
         Then "Switch1" should be in state "OFF" within 2 seconds

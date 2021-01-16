@@ -1,4 +1,4 @@
-Feature:  Openhab Action Support
+Feature:  Openhab Language with Delay Support
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

@@ -12,13 +12,13 @@ module OpenHAB
 
           prop_array(:only_if) do |item|
             unless item.is_a?(Proc) || item.respond_to?(:truthy?)
-              raise "Object passed to only_if must respond_to 'truthy?'"
+              raise ArgumentError, "Object passed to only_if must respond_to 'truthy?'"
             end
           end
 
           prop_array(:not_if) do |item|
             unless item.is_a?(Proc) || item.respond_to?(:truthy?)
-              raise "Object passed to not_if must respond_to 'truthy?'"
+              raise ArgumentError, "Object passed to not_if must respond_to 'truthy?'"
             end
           end
 

@@ -182,7 +182,7 @@ module OpenHAB
 
           start_sod = start.local_time.to_second_of_day
           ending_sod = ending.local_time.to_second_of_day
-          ending_sod += NUM_SECONDS_IN_DAY if ending_sod < start_sod
+          ending_sod += TimeOfDayRangeElement::NUM_SECONDS_IN_DAY if ending_sod < start_sod
 
           start_range = TimeOfDayRangeElement.new(sod: start_sod, range_begin: start_sod)
           ending_range = TimeOfDayRangeElement.new(sod: ending_sod, range_begin: start_sod)

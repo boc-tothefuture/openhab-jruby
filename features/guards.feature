@@ -75,10 +75,14 @@ Feature:  Rule languages supports guards (only_if/not_if)
   Scenario Outline: only_if and not_if raise an error if supplied objects that don't respond to 'truthy'?
     And a rule
       """
-      rule 'turn  on light switch at start' do
-        on_start
-        changed LightSwitch, to: ON
-        <guard>
+      begin
+        rule 'turn  on light switch at start' do
+          on_start
+          changed LightSwitch, to: ON
+          <guard>
+        end
+      rescue ArgumentError => e
+        logger.error(e)
       end
       """
     When I deploy a rule with an error

@@ -7,9 +7,11 @@ gemspec
 
 group :test do
   gem 'cucumber'
+  gem 'cuke_linter', '~> 1.2'
   gem 'httparty'
   gem 'persistent_httparty'
   gem 'rspec'
+  gem 'yaml-lint'
 end
 
 group :development do

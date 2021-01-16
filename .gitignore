@@ -11,4 +11,3 @@ openhab.code-workspace
 /.idea/
 .java-verison
 .ruby-version
-Gemfile.lock
