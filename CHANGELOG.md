@@ -6,6 +6,11 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 2.6.1
+### Fixed
+- Race condition with `after` block
+- Unknown constant error in certain cases uses `between` blocks
+
 ## 2.6.0
 ### Added
 - `TimeOfDay.between?` to check if TimeOfDay object is between supplied range
