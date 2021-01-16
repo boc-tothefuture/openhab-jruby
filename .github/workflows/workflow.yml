@@ -172,11 +172,14 @@ jobs:
           bundle install --jobs 4 --retry 3
      - name: Current Version 
        id: current_version
-       run: echo "::set-output name=version::$( bundle exec rake version )" 
+       run: |
+        bundle exec rake version
+        echo "::set-output name=version::$( bundle exec rake version )" 
      - name: Gets latest created release info
        id: latest_release
        run: |
           git fetch --tags
+          git tag | tail -1
           echo "::set-output name=tag_name::$( git tag | tail -1)" 
      - name: Execute Release
        #if:  ${{ steps.current_tag.outputs.tag != steps.latest_release.tag_name}}
