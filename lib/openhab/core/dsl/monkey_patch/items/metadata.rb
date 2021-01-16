@@ -116,16 +116,13 @@ module OpenHAB
                 NamespaceAccessor.registry.remove(MetadataKey.new(namespace, @item_name))
               end
 
-              def delete_all
-                NamespaceAccessor.registry.removeItemMetadata(@item_name)
-              end
-
               def has_key?(namespace)
                 !NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name)).nil?
               end
 
               alias key? has_key?
               alias include? has_key?
+              alias namespace? has_key?
 
               def self.registry
                 @@registry ||= OpenHAB::OSGI.service('org.openhab.core.items.MetadataRegistry')
