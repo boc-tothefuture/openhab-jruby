@@ -47,8 +47,8 @@ jobs:
        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-     - name: Rubocop 
-       run: bundle exec rubocop
+     - name: Cucumber Lint 
+       run: bundle exec cuke_linter
  
 
  openhab-setup:
