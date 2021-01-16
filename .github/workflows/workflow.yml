@@ -176,6 +176,9 @@ jobs:
        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
      - name: Execute Release
        if:  ${{ steps.current_tag.outputs.tag != steps.current_version.version}}
-       run: echo "New version detected, preparing release"
+       run: |
+          echo "Current Version ${{ steps.current_version.version }}" 
+          echo "Current Tag ${{ steps.current_tag.outputs.tag }}" 
+          echo "New version detected, preparing release"
 
 
