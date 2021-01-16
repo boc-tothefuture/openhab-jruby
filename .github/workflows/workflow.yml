@@ -172,10 +172,10 @@ release:
      - name: Current Version 
        id: current_version
        run: echo "::set-output name=version::$( bundle exec rake version )" 
-     - name: 'Get Previous tag'
+     - name: Get Previous tag
         id: previous_tag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
-     - name: 'Execute Release'
+     - name: Execute Release
         if:  ${{ steps.previous_tag.outputs.tag != steps.current_version.version}}
         run: echo "New version detected, preparing release"
 
