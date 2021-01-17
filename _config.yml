@@ -31,6 +31,8 @@ theme: just-the-docs
 plugins:
   - jekyll-feed
 
+remote_theme: pmarsceill/just-the-docs
+
 
 # Regression tests
 # By default, the pages in /docs/tests are excluded when the ste is built.
