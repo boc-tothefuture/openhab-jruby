@@ -13,3 +13,4 @@ openhab.code-workspace
 /.idea/
 .java-verison
 .ruby-version
+.jekyll-cache/
