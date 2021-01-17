@@ -18,6 +18,7 @@ require_relative 'lib/openhab/version'
 PACKAGE_DIR = 'pkg'
 TMP_DIR = 'tmp'
 OPENHAB_DIR = File.join(TMP_DIR, 'openhab')
+DOCS_DIR = 'doc'
 OPENHAB_VERSION = '3.0.0'
 JRUBY_BUNDLE = File.realpath(Dir.glob('bundle/*.jar').first)
 KARAF_CLIENT_PATH = File.join(OPENHAB_DIR, 'runtime/bin/client')
@@ -32,6 +33,8 @@ CUCUMBER_LOGS = File.join(TMP_DIR, 'cucumber_logs')
 CLEAN << PACKAGE_DIR
 CLEAN << DEPLOY_DIR
 CLEAN << CUCUMBER_LOGS
+CLEAN << 'doc'
+CLEAN << '.yardoc'
 
 YARD::Rake::YardocTask.new do |t|
   t.files = ['lib/**/*.rb'] # optional
@@ -56,6 +59,11 @@ task :docs do
 end
 
 
+task :yard_server do
+  #mv 'README.md', '_README'
+  sh 'bundle exec yard server --reload'
+  mv '_README', 'README.md'
+end
 
 desc 'Run Cucumber Features'
 task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|

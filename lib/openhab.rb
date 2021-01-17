@@ -8,6 +8,9 @@ require 'openhab/core/log'
 require 'openhab/core/debug'
 require 'openhab/core/dsl'
 
+#
+# Module used to extend base object with OpenHAB Library functionality
+#
 module OpenHAB
   def self.extended(base)
     base.extend Logging
