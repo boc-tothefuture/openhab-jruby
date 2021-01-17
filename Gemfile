@@ -15,6 +15,9 @@ group :test do
 end
 
 group :development do
+  gem 'jekyll', '~> 4.2', require: false
+  gem 'just-the-docs', '~> 0.3'
+  gem 'kramdown-parser-gfm'
   gem 'process_exists'
   gem 'rake', '~> 12.0'
   gem 'rubocop', '~> 1.8', require: false
