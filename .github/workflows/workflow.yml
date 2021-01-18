@@ -1,4 +1,4 @@
-name: Openhab JRuby Scripting
+name: Openhab-JRuby-Scripting
 
 on: 
   pull_request:
