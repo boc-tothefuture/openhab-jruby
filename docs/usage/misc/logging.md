@@ -1,3 +1,12 @@
+---
+layout: default
+title: Logging
+nav_order: 1
+has_children: false
+parent: Misc
+grand_parent: Usage
+---
+
 # Logging
 
 Logging is available everywhere through the logger object.  The name of the rule file is automatically appended to the logger name. Pending [merge](https://github.com/openhab/openhab-core/pull/1885) into the core.
