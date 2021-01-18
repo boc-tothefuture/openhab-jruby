@@ -1475,6 +1475,11 @@ Item1.meta['namespace1'].delete('config2')
 Item1.meta['namespace2'] = 'qx'
 # Item1's metadata after: { namespace1="value" [ config1="foo", config2="bar" ], namespace2="qx" }
 
+# Add a namespace and set it to a value and config
+# Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace2'] = 'qx', { 'config1' => 'doo' }
+# Item1's metadata after: { namespace1="value" [ config1="foo", config2="bar" ], namespace2="qx" [ config1="doo" ] }
+
 # Enumerate Item1's namespaces
 Item1.meta.each { |namespace, value, config| logger.info("Item1's namespace: #{namespace}='#{value}' #{config}") }
 
