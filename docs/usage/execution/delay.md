@@ -3,7 +3,7 @@ layout: default
 title: Delay
 nav_order: 3
 has_children: false
-parent: Execution
+parent: Execution Blocks
 grand_parent: Usage
 ---
 

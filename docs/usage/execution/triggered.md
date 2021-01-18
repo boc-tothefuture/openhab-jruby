@@ -3,7 +3,7 @@ layout: default
 title: Triggered
 nav_order: 2
 has_children: false
-parent: Execution
+parent: Execution Blocks
 grand_parent: Usage
 ---
 

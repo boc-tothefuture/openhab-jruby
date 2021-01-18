@@ -1,9 +1,8 @@
 ---
 layout: default
-title: Execution Blocks
-nav_order: 2
+title: Triggers
+nav_order: 1
 has_children: true
 parent: Usage
 ---
-
 

@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Othewise
+title: Otherwise
 nav_order: 4
 has_children: false
-parent: Execution
+parent: Execution Blocks
 grand_parent: Usage
 ---
 
