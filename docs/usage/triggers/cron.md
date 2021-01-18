@@ -3,7 +3,7 @@ layout: default
 title: Cron
 nav_order: 2
 has_children: false
-parent: Rules
+parent: Triggers
 grand_parent: Usage
 ---
 

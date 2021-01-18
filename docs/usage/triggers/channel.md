@@ -3,7 +3,7 @@ layout: default
 title: Channel
 nav_order: 6
 has_children: false
-parent: Rules
+parent: Triggers
 grand_parent: Usage
 ---
 

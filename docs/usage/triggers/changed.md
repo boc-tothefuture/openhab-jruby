@@ -3,7 +3,7 @@ layout: default
 title: Changed
 nav_order: 3
 has_children: false
-parent: Rules
+parent: Triggers
 grand_parent: Usage
 ---
 
