@@ -11,6 +11,7 @@ require 'cucumber/rake/task'
 require 'open-uri'
 require 'tty-command'
 require 'process_exists'
+require 'cuke_linter'
 
 require_relative 'lib/openhab/version'
 
@@ -37,10 +38,24 @@ YARD::Rake::YardocTask.new do |t|
   t.stats_options = ['--list-undoc'] # optional
 end
 
-RuboCop::RakeTask.new(:lint) do |task|
+RuboCop::RakeTask.new do |task|
   task.patterns = ['lib/**/*.rb', 'test/**/*.rb']
   task.fail_on_error = false
 end
+
+desc 'Lint Code'
+task :lint do 
+  Rake::Task['rubocop'].invoke
+  CukeLinter.lint
+end
+
+desc 'Start Documentation Server'
+task :docs do 
+  sh 'bundle exec jekyll clean'
+  sh 'bundle exec jekyll server --config docs/_config.yml'
+end
+
+
 
 desc 'Run Cucumber Features'
 task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|
