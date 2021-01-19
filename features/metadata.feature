@@ -3,8 +3,9 @@ Feature:  Items support accessing metadata
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
     And items:
-      | type   | name       |
-      | Switch | TestSwitch |
+      | type   | name        |
+      | Switch | TestSwitch  |
+      | Switch | TestSwitch2 |
 
   Scenario: User can access item metadata using hash like accessors
     Given metadata added to "TestSwitch" in namespace "test":
@@ -136,13 +137,13 @@ Feature:  Items support accessing metadata
       """
     And code in a rules file:
       """
-      logger.info("TestSwitch value for config test:bar is: \"#{TestSwitch.meta['test']['bar']}\" \"#{TestSwitch.meta['test']['bar'].nil?}\"")
+      logger.info("Before: TestSwitch value for config test:bar is: \"#{TestSwitch.meta['test']['bar']}\" nil? \"#{TestSwitch.meta['test']['bar'].nil?}\"")
       TestSwitch.meta['test'].delete 'bar'
-      logger.info("TestSwitch value for config test:bar is: \"#{TestSwitch.meta['test']['bar']}\" \"#{TestSwitch.meta['test']['bar'].nil?}\"")
+      logger.info("After: TestSwitch value for config test:bar is: \"#{TestSwitch.meta['test']['bar']}\" nil? \"#{TestSwitch.meta['test']['bar'].nil?}\"")
       """
     When I deploy the rules file
-    Then It should log 'TestSwitch value for config test:bar is: "baz" "false' within 5 seconds
-    And It should log 'TestSwitch value for config test:bar is: "" "true"' within 5 seconds
+    Then It should log 'Before: TestSwitch value for config test:bar is: "baz" nil? "false' within 5 seconds
+    And It should log 'After: TestSwitch value for config test:bar is: "" nil? "true"' within 5 seconds
 
   Scenario: User can add item metadata namespace
     Given code in a rules file:
@@ -177,11 +178,11 @@ Feature:  Items support accessing metadata
       """
       logger.info("TestSwitch has metadata namespace test? '#{TestSwitch.meta.key? 'test'}'")
       TestSwitch.meta.delete 'test'
-      logger.info("TestSwitch does not have metadata namespace test? '#{!TestSwitch.meta.key? 'test'}'")
+      logger.info("TestSwitch has metadata namespace test after deletion? '#{TestSwitch.meta.key? 'test'}'")
       """
     When I deploy the rules file
     Then It should log "TestSwitch has metadata namespace test? 'true'" within 5 seconds
-    And It should log "TestSwitch does not have metadata namespace test? 'true'" within 5 seconds
+    And It should log "TestSwitch has metadata namespace test after deletion? 'false'" within 5 seconds
 
   Scenario: User can enumerate all item metadata namespaces
     Given metadata added to "TestSwitch" in namespace "test":
@@ -201,12 +202,12 @@ Feature:  Items support accessing metadata
     And code in a rules file:
       """
       TestSwitch.meta.each do |namespace, value, config|
-      logger.info("TestSwitch namespace #{namespace} is: \"#{value}\" #{config}")
+      logger.info("TestSwitch namespace #{namespace} is: value=\"#{value}\" config=#{config}")
       end
       """
     When I deploy the rules file
-    Then It should log 'TestSwitch namespace test is: "foo" {"bar"=>"baz"}' within 5 seconds
-    And It should log 'TestSwitch namespace second is: "boo" {"moo"=>"goo"}' within 5 seconds
+    Then It should log 'TestSwitch namespace test is: value="foo" config={"bar"=>"baz"}' within 5 seconds
+    And It should log 'TestSwitch namespace second is: value="boo" config={"moo"=>"goo"}' within 5 seconds
 
 
 
@@ -235,8 +236,42 @@ Feature:  Items support accessing metadata
     Then It should log 'TestSwitch namespace test is: "" ""' within 5 seconds
     And It should log 'TestSwitch namespace second is: "" ""' within 5 seconds
 
+  Scenario: Metadata namespaces can be merged with a hash
+    Given code in a rules file
+      """
+      TestSwitch.meta.merge!({"n1"=>["baz",{"foo"=>"bar"}],"n2"=>["boo",{"moo"=>"goo"}]})
+      logger.info("TestSwitch n1: value=#{TestSwitch.meta['n1'].value} config=#{TestSwitch.meta['n1']}")
+      logger.info("TestSwitch n2: value=#{TestSwitch.meta['n2'].value} config=#{TestSwitch.meta['n2']}")
+      """
+    When I deploy the rules file
+    Then It should log 'TestSwitch n1: value=baz config={"foo"=>"bar"}' within 5 seconds
+    Then It should log 'TestSwitch n2: value=boo config={"moo"=>"goo"}' within 5 seconds
 
 
+  Scenario: Item metadata can be merged with another item's metadata
+    Given metadata added to "TestSwitch" in namespace "ts1":
+      """
+      {
+      "value": "foo",
+      "config": { "bar": 'baz' }
+      }
+      """
+    And metadata added to "TestSwitch2" in namespace "ts2":
+      """
+      {
+      "value": "boo",
+      "config": { "moo": 'goo' }
+      }
+      """
+    And code in a rules file
+      """
+      TestSwitch.meta.merge! TestSwitch2.meta
+      logger.info("TestSwitch ts1: value=#{TestSwitch.meta['ts1'].value} config=#{TestSwitch.meta['ts1']}")
+      logger.info("TestSwitch ts2: value=#{TestSwitch.meta['ts2'].value} config=#{TestSwitch.meta['ts2']}")
+      """
+    When I deploy the rules file
+    Then It should log 'TestSwitch ts1: value=foo config={"bar"=>"baz"}' within 5 seconds
+    Then It should log 'TestSwitch ts2: value=boo config={"moo"=>"goo"}' within 5 seconds
 
 
 

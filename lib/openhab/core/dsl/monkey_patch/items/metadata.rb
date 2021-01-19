@@ -55,6 +55,10 @@ module OpenHAB
                 NamespaceAccessor.registry.update(metadata) if @metadata&.uID
               end
               alias configuration= config=
+
+              def to_a
+                [@metadata&.value, @metadata&.configuration || {}]
+              end
             end
 
             class NamespaceAccessor
@@ -79,12 +83,14 @@ module OpenHAB
                 when Metadata
                   meta_value = value.value
                   configuration = value.configuration
+                when Array
+                  raise ArgumentError, 'Array must contain 2 elements: value, config' if value.length < 2
+
+                  meta_value = value[0]
+                  configuration = value[1]
                 when Hash
                   meta_value = nil
                   configuration = value
-                when Array
-                  meta_value = value[0]
-                  configuration = value[1]
                 else
                   meta_value = value
                   configuration = nil
@@ -92,6 +98,7 @@ module OpenHAB
 
                 key = MetadataKey.new(namespace, @item_name)
                 metadata = Metadata.new(key, meta_value, configuration)
+                # registry.get can be omitted, but registry.update will log a warning for nonexistent metadata
                 if NamespaceAccessor.registry.get(key)
                   NamespaceAccessor.registry.update(metadata)
                 else
@@ -99,12 +106,11 @@ module OpenHAB
                 end
               end
 
-              def each(&block)
+              def each
+                return unless block_given?
+
                 NamespaceAccessor.registry.getAll.each do |meta|
-                  if meta.uID.itemName == @item_name
-                    block.call(meta.uID.namespace, meta.value,
-                               meta.configuration)
-                  end
+                  yield meta.uID.namespace, meta.value, meta.configuration if meta.uID.itemName == @item_name
                 end
               end
 
@@ -116,13 +122,51 @@ module OpenHAB
                 NamespaceAccessor.registry.remove(MetadataKey.new(namespace, @item_name))
               end
 
+              def delete_all
+                NamespaceAccessor.registry.removeItemMetadata(@item_name)
+              end
+
               def has_key?(namespace)
                 !NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name)).nil?
               end
 
               alias key? has_key?
               alias include? has_key?
-              alias namespace? has_key?
+
+              def merge!(*others)
+                return self if others.empty?
+
+                others.each do |other|
+                  case other
+                  when Hash
+                    other.each do |key, new_meta|
+                      if block_given?
+                        current_meta = self[key]&.to_a
+                        new_meta = yield key, current_meta, new_meta unless current_meta.nil?
+                      end
+                      self[key] = new_meta
+                    end
+                  when self.class
+                    other.each do |key, new_value, new_config|
+                      new_meta = new_value, new_config
+                      if block_given?
+                        current_meta = self[key]&.to_a
+                        new_meta = yield key, current_meta, new_meta unless current_meta.nil?
+                      end
+                      self[key] = new_meta
+                    end
+                  else
+                    raise ArgumentError, "merge only supports Hash, or another item's metadata"
+                  end
+                end
+                self
+              end
+
+              def to_s
+                namespaces = []
+                each { |ns, value, config| namespaces << "\"#{ns}\"=>[\"#{value}\",#{config}]" }
+                '{' + namespaces.join(',') + '}'
+              end
 
               def self.registry
                 @@registry ||= OpenHAB::OSGI.service('org.openhab.core.items.MetadataRegistry')
