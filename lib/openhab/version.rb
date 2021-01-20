@@ -4,5 +4,5 @@
 # Holds project version constant
 #
 module OpenHAB
-  VERSION = '2.6.1'
+  VERSION = '2.7.0'
 end

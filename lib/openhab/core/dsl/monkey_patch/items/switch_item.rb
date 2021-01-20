@@ -50,9 +50,18 @@ class Java::OrgOpenhabCoreLibraryItems::SwitchItem
   end
 
   #
-  # Invert the state if the switch state is not UNDEF or NULL
+  # Send a command to invert the state of the switch
   #
-  # @return [OnOffType] Inverted state or nil
+  # @return [OnOffType] Inverted state
+  #
+  def toggle
+    self << !self
+  end
+
+  #
+  # Return the inverted state of the switch: ON if the switch is OFF, UNDEF or NULL; OFF if the switch is ON
+  #
+  # @return [OnOffType] Inverted state
   #
   def !
     return !state if state?
