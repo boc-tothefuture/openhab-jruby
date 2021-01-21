@@ -27,17 +27,15 @@ class Java::OrgOpenhabCoreLibraryTypes::OnOffType
   #  nil if object cannot be compared
   #
   def ===(other)
-    case self
-    when ON
-      return nil unless other.respond_to?('on?')
-
-      other.on?
-    when OFF
-      return nil unless other.respond_to?('off?')
-
-      other.off?
+    # A case statement here causes and infinite loop
+    # rubocop:disable Style/CaseLikeIf
+    if self == ON
+      other.on? if other.respond_to? :on?
+    elsif self == OFF
+      other.off? if other.respond_to?('off?')
     else
       false
     end
+    # rubocop:enable Style/CaseLikeIf
   end
 end
