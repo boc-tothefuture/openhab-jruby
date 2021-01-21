@@ -20,7 +20,7 @@ module OpenHAB
       # @param [Integer] amount of that unit
       #
       def initialize(temporal_unit:, amount:)
-        unless TEMPORAL_UNITS.include? unit == temporal_unit
+        unless TEMPORAL_UNITS.include? temporal_unit
           raise ArgumentError,
                 "Unexpected Temporal Unit: #{temporal_unit}"
         end
