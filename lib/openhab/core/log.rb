@@ -114,8 +114,6 @@ module Logging
       @loggers[name] ||= Logging.logger_for(name)
     end
 
-   private
-
     #
     # Configure a logger for the supplied class name
     #
@@ -126,6 +124,8 @@ module Logging
     def logger_for(classname)
       configure_logger_for(classname)
     end
+
+    private
 
     #
     # Configure a logger for the supplied classname
