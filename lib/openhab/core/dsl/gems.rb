@@ -2,8 +2,6 @@
 
 require 'core/log'
 
-# Ensure bundler is installed
-
 begin
   require 'bundler/inline'
 

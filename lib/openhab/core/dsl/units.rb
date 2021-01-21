@@ -14,8 +14,20 @@ java_import org.openhab.core.library.types.QuantityType
 module OpenHAB
   module Core
     module DSL
+      #
+      # Provides support for interacting with OpenHAB Units of Measurement
+      #
       module Units
         java_import 'tec.uom.se.format.SimpleUnitFormat'
+
+        #
+        # Sets a thread local variable to the supplied unit such that classes operating inside the block
+        # can perform automatic conversions to the supplied unit for NumberItems
+        #
+        # @param [Object] unit OpenHAB Unit or String representing unit
+        # @yield [] Block executed in context of the supplied unit
+        #
+        #
         def unit(unit)
           unit = SimpleUnitFormat.instance.unitFor(unit) if unit.is_a? String
           Thread.current.thread_variable_set(:unit, unit)

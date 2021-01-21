@@ -21,6 +21,9 @@ require 'core/dsl/states'
 
 module OpenHAB
   module Core
+    #
+    # Module to be extended to access the OpenHAB Ruby DSL
+    #
     module DSL
       # Extend the calling module/class with the DSL
       def self.extended(base)

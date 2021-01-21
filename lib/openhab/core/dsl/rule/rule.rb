@@ -16,7 +16,13 @@ require 'core/dsl/timers'
 module OpenHAB
   module Core
     module DSL
+      #
+      # Creates and manages OpenHAB Rules
+      #
       module Rule
+        #
+        # Rule configuration for OpenHAB Rules engine
+        #
         class RuleConfig
           include EntityLookup
           include OpenHAB::Core::DSL::Rule::Cron
@@ -29,7 +35,11 @@ module OpenHAB
 
           java_import org.openhab.core.library.items.SwitchItem
 
-          attr_reader :triggers, :trigger_delays
+          # @return [Array] Of triggers
+          attr_reader :triggers
+
+          # @return [Array] Of trigger delays
+          attr_reader :trigger_delays
 
           Run = Struct.new(:block)
           Trigger = Struct.new(:block)
@@ -46,6 +56,12 @@ module OpenHAB
           prop :enabled
           prop :between
 
+          #
+          # Create a new RuleConfig
+          #
+          # @param [Object] caller_binding The object initializing this configuration.
+          #   Used to execute within the object's context
+          #
           def initialize(caller_binding)
             @triggers = []
             @trigger_delays = {}
@@ -54,30 +70,54 @@ module OpenHAB
             @caller = caller_binding.eval 'self'
           end
 
+          #
+          # Start this rule on system startup
+          #
+          # @param [Boolean] run_on_start Run this rule on start, defaults to True
+          #
+          #
           def on_start(run_on_start = true)
             @on_start = run_on_start
           end
 
+          #
+          # Checks if this rule should run on start
+          #
+          # @return [Boolean] True if rule should run on start, false otherwise.
+          #
           def on_start?
             @on_start
           end
 
+          #
+          # Run the supplied block inside the object instance of the object that created the rule config
+          #
+          # @yield [] Block executed in context of the object creating the rule config
+          #
+          #
           def my(&block)
             @caller.instance_eval(&block)
           end
         end
 
+        #
+        # Create a new rule
+        #
+        # @param [String] name <description>
+        # @yield [] Block executed in context of a RuleConfic
+        #
+        #
         def rule(name, &block)
           config = RuleConfig.new(block.binding)
           config.name(name)
           config.instance_eval(&block)
-          unless config.on_start?
-            return if config.triggers.empty?
-          end
+          return if !config.on_start? && config.triggers.empty?
 
           guard = Guard::Guard.new(only_if: config.only_if, not_if: config.not_if)
 
-          logger.trace { "Triggers: #{config.triggers} Guard: #{guard} Runs: #{config.run} on_start: #{config.on_start?}" }
+          logger.trace do
+            "Triggers: #{config.triggers} Guard: #{guard} Runs: #{config.run} on_start: #{config.on_start?}"
+          end
           config.triggers.each { |trigger| logger.trace { "Trigger UID: #{trigger.id}" } }
           logger.trace { "Trigger Waits #{config.trigger_delays}" }
 
@@ -97,11 +137,24 @@ module OpenHAB
           end
         end
 
+        #
+        # JRuby extension to OpenHAB Rule
+        #
         class Rule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
           include Logging
           include OpenHAB::Core::DSL::Tod
           java_import java.time.ZonedDateTime
 
+          #
+          # Create a new Rule
+          #
+          # @param [String] name Name of the rule
+          # @param [String] description of the rule
+          # @param [Array] run_queue array of procs to execute for rule
+          # @param [Array] guard array of guards
+          # @param [Range] between range in which the rule will execute
+          # @param [Array] trigger_delays Array of delays for tiggers based on item config
+          #
           def initialize(name:, description:, run_queue:, guard:, between:, trigger_delays:)
             super()
             setName(name)
@@ -112,13 +165,54 @@ module OpenHAB
             @trigger_delays = trigger_delays
           end
 
+          #
+          # Execute the rule
+          #
+          # @param [Map] mod map provided by OpenHAB rules engine
+          # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
+          #
+          #
+          def execute(mod, inputs)
+            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect}" }
+            logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
+            if trigger_delay inputs
+              process_trigger_delay(mod, inputs)
+            else
+              # If guards are satisfied execute the run type blocks
+              # If they are not satisfied, execute the Othewise blocks
+              queue = case check_guards(event: inputs&.dig('event'))
+                      when true
+                        @run_queue.dup
+                      when false
+                        @run_queue.dup.grep(RuleConfig::Otherwise)
+                      end
+              process_queue(queue, mod, inputs)
+            end
+          end
+
+          private
+
+          #
           # Returns trigger delay from inputs if it exists
+          #
+          # @param [Map] inputs map from OpenHAB containing UID
+          #
+          # @return [Array] Array of trigger delays that match rule UID
+          #
           def trigger_delay(inputs)
-            # Parse this to get the trigger UID
+            # Parse this to get the trigger UID:
             # ["72698819-83cb-498a-8e61-5aab8b812623.event", "oldState", "module", "72698819-83cb-498a-8e61-5aab8b812623.oldState", "event", "newState", "72698819-83cb-498a-8e61-5aab8b812623.newState"
             @trigger_delays[inputs&.keys&.grep(/\.event$/)&.first&.chomp('.event')]
           end
 
+          #
+          # Check if trigger guards prevent rule execution
+          #
+          # @param [Delay] trigger_delay rules delaying trigger because of
+          # @param [Map] inputs map from OpenHAB describing the rle trigger
+          #
+          # @return [Boolean] True if the rule should execute, false if trigger guard prevents execution
+          #
           def check_trigger_guards(trigger_delay, inputs)
             old_state = inputs['oldState']
             new_state = inputs['newState']
@@ -134,6 +228,13 @@ module OpenHAB
             false
           end
 
+          #
+          # Process any matching trigger delays
+          #
+          # @param [Map] mod OpenHAB map object describing rule trigger
+          # @param [Map] inputs OpenHAB map object describing rule trigge
+          #
+          #
           def process_trigger_delay(mod, inputs)
             trigger_delay = trigger_delay(inputs)
             if check_trigger_guards(trigger_delay, inputs)
@@ -166,24 +267,13 @@ module OpenHAB
             end
           end
 
-          def execute(mod, inputs)
-            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect}" }
-            logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
-            if trigger_delay inputs
-              process_trigger_delay(mod, inputs)
-            else
-              # If guards are satisfied execute the run type blocks
-              # If they are not satisfied, execute the Othewise blocks
-              queue = case check_guards(event: inputs&.dig('event'))
-                      when true
-                        @run_queue.dup
-                      when false
-                        @run_queue.dup.grep(RuleConfig::Otherwise)
-                      end
-              process_queue(queue, mod, inputs)
-            end
-          end
-
+          #
+          # Check if any guards prevent execution
+          #
+          # @param [Map] event OpenHAB rule trigger event
+          #
+          # @return [Boolean] True if guards says rule should execute, false otherwise
+          #
           def check_guards(event:)
             if @guard.should_run? event
               now = TimeOfDay.now
@@ -198,6 +288,14 @@ module OpenHAB
             false
           end
 
+          #
+          # Process the run queue
+          #
+          # @param [Array] run_queue array of procs of various types to execute
+          # @param [Map] mod OpenHAB map object describing rule trigger
+          # @param [Map] inputs OpenHAB map object describing rule trigge
+          #
+          #
           def process_queue(run_queue, mod, inputs)
             while (task = run_queue.shift)
               case task
@@ -227,14 +325,26 @@ module OpenHAB
             end
           end
 
-          private
-
+          #
+          # Create a new hash in which all elements are converted to strings
+          #
+          # @param [Map] hash in which all elements should be converted to strings
+          #
+          # @return [Map] new map with values converted to strings
+          #
           def inspect_hash(hash)
             hash.each_with_object({}) do |(key, value), new_hash|
               new_hash[inspect_item(key)] = inspect_item(value)
             end
           end
 
+          #
+          # Convert an individual element into a string based on if it a Ruby or Java object
+          #
+          # @param [Object] item to convert to a string
+          #
+          # @return [String] representation of item
+          #
           def inspect_item(item)
             if item.respond_to? :to_string
               item.to_string

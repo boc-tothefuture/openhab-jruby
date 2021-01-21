@@ -7,25 +7,44 @@ module OpenHAB
     module DSL
       module MonkeyPatch
         module Ruby
+          #
+          # Extend integer to create duration object
+          #
           module IntegerExtensions
             include OpenHAB::Core
 
-            java_import org.openhab.core.library.types.QuantityType
-            java_import 'tec.uom.se.format.SimpleUnitFormat'
-            java_import javax.measure.Unit
-
+            #
+            # Create Duration with unit of seconds
+            #
+            # @return [OpenHAB::Core::Duration] Duration with number of seconds from self
+            #
             def seconds
               Duration.new(temporal_unit: :SECONDS, amount: self)
             end
 
+            #
+            # Create Duration with unit of milliseconds
+            #
+            # @return [OpenHAB::Core::Duration] Duration with number of milliseconds from self
+            #
             def milliseconds
               Duration.new(temporal_unit: :MILLISECONDS, amount: self)
             end
 
+            #
+            # Create Duration with unit of minutes
+            #
+            # @return [OpenHAB::Core::Duration] Duration with number of minutes from self
+            #
             def minutes
               Duration.new(temporal_unit: :MINUTES, amount: self)
             end
 
+            #
+            # Create Duration with unit of hours
+            #
+            # @return [OpenHAB::Core::Duration] Duration with number of hours from self
+            #
             def hours
               Duration.new(temporal_unit: :HOURS, amount: self)
             end
@@ -42,6 +61,9 @@ module OpenHAB
   end
 end
 
+#
+# Prepend Integer class with duration extensions
+#
 class Integer
   prepend OpenHAB::Core::DSL::MonkeyPatch::Ruby::IntegerExtensions
 end

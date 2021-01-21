@@ -50,8 +50,8 @@ module OpenHAB
 
           # Constructs a TimeOfDay representing the time when called
           # @since 0.0.1
-          # @param [String] String representation of TimeOfDay. Valid formats include "HH:MM:SS", "HH:MM", "H:MM", "HH", "H", "H:MM am"
-          # @return [TimeOfDay] Representing supplied string
+          # @param [String] string representation of TimeOfDay. Valid formats include "HH:MM:SS", "HH:MM", "H:MM", "HH", "H", "H:MM am"
+          # @return [TimeOfDay] object created by parsing supplied string
           def self.parse(string)
             format = /(am|pm)$/i.match?(string) ? 'h[:mm[:ss]][ ]a' : 'H[:mm[:ss]]'
             local_time = LocalTime.parse(string, DateTimeFormatterBuilder.new
@@ -149,14 +149,17 @@ module OpenHAB
                                   when String
                                     adjust_second_of_day(TimeOfDay.parse(other).local_time.to_second_of_day)
                                   when Time
-                                    adjust_second_of_day(TimeOfDay.new(h: other.hour, m: other.min, s: other.sec).local_time.to_second_of_day)
+                                    adjust_second_of_day(TimeOfDay.new(h: other.hour, m: other.min,
+                                                                       s: other.sec).local_time.to_second_of_day)
                                   when TimeOfDayRangeElement
                                     other.sod
                                   else
                                     raise ArgumentError, 'Supplied argument cannot be converted into Time Of Day Object'
                                   end
 
-            logger.trace { "SOD(#{sod}) other SOD(#{other_second_of_day}) Other Class (#{other.class}) Result (#{sod <=> other_second_of_day})" }
+            logger.trace do
+              "SOD(#{sod}) other SOD(#{other_second_of_day}) Other Class (#{other.class}) Result (#{sod <=> other_second_of_day})"
+            end
             sod <=> other_second_of_day
           end
 
@@ -168,7 +171,8 @@ module OpenHAB
           end
         end
 
-        # Creates a range that can be compared against time of day objects or strings to see if they are within the range.
+        # Creates a range that can be compared against time of day objects or strings
+        # to see if they are within the range
         # @since 2.4.0
         # @return Range object representing a TimeOfDay Range
         def between(range)

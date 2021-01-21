@@ -2,6 +2,9 @@
 
 require 'java'
 
+#
+# Monkey patch with ruby style accessors
+#
 # rubocop:disable Style/ClassAndModuleChildren
 class Java::OrgOpenhabCoreThingEvents::ThingStatusInfoChangedEvent
   # rubocop:enable Style/ClassAndModuleChildren
@@ -11,6 +14,9 @@ class Java::OrgOpenhabCoreThingEvents::ThingStatusInfoChangedEvent
   alias status status_info
 end
 
+#
+# Monkey patch with ruby style accessors
+#
 # rubocop:disable Style/ClassAndModuleChildren
 class Java::OrgOpenhabCoreThingEvents::ThingStatusInfoEvent
   # rubocop:enable Style/ClassAndModuleChildren
