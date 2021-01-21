@@ -9,9 +9,19 @@ module OpenHAB
     module DSL
       module MonkeyPatch
         module Ruby
+          #
+          # Extensions for Range Class to support DimmerItems
+          #
           module RangeExtensions
+            #
+            # Override range === method to support DimmerItems
+            #
+            # @param [Object] other object to compare for case equals
+            #
+            # @return [Boolean] if other is DimmerItem and state is covered by range, result from parent Range class if not DimmerItem
+            #
             def ===(other)
-              return super unless [DimmerItem].any? { |type| other.is_a? type }
+              return super unless other.is_a? DimmerItem
 
               cover? other.state.to_i
             end
@@ -22,6 +32,9 @@ module OpenHAB
   end
 end
 
+#
+# Prepend Range class with RangeExtensions
+#
 class Range
   prepend OpenHAB::Core::DSL::MonkeyPatch::Ruby::RangeExtensions
 end

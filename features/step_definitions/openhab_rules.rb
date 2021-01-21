@@ -37,7 +37,7 @@ def deploy_rule(filename: '', check_position: :end, check: true)
                identifying_started_log_line(uid)
              when :end
                identifying_log_line(uid)
-             else raise ArgumentError, "log_line can either be :start or :end"
+             else raise ArgumentError, 'log_line can either be :start or :end'
              end
 
   deploy_path = File.join(rules_dir, filename)

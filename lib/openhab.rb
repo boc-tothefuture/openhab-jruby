@@ -12,6 +12,12 @@ require 'openhab/core/dsl'
 # Module used to extend base object with OpenHAB Library functionality
 #
 module OpenHAB
+  #
+  # Extends calling object with DSL and helper methods
+  #
+  # @param [Object] base Object to decorate with DSL and helper methods
+  #
+  #
   def self.extended(base)
     base.extend Logging
     base.extend Debug

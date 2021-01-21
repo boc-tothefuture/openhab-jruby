@@ -32,7 +32,7 @@ module OpenHAB
           # Create a new Timer Object
           #
           # @param [Duration] duration Duration until timer should fire
-          # @param [Block] &block Block to execute when timer fires
+          # @param [Block] block Block to execute when timer fires
           #
           def initialize(duration:, &block)
             @duration = duration
@@ -42,22 +42,23 @@ module OpenHAB
             semaphore = Mutex.new
 
             @block = proc do
-              semaphore.synchronize {
+              semaphore.synchronize do
                 block.call(self)
-              }
+              end
             end
 
-            semaphore.synchronize {
-              @timer = ScriptExecution.createTimer(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(@duration.to_ms)), @block)
+            semaphore.synchronize do
+              @timer = ScriptExecution.createTimer(
+                ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(@duration.to_ms)), @block
+              )
               super(@timer)
-            }
-
+            end
           end
 
           #
           # Reschedule timer
           #
-          # @param optional [Duration] duration
+          # @param [Duration] duration
           #
           # @return [<Type>] <description>
           #
@@ -71,7 +72,7 @@ module OpenHAB
         # Execute the supplied block after the specified duration
         #
         # @param [Duration] duration after which to execute the block
-        # @param [Block] &block to execute, block is passed a Timer object
+        # @param [Block] block to execute, block is passed a Timer object
         #
         # @return [Timer] Timer object
         #

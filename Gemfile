@@ -15,6 +15,7 @@ group :test do
 end
 
 group :development do
+  gem 'guard-yard'
   gem 'jekyll', '~> 4.2', require: false
   gem 'just-the-docs', '~> 0.3'
   gem 'kramdown-parser-gfm'

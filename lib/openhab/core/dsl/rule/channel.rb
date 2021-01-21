@@ -7,9 +7,20 @@ module OpenHAB
   module Core
     module DSL
       module Rule
+        #
+        # Channel triggers
+        #
         module Channel
           include Logging
 
+          #
+          # Creates a channel trigger
+          #
+          # @param [Array] channels array to create triggers for on form of 'binding_id:type_id:thing_id#channel_id' or 'channel_id' if thing is provided
+          # @param [thing] thing to create trigger for if not specified with the channel
+          # @param [String] triggered specific triggering condition to match for trigger
+          #
+          #
           def channel(*channels, thing: nil, triggered: nil)
             channels.flatten.each do |channel|
               channel = [thing, channel].join(':') if thing

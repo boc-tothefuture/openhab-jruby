@@ -4,6 +4,9 @@ require 'pp'
 require 'httparty'
 require 'persistent_httparty'
 
+#
+# Rest interface for OpenHAB
+#
 class Rest
   include HTTParty
   persistent_connection_adapter
