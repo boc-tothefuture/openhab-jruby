@@ -115,7 +115,8 @@ module OpenHAB
                      when Numeric
                        [quantity, QuantityType.new(BigDecimal(other).to_java, AbstractUnit::ONE)]
                      else
-                       raise TypeError, "Operation '#{operation}' cannot be performed between #{self} and #{other.class}"
+                       raise TypeError,
+                             "Operation '#{operation}' cannot be performed between #{self} and #{other.class}"
                      end
               logger.trace("Coerced a='#{a}' with b='#{b}'")
               a, b = unitize(a, b, operation)

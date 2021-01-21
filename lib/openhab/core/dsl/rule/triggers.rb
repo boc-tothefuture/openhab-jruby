@@ -6,7 +6,9 @@ module OpenHAB
   module Core
     module DSL
       module Rule
-        # Class for creating triggers
+        #
+        # Class for creating and managing triggers
+        #
         class Trigger
           java_import org.openhab.core.automation.util.TriggerBuilder
           java_import org.openhab.core.config.core.Configuration
@@ -27,6 +29,14 @@ module OpenHAB
           TIME_OF_DAY = 'timer.TimeOfDayTrigger'
           CRON = 'timer.GenericCronTrigger'
 
+          #
+          # Create a trigger
+          #
+          # @param [String] type of trigger
+          # @param [Map] config map
+          #
+          # @return [OpenHAB Trigger] configured by type and supplied config
+          #
           def self.trigger(type:, config:)
             TriggerBuilder.create
                           .with_id(uuid)
@@ -35,6 +45,11 @@ module OpenHAB
                           .build
           end
 
+          #
+          # Generate a UUID for triggers
+          #
+          # @return [String] UUID
+          #
           def self.uuid
             SecureRandom.uuid
           end

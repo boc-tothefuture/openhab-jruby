@@ -18,6 +18,7 @@ require_relative 'lib/openhab/version'
 PACKAGE_DIR = 'pkg'
 TMP_DIR = 'tmp'
 OPENHAB_DIR = File.join(TMP_DIR, 'openhab')
+DOCS_DIR = 'doc'
 OPENHAB_VERSION = '3.0.0'
 JRUBY_BUNDLE = File.realpath(Dir.glob('bundle/*.jar').first)
 KARAF_CLIENT_PATH = File.join(OPENHAB_DIR, 'runtime/bin/client')
@@ -32,6 +33,8 @@ CUCUMBER_LOGS = File.join(TMP_DIR, 'cucumber_logs')
 CLEAN << PACKAGE_DIR
 CLEAN << DEPLOY_DIR
 CLEAN << CUCUMBER_LOGS
+CLEAN << 'doc'
+CLEAN << '.yardoc'
 
 YARD::Rake::YardocTask.new do |t|
   t.files = ['lib/**/*.rb'] # optional
@@ -44,24 +47,25 @@ RuboCop::RakeTask.new do |task|
 end
 
 desc 'Lint Code'
-task :lint do 
+task :lint do
   Rake::Task['rubocop'].invoke
   CukeLinter.lint
 end
 
 desc 'Start Documentation Server'
-task :docs do 
+task :docs do
   sh 'bundle exec jekyll clean'
   sh 'bundle exec jekyll server --config docs/_config.yml'
 end
 
-
+task :yard_server do
+  sh 'bundle exec yard server --reload'
+end
 
 desc 'Run Cucumber Features'
 task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|
   # Rake::Task['openhab:warmup'].execute
   Cucumber::Rake::Task.new(:features) do |t|
-    #t.cucumber_opts = "--retry 5 --tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
     t.cucumber_opts = "--tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
   end
 end
@@ -185,7 +189,9 @@ namespace :openhab do
       openhab_zip = "openhab-#{OPENHAB_VERSION}.zip"
       Dir.chdir(OPENHAB_DIR) do
         puts "Downloading #{openhab_zip}"
-        IO.copy_stream(open("https://openhab.jfrog.io/openhab/libs-release/org/openhab/distro/openhab/#{OPENHAB_VERSION}/openhab-#{OPENHAB_VERSION}.zip"), openhab_zip)
+        IO.copy_stream(
+          open("https://openhab.jfrog.io/openhab/libs-release/org/openhab/distro/openhab/#{OPENHAB_VERSION}/openhab-#{OPENHAB_VERSION}.zip"), openhab_zip
+        )
         fail_on_error("unzip #{openhab_zip}")
         rm openhab_zip
       end

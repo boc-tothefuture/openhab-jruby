@@ -7,6 +7,9 @@ module OpenHAB
   module Core
     module DSL
       module Rule
+        #
+        # Guards for rules
+        #
         module Guard
           include DSLProperty
 
@@ -22,18 +25,39 @@ module OpenHAB
             end
           end
 
+          #
+          # Guard that can prevent execute of a rule if not satisfied
+          #
           class Guard
             include Logging
 
+            #
+            # Create a new Guard
+            #
+            # @param [Object] only_if Item or Proc to use as guard
+            # @param [Object] not_if Item or Proc to use as guard
+            #
             def initialize(only_if: nil, not_if: nil)
               @only_if = only_if
               @not_if = not_if
             end
 
+            #
+            # Convert the guard into a string
+            #
+            # @return [String] describing the only_of and not_if guards
+            #
             def to_s
               "only_if: #{@only_if}, not_if: #{@not_if}"
             end
 
+            #
+            # Checks if a guard should run
+            #
+            # @param [OpenHAB Trigger Event] event OpenHAB Trigger Event
+            #
+            # @return [Boolean] True if guard is satisfied, false otherwise
+            #
             def should_run?(event)
               logger.trace("Checking guards #{self}")
               check(@only_if, check_type: :only_if, event: event) && check(@not_if, check_type: :not_if, event: event)
@@ -41,6 +65,15 @@ module OpenHAB
 
             private
 
+            #
+            # Check if guard is satisfied
+            #
+            # @param [Array] conditions to check
+            # @param [Symbol] check_type type of check to perform (:only_if or :not_if)
+            # @param [Event] event OpenHAB event to see if it satisfies the guard
+            #
+            # @return [Boolean] True if guard is satisfied, false otherwise
+            #
             def check(conditions, check_type:, event:)
               return true if conditions.nil? || conditions.empty?
 
@@ -55,7 +88,7 @@ module OpenHAB
               when :not_if
                 items.none?(&:truthy?) && procs.none? { |proc| proc.call(event) }
               else
-                raise "Unexpected check type: #{check_type}"
+                raise ArgumentError, "Unexpected check type: #{check_type}"
               end
             end
           end

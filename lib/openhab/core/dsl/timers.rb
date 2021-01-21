@@ -9,6 +9,9 @@ require 'core/duration'
 module OpenHAB
   module Core
     module DSL
+      #
+      # Provides access to and ruby wrappers around OpenHAB timers
+      #
       module Timers
         java_import org.openhab.core.model.script.actions.ScriptExecution
         java_import java.time.ZonedDateTime
@@ -25,6 +28,12 @@ module OpenHAB
           def_delegator :@timer, :is_running, :running?
           def_delegator :@timer, :has_terminated, :terminated?
 
+          #
+          # Create a new Timer Object
+          #
+          # @param [Duration] duration Duration until timer should fire
+          # @param [Block] block Block to execute when timer fires
+          #
           def initialize(duration:, &block)
             @duration = duration
 
@@ -33,24 +42,40 @@ module OpenHAB
             semaphore = Mutex.new
 
             @block = proc do
-              semaphore.synchronize {
+              semaphore.synchronize do
                 block.call(self)
-              }
+              end
             end
 
-            semaphore.synchronize {
-              @timer = ScriptExecution.createTimer(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(@duration.to_ms)), @block)
+            semaphore.synchronize do
+              @timer = ScriptExecution.createTimer(
+                ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(@duration.to_ms)), @block
+              )
               super(@timer)
-            }
-
+            end
           end
 
+          #
+          # Reschedule timer
+          #
+          # @param [Duration] duration
+          #
+          # @return [<Type>] <description>
+          #
           def reschedule(duration = nil)
             duration ||= @duration
             @timer.reschedule(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(duration.to_ms)))
           end
         end
 
+        #
+        # Execute the supplied block after the specified duration
+        #
+        # @param [Duration] duration after which to execute the block
+        # @param [Block] block to execute, block is passed a Timer object
+        #
+        # @return [Timer] Timer object
+        #
         def after(duration, &block)
           Timer.new(duration: duration, &block)
         end
