@@ -3,6 +3,7 @@
 /_yardoc/
 /_site/
 /docs/.jekyll-cache/
+/docs/yard/
 /coverage/
 /doc/
 /pkg/
