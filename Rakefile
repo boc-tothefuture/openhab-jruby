@@ -28,7 +28,7 @@ KARAF_CLIENT = KARAF_CLIENT_ARGS.join(' ')
 DEPLOY_DIR = File.join(OPENHAB_DIR, 'conf/automation/jsr223/ruby/personal')
 LIB_DIR = File.join(OPENHAB_DIR, 'conf/automation/lib/ruby/lib/')
 STATE_DIR = File.join(OPENHAB_DIR, 'rake_state')
-YARD_DIR = File.join('docs', '_yard')
+YARD_DIR = File.join('docs', 'yard')
 CUCUMBER_LOGS = File.join(TMP_DIR, 'cucumber_logs')
 
 CLEAN << PACKAGE_DIR
@@ -58,7 +58,7 @@ task :lint do
 end
 
 desc 'Start Documentation Server'
-task :docs do
+task :docs => :yard do
   sh 'bundle exec jekyll clean'
   sh 'bundle exec jekyll server --config docs/_config.yml'
 end

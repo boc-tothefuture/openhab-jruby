@@ -9,8 +9,8 @@
     <img alt="SemVer version observance" src="https://img.shields.io/badge/semver-2.0.0-blue"/>
     <a href="https://conventionalcommits.org"/>
        <img alt="Convention commits observance" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg"/>
-    </a>
-</p>
+	</a>
+  </p>
 
 
 ## Usage
