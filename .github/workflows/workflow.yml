@@ -57,7 +57,7 @@ jobs:
      - name: Cucumber Lint 
        run: bundle exec cuke_linter
  
-   yard-coverage:
+ yard-coverage:
    runs-on: ubuntu-18.04
    continue-on-error: true
    steps:
