@@ -217,7 +217,7 @@ module OpenHAB
                 logger.trace("Converting dimensionless #{quantity} to #{unit}")
                 QuantityType.new(quantity.to_big_decimal, unit)
               when unit
-                item
+                quantity
               else
                 logger.trace("Converting dimensioned item #{inspect} to #{unit}")
                 converted = quantity.to_unit(unit)
@@ -226,7 +226,7 @@ module OpenHAB
                 converted
               end
             else
-              item
+              quantity
             end
           end
 
