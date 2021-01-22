@@ -19,6 +19,9 @@ module OpenHAB
           include OpenHAB::Core::DSL::Groups
           include OpenHAB::Core::DSL::Things
 
+          #
+          # Struct capturing data necessary for a conditional trigger
+          #
           TriggerDelay = Struct.new(:to, :from, :duration, :timer, :tracking_to, keyword_init: true)
 
           #

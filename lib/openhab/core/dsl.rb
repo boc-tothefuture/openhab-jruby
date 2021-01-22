@@ -20,6 +20,9 @@ require 'core/dsl/types/quantity'
 require 'core/dsl/states'
 
 module OpenHAB
+  #
+  #  Holds core functions for OpenHAB Helper Library
+  #
   module Core
     #
     # Module to be extended to access the OpenHAB Ruby DSL

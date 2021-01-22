@@ -14,6 +14,9 @@ module OpenHAB
   module Core
     module DSL
       module MonkeyPatch
+        #
+        # Monkeypatches Items
+        #
         module Items
           #
           # Extensions for Items
