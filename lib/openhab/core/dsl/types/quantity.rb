@@ -6,7 +6,13 @@ require 'forwardable'
 module OpenHAB
   module Core
     module DSL
+      #
+      # Ruby implementation of OpenHAB Types
+      #
       module Types
+        #
+        # Ruby implementation for OpenHAB quantities
+        #
         class Quantity < Numeric
           extend Forwardable
           include Logging
@@ -24,16 +30,15 @@ module OpenHAB
             '/' => 'divide'
           }.freeze
 
-          def inspect
-            if @quantity.unit == AbstractUnit::ONE
-              "unit=#{@quantity.unit}, value=#{@quantity.to_string}"
-            else
-              @quantity.to_string
-            end
-          end
+          private_constant OPERATIONS
 
           attr_reader :quantity
 
+          #
+          # Create a new Quantity
+          #
+          # @param [Java::org::openhab::core::library::types::QuantityType] quantity OpenHAB quantity to delegate to
+          #
           def initialize(quantity)
             @quantity = case quantity
                         when String
@@ -48,13 +53,27 @@ module OpenHAB
             super()
           end
 
-          # Convert the number to the specified unit
+          #
+          # Convert this quantity into a another unit
+          #
+          # @param [Object] other String or Unit to convert to
+          #
+          # @return [Quantity] This quantity converted to another unit
+          #
           def |(other)
             other = SimpleUnitFormat.instance.unitFor(other) if other.is_a? String
 
             Quantity.new(quantity.to_unit(other))
           end
 
+          #
+          # Compare this quantity
+          #
+          # @param [Object] other object to compare to
+          #
+          # @return [Integer] -1,0,1 if this object is less than, equal to, or greater than the supplied object,
+          #   nil if it cannot be compared
+          #
           def <=>(other)
             logger.trace("Comparing #{self} to #{other}")
             case other
@@ -73,6 +92,13 @@ module OpenHAB
             end
           end
 
+          #
+          # Coerce other object into a Quantity
+          #
+          # @param [Object] other object to convert to Quantity
+          #
+          # @return [Array] of self and other object as Quantity types, nil if object cannot be coerced
+          #
           def coerce(other)
             logger.trace("Coercing #{self} as a request from  #{other.class}")
             case other
@@ -85,7 +111,16 @@ module OpenHAB
             end
           end
 
-          # Forward missing methods to Openhab Number Item if they are defined
+
+          #
+          # Forward missing methods to Openhab Quantity Item if they are defined
+          #
+          # @param [String] meth name of method invoked
+          # @param [Array] args arguments to invoked method
+          # @param [Proc] block block passed ot method
+          #
+          # @return [Object] result of delegation
+          #
           def method_missing(meth, *args, &block)
             if quantity.respond_to?(meth)
               quantity.__send__(meth, *args, &block)
@@ -96,6 +131,11 @@ module OpenHAB
             end
           end
 
+          #
+          # Negate the quantity
+          #
+          # @return [Quantity] This quantity negated
+          #
           def -@
             Quantity.new(quantity.negate)
           end
@@ -126,31 +166,62 @@ module OpenHAB
             end
           end
 
+
+          #
+          # Provide details about quantity object
+          #
+          # @return [String] Representing details about the quantity object
+          #
+          def inspect
+            if @quantity.unit == AbstractUnit::ONE
+              "unit=#{@quantity.unit}, value=#{@quantity.to_string}"
+            else
+              @quantity.to_string
+            end
+          end
+
           private
 
           DIMENSIONLESS_NON_UNITIZED_OPERATIONS = %w[* /].freeze
 
           # Dimensionless numbers should only be unitzed for addition and subtraction
-          def unitize?(item, operation)
-            if item.unit == AbstractUnit::ONE && DIMENSIONLESS_NON_UNITIZED_OPERATIONS.include?(operation)
+
+
+          #
+          # Checks if an item should be unitized
+          #
+          # @param [Quantity] quantity to check
+          # @param [String] operation quantity is being used with
+          #
+          # @return [Boolean] True if the quantity should be unitzed based on the unit and operation, false otherwise
+          #
+          def unitize?(quantity, operation)
+            if quantity.unit == AbstractUnit::ONE && DIMENSIONLESS_NON_UNITIZED_OPERATIONS.include?(operation)
               false
             else
               true
             end
           end
 
-          def convert_unit(item)
+          #
+          # Convert the unit for the quantity
+          #
+          # @param [Quantity] quantity being converted
+          #
+          # @return [Quantity] Quantity coverted to unit set by unit block
+          #
+          def convert_unit(quantity)
             if unit
-              case item.unit
+              case quantity.unit
               when AbstractUnit::ONE
-                logger.trace("Converting dimensionless #{item} to #{unit}")
-                QuantityType.new(item.to_big_decimal, unit)
+                logger.trace("Converting dimensionless #{quantity} to #{unit}")
+                QuantityType.new(quantity.to_big_decimal, unit)
               when unit
                 item
               else
                 logger.trace("Converting dimensioned item #{inspect} to #{unit}")
-                converted = item.to_unit(unit)
-                raise "Conversion from #{item.unit} to #{unit} failed" if converted.nil?
+                converted = quantity.to_unit(unit)
+                raise "Conversion from #{quantity.unit} to #{unit} failed" if converted.nil?
 
                 converted
               end
@@ -159,10 +230,24 @@ module OpenHAB
             end
           end
 
-          def unitize(a, b, operation)
-            [a, b].map { |qt| unitize?(qt, operation) ? convert_unit(qt) : qt }
+          #
+          # Convert quantities to appropriate units 
+          #
+          # @param [Quantity] quantity_a Quantity on left side of operation
+          # @param [Quantity] quantity_b Quantity on right side of operation
+          # @param [String] operation Math operation
+          #
+          # @return [Array] of quantites in correct units for the supplied operation and set unit
+          #
+          def unitize(quantity_a, quantity_b, operation)
+            [quantity_a, quantity_b].map { |qt| unitize?(qt, operation) ? convert_unit(qt) : qt }
           end
 
+          #
+          # Get the unit from the current thread local variable
+          #
+          # @return [Object] Unit or string representation of Unit, or nil if not set
+          #
           def unit
             Thread.current.thread_variable_get(:unit)
           end

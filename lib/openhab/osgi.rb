@@ -3,6 +3,9 @@
 require 'java'
 
 module OpenHAB
+  #
+  # OSGI interface into OpenHAB
+  #
   class OSGI
     java_import org.openhab.core.model.script.actions.ScriptExecution
     java_import org.osgi.framework.FrameworkUtil
