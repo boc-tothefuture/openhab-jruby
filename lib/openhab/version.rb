@@ -4,5 +4,6 @@
 # Holds project version constant
 #
 module OpenHAB
+  # @return [String] Version of OpenHAB helper libraries
   VERSION = '2.7.0'
 end

@@ -15,6 +15,7 @@ module OpenHAB
           extend Forwardable
 
           BLANK_RE = /\A[[:space:]]*\z/.freeze
+          private_constant :BLANK_RE
 
           def_delegator :@string_item, :to_s
 
@@ -77,7 +78,7 @@ module OpenHAB
           # Forward missing methods to Openhab String Item or String representation of the item if they are defined
           #
           # @param [String] meth method name
-          # @param [Array] *args arguments for method
+          # @param [Array] args arguments for method
           # @param [Proc] block <description>
           #
           # @return [Object] Value from delegated method in OpenHAB StringItem or Ruby String

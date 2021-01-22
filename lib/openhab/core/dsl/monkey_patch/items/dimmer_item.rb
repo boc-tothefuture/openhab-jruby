@@ -2,8 +2,11 @@
 
 require 'java'
 
-# Alias for is_a? testing
 java_import org.openhab.core.library.items.DimmerItem
+
+#
+# Alias class for is_a? testing
+#
 Dimmer = DimmerItem
 
 #

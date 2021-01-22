@@ -111,8 +111,6 @@ module OpenHAB
           #
           # Convert NumberItem to a Quantity
           #
-          # @param [Object] other String or Unit representing an OpenHAB Unit
-          #
           # @return [OpenHAB::Core::DSL::Types::Quantity] NumberItem converted to a QuantityUnit
           #
           def to_qt
@@ -159,11 +157,12 @@ module OpenHAB
             @number_item.dimension
           end
 
+
           #
           # Forward missing methods to Openhab Number Item if they are defined
           #
           # @param [String] meth method name
-          # @param [Array] *args arguments for method
+          # @param [Array] args arguments for method
           # @param [Proc] block <description>
           #
           # @return [Object] Value from delegated method in OpenHAB NumberItem

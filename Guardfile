@@ -17,8 +17,20 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
-guard 'yard' do
-  watch(%r{app/.+\.rb})
-  watch(%r{lib/.+\.rb})
-  watch(%r{ext/.+\.c})
+group :docs do
+  guard 'yard' do
+    watch(%r{app/.+\.rb})
+    watch(%r{lib/.+\.rb})
+    watch(%r{ext/.+\.c})
+  end
+
+  # Add files and commands to this file, like the example:
+  #   watch(%r{file/path}) { `command(s)` }
+  #
+  guard :shell do
+    watch(%r{lib/.+\.rb}) do |modified|
+      `yard stats --list-undoc`
+    end
+  end
+
 end

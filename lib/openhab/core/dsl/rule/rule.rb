@@ -41,9 +41,24 @@ module OpenHAB
           # @return [Array] Of trigger delays
           attr_reader :trigger_delays
 
+          #
+          # Struct holding a run block
+          #
           Run = Struct.new(:block)
+
+          # 
+          # Struct holding a Triggered block
+          #
           Trigger = Struct.new(:block)
+
+          # 
+          # Struct holding an otherwise block
+          #
           Otherwise = Struct.new(:block)
+
+          #
+          # Struct holding rule delays
+          #
           Delay = Struct.new(:duration)
 
           prop_array :run, array_name: :run_queue, wrapper: Run
