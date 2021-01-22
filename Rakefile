@@ -58,21 +58,13 @@ task :lint do
 end
 
 desc 'Start Documentation Server'
-<<<<<<< HEAD
-task :docs do
-=======
 task :docs => :yard do
->>>>>>> main
   sh 'bundle exec jekyll clean'
   sh 'bundle exec jekyll server --config docs/_config.yml'
 end
 
 task :yard_server do
-<<<<<<< HEAD
-  sh 'bundle exec yard server --reload'
-=======
   sh 'bundle exec guard'
->>>>>>> main
 end
 
 desc 'Run Cucumber Features'
