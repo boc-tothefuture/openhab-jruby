@@ -6,6 +6,10 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 2.7.0
+### Added
+- SwitchItem.toggle to toggle a SwitchItem similar to SwitchItem << !SwitchItem
+
 ## 2.6.1
 ### Fixed
 - Race condition with `after` block

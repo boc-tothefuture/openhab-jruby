@@ -11,17 +11,18 @@ grand_parent: Usage
 # Switch Item
 This class is aliased to **Switch** so you can compare compare item types using ` item.is_a? Switch or grep(Switch)`
 
-| Method  | Description                               | Example                                         |
-| ------- | ----------------------------------------- | ----------------------------------------------- |
-| truthy? | Item is not undefined, not null and is ON | `puts "#{item.name} is truthy" if item.truthy?` |
-| on      | Send command to turn item ON              | `item.on`                                       |
-| off     | Send command to turn item OFF             | `item.off`                                      |
-| on?     | Returns true if item state == ON          | `puts "#{item.name} is on." if item.on?`        |
-| off?    | Returns true if item state == OFF         | `puts "#{item.name} is off." if item.off?`      |
-| !       | Return the inverted state of the item     | `item << !item`                                 |
+| Method  | Description                                  | Example                                         |
+| ------- | -------------------------------------------- | ----------------------------------------------- |
+| truthy? | Item is not undefined, not null and is ON    | `puts "#{item.name} is truthy" if item.truthy?` |
+| on      | Send command to turn item ON                 | `item.on`                                       |
+| off     | Send command to turn item OFF                | `item.off`                                      |
+| on?     | Returns true if item state == ON             | `puts "#{item.name} is on." if item.on?`        |
+| off?    | Returns true if item state == OFF            | `puts "#{item.name} is off." if item.off?`      |
+| toggle  | Send command to invert the state of the item | `item.toggle`                                   |
+| !       | Return the inverted state of the item        | `item << !item`                                 |
 
 
-Switches respond to `on` and `off`
+Switches respond to `on`, `off`, and `toggle`
 
 ```ruby
 # Turn on all switches in a group called Switches

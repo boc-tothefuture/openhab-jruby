@@ -20,6 +20,25 @@ Feature:  Rule languages supports Switches
       | ON            | OFF         |
       | OFF           | ON          |
 
+  Scenario Outline: Switches respond to toggle
+    Given items:
+      | type   | name       | label       | state           |
+      | Switch | TestSwitch | Test Switch | <initial_state> |
+    And code in a rules file
+      """
+      # Invert all switches
+      items.select { |item| item.is_a? Switch }
+           .each   { |switch| switch.toggle }
+      """
+    When I deploy the rules file
+    Then "TestSwitch" should be in state "<final_state>" within 5 seconds
+    Examples:
+      | initial_state | final_state |
+      | ON            | OFF         |
+      | OFF           | ON          |
+      | UNDEF         | ON          |
+      | NULL          | ON          |
+
   Scenario Outline: Switches support ! (not) operator to invert the state
     Given items:
       | type   | name       | label       | state           |
@@ -37,6 +56,7 @@ Feature:  Rule languages supports Switches
       | ON            | OFF         |
       | OFF           | ON          |
       | NULL          | ON          |
+      | UNDEF         | ON          |
 
   Scenario: Switches respond to grep
     Given items:
