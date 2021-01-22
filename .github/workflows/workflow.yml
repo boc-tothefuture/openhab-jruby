@@ -178,12 +178,12 @@ jobs:
           bundle install --jobs 4 --retry 3
      - name: Publish docs
        uses: JamesIves/github-pages-deploy-action@3.7.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages 
-          FOLDER: docs 
-          CLEAN: true 
-          SINGLE_COMMIT: true 
+       with:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         BRANCH: gh-pages 
+         FOLDER: docs 
+         CLEAN: true 
+         SINGLE_COMMIT: true 
      - name: Current Version 
        id: current_version
        run: |
