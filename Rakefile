@@ -28,17 +28,22 @@ KARAF_CLIENT = KARAF_CLIENT_ARGS.join(' ')
 DEPLOY_DIR = File.join(OPENHAB_DIR, 'conf/automation/jsr223/ruby/personal')
 LIB_DIR = File.join(OPENHAB_DIR, 'conf/automation/lib/ruby/lib/')
 STATE_DIR = File.join(OPENHAB_DIR, 'rake_state')
+YARD_DIR = File.join('docs', '_yard')
 CUCUMBER_LOGS = File.join(TMP_DIR, 'cucumber_logs')
 
 CLEAN << PACKAGE_DIR
 CLEAN << DEPLOY_DIR
 CLEAN << CUCUMBER_LOGS
-CLEAN << 'doc'
+CLEAN << YARD_DIR
 CLEAN << '.yardoc'
 
-YARD::Rake::YardocTask.new do |t|
-  t.files = ['lib/**/*.rb'] # optional
-  t.stats_options = ['--list-undoc'] # optional
+
+desc 'Generate Yard docs'
+task :yard do
+  YARD::Rake::YardocTask.new do |t|
+   t.files = ['lib/**/*.rb'] # optional
+   t.stats_options = ['--list-undoc'] # optional
+  end
 end
 
 RuboCop::RakeTask.new do |task|
@@ -59,7 +64,7 @@ task :docs do
 end
 
 task :yard_server do
-  sh 'bundle exec yard server --reload'
+  sh 'bundle exec guard'
 end
 
 desc 'Run Cucumber Features'
