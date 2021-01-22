@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openhab-scripting (2.6.1)
+    openhab-scripting (2.7.0)
 
 GEM
   remote: https://rubygems.org/
@@ -242,4 +242,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.1.4
+   2.2.4
