@@ -28,6 +28,9 @@ The development process has been tested on MacOS, others operating systems may w
 4. Run `bundler install` from inside of the repo directory
 5. Run `bundle openhab:setup` from inside of the repo directory.  This will download a copy of OpenHAB local in your development environment, start it and prepare it for JRuby OpenHAB Scripting Development
 
+# Documentation
+Documentation is written in [Yard](https://yardoc.org/) and the current documentation for this project is available [here](./_yard/)
+
 
 # Development Process
 1. Create a branch for your contribution
