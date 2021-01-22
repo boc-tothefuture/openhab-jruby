@@ -30,7 +30,7 @@ module OpenHAB
             '/' => 'divide'
           }.freeze
 
-          private_constant OPERATIONS
+          private_constant :OPERATIONS
 
           attr_reader :quantity
 
