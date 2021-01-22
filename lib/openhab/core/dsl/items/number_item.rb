@@ -157,6 +157,7 @@ module OpenHAB
             @number_item.dimension
           end
 
+
           #
           # Forward missing methods to Openhab Number Item if they are defined
           #

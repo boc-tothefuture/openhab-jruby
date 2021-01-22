@@ -15,6 +15,7 @@ module OpenHAB
           extend Forwardable
 
           BLANK_RE = /\A[[:space:]]*\z/.freeze
+          private_constant :BLANK_RE
 
           def_delegator :@string_item, :to_s
 

@@ -7,7 +7,13 @@ require 'java'
 module OpenHAB
   module Core
     module DSL
+      #
+      # MonkeyPatch both Ruby and OpenHAB Objects to support DSL
+      #
       module MonkeyPatch
+        #
+        # MonkeyPatch ruby object to support DSL
+        #
         module Ruby
           #
           # Extensions for Range Class to support DimmerItems
