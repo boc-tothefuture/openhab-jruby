@@ -189,7 +189,9 @@ jobs:
     - name: Install pickles
       run: choco install pickles
     - name: Generate Pickles docs
-      run:  pickles.exe -f features -o pickles --df html
+      run:  |
+          call refreshenv
+          pickles -f features -o pickles --df html
     - uses: actions/upload-artifact@v2
       with:
         name: pickles-docs
