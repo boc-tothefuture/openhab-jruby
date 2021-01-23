@@ -180,22 +180,22 @@ jobs:
             tmp/openhab/conf/automation/jsr223/ruby/personal/
           retention-days: 2
 
- pickles-docs:
+# pickles-docs:
   #needs: cucumber 
-  if: github.ref == 'refs/heads/main'
-  runs-on: windows-latest
-  steps:
-    - uses: actions/checkout@v2
-    - name: Generate pickles docs
-      run: |
-        choco install pickles
-        pickles -f features -o pickles --df html
-    - uses: actions/upload-artifact@v2
-      with:
-        name: pickles-docs
-        path: pickles/
-        if-no-files-found: error
-        retention-days: 1
+#  if: github.ref == 'refs/heads/main'
+#  runs-on: windows-latest
+#  steps:
+#    - uses: actions/checkout@v2
+#    - name: Generate pickles docs
+#      run: |
+#        choco install pickles
+#        pickles -f features -o pickles --df html
+#    - uses: actions/upload-artifact@v2
+#      with:
+#        name: pickles-docs
+#        path: pickles/
+#        if-no-files-found: error
+#        retention-days: 1
   
  docs:
    #needs: [cucumber, pickles-docs]
