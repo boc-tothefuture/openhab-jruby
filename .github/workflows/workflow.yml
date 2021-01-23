@@ -181,7 +181,6 @@ jobs:
           retention-days: 2
 
  pickles-docs:
-  #needs: cucumber 
   if: github.ref == 'refs/heads/main'
   runs-on: windows-latest
   steps:
@@ -201,7 +200,7 @@ jobs:
         retention-days: 1
   
  docs:
-   #needs: [cucumber, pickles-docs]
+   needs: [cucumber, pickles-docs]
    needs: [pickles-docs]
    if: github.ref == 'refs/heads/main'
    runs-on: ubuntu-18.04
