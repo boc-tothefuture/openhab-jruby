@@ -186,10 +186,10 @@ jobs:
   runs-on: windows-latest
   steps:
     - uses: actions/checkout@v2
-    - name: Generate pickles docs
-      run: |
-        choco install pickles
-#        pickles -f features -o pickles --df html
+    - name: Install pickles
+      run: choco install pickles
+    - name: Generate Pickles docs
+      run:  pickles -f features -o pickles --df html
     - uses: actions/upload-artifact@v2
       with:
         name: pickles-docs
