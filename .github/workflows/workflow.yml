@@ -189,7 +189,7 @@ jobs:
     - name: Generate pickles docs
       run: |
         choco install pickles
-        pickles -f features -o pickles --df html
+#        pickles -f features -o pickles --df html
     - uses: actions/upload-artifact@v2
       with:
         name: pickles-docs
