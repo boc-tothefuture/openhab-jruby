@@ -179,8 +179,27 @@ jobs:
             tmp/openhab/userdata/*.zip
             tmp/openhab/conf/automation/jsr223/ruby/personal/
           retention-days: 2
- release:
-   needs: cucumber 
+
+ pickles-docs:
+  #needs: cucumber 
+  if: github.ref == 'refs/heads/main'
+  runs-on: windows-latest
+  steps:
+    - uses: actions/checkout@v2
+    - name: Generate pickles docs
+      run: |
+        choco install pickles
+        pickles -f features -o pickles --df html
+    - uses: actions/upload-artifact@v2
+      with:
+        name: pickles-docs
+        path: pickles/
+        if-no-files-found: error
+        retention-days: 1
+  
+ docs:
+   #needs: [cucumber, pickles-docs]
+   needs: [pickles-docs]
    if: github.ref == 'refs/heads/main'
    runs-on: ubuntu-18.04
    steps:
@@ -202,6 +221,11 @@ jobs:
      - name: Build yard docs
        run: |
           bundle exec rake yard
+     - name: Download pickles docs
+     - uses: actions/download-artifact@v2
+       with:
+         name: pickles-docs
+         path: docs/pickles
      - name: Publish docs
        uses: JamesIves/github-pages-deploy-action@3.7.1
        with:
@@ -210,6 +234,28 @@ jobs:
          FOLDER: docs 
          CLEAN: true 
          SINGLE_COMMIT: true 
+
+ 
+ release:
+   needs: cucumber 
+   if: github.ref == 'refs/heads/main'
+   runs-on: ubuntu-18.04
+   steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Install bundler
+       run: gem install bundler -N
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
      - name: Current Version 
        id: current_version
        run: |
