@@ -192,7 +192,7 @@ jobs:
       shell: cmd
       run:  |
           call refreshenv
-          pickles -f features -o pickles --df html
+          pickles -f features -o pickles --df html || VER>NUL
     - uses: actions/upload-artifact@v2
       with:
         name: pickles-docs
