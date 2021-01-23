@@ -189,6 +189,7 @@ jobs:
     - name: Install pickles
       run: choco install pickles
     - name: Generate Pickles docs
+      shell: cmd
       run:  |
           call refreshenv
           pickles -f features -o pickles --df html
