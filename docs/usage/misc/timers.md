@@ -18,16 +18,15 @@ After method parameters
 | block     | Block to execute after duration, block will be passed timer object |
 
 Timer Object
-The timer object has all of the methods of the [OpenHAB Timer](https://www.openhab.org/docs/configuration/actions.html#timers) with a change to the reschedule method to enable it to operate Ruby context. 
+The timer object has all of the methods of the [OpenHAB Timer](https://www.openhab.org/docs/configuration/actions.html#timers) with a change to the reschedule method to enable it to operate Ruby context. The following methods are available to a Timer object:
 
-
-`reschedule` method parameters
-
-| Parameter | Description                                                                                      |
-| --------- | ------------------------------------------------------------------------------------------------ |
-| duration  | Optional [duration](#Duration) if unspecified original duration supplied to after method is used |
-
-
+| Method        | Parameter | Description                                                                                      |
+| ------------- | --------- | ------------------------------------------------------------------------------------------------ |
+| `cancel`      |           | Cancel the scheduled timer                                                                       |
+| `reschedule`  | duration  | Optional [duration](#Duration) if unspecified original duration supplied to after method is used |
+| `active?`     |           | An alias for `Timer::isActive()`                                                                 |
+| `running?`    |           | An alias for `Timer::isRunning()`                                                                |
+| `terminated?` |           | An alias for `Timer::hasTerminated()`                                                            |
 
 ```ruby
 after 5.seconds do
@@ -56,4 +55,13 @@ after 3.seconds do |timer|
   logger.info("Timer Fired")
   timer.reschedule 5.seconds
 end
+```
+
+```ruby
+# Timers can be manipulated through the returned object
+mytimer = after 1.minute do
+  logger.info('It has been 1 minute')
+end
+
+mytimer.cancel
 ```
