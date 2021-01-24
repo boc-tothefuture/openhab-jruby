@@ -140,3 +140,8 @@ Then('{string} should be in state {string} within {int} seconds') do |item, stat
     Rest.item_state(item) == state
   end
 end
+
+Given('metadata added to {string} in namespace {string}:') do |item, namespace, config|
+  response = Rest.add_metadata(item: item, namespace: namespace, config: config)
+  raise "Response #{response.pretty_inspect} Request #{response.request.pretty_inspect}" unless response.success?
+end
