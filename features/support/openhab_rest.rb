@@ -39,6 +39,10 @@ class Rest
     delete "/rest/items/#{name}"
   end
 
+  def self.add_metadata(item:, namespace:, config:)
+    put "/rest/items/#{item}/metadata/#{namespace}", headers: json, body: config
+  end
+
   def self.delete_rule(uid)
     delete "/rest/rules/#{uid}"
   end

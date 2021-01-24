@@ -1,53 +1,52 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'openhab/core/log'
 
 module OpenHAB
   #
-  # OSGI interface into OpenHAB
+  # OSGI services interface
   #
   class OSGI
+    include Logging
+
     java_import org.openhab.core.model.script.actions.ScriptExecution
     java_import org.osgi.framework.FrameworkUtil
 
     #
-    # Return all service references
+    # @return [ServiceReferences]
     #
-    # @return [Server Reference Bundle] Context for all service references
-    #
-    def service_references
+    def self.service_references
       bundle_context.getAllServiceReferences(action_service, nil)
     end
 
-    private
+    #
+    # @param name [String] The service name
+    #
+    # @return [Service]
+    #
+    def self.service(name)
+      ref = bundle_context.getServiceReference(name)
+      service = bundle_context.getService(ref) if ref
+      logger.trace "OSGI service(#{service}) found for '#{name}' using OSGI Service Reference #{ref}"
 
-    #
-    # Get the lookup string for action services
-    #
-    # @return [String] Lookup string for the action services
-    #
-    def action_service
+      service
+    end
+
+    def self.action_service
       'org.openhab.core.model.script.engine.action.ActionService'
     end
+    private_class_method :action_service
 
-    #
-    # Get the bundle context
-    #
-    # @return [Bundle Context] OSGI Bundle Context
-    #
-    def bundle_context
+    def self.bundle_context
       @bundle_context ||= bundle.getBundleContext
     end
+    private_class_method :bundle_context
 
-    #
     # Get the OSGI Bundle for ScriptExtension Class
-    #
-    # @return [OSGI Bundle] OSGI Bundle for ScriptExtension class
-    #
-    def bundle
-      # rubocop: disable Style/GlobalVars
+    def self.bundle
       @bundle ||= FrameworkUtil.getBundle($scriptExtension.class)
-      # rubocop: enable Style/GlobalVars
     end
+    private_class_method :bundle
   end
 end
