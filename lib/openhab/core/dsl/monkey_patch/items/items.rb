@@ -5,6 +5,7 @@ require 'openhab/core/log'
 require 'bigdecimal'
 
 # Monkey patch items
+require 'openhab/core/dsl/monkey_patch/items/metadata'
 require 'openhab/core/dsl/monkey_patch/items/contact_item'
 require 'openhab/core/dsl/monkey_patch/items/dimmer_item'
 require 'openhab/core/dsl/monkey_patch/items/switch_item'
@@ -61,6 +62,10 @@ module OpenHAB
               method(:state).super_method.call == UnDefType::UNDEF
             end
 
+            #
+            # Check if the item state == NULL
+            #
+            # @return [Boolean] True if the state is NULL, false otherwise
             def null?
               # Need to explicitly call the super method version because this state will never return NULL
               method(:state).super_method.call == UnDefType::NULL
@@ -121,4 +126,5 @@ end
 class Java::OrgOpenhabCoreItems::GenericItem
   # rubocop:enable Style/ClassAndModuleChildren
   prepend OpenHAB::Core::DSL::MonkeyPatch::Items::ItemExtensions
+  prepend OpenHAB::Core::DSL::MonkeyPatch::Items::Metadata
 end
