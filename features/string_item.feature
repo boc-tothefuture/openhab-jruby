@@ -4,9 +4,10 @@ Feature:  Rule languages supports String Items
     Given Clean OpenHAB with latest Ruby Libraries
     And group "Strings"
     And items:
-      | type   | name      | label      | group   |
-      | String | StringOne | String One | Strings |
-      | String | StringTwo | String Two | Strings |
+      | type   | name        | label        | group   |
+      | String | StringOne   | String One   | Strings |
+      | String | StringTwo   | String Two   | Strings |
+      | String | StringThree | String Three | Strings |
 
   Scenario: StringItem supports string operations
     Given item "StringOne" state is changed to "Hello"
@@ -75,5 +76,37 @@ Feature:  Rule languages supports String Items
     And It should log "Undef String is blank" within 5 seconds
     And It should log "Whitespace String is blank" within 5 seconds
     But It should not log "hello String is blank" within 5 seconds
+
+  Scenario: StringItem can be compared against a string
+    Given item "StringOne" state is changed to "Hello"
+    And code in a rules file
+      """
+      logger.info("StringOne == 'Hello' is #{StringOne == 'Hello'}")
+      logger.info("StringOne == 'World' is #{StringOne == 'World'}")
+      logger.info("StringOne != 'Hello' is #{StringOne != 'Hello'}")
+      logger.info("StringOne != 'World' is #{StringOne != 'World'}")
+      """
+    When I deploy the rules file
+    Then It should log "StringOne == 'Hello' is true" within 5 seconds
+    And It should log "StringOne == 'World' is false" within 5 seconds
+    And It should log "StringOne != 'Hello' is false" within 5 seconds
+    And It should log "StringOne != 'World' is true" within 5 seconds
+
+  Scenario: StringItem can be compared against another StringItem
+    Given item "StringOne" state is changed to "Hello"
+    And item "StringTwo" state is changed to "World"
+    And item "StringThree" state is changed to "Hello"
+    And code in a rules file
+      """
+      logger.info("StringOne == StringTwo is #{StringOne == StringTwo}")
+      logger.info("StringOne != StringTwo is #{StringOne != StringTwo}")
+      logger.info("StringOne == StringThree is #{StringOne == StringThree}")
+      logger.info("StringOne != StringThree is #{StringOne != StringThree}")
+      """
+    When I deploy the rules file
+    Then It should log "StringOne == StringTwo is false" within 5 seconds
+    And It should log "StringOne != StringTwo is true" within 5 seconds
+    And It should log "StringOne == StringThree is true" within 5 seconds
+    And It should log "StringOne != StringThree is false" within 5 seconds
 
 
