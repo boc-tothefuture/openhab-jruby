@@ -317,7 +317,15 @@ module OpenHAB
               when RuleConfig::Run
 
                 event = inputs&.dig('event')
-
+                # Patch event to include event.item when it doesn't exist
+                # This is to patch a bug see https://github.com/boc-tothefuture/openhab-jruby/issues/75
+                # It may be fixed in the openhab core in the future, in which case, this patch will no longer be necessary
+                unless event.nil? || defined?(event.item)
+                  class << event
+                    attr_accessor :item
+                  end
+                  event.item = inputs&.dig('triggeringItem')
+                end
                 logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
                 task.block.call(event)
               when RuleConfig::Trigger
