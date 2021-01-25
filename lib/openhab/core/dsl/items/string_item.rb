@@ -13,6 +13,7 @@ module OpenHAB
         #
         class StringItem
           extend Forwardable
+          include Comparable
 
           BLANK_RE = /\A[[:space:]]*\z/.freeze
           private_constant :BLANK_RE
@@ -70,7 +71,7 @@ module OpenHAB
             when StringItem
               @string_item.state <=> other.state
             when String
-              @StringItem.state.to_s <=> other
+              @string_item.state.to_s <=> other
             end
           end
 
