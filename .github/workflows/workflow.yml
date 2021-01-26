@@ -104,11 +104,13 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
      - name: Cache OpenHAB setup
+       id: cache
        uses: actions/cache@v2
        with: 
         path: tmp/
-        key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
+        key: OpenHAB-setup-${{ hashFiles('bundle/*jrubyscripting*.jar') }}
      - name: Setup OpenHAB
+       if: steps.cache.outputs.cache-hit != 'true'
        run: bundle exec rake openhab:setup
  
  cucumber-matrix:
@@ -161,7 +163,7 @@ jobs:
         uses: actions/cache@v2
         with: 
           path: tmp/
-          key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
+          key: OpenHAB-setup-${{ hashFiles('bundle/*jrubyscripting*.jar') }}
       - name: Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Generate OpenHAB Dump
