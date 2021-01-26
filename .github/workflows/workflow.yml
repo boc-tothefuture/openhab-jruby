@@ -10,7 +10,6 @@ env:
   RUBY_VERSION: 2.5
   GITHUB_TOKEN: ${{ github.token }}
 
-
 jobs:
 
  rubocop:
@@ -34,6 +33,14 @@ jobs:
           bundle install --jobs 4 --retry 3
      - name: Rubocop 
        run: bundle exec rubocop
+
+ commit-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v2
 
  cucumber-lint:
    runs-on: ubuntu-18.04
