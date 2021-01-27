@@ -24,6 +24,7 @@ From add-ons, e.g.:
 * NotificationAction (from OpenHAB cloud add-on)
 
 For convenience, the following methods are implemented:
+
 | Method     | Parameters                                                    | Description                                                                                                                          |
 | ---------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | notify     | msg, email: (optional)                                        | When an email is specified, calls NotificationAction.sendNotification. Otherwise, calls NotificationAction.sendBroadcastNotification |
