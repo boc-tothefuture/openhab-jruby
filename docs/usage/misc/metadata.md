@@ -12,6 +12,7 @@ grand_parent: Usage
 Item metadata can be accessed through `Item.meta` using the hash syntax. The `Item.meta` variable is also an [Enumerable](https://ruby-doc.org/core-2.5.8/Enumerable.html).
 
 In addition to the Enumerable methods, the following methods are available for `Item.meta`:
+
 | Method     | Parameters               | Description                                | Example                          |
 | ---------- | ------------------------ | ------------------------------------------ | -------------------------------- |
 | clear      |                          | Deletes all metadata namespaces            | `Item1.meta.clear`               |
@@ -21,28 +22,30 @@ In addition to the Enumerable methods, the following methods are available for `
 | namespace? | namespace                | Returns true if the given namespace exists |                                  |
 
 Metadata configuration is a hash and can be accessed using a subscript of `Item.meta['namespace']`. For example, the following Item metadata
+
 ```
 Switch Item1 { namespace1="boo" [ config1="foo", config2="bar" ] }
 ```
 
 is accessible via:
-```
+
+```ruby
 Item1.meta['namespace1']['config1']
 Item1.meta['namespace1']['config2']
 ```
 
 The Item namespace has the following methods:
+
 | Method | Parameters | Description                             | Example                                          |
 | ------ | ---------- | --------------------------------------- | ------------------------------------------------ |
 | delete | config_key | Delete the given metadata configuration | `Item1.meta['namespace1'].delete` 'config1'      |
 | value  |            | Returns the namespace value             | `Item1.meta['namespace1'].value` # returns 'boo' |
 | value= |            | Sets namespace value                    | `Item1.meta['namespace1'].value = 'moo'`         |
 
-
-
 ## Examples
 
 With the following item definition:
+
 ```
 Switch Item1 { namespace1="value" [ config1="foo", config2="bar" ] }
 ```
