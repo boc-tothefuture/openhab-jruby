@@ -42,10 +42,10 @@ The first method uses the `action` method and is analogous to how you load actio
 | ------- | ---------------- | ---------------------------------------------------------- |
 | actions | scope, thing_uid | Return the Action object for the given scope and thing_uid |
 
+
 ```ruby
-  mail = actions('mail', 'mail:smtp:local')
-  mail.sendEmail('me@example.com', 'subject', 'message')
-end
+mail = actions('mail', 'mail:smtp:local')
+mail.sendEmail('me@example.com', 'subject', 'message')
 ```
 
 
@@ -57,8 +57,7 @@ end
 
 
 ```ruby
-  things['mail:smtp:local'].sendEmail('me@example.com', 'subject', 'message')
-end
+things['mail:smtp:local'].sendEmail('me@example.com', 'subject', 'message')
 ```
 
 
