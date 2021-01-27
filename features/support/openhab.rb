@@ -32,7 +32,9 @@ def ensure_openhab_running
 end
 
 def check_log(entry)
-  if File.foreach(openhab_log).any? { |line| line.include?('Error during evaluation of script') }
+  lines = File.foreach(openhab_log).select { |line| line.include?('Error during evaluation of script') }
+  if lines.any?
+    log(lines)
     raise 'Error in script'
   end
 

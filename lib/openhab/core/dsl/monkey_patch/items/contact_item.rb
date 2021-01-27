@@ -5,7 +5,7 @@ require 'java'
 # Alias for is_a? testing
 java_import org.openhab.core.library.items.ContactItem
 
-# 
+#
 # Alias class for ContactItem
 #
 Contact = ContactItem

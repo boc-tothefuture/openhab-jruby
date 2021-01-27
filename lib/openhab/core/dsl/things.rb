@@ -2,6 +2,8 @@
 
 require 'java'
 require 'core/log'
+require 'core/dsl/actions'
+require 'delegate'
 
 module OpenHAB
   module Core
@@ -16,6 +18,43 @@ module OpenHAB
         # Ruby Delegator for Thing
         #
         class Thing < SimpleDelegator
+          include OpenHAB::Core::DSL::Actions
+          include Logging
+
+          def initialize(thing)
+            super
+            define_action_methods
+          end
+
+          private
+
+          java_import 'org.openhab.core.automation.annotation.RuleAction'
+
+          #
+          # Define methods from actions mapped to this thing
+          #
+          #
+          def define_action_methods
+            actions_for_thing(uid).each do |action|
+              methods = action.java_class.declared_instance_methods
+              methods.select { |method| method.annotation_present?(RuleAction.java_class) }
+                     .each { |method| define_action_method(action: action, method: method.name) }
+            end
+          end
+
+          #
+          # Define a method, delegating to supplied action class
+          #
+          # @param [Object] action object to delegate method to
+          # @param [String] method Name of method to delegate
+          #
+          #
+          def define_action_method(action:, method:)
+            logger.trace("Adding action method '#{method}' to thing '#{uid}'")
+            define_singleton_method(method) do |*args|
+              action.public_send(method, *args)
+            end
+          end
         end
 
         #
@@ -31,10 +70,10 @@ module OpenHAB
             # rubocop: disable Style/GlobalVars
             thing = $things.get(thing_uid)
             # rubocop: enable Style/GlobalVars
-            if thing
-              logger.trace("Retrieved Thing(#{thing}) from registry for uid: #{uid}")
-              Thing.new(thing)
-            end
+            return unless thing
+
+            logger.trace("Retrieved Thing(#{thing}) from registry for uid: #{uid}")
+            Thing.new(thing)
           end
         end
 
