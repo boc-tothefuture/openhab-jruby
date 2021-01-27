@@ -46,12 +46,12 @@ module OpenHAB
           #
           Run = Struct.new(:block)
 
-          # 
+          #
           # Struct holding a Triggered block
           #
           Trigger = Struct.new(:block)
 
-          # 
+          #
           # Struct holding an otherwise block
           #
           Otherwise = Struct.new(:block)

@@ -6,6 +6,10 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 2.9.0
+### Added
+- Support OpenHAB Actions
+
 ## 2.8.1
 ### Fixed
 - Fixed StringItem comparison against a string
