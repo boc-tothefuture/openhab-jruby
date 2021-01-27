@@ -37,6 +37,8 @@ CLEAN << CUCUMBER_LOGS
 CLEAN << YARD_DIR
 CLEAN << '.yardoc'
 
+CLOBBER << OPENHAB_DIR
+
 
 desc 'Generate Yard docs'
 task :yard do
