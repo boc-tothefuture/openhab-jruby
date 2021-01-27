@@ -2,7 +2,6 @@
 
 require 'java'
 
-
 #
 # Monkey patch for DSL use
 #

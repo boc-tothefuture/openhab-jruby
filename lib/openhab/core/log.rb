@@ -125,7 +125,7 @@ module Logging
       configure_logger_for(classname)
     end
 
-    private
+   private
 
     #
     # Configure a logger for the supplied classname

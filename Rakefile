@@ -43,8 +43,8 @@ CLOBBER << OPENHAB_DIR
 desc 'Generate Yard docs'
 task :yard do
   YARD::Rake::YardocTask.new do |t|
-   t.files = ['lib/**/*.rb'] # optional
-   t.stats_options = ['--list-undoc'] # optional
+    t.files = ['lib/**/*.rb'] # optional
+    t.stats_options = ['--list-undoc'] # optional
   end
 end
 
@@ -60,7 +60,7 @@ task :lint do
 end
 
 desc 'Start Documentation Server'
-task :docs => :yard do
+task docs: :yard do
   sh 'bundle exec jekyll clean'
   sh 'bundle exec jekyll server --config docs/_config.yml'
 end
