@@ -12,6 +12,7 @@ require 'open-uri'
 require 'tty-command'
 require 'process_exists'
 require 'cuke_linter'
+require 'erb'
 
 require_relative 'lib/openhab/version'
 
@@ -20,7 +21,7 @@ TMP_DIR = 'tmp'
 OPENHAB_DIR = File.join(TMP_DIR, 'openhab')
 DOCS_DIR = 'doc'
 OPENHAB_VERSION = '3.0.0'
-JRUBY_BUNDLE = File.realpath(Dir.glob('bundle/*.jar').first)
+JRUBY_BUNDLE = 'https://github.com/boc-tothefuture/openhab2-addons/releases/download/3.1.0/org.openhab.automation.jrubyscripting-3.1.0-SNAPSHOT.jar'
 KARAF_CLIENT_PATH = File.join(OPENHAB_DIR, 'runtime/bin/client')
 KARAF_CLIENT_ARGS = [KARAF_CLIENT_PATH, '-p', 'habopen'].freeze
 KARAF_CLIENT = KARAF_CLIENT_ARGS.join(' ')
@@ -30,6 +31,7 @@ LIB_DIR = File.join(OPENHAB_DIR, 'conf/automation/lib/ruby/lib/')
 STATE_DIR = File.join(OPENHAB_DIR, 'rake_state')
 YARD_DIR = File.join('docs', 'yard')
 CUCUMBER_LOGS = File.join(TMP_DIR, 'cucumber_logs')
+SERVICES_CONFIG = File.join(OPENHAB_DIR, 'conf/services/jruby.cfg')
 
 CLEAN << PACKAGE_DIR
 CLEAN << DEPLOY_DIR
@@ -38,7 +40,6 @@ CLEAN << YARD_DIR
 CLEAN << '.yardoc'
 
 CLOBBER << OPENHAB_DIR
-
 
 desc 'Generate Yard docs'
 task :yard do
@@ -71,7 +72,6 @@ end
 
 desc 'Run Cucumber Features'
 task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|
-  # Rake::Task['openhab:warmup'].execute
   Cucumber::Rake::Task.new(:features) do |t|
     t.cucumber_opts = "--tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
   end
@@ -83,21 +83,12 @@ task :version do
 end
 
 namespace :gh do
-  zip_path = ''
-
-  directory PACKAGE_DIR
-
-  desc 'Package for release'
-  task package: [PACKAGE_DIR] do
-    zip_filename = "OpenHABJRuby-#{OpenHAB::VERSION}.zip"
-    zip_path = File.join(PACKAGE_DIR, zip_filename)
-    target_dir = 'lib/'
-    sh 'zip', '-r', zip_path, target_dir
-  end
-
-  desc 'Package for release'
-  task release: :package do
-    sh 'gh', 'release', 'create', OpenHAB::VERSION, '-p', '-F', 'CHANGELOG.md', zip_path, JRUBY_BUNDLE
+  desc 'Release JRuby Binding'
+  task :release,  [:file] do |_, args|
+    bundle = args[:file]
+    _,version,_ = File.basename(bundle,'.jar').split('-')
+    sh 'gh', 'release', 'delete', version, '-y', '-R', 'boc-tothefuture/openhab2-addons'
+    sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', 'Prerelease', '-R', 'boc-tothefuture/openhab2-addons', bundle
   end
 end
 
@@ -142,9 +133,9 @@ namespace :openhab do
     $stdout.flush
   end
 
-  def fail_on_error(command)
+  def fail_on_error(command, env = {})
     cmd = TTY::Command.new
-    out, = cmd.run(command, only_output_on_error: true)
+    out, = cmd.run(command, env: env, only_output_on_error: true)
     out
   end
 
@@ -167,16 +158,20 @@ namespace :openhab do
     false
   end
 
-  def ruby_env
+  def gem_home
     full_path = File.realpath OPENHAB_DIR
-    { 'RUBYLIB' => File.join(full_path, '/conf/automation/lib/ruby/lib'),
-      'GEM_HOME' => File.join(full_path, '/conf/automation/lib/ruby/gem_home') }
+    File.join(full_path, '/conf/automation/lib/ruby/gem_home')
   end
 
-  def state(task)
+  def ruby_env
+    { 'GEM_HOME' => gem_home }
+  end
+
+  def state(task, args = nil)
     Rake::Task[STATE_DIR.to_s].execute
     task_file = File.join(STATE_DIR, task)
-    if File.exist? task_file
+    force = args&.key? :force
+    if File.exist?(task_file) && !force
       puts "Skipping task(#{task}), task already up to date"
     else
       yield
@@ -205,42 +200,42 @@ namespace :openhab do
     end
   end
 
-  desc 'Add RubyLib and GEM_HOME to start.sh'
-  task rubylib: :download do |task|
-    state(task.name) do
-      paths = ruby_env
-      Dir.chdir(OPENHAB_DIR) do
-        start_file = 'start.sh'
-
-        settings = {
-          /^export RUBYLIB=/ => "export RUBYLIB=#{paths['RUBYLIB']}\n",
-          /^export GEM_HOME=/ => "export GEM_HOME=#{paths['GEM_HOME']}\n"
-        }
-
-        settings.each do |regex, line|
-          lines = File.readlines(start_file)
-          unless lines.grep(regex).any?
-            lines.insert(-2, line)
-            File.write(start_file, lines.join)
-          end
-        end
-      end
+  desc 'Setup services config'
+  task :services, [:force] => [:download] do |task, args|
+    state(task.name, args) do
+      services_config = ERB.new <<~SERVICES
+        org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
+      SERVICES
+      File.write(SERVICES_CONFIG, services_config.result)
     end
   end
 
+  def bundle_id
+    karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').lines.last[/^\d\d\d/].chomp
+  end
+
   desc 'Install JRuby Bundle'
-  task install: [:download, :rubylib, DEPLOY_DIR] do |task|
+  task bundle: [:download, :services, DEPLOY_DIR] do |task|
     state(task.name) do
       start
       if karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').include?('Active')
         puts 'Bundle Active, no action taken'
       else
         unless karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').include?('Installed')
-          karaf("bundle:install file://#{JRUBY_BUNDLE}")
+          karaf("bundle:install #{JRUBY_BUNDLE}")
         end
-        bundle_id = karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').lines.last[/^\d\d\d/].chomp
         karaf("bundle:start #{bundle_id}")
       end
+    end
+  end
+
+  desc 'Upgrade JRuby Bundle'
+  task :upgrade, [:file] do |_, args|
+    start
+    if karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').include?('Active')
+      karaf("bundle:update #{bundle_id} file://#{args[:file]}")
+    else
+      abort "Bundle not installed, can't upgrade"
     end
   end
 
@@ -251,6 +246,7 @@ namespace :openhab do
       start
       karaf('log:set TRACE jsr223')
       karaf('log:set TRACE org.openhab.core.automation')
+      karaf('log:set TRACE org.openhab.binding.jrubyscripting')
       karaf('openhab:users add foo foo administrator')
       sh 'rsync', '-aih', 'config/userdata/', File.join(OPENHAB_DIR, 'userdata')
     end
@@ -354,14 +350,15 @@ namespace :openhab do
   end
 
   desc 'Prepare local Openhab'
-  task prepare: [:download, :rubylib, :install, :configure, :deploy, CUCUMBER_LOGS]
+  task prepare: [:download, :configure, :bundle, :deploy, CUCUMBER_LOGS]
 
   desc 'Setup local Openhab'
   task setup: %i[prepare stop]
 
   desc 'Deploy to local Openhab'
-  task deploy: [:download, LIB_DIR] do
-    fail_on_error("rsync --delete -aih lib/. #{LIB_DIR}")
+  task deploy: %i[download build] do |_task|
+    gem_file = File.join(PACKAGE_DIR, "openhab-scripting-#{OpenHAB::VERSION}.gem")
+    fail_on_error("gem install #{gem_file}", ruby_env)
   end
 
   desc 'Deploy adhoc test Openhab'
