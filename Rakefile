@@ -74,7 +74,11 @@ end
 desc 'Run Cucumber Features'
 task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|
   Cucumber::Rake::Task.new(:features) do |t|
+<<<<<<< HEAD
     cp File.join(OPENHAB_DIR, 'userdata/logs/openhab.log'), File.join(CUCUMBER_LOGS, 'startup.log')
+=======
+    cp File.join(OPENHAB_DIR,'userdata/logs/openhab.log'), File.join(CUCUMBER_LOGS,'startup.log')
+>>>>>>> 2f55708 (build: capture OpenHAB startup log in assets)
     t.cucumber_opts = "--tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
   end
 end
@@ -85,10 +89,6 @@ task :version do
 end
 
 namespace :gh do
-<<<<<<< HEAD
-=======
-
->>>>>>> 0654e97 (build: updated hash calculation for openhab setup now that jar no longer in repository)
   def md5(filename)
     md5 = Digest::MD5.new
     File.open(filename) do |file|
@@ -101,16 +101,9 @@ namespace :gh do
   task :release, [:file] do |_, args|
     bundle = args[:file]
     hash = md5(bundle)
-<<<<<<< HEAD
-    _, version, = File.basename(bundle, '.jar').split('-')
-    sh 'gh', 'release', 'delete', version, '-y', '-R', 'boc-tothefuture/openhab2-addons'
-    sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', "md5: #{hash}", '-R',
-       'boc-tothefuture/openhab2-addons', bundle
-=======
     _,version, = File.basename(bundle,'.jar').split('-')
     sh 'gh', 'release', 'delete', version, '-y', '-R', 'boc-tothefuture/openhab2-addons'
     sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', "md5: #{hash}", '-R', 'boc-tothefuture/openhab2-addons', bundle
->>>>>>> 0654e97 (build: updated hash calculation for openhab setup now that jar no longer in repository)
     File.write('.bundlehash', hash)
   end
 end
