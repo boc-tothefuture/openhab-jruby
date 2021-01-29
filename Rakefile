@@ -74,11 +74,7 @@ end
 desc 'Run Cucumber Features'
 task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|
   Cucumber::Rake::Task.new(:features) do |t|
-<<<<<<< HEAD
-    cp File.join(OPENHAB_DIR, 'userdata/logs/openhab.log'), File.join(CUCUMBER_LOGS, 'startup.log')
-=======
     cp File.join(OPENHAB_DIR,'userdata/logs/openhab.log'), File.join(CUCUMBER_LOGS,'startup.log')
->>>>>>> 2f55708 (build: capture OpenHAB startup log in assets)
     t.cucumber_opts = "--tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
   end
 end
@@ -185,7 +181,7 @@ namespace :openhab do
 
   def state(task, args = nil)
     Rake::Task[STATE_DIR.to_s].execute
-    task_file = File.join(STATE_DIR, task).gsub(':', '_')
+    task_file = File.join(STATE_DIR, task).gsub(':','_')
     force = args&.key? :force
     if File.exist?(task_file) && !force
       puts "Skipping task(#{task}), task already up to date"
