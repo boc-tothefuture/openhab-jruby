@@ -85,6 +85,10 @@ task :version do
 end
 
 namespace :gh do
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0654e97 (build: updated hash calculation for openhab setup now that jar no longer in repository)
   def md5(filename)
     md5 = Digest::MD5.new
     File.open(filename) do |file|
@@ -97,10 +101,16 @@ namespace :gh do
   task :release, [:file] do |_, args|
     bundle = args[:file]
     hash = md5(bundle)
+<<<<<<< HEAD
     _, version, = File.basename(bundle, '.jar').split('-')
     sh 'gh', 'release', 'delete', version, '-y', '-R', 'boc-tothefuture/openhab2-addons'
     sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', "md5: #{hash}", '-R',
        'boc-tothefuture/openhab2-addons', bundle
+=======
+    _,version, = File.basename(bundle,'.jar').split('-')
+    sh 'gh', 'release', 'delete', version, '-y', '-R', 'boc-tothefuture/openhab2-addons'
+    sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', "md5: #{hash}", '-R', 'boc-tothefuture/openhab2-addons', bundle
+>>>>>>> 0654e97 (build: updated hash calculation for openhab setup now that jar no longer in repository)
     File.write('.bundlehash', hash)
   end
 end
