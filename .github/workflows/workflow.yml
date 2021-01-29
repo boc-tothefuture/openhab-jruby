@@ -115,7 +115,11 @@ jobs:
        uses: actions/cache@v2
        with: 
         path: tmp/
+<<<<<<< HEAD
         key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
+=======
+        key: OpenHAB-setup-${{ hashFiles('.bundlehash') }}
+>>>>>>> 0654e97 (build: updated hash calculation for openhab setup now that jar no longer in repository)
      - name: Setup OpenHAB
        if: steps.cache.outputs.cache-hit != 'true'
        run: bundle exec rake openhab:setup
@@ -170,7 +174,11 @@ jobs:
         uses: actions/cache@v2
         with: 
           path: tmp/
+<<<<<<< HEAD
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
+=======
+          key: OpenHAB-setup-${{ hashFiles('.bundlehash') }}
+>>>>>>> 0654e97 (build: updated hash calculation for openhab setup now that jar no longer in repository)
       - name: Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Generate OpenHAB Dump
