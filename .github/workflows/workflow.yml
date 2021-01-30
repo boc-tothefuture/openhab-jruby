@@ -308,4 +308,5 @@ jobs:
          upload_url: ${{ steps.create_release.outputs.upload_url }} 
          asset_path: ./pkg/openhab-scripting-${{steps.current_version.outputs.version}}.gem
          asset_name: openhab-scripting-${{steps.current_version.outputs.version}}.gem
+         asset_content_type: application/octet-stream
      
