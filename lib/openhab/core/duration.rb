@@ -64,6 +64,15 @@ module OpenHAB
           @amount * 1000 * 60 * 60
         end
       end
+
+      #
+      # Return a string representation of the duration
+      #
+      # @return [String] Duration in string
+      #
+      def to_s
+        "#{@amount} #{(@amount == 1) ? @temporal_unit.to_s.downcase.delete_suffix('s') : @temporal_unit.to_s.downcase}"
+      end
     end
   end
 end
