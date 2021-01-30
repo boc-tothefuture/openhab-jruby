@@ -6,6 +6,10 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/). <br>
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org). <br>
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/). <br>
 
+## 2.10.0
+### Changed
+- Library now released as a Ruby Gem
+
 ## 2.9.0
 ### Added
 - Support OpenHAB Actions
