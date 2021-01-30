@@ -115,11 +115,7 @@ jobs:
        uses: actions/cache@v2
        with: 
         path: tmp/
-<<<<<<< HEAD
         key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
-=======
-        key: OpenHAB-setup-${{ hashFiles('.bundlehash') }}
->>>>>>> 0654e97 (build: updated hash calculation for openhab setup now that jar no longer in repository)
      - name: Setup OpenHAB
        if: steps.cache.outputs.cache-hit != 'true'
        run: bundle exec rake openhab:setup
@@ -174,11 +170,7 @@ jobs:
         uses: actions/cache@v2
         with: 
           path: tmp/
-<<<<<<< HEAD
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
-=======
-          key: OpenHAB-setup-${{ hashFiles('.bundlehash') }}
->>>>>>> 0654e97 (build: updated hash calculation for openhab setup now that jar no longer in repository)
       - name: Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Generate OpenHAB Dump
@@ -258,6 +250,9 @@ jobs:
      - uses: actions/setup-ruby@v1
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '15'
      - name: Install bundler
        run: gem install bundler -N
      - name: Gem Cache
@@ -269,6 +264,13 @@ jobs:
        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
+     - name: Install Semantic Release
+       run: |
+         npm install semantic-release
+         npm install @semantic-release/changelog -D
+         npm install @semantic-release/exec -D 
+          
+     - name: Release
      - name: Current Version 
        id: current_version
        run: |
