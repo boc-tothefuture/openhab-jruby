@@ -13,6 +13,7 @@ require 'tty-command'
 require 'process_exists'
 require 'cuke_linter'
 require 'erb'
+require 'digest/md5'
 
 require_relative 'lib/openhab/version'
 
@@ -73,6 +74,7 @@ end
 desc 'Run Cucumber Features'
 task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|
   Cucumber::Rake::Task.new(:features) do |t|
+    cp File.join(OPENHAB_DIR, 'userdata/logs/openhab.log'), File.join(CUCUMBER_LOGS, 'startup.log')
     t.cucumber_opts = "--tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
   end
 end
@@ -83,12 +85,23 @@ task :version do
 end
 
 namespace :gh do
+  def md5(filename)
+    md5 = Digest::MD5.new
+    File.open(filename) do |file|
+      file.each(nil, 4096) { |chunk| md5 << chunk }
+    end
+    md5.hexdigest
+  end
+
   desc 'Release JRuby Binding'
-  task :release,  [:file] do |_, args|
+  task :release, [:file] do |_, args|
     bundle = args[:file]
-    _,version,_ = File.basename(bundle,'.jar').split('-')
+    hash = md5(bundle)
+    _, version, = File.basename(bundle, '.jar').split('-')
     sh 'gh', 'release', 'delete', version, '-y', '-R', 'boc-tothefuture/openhab2-addons'
-    sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', 'Prerelease', '-R', 'boc-tothefuture/openhab2-addons', bundle
+    sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', "md5: #{hash}", '-R',
+       'boc-tothefuture/openhab2-addons', bundle
+    File.write('.bundlehash', hash)
   end
 end
 
@@ -169,7 +182,7 @@ namespace :openhab do
 
   def state(task, args = nil)
     Rake::Task[STATE_DIR.to_s].execute
-    task_file = File.join(STATE_DIR, task)
+    task_file = File.join(STATE_DIR, task).gsub(':', '_')
     force = args&.key? :force
     if File.exist?(task_file) && !force
       puts "Skipping task(#{task}), task already up to date"
@@ -203,6 +216,7 @@ namespace :openhab do
   desc 'Setup services config'
   task :services, [:force] => [:download] do |task, args|
     state(task.name, args) do
+      mkdir_p gem_home
       services_config = ERB.new <<~SERVICES
         org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
       SERVICES
@@ -252,19 +266,28 @@ namespace :openhab do
     end
   end
 
+  def karaf_log
+    File.join(File.realpath(TMP_DIR), 'karaf.log')
+  end
+
   def start
     if running?
       puts 'OpenHAB already running'
       return
     end
 
-    env = ruby_env
-    env = env.merge({ 'KARAF_REDIRECT' => File.join(File.realpath(TMP_DIR), 'karaf.log'),
-                      'EXTRA_JAVA_OPTS' => '-Xmx4g' })
+    # Running inside of bundler breaks GEM_HOME, so we run with a clean environment passing through
+    # only specific variables
+    env = {
+      'LANG' => ENV['LANG'],
+      'JAVA_HOME' => ENV['JAVA_HOME'],
+      'KARAF_REDIRECT' => karaf_log,
+      'EXTRA_JAVA_OPTS' => '-Xmx4g'
+    }
 
     Dir.chdir(OPENHAB_DIR) do
       puts 'Starting OpenHAB'
-      pid = spawn(env, 'runtime/bin/start')
+      pid = spawn(env, 'runtime/bin/start', unsetenv_others: true)
       Process.detach(pid)
     end
 
@@ -336,7 +359,7 @@ namespace :openhab do
   end
 
   desc 'Warmup OpenHab environment'
-  task warmup: [:prepare, DEPLOY_DIR] do
+  task warmup: [:prepare, DEPLOY_DIR, CUCUMBER_LOGS] do
     start
     openhab_log = File.join(OPENHAB_DIR, 'userdata/logs/openhab.log')
 
@@ -347,6 +370,8 @@ namespace :openhab do
       File.foreach(openhab_log).grep(/OpenHAB warmup complete/).any?
     end
     rm dest_file
+    cp openhab_log, File.join(CUCUMBER_LOGS, 'warmup.log')
+    cp karaf_log, File.join(CUCUMBER_LOGS, 'karaf-warmup.log')
   end
 
   desc 'Prepare local Openhab'
@@ -357,8 +382,9 @@ namespace :openhab do
 
   desc 'Deploy to local Openhab'
   task deploy: %i[download build] do |_task|
+    mkdir_p gem_home
     gem_file = File.join(PACKAGE_DIR, "openhab-scripting-#{OpenHAB::VERSION}.gem")
-    fail_on_error("gem install #{gem_file}", ruby_env)
+    fail_on_error("gem install #{gem_file} -i #{gem_home} ")
   end
 
   desc 'Deploy adhoc test Openhab'

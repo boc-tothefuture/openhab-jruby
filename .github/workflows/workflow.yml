@@ -115,7 +115,7 @@ jobs:
        uses: actions/cache@v2
        with: 
         path: tmp/
-        key: OpenHAB-setup-${{ hashFiles('bundle/*jrubyscripting*.jar') }}
+        key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
      - name: Setup OpenHAB
        if: steps.cache.outputs.cache-hit != 'true'
        run: bundle exec rake openhab:setup
@@ -170,7 +170,7 @@ jobs:
         uses: actions/cache@v2
         with: 
           path: tmp/
-          key: OpenHAB-setup-${{ hashFiles('bundle/*jrubyscripting*.jar') }}
+          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
       - name: Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Generate OpenHAB Dump
@@ -181,12 +181,7 @@ jobs:
         if: failure()
         with:
           name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.feature }}
-          path: |
-            tmp/cucumber_logs
-            tmp/karaf.log
-            tmp/openhab/userdata/logs
-            tmp/openhab/userdata/*.zip
-            tmp/openhab/conf/automation/jsr223/ruby/personal/
+          path: tmp/
           retention-days: 2
 
  pickles-docs:
