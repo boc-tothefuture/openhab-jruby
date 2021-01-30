@@ -22,8 +22,29 @@ def rules_dir
   File.join(openhab_dir, 'conf/automation/jsr223/ruby/personal/')
 end
 
+def gem_home
+  File.join(openhab_dir, 'conf/automation/lib/ruby/gem_home')
+end
+
+def services_dir
+  File.join(openhab_dir, 'conf/services')
+end
+
 def openhab_log
   File.join(openhab_dir, 'userdata/logs/openhab.log')
+end
+
+def stop_openhab
+  system('rake openhab:stop 1>/dev/null 2>/dev/null') || raise('Error Stopping OpenHAB')
+end
+
+def start_openhab
+  system('rake openhab:start 1>/dev/null 2>/dev/null') || raise('Error Starting OpenHAB')
+end
+
+def clear_gem_path
+ FileUtils.rm_r gem_home
+ FileUtils.mkdir gem_home
 end
 
 def ensure_openhab_running
