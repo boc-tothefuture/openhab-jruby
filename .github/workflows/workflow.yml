@@ -274,22 +274,20 @@ jobs:
           git tag | tail -1
           TAG_NAME=$(git tag | tail -1)
           echo "::set-output name=tag_name::$( echo "$TAG_NAME" )"
-     - name: Prepare Release
+     - name: Release Gem
        if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
        run: |
           echo "New version detected, preparing release"
           echo "Released Version: ${{ steps.latest_release.outputs.tag_name }}" 
           echo "Current Version: ${{ steps.current_version.outputs.version }}" 
-          bundle exec rake gh:package
-     - name: Get JRuby Bundle
-       id: jruby_bundle
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       run: |
-          echo "Finding JRuby Bundle"
-          BUNDLE=$(ls bundle/*.jar)
-          echo "Found: $BUNDLE"
-          echo "::set-output name=file::$( echo "$BUNDLE" )"
-     - name: Create Release
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:rubygems_api_key: ${RUBYGEMS_API_KEY}\n" > $HOME/.gem/credentials
+          bundle exec rake release
+       env:
+        RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
+     - name: Create GitHub Release
        if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
        uses: actions/create-release@v1
        id: create_release
@@ -300,23 +298,13 @@ jobs:
          tag_name: ${{ steps.current_version.outputs.version }}
          release_name: Release ${{ steps.current_version.outputs.version }}
          body_path: CHANGELOG.md
-     - name: Upload OpenHAB JRuby Scripting Assets
+     - name: Upload OpenHAB JRuby Gem
        if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
        uses: actions/upload-release-asset@v1
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        with:
          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-         asset_path: ./pkg/OpenHABJRuby-${{steps.current_version.outputs.version}}.zip
-         asset_name: OpenHABJRuby-${{steps.current_version.outputs.version}}.zip
-         asset_content_type: application/zip
-     - name: Upload OpenHAB JRuby Bundle Assets
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       uses: actions/upload-release-asset@v1
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-         asset_path: ${{ steps.jruby_bundle.outputs.file }}
-         asset_name: OpenHAB JRuby Bundle Jar
-         asset_content_type: application/jar
+         asset_path: ./pkg/openhab-scripting-${{steps.current_version.outputs.version}}.gem
+         asset_name: openhab-scripting-${{steps.current_version.outputs.version}}.gem
+     
