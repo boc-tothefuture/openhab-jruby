@@ -4,8 +4,6 @@ require 'securerandom'
 require 'json'
 
 Given('Clean OpenHAB with latest Ruby Libraries') do
-  system('rake openhab:deploy 1>/dev/null 2>/dev/null') || raise('Error Deploying Libraries')
-  ensure_openhab_running
   delete_rules
   delete_items
   delete_things
@@ -36,6 +34,22 @@ Then('It should not log {string} within {int} seconds') do |string, seconds|
   not_for(seconds: seconds, msg: "'#{string}'' found in log file (#{openhab_log}) within #{seconds} seconds") do
     check_log(string)
   end
+end
+
+Given('OpenHAB is stopped') do
+  stop_openhab
+end
+
+When('I start OpenHAB') do
+  start_openhab
+end
+
+Given('GEM_HOME is empty') do
+  clear_gem_path
+end
+
+Given('a services template filed named {string}') do |file, doc_string|
+  File.write(File.join(services_dir, file), ERB.new(doc_string).result)
 end
 
 Given('group {string}') do |group|

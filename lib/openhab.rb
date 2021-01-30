@@ -8,10 +8,13 @@ require 'openhab/core/log'
 require 'openhab/core/debug'
 require 'openhab/core/dsl'
 
+require 'openhab/version'
+
 #
 # Module used to extend base object with OpenHAB Library functionality
 #
 module OpenHAB
+  include Logging
   #
   # Extends calling object with DSL and helper methods
   #
@@ -28,6 +31,7 @@ module OpenHAB
     base.send :include, OpenHAB::Core::DSL::Tod
     base.send :include, OpenHAB::Core::DSL::Items
     base.send :include, OpenHAB::Core::DSL::Types
+    logger.info "OpenHAB JRuby Scripting Library Version #{OpenHAB::VERSION} Loaded"
   end
 end
 
