@@ -5,5 +5,5 @@
 #
 module OpenHAB
   # @return [String] Version of OpenHAB helper libraries
-  VERSION = '2.10.0'
+  VERSION = File.read(File.join(__dir__, 'VERSION'))
 end
