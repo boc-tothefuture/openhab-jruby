@@ -17,6 +17,7 @@ require 'digest/md5'
 
 require_relative 'lib/openhab/version'
 
+VERSION_FILE = 'lib/openhab/VERSION'
 PACKAGE_DIR = 'pkg'
 TMP_DIR = 'tmp'
 OPENHAB_DIR = File.join(TMP_DIR, 'openhab')
@@ -80,8 +81,12 @@ task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS
 end
 
 desc 'Get OpenHAB-JRuby Version'
-task :version do
-  puts OpenHAB::VERSION
+task :version, [:version] do |_, args|
+  if args[:version]
+    File.write(VERSION_FILE, args[:version].chomp)
+  else
+    puts OpenHAB::VERSION
+  end
 end
 
 namespace :gh do

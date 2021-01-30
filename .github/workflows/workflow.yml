@@ -269,54 +269,13 @@ jobs:
          npm install semantic-release
          npm install @semantic-release/changelog -D
          npm install @semantic-release/exec -D 
-          
      - name: Release
-     - name: Current Version 
-       id: current_version
        run: |
-          bundle exec rake version
-          VERSION=$( bundle exec rake version )
-          echo "::set-output name=version::$( echo "$VERSION" )"
-     - name: Gets latest created release info
-       id: latest_release
-       run: |
-          git fetch --tags
-          git tag | tail -1
-          TAG_NAME=$(git tag | tail -1)
-          echo "::set-output name=tag_name::$( echo "$TAG_NAME" )"
-     - name: Release Gem
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       run: |
-          echo "New version detected, preparing release"
-          echo "Released Version: ${{ steps.latest_release.outputs.tag_name }}" 
-          echo "Current Version: ${{ steps.current_version.outputs.version }}" 
           mkdir -p $HOME/.gem
           touch $HOME/.gem/credentials
           chmod 0600 $HOME/.gem/credentials
-          printf -- "---\n:rubygems_api_key: ${RUBYGEMS_API_KEY}\n" > $HOME/.gem/credentials
-          bundle exec rake build
-          bundle exec gem push ./pkg/openhab-scripting-${{steps.current_version.outputs.version}}.gem
+          printf -- "---\n:rubygems_api_key: ${RUBYGEMS_API_KEY}\n" > $HOME/.gem/credential
+          npx semantic-release
        env:
         RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
-     - name: Create GitHub Release
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       uses: actions/create-release@v1
-       id: create_release
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-         prerelease: true
-         tag_name: ${{ steps.current_version.outputs.version }}
-         release_name: Release ${{ steps.current_version.outputs.version }}
-         body_path: CHANGELOG.md
-     - name: Upload OpenHAB JRuby Gem
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       uses: actions/upload-release-asset@v1
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-         asset_path: ./pkg/openhab-scripting-${{steps.current_version.outputs.version}}.gem
-         asset_name: openhab-scripting-${{steps.current_version.outputs.version}}.gem
-         asset_content_type: application/octet-stream
      

@@ -1,7 +1,17 @@
 branches:
   - main
+tagFormat: ${version}
 plugins:
   - "@semantic-release/github"
-  - "@semantic-release/commit-analyzer"
+    assets: 
+      path: "./pkg/openhab-scripting-${nextRelease.version}.gem"
+      label: openhab-scripting Ruby Gem
+  - "@semantic-release/commit-analyzer":
+    preset: conventionalcommits
   - "@semantic-release/release-notes-generator"
-  - "@semantic-release/changelog"
+    preset: conventionalcommits
+  - "@semantic-release/changelog":
+    changeLogTitle: JRuby OpenHAB Scripting Change Log
+  - "@semantic-release/exec":
+    prepareCmd: "bundle exec rake version[${nextRelease.version}] build"
+    publishCmd: "bundle exec gem push ./pkg/openhab-scripting-${nextRelease.version}.gem"
