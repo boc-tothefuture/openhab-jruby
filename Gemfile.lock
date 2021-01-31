@@ -223,6 +223,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bundler (~> 2.1.4)
   cucumber
   cuke_linter (~> 1.2)
   guard-shell
