@@ -98,7 +98,11 @@ module Logging
   # @return [Logger] for the current class
   #
   def logger
-    Logging.logger(self.class.name)
+    if defined?(name) && !name.nil?
+      Logging.logger(name.gsub(/\s+/, '_'))
+    else
+      Logging.logger(self.class.name)
+    end
   end
 
   class << self
@@ -125,7 +129,7 @@ module Logging
       configure_logger_for(classname)
     end
 
-    private
+   private
 
     #
     # Configure a logger for the supplied classname
