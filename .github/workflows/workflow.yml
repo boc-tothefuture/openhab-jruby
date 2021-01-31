@@ -249,7 +249,7 @@ jobs:
 
  
  release:
-   needs: cucumber 
+   #needs: cucumber 
    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
    runs-on: ubuntu-18.04
    steps:
@@ -277,6 +277,7 @@ jobs:
          npm install @semantic-release/changelog -D
          npm install @semantic-release/git -D
          npm install semantic-release-rubygem -D
+         npm install conventional-changelog-conventionalcommits -D
      - name: Release
        run: |
           npx semantic-release
