@@ -249,7 +249,7 @@ jobs:
 
  
  release:
-   #needs: cucumber 
+   needs: cucumber 
    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
    runs-on: ubuntu-18.04
    steps:
