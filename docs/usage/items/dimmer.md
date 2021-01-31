@@ -14,17 +14,18 @@ DimmerItem  is aliased to **Dimmer** so you can compare compare item types using
 `item.is_a? Dimmer or grep(Dimmer)`
 
 
-| Method   | Parameters         | Description                                  | Example                                         |
-| -------- | ------------------ | -------------------------------------------- | ----------------------------------------------- |
-| truthy?  |                    | Item state not UNDEF, not NULL and is ON     | `puts "#{item.name} is truthy" if item.truthy?` |
-| on       |                    | Send command to turn item ON                 | `item.on`                                       |
-| off      |                    | Send command to turn item OFF                | `item.off`                                      |
-| on?      |                    | Returns true if item state == ON             | `puts "#{item.name} is on." if item.on?`        |
-| off?     |                    | Returns true if item state == OFF            | `puts "#{item.name} is off." if item.off?`      |
-| dim      | amount (default 1) | Dim the switch the specified amount          | `DimmerSwitch.dim`                              |
-| -        | amount             | Subtract the supplied amount from DimmerItem | `DimmerSwitch << DimmerSwitch - 5`              |
-| brighten | amount (default 1) | Brighten the switch the specified amount     | `DimmerSwitch.brighten`                         |
-| +        | amount             | Add the supplied amount from the DimmerItem  | `DimmerSwitch << DimmerSwitch + 5`              |
+| Method   | Parameters                             | Description                                    | Example                                         |
+| -------- | -------------------------------------- | ---------------------------------------------- | ----------------------------------------------- |
+| truthy?  |                                        | Item state not UNDEF, not NULL and is ON       | `puts "#{item.name} is truthy" if item.truthy?` |
+| on       |                                        | Send command to turn item ON                   | `item.on`                                       |
+| off      |                                        | Send command to turn item OFF                  | `item.off`                                      |
+| on?      |                                        | Returns true if item state == ON               | `puts "#{item.name} is on." if item.on?`        |
+| off?     |                                        | Returns true if item state == OFF              | `puts "#{item.name} is off." if item.off?`      |
+| dim      | amount (default 1)                     | Dim the switch the specified amount            | `DimmerSwitch.dim`                              |
+| -        | amount                                 | Subtract the supplied amount from DimmerItem   | `DimmerSwitch << DimmerSwitch - 5`              |
+| brighten | amount (default 1)                     | Brighten the switch the specified amount       | `DimmerSwitch.brighten`                         |
+| +        | amount                                 | Add the supplied amount from the DimmerItem    | `DimmerSwitch << DimmerSwitch + 5`              |
+| <=>      | DimmerItem, NumberItem, Number, String | Compare the value of DimmerItem against others | `DimmerSwitch > 100`                            |
 
 
 ## Examples
