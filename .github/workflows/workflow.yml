@@ -15,6 +15,7 @@ jobs:
  rubocop:
    runs-on: ubuntu-18.04
    continue-on-error: true
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
@@ -36,6 +37,7 @@ jobs:
 
  commit-lint:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -45,6 +47,7 @@ jobs:
  cucumber-lint:
    runs-on: ubuntu-18.04
    continue-on-error: true
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
@@ -66,6 +69,7 @@ jobs:
  
  yard-coverage:
    runs-on: ubuntu-18.04
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
@@ -90,6 +94,7 @@ jobs:
 
  openhab-setup:
    runs-on: ubuntu-18.04
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
@@ -122,6 +127,7 @@ jobs:
  
  cucumber-matrix:
    runs-on: ubuntu-18.04
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
    steps: 
@@ -144,6 +150,7 @@ jobs:
  cucumber:
     needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-18.04
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
       matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
@@ -185,7 +192,7 @@ jobs:
           retention-days: 2
 
  pickles-docs:
-  if: github.ref == 'refs/heads/main'
+  if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
   runs-on: windows-latest
   steps:
     - uses: actions/checkout@v2
@@ -205,7 +212,7 @@ jobs:
   
  docs:
    needs: [cucumber, pickles-docs]
-   if: github.ref == 'refs/heads/main'
+   if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
    runs-on: ubuntu-18.04
    steps:
      - uses: actions/checkout@v2
@@ -243,7 +250,7 @@ jobs:
  
  release:
    needs: cucumber 
-   if: github.ref == 'refs/heads/main'
+   if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
    runs-on: ubuntu-18.04
    steps:
      - uses: actions/checkout@v2
@@ -268,14 +275,11 @@ jobs:
        run: |
          npm install semantic-release
          npm install @semantic-release/changelog -D
-         npm install @semantic-release/exec -D 
+         npm install @semantic-release/git -D
+         npm install semantic-release-rubygem -D
      - name: Release
        run: |
-          mkdir -p $HOME/.gem
-          touch $HOME/.gem/credentials
-          chmod 0600 $HOME/.gem/credentials
-          printf -- "---\n:rubygems_api_key: ${RUBYGEMS_API_KEY}\n" > $HOME/.gem/credential
           npx semantic-release
        env:
-        RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
+        GEM_HOST_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
      

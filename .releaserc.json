@@ -1,0 +1,53 @@
+{
+  "branches": [
+    "main"
+  ],
+  "tagFormat": "${version}",
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogTitle": "JRuby OpenHAB Scripting Change Log",
+        "changelogFile": "docs/CHANGELOG.md"
+      }
+    ],
+    [
+      "semantic-release-rubygem",
+      {
+        "gemFileDir": "pkg/"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "lib/openhab/version.rb"
+        ]
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "./pkg/openhab-scripting-${nextRelease.version}.gem",
+            "label": "openhab-scripting Ruby Gem"
+          }
+        ]
+      }
+    ]
+  ]
+}
