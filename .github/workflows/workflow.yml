@@ -22,7 +22,7 @@ jobs:
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
-       run: gem install bundler -N
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
@@ -54,7 +54,7 @@ jobs:
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
-       run: gem install bundler -N       
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
@@ -76,7 +76,7 @@ jobs:
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
-       run: gem install bundler -N       
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
@@ -105,7 +105,7 @@ jobs:
          java-version: '11.0.8' 
          java-package: jre
      - name: Install bundler
-       run: gem install bundler -N
+       run: gem install bundler:2.2.7 -N
      - name: Cache Gems 
        uses: actions/cache@v2
        with: 
@@ -163,7 +163,7 @@ jobs:
           java-version: '11.0.8' 
           java-package: jre
       - name: Install bundler
-        run: gem install bundler -N
+        run: gem install bundler:2.2.7 -N
       - name: Restore Gems 
         uses: actions/cache@v2
         with: 
@@ -220,7 +220,7 @@ jobs:
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
-       run: gem install bundler -N
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
@@ -261,7 +261,7 @@ jobs:
        with:
         node-version: '15'
      - name: Install bundler
-       run: gem install bundler -N
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
