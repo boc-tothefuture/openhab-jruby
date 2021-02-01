@@ -75,4 +75,20 @@ Feature:  Rule languages supports groups
     Then It should log "Max is 70" within 5 seconds
     And It should log "Min is 30" within 5 seconds
 
+  Scenario: Group update trigger has event.item in run block
+    Given code in a rules file
+      """
+      rule 'group member updated' do
+        updated Temperatures.items
+        run do |event|
+          logger.info("event.item is #{event.item.name}")
+        end
+      end
 
+      rule 'update a group member' do
+        on_start
+        run { Livingroom_Temp.update 65 }
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'event.item is Livingroom_Temp' within 5 seconds
