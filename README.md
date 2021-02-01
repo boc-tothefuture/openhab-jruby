@@ -16,6 +16,9 @@
 ## Usage
 Usage documentation is located [here](https://boc-tothefuture.github.io/openhab-jruby/).
 
+## Contribution
+Contribution process is described [here](https://boc-tothefuture.github.io/openhab-jruby/contributing/).
+
 ## Discussion
 Please see [this thread](https://community.openhab.org/t/jruby-openhab-rules-system/110598) on the OpenHAB forum for further discussion.  Ideas and suggestions are welcome.
 
