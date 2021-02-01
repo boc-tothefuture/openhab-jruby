@@ -1,6 +1,11 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.11.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.10.1...2.11.0) (2021-02-01)
 
+
+### Features
+
+* Add Duration.to_s ([b5b9c81](https://github.com/boc-tothefuture/openhab-jruby/commit/b5b9c8176f995ad996ac481c4c23c614bd5f54f7))
 
 ## 2.10.0
 ### Changed
