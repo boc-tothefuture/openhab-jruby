@@ -20,7 +20,7 @@
       "@semantic-release/changelog",
       {
         "changelogTitle": "JRuby OpenHAB Scripting Change Log",
-        "changelogFile": "docs/CHANGELOG.md"
+        "changelogFile": "CHANGELOG.md"
       }
     ],
     [
