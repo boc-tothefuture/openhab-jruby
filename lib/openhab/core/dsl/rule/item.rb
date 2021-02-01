@@ -97,6 +97,7 @@ module OpenHAB
           #
           def updated(*items, to: nil)
             items.flatten.each do |item|
+              item = item.group if item.is_a? Group
               logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
               [to].flatten.each do |to_state|
                 case item
