@@ -278,6 +278,7 @@ jobs:
          npm install @semantic-release/git -D
          npm install semantic-release-rubygem -D
          npm install conventional-changelog-conventionalcommits -D
+         npm install @semantic-release/changelog -D
      - name: Release
        run: |
           npx semantic-release
