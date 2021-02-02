@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.12.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.11.1...2.12.0) (2021-02-02)
+
+
+### Bug Fixes
+
+* return nil for items['nonexistent'] instead of raising an exception ([4a412f8](https://github.com/boc-tothefuture/openhab-jruby/commit/4a412f81daf46c86469d8badeac2327a6c1816d3))
+
+
+### Features
+
+* add Item.include? to check for item's existence ([1a8fd3a](https://github.com/boc-tothefuture/openhab-jruby/commit/1a8fd3aad11fb0549dc2c7308f26946ffb8e899c))
+
 ## [2.11.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.11.0...2.11.1) (2021-02-01)
 
 
