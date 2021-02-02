@@ -1,4 +1,5 @@
-Feature:  Rule languages supports channels
+Feature:  channels
+  Rule languages supports channels
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -13,7 +14,7 @@ Feature:  Rule languages supports channels
       """
     When channel "<channel>" is triggered
     Then It should log 'Channel triggered' within 5 seconds
-    Examples:
+    Examples: Checks support for string based and thing based channels
       | trigger                                       | channel                   |
       | channel 'astro:sun:home:rise#event'           | astro:sun:home:rise#event |
       | channel 'rise#event', thing: 'astro:sun:home' | astro:sun:home:rise#event |
@@ -40,7 +41,7 @@ Feature:  Rule languages supports channels
       """
     When channel "<channel>" is triggered
     Then It should log 'Channel triggered' within 5 seconds
-    Examples:
+    Examples: Checks arrays of channels
       | trigger                                                     | channel                   |
       | channel ['rise#event','set#event'], thing: 'astro:sun:home' | astro:sun:home:rise#event |
       | channel ['rise#event','set#event'], thing: 'astro:sun:home' | astro:sun:home:set#event  |
@@ -55,7 +56,7 @@ Feature:  Rule languages supports channels
       """
     When channel "<channel>" is triggered with "<event>"
     Then It should log 'Channel triggered' within 5 seconds
-    Examples:
+    Examples: Checks arrays of chanels and arrays of triggers
       | trigger                                                                                   | channel                   | event |
       | channel ['rise#event','set#event'], thing: 'astro:sun:home', triggered: ['START', 'STOP'] | astro:sun:home:rise#event | START |
       | channel ['rise#event','set#event'], thing: 'astro:sun:home', triggered: ['START', 'STOP'] | astro:sun:home:set#event  | START |

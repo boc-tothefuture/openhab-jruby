@@ -1,4 +1,5 @@
-Feature:  Rule languages supports OpenHAB units of measurement
+Feature:  units_of_measurement
+  Rule languages supports OpenHAB units of measurement
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -63,17 +64,14 @@ Feature:  Rule languages supports OpenHAB units of measurement
       | Dimensionless * NumberF | 140.0 °F |
       | 2 * NumberF             | 140.0 °F |
 
-  Scenario Outline: Comparisons work on dimensioned number items with different, but comparable units.
+  Scenario: Comparisons work on dimensioned number items with different, but comparable units.
     Given code in a rules file
       """
-        result = <code_line>
+        result = NumberC > NumberF
         logger.info("Result is #{result}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
-    Examples:
-      | code_line         | result |
-      | NumberC > NumberF | true   |
 
   Scenario Outline: Comparisons work with dimensioned numbers and strings representing quantities
     Given code in a rules file
@@ -89,17 +87,14 @@ Feature:  Rule languages supports OpenHAB units of measurement
       | NumberC == '23 °C' | true   |
 
 
-  Scenario Outline: Each unit needs to be normalized for all operations when combining operators with comparitors.
+  Scenario: Each unit needs to be normalized for all operations when combining operators with comparitors.
     Given code in a rules file
       """
-        result = <code_line>
+        result = (NumberC \|'°F') - (NumberF \|'°F') < '4 °F'
         logger.info("Result is #{result}")
       """
     When I deploy the rules file
-    Then It should log 'Result is <result>' within 5 seconds
-    Examples:
-      | code_line                                    | result |
-      | (NumberC \|'°F') - (NumberF \|'°F') < '4 °F' | true   |
+    Then It should log 'Result is true' within 5 seconds
 
   Scenario Outline: unit block should convert all units and numbers to a specific unit for all operations
     Given code in a rules file

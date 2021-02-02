@@ -1,4 +1,5 @@
-Feature:  Rule languages supports OpenHAB support Quantities
+Feature:  quantity
+  Rule languages supports OpenHAB support Quantities
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
