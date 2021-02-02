@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    openhab-scripting (2.10.0)
+    openhab-scripting (2.13.0)
+      bundler (~> 2.2)
 
 GEM
   remote: https://rubygems.org/
@@ -223,7 +224,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 2.1.4)
   cucumber
   cuke_linter (~> 1.2)
   guard-shell
@@ -243,4 +243,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.4
+   2.2.7

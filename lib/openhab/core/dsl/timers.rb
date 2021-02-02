@@ -4,8 +4,6 @@ require 'java'
 require 'delegate'
 require 'forwardable'
 
-require 'core/duration'
-
 module OpenHAB
   module Core
     module DSL
@@ -49,7 +47,7 @@ module OpenHAB
 
             semaphore.synchronize do
               @timer = ScriptExecution.createTimer(
-                ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(@duration.to_ms)), @block
+                ZonedDateTime.now.plus(@duration), @block
               )
               super(@timer)
             end
@@ -64,7 +62,7 @@ module OpenHAB
           #
           def reschedule(duration = nil)
             duration ||= @duration
-            @timer.reschedule(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(duration.to_ms)))
+            @timer.reschedule(ZonedDateTime.now.plus(duration))
           end
         end
 
