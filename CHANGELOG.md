@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.11.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.11.0...2.11.1) (2021-02-01)
+
+
+### Bug Fixes
+
+* **group:**  support for accessing triggering item in group updates ([6204f0a](https://github.com/boc-tothefuture/openhab-jruby/commit/6204f0a8f33e08abddcc130b46a2fe39c5f4bb49))
+
 # [2.11.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.10.1...2.11.0) (2021-02-01)
 
 
