@@ -274,7 +274,7 @@ module OpenHAB
                   process_trigger_delay(mod, inputs)
                 else
                   logger.trace("Item changed to #{state} for #{trigger_delay}, rescheduling timer.")
-                  trigger_delay.timer.reschedule(ZonedDateTime.now.plus(Java::JavaTime::Duration.ofMillis(duration.to_ms)))
+                  trigger_delay.timer.reschedule(ZonedDateTime.now.plus(duration))
                 end
               end
             else

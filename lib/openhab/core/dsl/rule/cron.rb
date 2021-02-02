@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'java'
-require 'core/duration'
 require 'core/dsl/time_of_day'
 require 'core/cron'
 
@@ -64,8 +63,10 @@ module OpenHAB
               expression_map = EXPRESSION_MAP[value]
               expression_map = at_condition(expression_map, at) if at
               cron(map_to_cron(expression_map))
-            when Duration
-              cron(map_to_cron(value.cron_map))
+            when Java::JavaTime::Duration
+              raise ArgumentError, '"at" cannot be used with duration' if at
+
+              cron(map_to_cron(duration_to_map(value)))
             else
               raise ArgumentExpression, 'Unknown interval' unless expression_map
             end
@@ -91,6 +92,28 @@ module OpenHAB
           #
           def map_to_cron(map)
             %i[second minute hour dom month dow].map { |field| map.fetch(field) }.join(' ')
+          end
+
+          #
+          # Convert a Java Duration to a map for the map_to_cron method
+          #
+          # @param duration [Java::JavaTime::Duration] The duration object
+          #
+          # @return [Hash] a map suitable for map_to_cron
+          #
+          def duration_to_map(duration)
+            if duration.to_millis_part.zero? && duration.to_nanos_part.zero? && duration.to_days.zero?
+              %i[second minute hour].each do |unit|
+                to_unit_part = duration.public_send("to_#{unit}s_part")
+                next unless to_unit_part.positive?
+
+                to_unit = duration.public_send("to_#{unit}s")
+                break unless to_unit_part == to_unit
+
+                return EXPRESSION_MAP[unit].merge(unit => "*/#{to_unit}")
+              end
+            end
+            raise ArgumentError, "Cron Expression not supported for duration: #{duration}"
           end
 
           #
