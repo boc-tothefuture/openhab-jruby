@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.13.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.12.0...2.13.0) (2021-02-02)
+
+
+### Features
+
+* **dimmeritem:** dimmeritems can now be compared ([aa286dc](https://github.com/boc-tothefuture/openhab-jruby/commit/aa286dcd8f55d7a7ecd84ed6b0e360cb52103a1c))
+
 # [2.12.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.11.1...2.12.0) (2021-02-02)
 
 
