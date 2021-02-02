@@ -1,4 +1,5 @@
-Feature:  Rule languages supports String Items
+Feature:  string_item
+  Rule languages supports String Items
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

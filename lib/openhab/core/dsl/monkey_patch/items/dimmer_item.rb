@@ -14,6 +14,7 @@ Dimmer = DimmerItem
 #
 # rubocop:disable Style/ClassAndModuleChildren
 class Java::OrgOpenhabCoreLibraryItems::DimmerItem
+  include Comparable
   # rubocop:enable Style/ClassAndModuleChildren
   java_import org.openhab.core.library.types.DecimalType
   java_import org.openhab.core.library.types.IncreaseDecreaseType
@@ -86,6 +87,38 @@ class Java::OrgOpenhabCoreLibraryItems::DimmerItem
   end
 
   #
+  # Compare DimmerItem to supplied object
+  #
+  # @param [Object] other object to compare to
+  #
+  # @return [Integer] -1,0,1 or nil depending on value supplied, nil comparison to supplied object is not possible.
+  #
+  def <=>(other)
+    logger.trace("Comparing #{self} to #{other}")
+    case other
+    when DimmerItem, NumberItem
+      state <=> other.state
+    when DecimalType
+      state <=> other
+    else
+      to_i <=> other.to_i
+    end
+  end
+
+  #
+  # Compare DimmerItem to supplied object.
+  # The == operator needs to be overridden because the parent java object
+  # has .equals which overrides the <=> operator above
+  #
+  # @param [Object] other object to compare to
+  #
+  # @return [Integer] true if the two objects contain the same value, false otherwise
+  #
+  def ==(other)
+    (self <=> other).zero?
+  end
+
+  #
   # Check if dimmer has a state and state is not zero
   #
   # @return [Boolean] True if dimmer is not NULL or UNDEF and value is not 0
@@ -104,6 +137,15 @@ class Java::OrgOpenhabCoreLibraryItems::DimmerItem
   end
 
   alias to_int to_i
+
+  #
+  # Return the string representation of the dimmer item
+  #
+  # @return [String] String version of the dimmer value
+  #
+  def to_s
+    to_i.to_s
+  end
 
   #
   # Check if dimmer is on

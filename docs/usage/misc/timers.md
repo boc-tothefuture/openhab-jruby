@@ -20,13 +20,14 @@ After method parameters
 Timer Object
 The timer object has all of the methods of the [OpenHAB Timer](https://www.openhab.org/docs/configuration/actions.html#timers) with a change to the reschedule method to enable it to operate Ruby context. The following methods are available to a Timer object:
 
-| Method        | Parameter | Description                                                                                      |
-| ------------- | --------- | ------------------------------------------------------------------------------------------------ |
-| `cancel`      |           | Cancel the scheduled timer                                                                       |
-| `reschedule`  | duration  | Optional [duration](#Duration) if unspecified original duration supplied to after method is used |
-| `active?`     |           | An alias for `Timer::isActive()`                                                                 |
-| `running?`    |           | An alias for `Timer::isRunning()`                                                                |
-| `terminated?` |           | An alias for `Timer::hasTerminated()`                                                            |
+| Method           | Parameter | Description                                                                                        |
+| ---------------- | --------- | -------------------------------------------------------------------------------------------------- |
+| `cancel`         |           | Cancel the scheduled timer                                                                         |
+| `execution_time` |           | An alias for `Timer::getExecutionTime()`. Available in OpenHAB 3.1+                                |
+| `reschedule`     | duration  | Optional [duration](#Duration) if unspecified original duration supplied to `after` method is used |
+| `active?`        |           | An alias for `Timer::isActive()`                                                                   |
+| `running?`       |           | An alias for `Timer::isRunning()`                                                                  |
+| `terminated?`    |           | An alias for `Timer::hasTerminated()`                                                              |
 
 ```ruby
 after 5.seconds do

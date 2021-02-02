@@ -1,4 +1,5 @@
-Feature:  Rule languages supports description feature
+Feature:  description
+  Rule languages supports description feature
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

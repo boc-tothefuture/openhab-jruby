@@ -1,4 +1,5 @@
-Feature:  Rule languages supports Dimmers
+Feature:  dimmer_item
+  Rule languages supports Dimmers
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -121,3 +122,18 @@ Feature:  Rule languages supports Dimmers
     When I deploy the rules file
     Then It should log "Dimmer One is less than 50%" within 5 seconds
     And It should log "Dimmer Two is greater than 50%" within 5 seconds
+
+  Scenario: Dimmer can be compared against a number
+    Given code in a rules file
+      """
+      logger.info("DimmerOne #{DimmerOne}  DimmerTwo #{DimmerTwo}")
+      logger.info("DimmerOne == 50? #{DimmerOne == 50}")
+      logger.info("DimmerOne == DimmerTwo? #{DimmerOne == DimmerTwo}")
+      logger.info("DimmerOne > 50? #{DimmerOne > 50}")
+      logger.info("DimmerOne < 60? #{DimmerOne < 60}")
+      """
+    When I deploy the rules file
+    Then It should log "DimmerOne > 50? false" within 5 seconds
+    And It should log "DimmerOne == 50? true" within 5 seconds
+    And It should log "DimmerOne < 60? true" within 5 seconds
+    And It should log "DimmerOne == DimmerTwo? true" within 5 seconds

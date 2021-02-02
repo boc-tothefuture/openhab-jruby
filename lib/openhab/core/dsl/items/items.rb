@@ -22,7 +22,17 @@ module OpenHAB
             item = $ir.getItem(name)
             # rubocop: enable Style/GlobalVars
             (item.is_a? GroupItem) ? nil : item
+          rescue Java::OrgOpenhabCoreItems::ItemNotFoundException
+            nil
           end
+
+          # Returns true if the given item name exists
+          # @param name [String] Item name to check
+          # @return [Boolean] true if the item exists, false otherwise
+          def include?(name)
+            !$ir.getItems(name).empty?
+          end
+          alias key? include?
         end
 
         java_import org.openhab.core.items.GroupItem

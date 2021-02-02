@@ -1,4 +1,5 @@
-Feature:  Openhab Gem Support
+Feature:  gem
+  Openhab Gem Support
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

@@ -1,9 +1,10 @@
-Feature:  Rule languages supports OpenHAB transformations
+@not_implemented
+Feature:  transformation
+  Rule languages supports OpenHAB transformations
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
-  @not_implemented
   Scenario: Transform using explicit transform invokation
     Given a map transformation named "AlarmModes.map":
       """
@@ -17,7 +18,6 @@ Feature:  Rule languages supports OpenHAB transformations
     When I deploy the rule
     Then It should log 'Arming Away is 14' within 10 seconds
 
-  @not_implemented
   Scenario: Transform using implicit transform
     Given a map transformation named "AlarmModes.map":
       """
@@ -32,7 +32,6 @@ Feature:  Rule languages supports OpenHAB transformations
     When I deploy the rule
     Then It should log 'Arming Away is 14' within 10 seconds
 
-  @not_implemented
   Scenario: Implicit transform inside rule creation
     Given items:
       | type   | name       | label      |

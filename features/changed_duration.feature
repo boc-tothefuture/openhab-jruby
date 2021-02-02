@@ -1,4 +1,5 @@
-Feature:  Rule languages supports changed item features
+Feature: changed_duration
+  Rule languages supports changed item features
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -20,7 +21,7 @@ Feature:  Rule languages supports changed item features
     But If I wait 5 seconds
     Then It <should> log 'Alarm Mode Updated' within 5 seconds
 
-    Examples:
+    Examples: Checks multiple from and to states
       | from | to | rule                                                  | should     |
       | 8    | 14 | changed Alarm_Mode, for: 10.seconds                   | should     |
       | 8    | 14 | changed Alarm_Mode, to: 14, for: 10.seconds           | should     |
@@ -66,7 +67,7 @@ Feature:  Rule languages supports changed item features
     But If I wait 5 seconds
     Then It <should> log 'Alarm Two Mode Changed' within 5 seconds
 
-    Examples:
+    Examples: Checks multiple from and to states
       | from | to | rule                                                   | should     |
       | 8    | 14 | changed Modes.items, for: 10.seconds                   | should     |
       | 8    | 14 | changed Modes.items, to: 14, for: 10.seconds           | should     |
@@ -94,15 +95,10 @@ Feature:  Rule languages supports changed item features
     But If I wait 5 seconds
     Then It <should> log 'Switches Changed' within 5 seconds
 
-    Examples:
+    Examples: Checks multiple from and to states
       | from | to  | rule                                                 | should     |
       | OFF  | ON  | changed Switches, for: 10.seconds                    | should     |
       | OFF  | ON  | changed Switches, to: ON, for: 10.seconds            | should     |
       | ON   | OFF | changed Switches, to: ON, for: 10.seconds            | should not |
       | OFF  | ON  | changed Switches, from: OFF, to: ON, for: 10.seconds | should     |
       | OFF  | ON  | changed Switches, from: ON, to: ON, for: 10.seconds  | should not |
-
-
-  @not_implemented
-  Scenario: Rule deleted, timers should be cancelled
-    Then NOT_IMPLEMENTED

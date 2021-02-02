@@ -10,41 +10,50 @@ env:
   RUBY_VERSION: 2.5
   GITHUB_TOKEN: ${{ github.token }}
 
-
 jobs:
 
- rubocop:
-   runs-on: ubuntu-18.04
-   continue-on-error: true
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
-     - name: Rubocop 
-       run: bundle exec rubocop
+# rubocop:
+#   runs-on: ubuntu-18.04
+#   continue-on-error: true
+#   if: "!contains(github.event.head_commit.message, 'ci skip')"
+#   steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/setup-ruby@v1
+#       with:
+#         ruby-version: ${{ env.RUBY_VERSION }}
+#     - name: Install bundler
+#       run: gem install bundler:2.2.7 -N
+#     - name: Gem Cache
+#       uses: actions/cache@v2
+#       with: 
+#        path: vendor/bundle
+#        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+#     - name: Install gems
+#       run: |
+#          bundle config path vendor/bundle
+#          bundle install --jobs 4 --retry 3
+#     - name: Rubocop 
+#       run: bundle exec rubocop
+
+ commit-lint:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v2
 
  cucumber-lint:
    runs-on: ubuntu-18.04
-   continue-on-error: true
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
-       run: gem install bundler -N       
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
@@ -55,17 +64,18 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
      - name: Cucumber Lint 
-       run: bundle exec cuke_linter
+       run: bundle exec cuke_linter -p features/
  
  yard-coverage:
    runs-on: ubuntu-18.04
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
-       run: gem install bundler -N       
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
@@ -83,6 +93,7 @@ jobs:
 
  openhab-setup:
    runs-on: ubuntu-18.04
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
@@ -93,7 +104,7 @@ jobs:
          java-version: '11.0.8' 
          java-package: jre
      - name: Install bundler
-       run: gem install bundler -N
+       run: gem install bundler:2.2.7 -N
      - name: Cache Gems 
        uses: actions/cache@v2
        with: 
@@ -104,15 +115,18 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
      - name: Cache OpenHAB setup
+       id: cache
        uses: actions/cache@v2
        with: 
         path: tmp/
-        key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
+        key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
      - name: Setup OpenHAB
+       if: steps.cache.outputs.cache-hit != 'true'
        run: bundle exec rake openhab:setup
  
  cucumber-matrix:
    runs-on: ubuntu-18.04
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
    outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
    steps: 
@@ -135,6 +149,7 @@ jobs:
  cucumber:
     needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-18.04
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
       matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
@@ -147,7 +162,7 @@ jobs:
           java-version: '11.0.8' 
           java-package: jre
       - name: Install bundler
-        run: gem install bundler -N
+        run: gem install bundler:2.2.7 -N
       - name: Restore Gems 
         uses: actions/cache@v2
         with: 
@@ -161,7 +176,7 @@ jobs:
         uses: actions/cache@v2
         with: 
           path: tmp/
-          key: OpenHAB-setup-${{ github.workflow }}-${{ github.run_number }}
+          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
       - name: Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Generate OpenHAB Dump
@@ -172,16 +187,11 @@ jobs:
         if: failure()
         with:
           name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.feature }}
-          path: |
-            tmp/cucumber_logs
-            tmp/karaf.log
-            tmp/openhab/userdata/logs
-            tmp/openhab/userdata/*.zip
-            tmp/openhab/conf/automation/jsr223/ruby/personal/
+          path: tmp/
           retention-days: 2
 
  pickles-docs:
-  if: github.ref == 'refs/heads/main'
+  if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
   runs-on: windows-latest
   steps:
     - uses: actions/checkout@v2
@@ -201,7 +211,7 @@ jobs:
   
  docs:
    needs: [cucumber, pickles-docs]
-   if: github.ref == 'refs/heads/main'
+   if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
    runs-on: ubuntu-18.04
    steps:
      - uses: actions/checkout@v2
@@ -209,7 +219,7 @@ jobs:
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
      - name: Install bundler
-       run: gem install bundler -N
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
@@ -239,15 +249,18 @@ jobs:
  
  release:
    needs: cucumber 
-   if: github.ref == 'refs/heads/main'
+   if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
    runs-on: ubuntu-18.04
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
        with:
-         ruby-version: ${{ env.RUBY_VERSION }}
+        ruby-version: ${{ env.RUBY_VERSION }}
+     - uses: actions/setup-node@v2
+       with:
+        node-version: '15'
      - name: Install bundler
-       run: gem install bundler -N
+       run: gem install bundler:2.2.7 -N
      - name: Gem Cache
        uses: actions/cache@v2
        with: 
@@ -257,62 +270,17 @@ jobs:
        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-     - name: Current Version 
-       id: current_version
+     - name: Install Semantic Release
        run: |
-          bundle exec rake version
-          VERSION=$( bundle exec rake version )
-          echo "::set-output name=version::$( echo "$VERSION" )"
-     - name: Gets latest created release info
-       id: latest_release
+         npm install semantic-release
+         npm install @semantic-release/changelog -D
+         npm install @semantic-release/git -D
+         npm install semantic-release-rubygem -D
+         npm install conventional-changelog-conventionalcommits -D
+         npm install @semantic-release/changelog -D
+     - name: Release
        run: |
-          git fetch --tags
-          git tag | tail -1
-          TAG_NAME=$(git tag | tail -1)
-          echo "::set-output name=tag_name::$( echo "$TAG_NAME" )"
-     - name: Prepare Release
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       run: |
-          echo "New version detected, preparing release"
-          echo "Released Version: ${{ steps.latest_release.outputs.tag_name }}" 
-          echo "Current Version: ${{ steps.current_version.outputs.version }}" 
-          bundle exec rake gh:package
-     - name: Get JRuby Bundle
-       id: jruby_bundle
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       run: |
-          echo "Finding JRuby Bundle"
-          BUNDLE=$(ls bundle/*.jar)
-          echo "Found: $BUNDLE"
-          echo "::set-output name=file::$( echo "$BUNDLE" )"
-     - name: Create Release
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       uses: actions/create-release@v1
-       id: create_release
+          npx semantic-release
        env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-         prerelease: true
-         tag_name: ${{ steps.current_version.outputs.version }}
-         release_name: Release ${{ steps.current_version.outputs.version }}
-         body_path: CHANGELOG.md
-     - name: Upload OpenHAB JRuby Scripting Assets
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       uses: actions/upload-release-asset@v1
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-         asset_path: ./pkg/OpenHABJRuby-${{steps.current_version.outputs.version}}.zip
-         asset_name: OpenHABJRuby-${{steps.current_version.outputs.version}}.zip
-         asset_content_type: application/zip
-     - name: Upload OpenHAB JRuby Bundle Assets
-       if:  ${{ steps.current_version.outputs.version != steps.latest_release.outputs.tag_name}}
-       uses: actions/upload-release-asset@v1
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-         asset_path: ${{ steps.jruby_bundle.outputs.file }}
-         asset_name: OpenHAB JRuby Bundle Jar
-         asset_content_type: application/jar
+        GEM_HOST_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
+     

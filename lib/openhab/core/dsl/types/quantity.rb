@@ -111,7 +111,6 @@ module OpenHAB
             end
           end
 
-
           #
           # Forward missing methods to Openhab Quantity Item if they are defined
           #
@@ -166,7 +165,6 @@ module OpenHAB
             end
           end
 
-
           #
           # Provide details about quantity object
           #
@@ -185,7 +183,6 @@ module OpenHAB
           DIMENSIONLESS_NON_UNITIZED_OPERATIONS = %w[* /].freeze
 
           # Dimensionless numbers should only be unitzed for addition and subtraction
-
 
           #
           # Checks if an item should be unitized
@@ -231,7 +228,7 @@ module OpenHAB
           end
 
           #
-          # Convert quantities to appropriate units 
+          # Convert quantities to appropriate units
           #
           # @param [Quantity] quantity_a Quantity on left side of operation
           # @param [Quantity] quantity_b Quantity on right side of operation

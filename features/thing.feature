@@ -1,4 +1,5 @@
-Feature:  Rule languages supports interacting with things
+Feature:  thing
+  Rule languages supports interacting with things
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

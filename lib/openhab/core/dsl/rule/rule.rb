@@ -46,12 +46,12 @@ module OpenHAB
           #
           Run = Struct.new(:block)
 
-          # 
+          #
           # Struct holding a Triggered block
           #
           Trigger = Struct.new(:block)
 
-          # 
+          #
           # Struct holding an otherwise block
           #
           Otherwise = Struct.new(:block)
@@ -304,6 +304,23 @@ module OpenHAB
           end
 
           #
+          # Patch event to include event.item when it doesn't exist
+          # This is to patch a bug see https://github.com/boc-tothefuture/openhab-jruby/issues/75
+          # It may be fixed in the openhab core in the future, in which case, this patch will no longer be necessary
+          #
+          # @param [OpenHAB Event] event to check for item accessor
+          # @param [OpenHAB Event Inputs] inputs inputs to running rule
+          #
+          def add_event_item(event, inputs)
+            return if event.nil? || defined?(event.item)
+
+            class << event
+              attr_accessor :item
+            end
+            event.item = inputs&.dig('triggeringItem')
+          end
+
+          #
           # Process the run queue
           #
           # @param [Array] run_queue array of procs of various types to execute
@@ -317,7 +334,7 @@ module OpenHAB
               when RuleConfig::Run
 
                 event = inputs&.dig('event')
-
+                add_event_item(event, inputs)
                 logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
                 task.block.call(event)
               when RuleConfig::Trigger

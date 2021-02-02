@@ -14,13 +14,6 @@ module OpenHAB
     java_import org.osgi.framework.FrameworkUtil
 
     #
-    # @return [ServiceReferences]
-    #
-    def self.service_references
-      bundle_context.getAllServiceReferences(action_service, nil)
-    end
-
-    #
     # @param name [String] The service name
     #
     # @return [Service]
@@ -33,10 +26,17 @@ module OpenHAB
       service
     end
 
-    def self.action_service
-      'org.openhab.core.model.script.engine.action.ActionService'
+    #
+    # @param name [String] The service name
+    # @param filter [String] Filter for service names. See https://docs.osgi.org/javadoc/r4v43/core/org/osgi/framework/Filter.html
+    #
+    # @return [Array] An array of services
+    #
+    def self.services(name, filter: nil)
+      bundle_context.getServiceReferences(name, filter)&.map do |reference|
+        bundle_context.getService(reference)
+      end
     end
-    private_class_method :action_service
 
     def self.bundle_context
       @bundle_context ||= bundle.getBundleContext

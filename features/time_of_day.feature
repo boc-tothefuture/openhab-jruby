@@ -1,4 +1,5 @@
-Feature:  Rule languages supports comparing using TimeOfDay
+Feature:  time_of_day
+    Rule languages supports comparing using TimeOfDay
 
     Background:
         Given Clean OpenHAB with latest Ruby Libraries
@@ -44,7 +45,7 @@ Feature:  Rule languages supports comparing using TimeOfDay
             | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>' | should not |
 
 
-    Scenario Outline: TimeOfDay object between? method 
+    Scenario Outline: TimeOfDay object between? method
         Given a rule template:
             """
             if TimeOfDay.now.between? <from>..<to>

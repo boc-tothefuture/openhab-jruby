@@ -1,4 +1,5 @@
-Feature:  Rule languages supports Contacts
+Feature:  contact_item
+  Rule languages supports Contacts
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

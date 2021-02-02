@@ -1,4 +1,5 @@
-Feature:  Openhab Timer Support
+Feature:  timer
+  Openhab Timer Support
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

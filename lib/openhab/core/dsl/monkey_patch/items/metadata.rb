@@ -231,7 +231,7 @@ module OpenHAB
               def to_s
                 namespaces = []
                 each { |ns, value, config| namespaces << "\"#{ns}\"=>[\"#{value}\",#{config}]" }
-                '{' + namespaces.join(',') + '}'
+                "{#{namespaces.join(',')}}"
               end
 
               #

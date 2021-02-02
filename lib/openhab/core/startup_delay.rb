@@ -11,7 +11,6 @@ module StartupDelay
   CHECK_DELAY = 10
   private_constant :CHECK_DELAY
 
-
   logger.info('Checking for Automation manager')
   # rubocop: disable Style/GlobalVars
   until $scriptExtension.get('automationManager')

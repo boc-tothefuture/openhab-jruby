@@ -1,4 +1,5 @@
-Feature:  Rule languages supports groups
+Feature:  items
+  Rule languages supports groups
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -37,19 +38,16 @@ Feature:  Rule languages supports groups
     When item "SwitchTest" state is changed to "ON"
     Then "DimmerTest" should be in state "55" within 5 seconds
 
-  Scenario Outline: Send command to an item
+  Scenario: Send command to an item
     Given a deployed rule:
       """
       rule 'Increase Related Dimmer Brightness when Switch is turned on' do
         changed SwitchTest, to: ON
-        run { <command> }
+        run { SwitchTwo << ON }
       end
       """
     When item "SwitchTest" state is changed to "ON"
     Then "SwitchTwo" should be in state "ON" within 5 seconds
-    Examples:
-      | command         |
-      | SwitchTwo << ON |
 
   Scenario: id returns label if set or name if not
     Given items:
@@ -162,3 +160,15 @@ Feature:  Rule languages supports groups
       """
     When I deploy the rules file
     Then It should log "SwitchTest Received Update" within 5 seconds
+
+  Scenario: Check for item existence
+    Given code in a rules file
+      """
+      logger.info("DimmerTest include? #{items.include? 'DimmerTest'}")
+      logger.info("SimmerTest include? #{items.include? 'SimmerTest'}")
+      logger.info("SimmerTest item nil? #{items['SimmerTest'].nil?}")
+      """
+    When I deploy the rules file
+    Then It should log 'DimmerTest include? true' within 5 seconds
+    And It should log 'SimmerTest include? false' within 5 seconds
+    And It should log 'SimmerTest item nil? true' within 5 seconds
