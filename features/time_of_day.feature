@@ -1,4 +1,5 @@
-Feature:  Rule languages supports comparing using TimeOfDay
+Feature:  time_of_day
+    Rule languages supports comparing using TimeOfDay
 
     Background:
         Given Clean OpenHAB with latest Ruby Libraries

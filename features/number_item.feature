@@ -1,4 +1,5 @@
-Feature:  Rule languages supports Number Items
+Feature:  number_item
+  Rule languages supports Number Items
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

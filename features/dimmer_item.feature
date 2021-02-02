@@ -1,4 +1,5 @@
-Feature:  Rule languages supports Dimmers
+Feature:  dimmer_item
+  Rule languages supports Dimmers
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

@@ -1,4 +1,5 @@
-Feature:  Rule languages supports storing and restoring states
+Feature:  states
+    Rule languages supports storing and restoring states
 
     Background:
         Given Clean OpenHAB with latest Ruby Libraries

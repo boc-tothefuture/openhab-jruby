@@ -1,4 +1,5 @@
-Feature:  Rule languages supports Switches
+Feature:  switch_item
+  Rule languages supports Switches
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
