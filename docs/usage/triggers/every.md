@@ -33,7 +33,6 @@ grand_parent: Usage
 | ------ | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | :at    | Limit the execution to specific times of day. The value can either be a String or a TimeOfDay object | at: '16:45' or at: TimeOfDay.new(h: 16, m: 45) |
 
-
 # Examples
 
 ```ruby
@@ -43,7 +42,6 @@ rule 'Log the rule name every minute' do
   run { logger.info "Rule '#{name}' executed" }
 end
 ```
-
 
 ```ruby
 rule 'Log an entry at 11:21' do
@@ -59,14 +57,12 @@ rule 'Log an entry at 11:21' do
 end
 ```
 
-
 ```ruby
 rule 'Log an entry Wednesdays at 11:21' do
   every :wednesday, at: '11:21'
   run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
 end
 ```
-
 
 ```ruby
 rule 'Every 5 seconds' do
