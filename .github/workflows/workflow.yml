@@ -12,28 +12,28 @@ env:
 
 jobs:
 
- rubocop:
-   runs-on: ubuntu-18.04
-   continue-on-error: true
-   if: "!contains(github.event.head_commit.message, 'ci skip')"
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
-     - name: Rubocop 
-       run: bundle exec rubocop
+# rubocop:
+#   runs-on: ubuntu-18.04
+#   continue-on-error: true
+#   if: "!contains(github.event.head_commit.message, 'ci skip')"
+#   steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/setup-ruby@v1
+#       with:
+#         ruby-version: ${{ env.RUBY_VERSION }}
+#     - name: Install bundler
+#       run: gem install bundler:2.2.7 -N
+#     - name: Gem Cache
+#       uses: actions/cache@v2
+#       with: 
+#        path: vendor/bundle
+#        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+#     - name: Install gems
+#       run: |
+#          bundle config path vendor/bundle
+#          bundle install --jobs 4 --retry 3
+#     - name: Rubocop 
+#       run: bundle exec rubocop
 
  commit-lint:
     runs-on: ubuntu-latest
@@ -44,28 +44,28 @@ jobs:
           fetch-depth: 0
       - uses: wagoid/commitlint-github-action@v2
 
- cucumber-lint:
-   runs-on: ubuntu-18.04
-   continue-on-error: true
-   if: "!contains(github.event.head_commit.message, 'ci skip')"
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
-     - name: Cucumber Lint 
-       run: bundle exec cuke_linter
+# cucumber-lint:
+#   runs-on: ubuntu-18.04
+#   continue-on-error: true
+#   if: "!contains(github.event.head_commit.message, 'ci skip')"
+#   steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/setup-ruby@v1
+#       with:
+#         ruby-version: ${{ env.RUBY_VERSION }}
+#     - name: Install bundler
+#       run: gem install bundler:2.2.7 -N
+#     - name: Gem Cache
+#       uses: actions/cache@v2
+#       with: 
+#        path: vendor/bundle
+#        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+#     - name: Install gems
+#       run: |
+#          bundle config path vendor/bundle
+#          bundle install --jobs 4 --retry 3
+#     - name: Cucumber Lint 
+#       run: bundle exec cuke_linter
  
  yard-coverage:
    runs-on: ubuntu-18.04
