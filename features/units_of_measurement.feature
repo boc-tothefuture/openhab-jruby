@@ -71,7 +71,7 @@ Feature:  units_of_measurement
         logger.info("Result is #{result}")
       """
     When I deploy the rules file
-    Then It should log 'Result is <result>' within 5 seconds
+    Then It should log 'Result is true' within 5 seconds
 
   Scenario Outline: Comparisons work with dimensioned numbers and strings representing quantities
     Given code in a rules file
@@ -90,7 +90,7 @@ Feature:  units_of_measurement
   Scenario: Each unit needs to be normalized for all operations when combining operators with comparitors.
     Given code in a rules file
       """
-        result = (NumberC \|'°F') - (NumberF \|'°F') < '4 °F'
+        result = (NumberC |'°F') - (NumberF |'°F') < '4 °F'
         logger.info("Result is #{result}")
       """
     When I deploy the rules file
