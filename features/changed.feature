@@ -1,4 +1,5 @@
-Feature:  Rule languages supports changed item features
+Feature:  changed
+  Rule languages supports changed item features
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -128,7 +129,7 @@ Feature:  Rule languages supports changed item features
     When I deploy the rule
     And item "TestSwitch" state is changed to "<state>"
     Then It <should> log 'Switch Changed' within 5 seconds
-    Examples:
+    Examples: Checks various initial and final states
       | initial_state | state | should     |
       | OFF           | OFF   | should not |
       | OFF           | ON    | should     |

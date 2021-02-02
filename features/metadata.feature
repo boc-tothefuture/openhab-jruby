@@ -1,4 +1,5 @@
-Feature:  Items support accessing metadata
+Feature:  metadata
+  Items support accessing metadata
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

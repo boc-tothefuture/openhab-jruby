@@ -1,4 +1,5 @@
-Feature:  Rule languages supports between
+Feature: between
+  Rule languages supports between
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -11,7 +12,7 @@ Feature:  Rule languages supports between
       """
     When I deploy the rule
     Then It <should> log "Within time range" within 5 seconds
-    Examples:
+    Examples: Checks Time, TimeOfDay and Strings
       | between                                                                                           | compare                                | should     |
       | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | Time.now                               | should     |
       | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | Time.now                               | should not |
@@ -29,7 +30,7 @@ Feature:  Rule languages supports between
       """
     When I deploy the rule
     Then It <should> log "Within time range" within 5 seconds
-    Examples:
+    Examples: Checks Time, TimeOfDay and Strings
       | between                                                                                           | compare                                | should     |
       | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | Time.now                               | should     |
       | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | Time.now                               | should not |
@@ -51,7 +52,7 @@ Feature:  Rule languages supports between
       """
     When I deploy the rule
     Then It <should> log "Within time range" within 5 seconds
-    Examples:
+    Examples: Checks Time, TimeOfDay and Strings
       | between                                                                                           | compare                                | should     |
       | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | Time.now                               | should     |
       | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | Time.now                               | should not |

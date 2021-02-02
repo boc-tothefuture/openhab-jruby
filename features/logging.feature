@@ -1,4 +1,5 @@
-Feature:  Logging support
+Feature:  logging
+  Provides a bridge to OpenHAB Logging
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -35,7 +36,3 @@ Feature:  Logging support
       """
     When I deploy the rules file named "log_test.rb"
     Then It should log 'jsr223.jruby.log_test' within 5 seconds
-
-  @not_implemented
-  Scenario: Logging outputs rule name when executing inside the rule code.
-    Then  NOT_IMPLEMENTED

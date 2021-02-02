@@ -1,4 +1,5 @@
-Feature:  Rule languages supports cron features
+Feature:  cron
+  Rule languages supports cron features
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

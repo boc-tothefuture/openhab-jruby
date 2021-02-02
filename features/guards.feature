@@ -1,4 +1,5 @@
-Feature:  Rule languages supports guards (only_if/not_if)
+Feature:  guards
+  Rule languages supports guards (only_if/not_if)
 
 
   Background:
@@ -209,9 +210,3 @@ Feature:  Rule languages supports guards (only_if/not_if)
       | between                                                                                           | should     |
       | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | should     |
       | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | should not |
-
-
-
-  @not_implemented
-  Scenario: Between guards rule execution based on dates
-

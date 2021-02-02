@@ -1,4 +1,5 @@
-Feature:  Rule languages supports groups
+Feature:  groups
+  Rule languages supports groups
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
