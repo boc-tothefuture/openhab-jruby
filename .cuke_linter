@@ -1,0 +1,9 @@
+---
+ExampleWithoutNameLinter:
+   Enabled: false
+SingleTestBackgroundLinter:
+   Enabled: false
+TestWithBadNameLinter:
+   Enabled: false
+StepWithTooManyCharactersLinter:
+   Enabled: false

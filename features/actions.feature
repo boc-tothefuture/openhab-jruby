@@ -1,10 +1,11 @@
-Feature:  Openhab Action Support
+Feature:  actions
+  Provides support for OpenHAB actions
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
-  Scenario Outline:
-    Given code in a rules file:
+  Scenario: send notification to a user
+    Given a rule
       """
       logger.info("Action <action> is defined: #{defined? <action>}")
       """
@@ -18,8 +19,7 @@ Feature:  Openhab Action Support
       | Audio  |
       | Voice  |
 
-
-  Scenario: Execute a command line
+  Scenario: Exec action is supported
     Given a rule
       """
       java_import java.time.Duration

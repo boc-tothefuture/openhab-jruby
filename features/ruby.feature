@@ -1,9 +1,10 @@
-Feature:  Openhab Gem Support
+@wip
+Feature:  ruby
+  Support for various types of ruby variables
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
-  @wip
   Scenario: Instance variables are available with a rule
     Given a rule
       """
@@ -16,8 +17,6 @@ Feature:  Openhab Gem Support
     When I deploy the rule
     Then It should log 'Foo is bar' within 5 seconds
 
-
-  @wip
   Scenario: Rule variables are available between rules
     Given a rule
       """
@@ -40,7 +39,6 @@ Feature:  Openhab Gem Support
     When I deploy the rule
     Then It should log 'Foo is defined: true' within 5 seconds
 
-  @wip
   Scenario: Instance variables are not shared between rules files
     Given a deployed rule:
       """

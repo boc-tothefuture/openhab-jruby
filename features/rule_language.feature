@@ -1,4 +1,5 @@
-Feature:  Rule language generic support
+Feature: rule_language
+  Rule language generic support
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
@@ -50,9 +51,6 @@ Feature:  Rule language generic support
     When I deploy the rules file
     Then It should log 'More than 50' within 5 seconds
 
-  Scenario: Items should provide their label if they have one when converted to a string
-  Scenario: Items should provide their name if they don't have a label one when converted to a string
-
   Scenario: Grep should work on Items by ItemType
     Given items:
       | type   | name       | label         | state |
@@ -82,8 +80,3 @@ Feature:  Rule language generic support
       """
     When I deploy the rule
     Then "TestSwitch" should be in state "OFF" within 5 seconds
-
-
-  @not_implemented
-  Scenario: It logs the versions of the library on start
-    Then NOT_IMPLEMENTED

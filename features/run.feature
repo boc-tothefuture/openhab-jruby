@@ -1,12 +1,13 @@
-Feature:  Openhab Action Support
+Feature:  run
+  Automation is executed in run blocks
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
-
-  Scenario: Rules have access to event information in run blocks
-    Given items:
+    And items:
       | type   | name       | label       | state |
       | Switch | TestSwitch | Test Switch | OFF   |
+
+  Scenario: Rules have access to event information in run blocks
     Given a rule
       """
       rule 'Access Event Properties' do
@@ -22,9 +23,6 @@ Feature:  Openhab Action Support
 
 
   Scenario: Single line run blocks supported
-    Given items:
-      | type   | name       | label       | state |
-      | Switch | TestSwitch | Test Switch | OFF   |
     Given a rule
       """
       rule 'Access Event Properties' do
@@ -37,9 +35,6 @@ Feature:  Openhab Action Support
     Then It should log 'Test Switch triggered from OFF to ON' within 5 seconds
 
   Scenario: Multi-line run blocks supported
-    Given items:
-      | type   | name       | label       | state |
-      | Switch | TestSwitch | Test Switch | OFF   |
     Given a rule
       """
       rule 'Multi Line Run Block' do
@@ -58,9 +53,6 @@ Feature:  Openhab Action Support
     Then It should log 'to ON' within 5 seconds
 
   Scenario: Multiple run blocks supported
-    Given items:
-      | type   | name       | label       | state |
-      | Switch | TestSwitch | Test Switch | OFF   |
     Given a rule
       """
       rule 'Multiple Run Blocks' do

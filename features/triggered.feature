@@ -1,4 +1,5 @@
-Feature:  Openhab Action Support
+Feature:  triggered
+  Openhab Action Support
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

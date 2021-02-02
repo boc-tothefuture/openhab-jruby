@@ -1,4 +1,5 @@
-Feature:  Openhab Language with Delay Support
+Feature:  delay
+  Openhab Language with Delay Support
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
