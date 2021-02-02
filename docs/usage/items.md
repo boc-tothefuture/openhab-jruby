@@ -41,6 +41,15 @@ rule 'Use dynamic item lookup to increase related dimmer brightness when switch 
 end
 ```
 
+```ruby
+rule 'search for a suitable item' do
+  on_start
+  triggered do
+    (items['DimmerTest'] || items['SwitchTest'])&.on # Send ON to DimmerTest if it exists, otherwise send it to SwitchTest
+  end
+end
+```
+
 ## All Items
 Item types have methods added to them to make it flow naturally within the a ruby context.  All methods of the OpenHAB item are available plus the additional methods described below.
 

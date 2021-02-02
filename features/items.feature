@@ -168,7 +168,9 @@ Feature:  Rule languages supports groups
       """
       logger.info("DimmerTest include? #{items.include? 'DimmerTest'}")
       logger.info("SimmerTest include? #{items.include? 'SimmerTest'}")
+      logger.info("SimmerTest item nil? #{items['SimmerTest'].nil?}")
       """
     When I deploy the rules file
     Then It should log 'DimmerTest include? true' within 5 seconds
     And It should log 'SimmerTest include? false' within 5 seconds
+    And It should log 'SimmerTest item nil? true' within 5 seconds
