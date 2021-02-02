@@ -15,6 +15,7 @@ All items can be accessed as an enumerable the `items` method.
 | Method             | Description                                                                    |
 | ------------------ | ------------------------------------------------------------------------------ |
 | []                 | Get a specific item by name, this syntax can be used to dynamically load items |
+| include?           | Check to see if an item with the given name exists                             |
 | enumerable methods | All methods [here](https://ruby-doc.org/core-2.5.0/Enumerable.html)            |
 
 ## Examples
@@ -29,6 +30,8 @@ Switch SwitchTest "Test Switch"
 ```ruby
 logger.info("Item Count: #{items.count}")  # Item Count: 2
 logger.info("Items: #{items.sort_by(&:label).map(&:label).join(', ')}")  #Items: Test Dimmer, Test Switch' 
+logger.info("DimmerTest exists? #{items.include? 'DimmerTest'}") # DimmerTest exists? true
+logger.info("StringTest exists? #{items.include? 'StringTest'}") # StringTest exists? false
 ```
 
 ```ruby
