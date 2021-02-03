@@ -113,6 +113,19 @@ module OpenHAB
           def my(&block)
             @caller.instance_eval(&block)
           end
+
+          #
+          # Create a logger where name includes rule name if name is set
+          #
+          # @return [Logging::Logger] Logger with name that appended with rule name if rule name is set
+          #
+          def logger
+            if name
+              Logging.logger(name.chomp.gsub(/\s+/, '_'))
+            else
+              super
+            end
+          end
         end
 
         #
