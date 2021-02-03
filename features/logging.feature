@@ -36,3 +36,16 @@ Feature:  logging
       """
     When I deploy the rules file named "log_test.rb"
     Then It should log 'jsr223.jruby.log_test' within 5 seconds
+
+  Scenario: Logging should include rule name inside a rule
+    Given a rule:
+      """
+      rule 'log test' do
+        on_start
+        run { logger.info('Log Test') }
+      end
+
+      """
+    When I deploy the rule
+    Then It should log 'jsr223.jruby.log_test' within 5 seconds
+
