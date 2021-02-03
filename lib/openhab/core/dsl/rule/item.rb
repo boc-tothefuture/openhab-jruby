@@ -35,9 +35,6 @@ module OpenHAB
           # @return [Array] Array of current TriggerDelay objects
           #
           def changed_wait(item, duration:, to: nil, from: nil)
-            # Convert to testing the group if group specified rather than item
-            item = item.group if item.is_a? Group
-
             # If GroupItems specified, use the group state trigger instead
             if item.is_a? GroupItems
               config = { 'groupName' => item.group.name }
@@ -97,7 +94,6 @@ module OpenHAB
           #
           def updated(*items, to: nil)
             items.flatten.each do |item|
-              item = item.group if item.is_a? Group
               logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
               [to].flatten.each do |to_state|
                 case item
@@ -129,7 +125,6 @@ module OpenHAB
           #
           def changed(*items, to: nil, from: nil, for: nil)
             items.flatten.each do |item|
-              item = item.group if item.is_a? Group
               logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
               # for is a reserved word in ruby, so use local_variable_get :for
               if (wait_duration = binding.local_variable_get(:for))
