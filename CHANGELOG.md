@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.14.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.13.1...2.14.0) (2021-02-03)
+
+
+### Features
+
+* **logging:** append rule name to logging class if logging within rule context ([00c73a9](https://github.com/boc-tothefuture/openhab-jruby/commit/00c73a98de63eec31f7d2f24137e3581b6f66b60))
+
 ## [2.13.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.13.0...2.13.1) (2021-02-02)
 
 # [2.13.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.12.0...2.13.0) (2021-02-02)
