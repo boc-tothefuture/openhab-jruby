@@ -24,7 +24,8 @@ module OpenHAB
             #
             # @param [Object] other object to compare for case equals
             #
-            # @return [Boolean] if other is DimmerItem and state is covered by range, result from parent Range class if not DimmerItem
+            # @return [Boolean] if other is DimmerItem and state is covered by range,
+            #   result from parent Range class if not DimmerItem
             #
             def ===(other)
               return super unless other.is_a? DimmerItem

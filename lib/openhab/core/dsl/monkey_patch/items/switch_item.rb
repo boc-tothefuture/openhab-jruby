@@ -74,7 +74,8 @@ class Java::OrgOpenhabCoreLibraryItems::SwitchItem
   #
   # @param [Object] other object to compare to
   #
-  # @return [Boolean] True if other is a OnOffType and other equals state for this switch item, otherwise result from super
+  # @return [Boolean] True if other is a OnOffType and other equals state for this switch item,
+  #   otherwise result from super
   #
   def ==(other)
     if other.is_a? OnOffType

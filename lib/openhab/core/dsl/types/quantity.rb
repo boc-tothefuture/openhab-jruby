@@ -37,18 +37,16 @@ module OpenHAB
           #
           # Create a new Quantity
           #
-          # @param [Java::org::openhab::core::library::types::QuantityType] quantity OpenHAB quantity to delegate to
+          # @param [object] quantity String,QuantityType or Numeric to be this quantity
           #
+          # Cop disabled, case statement is compact and idiomatic
           def initialize(quantity)
             @quantity = case quantity
-                        when String
-                          QuantityType.new(quantity)
-                        when QuantityType
-                          quantity
-                        when Numeric
-                          QuantityType.new(quantity.to_d.to_java, AbstractUnit::ONE)
-                        else
-                          raise "Unexpected type #{quantity.class} provided to Quantity initializer"
+                        when String then QuantityType.new(quantity)
+                        when QuantityType then quantity
+                        when NumberItem then QuantityType.new(quantity.to_d.to_java, AbstractUnit::ONE)
+                        when Numeric then QuantityType.new(BigDecimal(quantity).to_java, AbstractUnit::ONE)
+                        else raise ArgumentError, "Unexpected type #{quantity.class} provided to Quantity initializer"
                         end
             super()
           end
@@ -76,20 +74,8 @@ module OpenHAB
           #
           def <=>(other)
             logger.trace("Comparing #{self} to #{other}")
-            case other
-            when Quantity
-              logger.trace("Comparing Quantity #{self} to Quantity #{other}")
-              convert_unit(quantity).compare_to(convert_unit(other.quantity))
-            when QuantityType
-              other = convert_unit(other)
-              quantity.compare_to(other)
-            when String
-              other = QuantityType.new(other)
-              other = convert_unit(other)
-              quantity.compare_to(other)
-            when Numeric
-              quantity.compare_to(QuantityType.new(other, unit)) if unit
-            end
+            my_qt, other_qt = unitize(*to_qt(coerce(other).reverse))
+            my_qt.compare_to(other_qt)
           end
 
           #
@@ -100,14 +86,12 @@ module OpenHAB
           # @return [Array] of self and other object as Quantity types, nil if object cannot be coerced
           #
           def coerce(other)
-            logger.trace("Coercing #{self} as a request from  #{other.class}")
+            logger.trace("Coercing #{self} as a request from #{other.class}")
             case other
-            when Quantity
-              [other.quantity, quantity]
-            when QuantityType
-              [other, quantity]
-            when Numeric
-              [Quantity.new(other), self]
+            when Quantity then [other.quantity, quantity]
+            when QuantityType then [other, quantity]
+            when NumberItem then [other.to_qt.quantity, quantity]
+            when Numeric, String then [Quantity.new(other), self]
             end
           end
 
@@ -131,6 +115,20 @@ module OpenHAB
           end
 
           #
+          # Checks if this method responds to the missing method
+          #
+          # @param [String] method_name Name of the method to check
+          # @param [Boolean] _include_private boolean if private methods should be checked
+          #
+          # @return [Boolean] true if this object will respond to the supplied method, false otherwise
+          #
+          def respond_to_missing?(method_name, _include_private = false)
+            quantity.respond_to?(method_name) ||
+              ::Kernel.method_defined?(method_name) ||
+              ::Kernel.private_method_defined?(method_name)
+          end
+
+          #
           # Negate the quantity
           #
           # @return [Quantity] This quantity negated
@@ -141,22 +139,10 @@ module OpenHAB
 
           OPERATIONS.each do |operation, method|
             define_method(operation) do |other|
-              logger.trace("Executing math operation '#{operation}' on quantity #{inspect} with other type #{other.class} and value #{other.inspect}")
-              a, b = case other
-                     when Quantity
-                       [quantity, other.quantity]
-                     when String
-                       [quantity, QuantityType.new(other)]
-                     when NumberItem
-                       a, b = other.coerce(self)
-                       logger.trace("Number Item coerced result a(#{a.class})='#{a}' b(#{b.class})='#{b}'")
-                       [a.quantity, b.quantity]
-                     when Numeric
-                       [quantity, QuantityType.new(other.to_d.to_java, AbstractUnit::ONE)]
-                     else
-                       raise TypeError,
-                             "Operation '#{operation}' cannot be performed between #{self} and #{other.class}"
-                     end
+              logger.trace("Executing math operation '#{operation}' on quantity #{inspect} "\
+                           "with other type #{other.class} and value #{other.inspect}")
+
+              a, b = to_qt(coerce(other).reverse)
               logger.trace("Coerced a='#{a}' with b='#{b}'")
               a, b = unitize(a, b, operation)
               logger.trace("Unitized a='#{a}' b='#{b}'")
@@ -185,6 +171,17 @@ module OpenHAB
           # Dimensionless numbers should only be unitzed for addition and subtraction
 
           #
+          # Convert one or more Quantity obects to the underlying quantitytypes
+          #
+          # @param [Array] quanities Array of either Quantity or QuantityType objects
+          #
+          # @return [Array]  Array of QuantityType objects
+          #
+          def to_qt(*quanities)
+            [quanities].flatten.compact.map { |item| item.is_a?(Quantity) ? item.quantity : item }
+          end
+
+          #
           # Checks if an item should be unitized
           #
           # @param [Quantity] quantity to check
@@ -208,23 +205,44 @@ module OpenHAB
           # @return [Quantity] Quantity coverted to unit set by unit block
           #
           def convert_unit(quantity)
-            if unit
-              case quantity.unit
-              when AbstractUnit::ONE
-                logger.trace("Converting dimensionless #{quantity} to #{unit}")
-                QuantityType.new(quantity.to_big_decimal, unit)
-              when unit
-                quantity
-              else
-                logger.trace("Converting dimensioned item #{inspect} to #{unit}")
-                converted = quantity.to_unit(unit)
-                raise "Conversion from #{quantity.unit} to #{unit} failed" if converted.nil?
+            return quantity unless unit?
 
-                converted
-              end
-            else
+            case quantity.unit
+            when unit
               quantity
+            when AbstractUnit::ONE
+              convert_unit_from_dimensionless(quantity, unit)
+            else
+              convert_unit_from_dimensioned(quantity, unit)
             end
+          end
+
+          #
+          # Converts a dimensioned quantity to a specific unit
+          #
+          # @param [Quantity] quantity to convert
+          # @param [Unit] unit to convert to
+          #
+          # @return [Java::org::openhab::core::library::types::QuantityType] converted quantity
+          #
+          def convert_unit_from_dimensioned(quantity, unit)
+            logger.trace("Converting dimensioned item #{inspect} to #{unit}")
+            quantity.to_unit(unit).tap do |converted|
+              raise "Conversion from #{quantity.unit} to #{unit} failed" unless converted
+            end
+          end
+
+          #
+          # Converts a dimensionless quantity to a unit
+          #
+          # @param [Quantity] quantity to convert
+          # @param [Unit] unit to convert to
+          #
+          # @return [Java::org::openhab::core::library::types::QuantityType] converted quantity
+          #
+          def convert_unit_from_dimensionless(quantity, unit)
+            logger.trace("Converting dimensionless #{quantity} to #{unit}")
+            QuantityType.new(quantity.to_big_decimal, unit)
           end
 
           #
@@ -233,11 +251,19 @@ module OpenHAB
           # @param [Quantity] quantity_a Quantity on left side of operation
           # @param [Quantity] quantity_b Quantity on right side of operation
           # @param [String] operation Math operation
+          # @yield [quantity_a, quantity_b] yields unitized versions of supplied quantities
           #
-          # @return [Array] of quantites in correct units for the supplied operation and set unit
+          # @return [Array, Object] of quantites in correct units for the supplied operation and the unit
+          #   or the result of the block if a block is given
           #
-          def unitize(quantity_a, quantity_b, operation)
-            [quantity_a, quantity_b].map { |qt| unitize?(qt, operation) ? convert_unit(qt) : qt }
+          def unitize(quantity_a, quantity_b, operation = nil)
+            logger.trace("Unitizing (#{quantity_a}) and (#{quantity_b})")
+            quantity_a, quantity_b = [quantity_a, quantity_b].map do |qt|
+              unitize?(qt, operation) ? convert_unit(qt) : qt
+            end
+            return yield quantity_a, quantity_b if block_given?
+
+            [quantity_a, quantity_b]
           end
 
           #
@@ -247,6 +273,15 @@ module OpenHAB
           #
           def unit
             Thread.current.thread_variable_get(:unit)
+          end
+
+          #
+          # Is a unit set for this thread
+          #
+          # @return [boolean] true if a unit is set by this thread, false otherwise
+          #
+          def unit?
+            unit != nil
           end
         end
       end

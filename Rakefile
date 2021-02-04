@@ -75,7 +75,7 @@ end
 desc 'Run Cucumber Features'
 task :features, [:feature] => ['openhab:warmup', 'openhab:deploy', CUCUMBER_LOGS] do |_, args|
   Cucumber::Rake::Task.new(:features) do |t|
-    cp File.join(OPENHAB_DIR,'userdata/logs/openhab.log'), File.join(CUCUMBER_LOGS,'startup.log')
+    cp File.join(OPENHAB_DIR, 'userdata/logs/openhab.log'), File.join(CUCUMBER_LOGS, 'startup.log')
     t.cucumber_opts = "--tags 'not @wip and not @not_implemented' --format pretty #{args[:feature]}"
   end
 end
@@ -102,9 +102,10 @@ namespace :gh do
   task :release, [:file] do |_, args|
     bundle = args[:file]
     hash = md5(bundle)
-    _,version, = File.basename(bundle,'.jar').split('-')
+    _, version, = File.basename(bundle, '.jar').split('-')
     sh 'gh', 'release', 'delete', version, '-y', '-R', 'boc-tothefuture/openhab2-addons'
-    sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', "md5: #{hash}", '-R', 'boc-tothefuture/openhab2-addons', bundle
+    sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', "md5: #{hash}", '-R',
+       'boc-tothefuture/openhab2-addons', bundle
     File.write('.bundlehash', hash)
   end
 end
@@ -186,7 +187,7 @@ namespace :openhab do
 
   def state(task, args = nil)
     Rake::Task[STATE_DIR.to_s].execute
-    task_file = File.join(STATE_DIR, task).gsub(':','_')
+    task_file = File.join(STATE_DIR, task).gsub(':', '_')
     force = args&.key? :force
     if File.exist?(task_file) && !force
       puts "Skipping task(#{task}), task already up to date"
@@ -209,7 +210,8 @@ namespace :openhab do
       Dir.chdir(OPENHAB_DIR) do
         puts "Downloading #{openhab_zip}"
         IO.copy_stream(
-          open("https://openhab.jfrog.io/openhab/libs-release/org/openhab/distro/openhab/#{OPENHAB_VERSION}/openhab-#{OPENHAB_VERSION}.zip"), openhab_zip
+          open('https://openhab.jfrog.io/openhab/libs-release/org/openhab/distro/openhab/'\
+               "#{OPENHAB_VERSION}/openhab-#{OPENHAB_VERSION}.zip"), openhab_zip
         )
         fail_on_error("unzip #{openhab_zip}")
         rm openhab_zip

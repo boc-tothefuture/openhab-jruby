@@ -75,10 +75,10 @@ module DSLProperty
         end
       end
 
-      if array_name
-        define_method(array_name) do
-          instance_variable_get("@#{array_name}")
-        end
+      return unless array_name
+
+      define_method(array_name) do
+        instance_variable_get("@#{array_name}")
       end
     end
   end

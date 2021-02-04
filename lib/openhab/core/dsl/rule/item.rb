@@ -60,7 +60,8 @@ module OpenHAB
           #
           def received_command(*items, command: nil, commands: nil)
             items.flatten.each do |item|
-              logger.trace("Creating received command trigger for item(#{item}) command(#{command}) commands(#{commands})")
+              logger.trace("Creating received command trigger for item(#{item})"\
+                           "command(#{command}) commands(#{commands})")
 
               # Combine command and commands, doing union so only a single nil will be in the combined array.
               combined_commands = ([command] | [commands]).flatten

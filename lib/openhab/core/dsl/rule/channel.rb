@@ -16,7 +16,8 @@ module OpenHAB
           #
           # Creates a channel trigger
           #
-          # @param [Array] channels array to create triggers for on form of 'binding_id:type_id:thing_id#channel_id' or 'channel_id' if thing is provided
+          # @param [Array] channels array to create triggers for on form of 'binding_id:type_id:thing_id#channel_id'
+          #   or 'channel_id' if thing is provided
           # @param [thing] thing to create trigger for if not specified with the channel
           # @param [String] triggered specific triggering condition to match for trigger
           #

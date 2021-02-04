@@ -66,7 +66,8 @@ class Rest
     post('/rest/things', headers: json, body: body.to_json)
   end
 
-  def self.add_item(type:, name:, state: nil, label: nil, groups: nil, group_type: nil, function: nil, params: nil, pattern: nil)
+  def self.add_item(type:, name:, state: nil, label: nil, groups: nil,
+                    group_type: nil, function: nil, params: nil, pattern: nil)
     body = {}
     body[:type] = type
     body[:name] = name
