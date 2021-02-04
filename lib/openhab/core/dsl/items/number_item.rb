@@ -46,7 +46,8 @@ module OpenHAB
           #
           # @param [Object] other object to coerce to a NumberItem if possible
           #
-          # @return [Object] NumberItem, QuantityTypes, BigDecimal or nil depending on NumberItem configuration and/or supplied object
+          # @return [Object] NumberItem, QuantityTypes, BigDecimal or nil depending on NumberItem configuration
+          #  and/or supplied object
           #
           def coerce(other)
             logger.trace("Coercing #{self} as a request from  #{other.class}")
@@ -72,7 +73,8 @@ module OpenHAB
           #
           # @param [Object] other object to compare to
           #
-          # @return [Integer] -1,0,1 or nil depending on value supplied, nil comparison to supplied object is not possible.
+          # @return [Integer] -1,0,1 or nil depending on value supplied,
+          #   nil comparison to supplied object is not possible.
           #
           def <=>(other)
             logger.trace("Comparing #{self} to #{other}")
@@ -186,7 +188,8 @@ module OpenHAB
                   logger.trace("Both objects have dimensions self='#{dimension}' other='#{other.dimension}'")
                   to_qt.public_send(operation, other.to_qt)
                 elsif dimension && !other.dimension
-                  # If this number has dimension and the other does not, do math with this quantity type and the other as a big decimal
+                  # If this number has dimension and the other does not,
+                  # do math with this quantity type and the other as a big decimal
                   logger.trace("Self has dimension self='#{dimension}' other lacks dimension='#{other}'")
                   to_qt.public_send(operation, other)
                 elsif other.dimension

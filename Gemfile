@@ -15,6 +15,7 @@ group :test do
 end
 
 group :development do
+  gem 'guard-rubocop'
   gem 'guard-shell'
   gem 'guard-yard'
   gem 'jekyll', '~> 4.2', require: false

@@ -20,6 +20,15 @@ Feature:  logging
       | info  |
       | error |
 
+  Scenario: Logging accepts block
+    Given code in a rules file
+      """
+      # Log at a level
+      logger.error { "Error Message in Block" }
+      """
+    When I deploy the rules file
+    Then It should log 'Error Message in Block' within 5 seconds
+
   # Waiting on merge of PR
   @wip
   Scenario: Logging outputs file as part of log path

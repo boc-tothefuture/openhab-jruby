@@ -63,8 +63,6 @@ Feature: rule_language
     When I deploy the rules file
     Then It should log 'Found Dimmer Switch' within 5 seconds
 
-
-  @wip
   Scenario: Rule supports executing different block if guards are not satisfied
     Given items:
       | type   | name       | state |
@@ -80,3 +78,14 @@ Feature: rule_language
       """
     When I deploy the rule
     Then "TestSwitch" should be in state "OFF" within 5 seconds
+
+
+  Scenario: Rule logs a warning and isn't created if it contains no execution blocks
+    Given a rule
+      """
+      rule 'No execution blocks' do
+        on_start
+      end
+      """
+    When I deploy the rule
+    Then It should log 'Not creating rule without execution blocks' within 5 seconds

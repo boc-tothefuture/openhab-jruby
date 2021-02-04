@@ -33,7 +33,8 @@ module OpenHAB
           #
           # Convert the StringItem into a String
           #
-          # @return [String] String representation of the StringItem or nil if underlying OpenHAB StringItem does not have a state
+          # @return [String] String representation of the StringItem or
+          #   nil if underlying OpenHAB StringItem does not have a state
           #
           def to_str
             @string_item.state&.to_full_string&.to_s
@@ -64,7 +65,8 @@ module OpenHAB
           #
           # @param [Object] other object to compare to
           #
-          # @return [Integer] -1,0,1 or nil depending on value supplied, nil comparison to supplied object is not possible.
+          # @return [Integer] -1,0,1 or nil depending on value supplied,
+          #   nil comparison to supplied object is not possible.
           #
           def <=>(other)
             case other

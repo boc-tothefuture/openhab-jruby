@@ -32,14 +32,13 @@ module EntityLookup
   #
   # @return [Array] Array of decorated items
   #
+  # rubocop: disable Metrics/MethodLength
+  # Disabled line length - case dispatch pattern
   def self.decorate_items(*items)
     items.flatten.map do |item|
       case item
       when GroupItem
-        group = item
-        item = OpenHAB::Core::DSL::Groups::Group.new(Set.new(EntityLookup.decorate_items(item.all_members.to_a)))
-        item.group = group
-        item
+        decorate_group(item)
       when Java::Org.openhab.core.library.items::NumberItem
         OpenHAB::Core::DSL::Items::NumberItem.new(item)
       when Java::Org.openhab.core.library.items::StringItem
@@ -49,6 +48,7 @@ module EntityLookup
       end
     end
   end
+  # rubocop: enable Metrics/MethodLength
 
   #
   # Loops up a Thing in the OpenHAB registry replacing '_' with ':'
@@ -99,5 +99,18 @@ module EntityLookup
     return if method.to_s == 'scriptUnloaded'
 
     EntityLookup.lookup_item(method) || EntityLookup.lookup_thing(method) || super
+  end
+
+  #
+  # Decorate a group from an item base
+  #
+  # @param [OpenHAB item] item item to convert to a group item
+  #
+  # @return [OpenHAB::Core::DSL::Groups::Group] Group created from supplied item
+  #
+  def self.decorate_group(item)
+    group = OpenHAB::Core::DSL::Groups::Group.new(Set.new(EntityLookup.decorate_items(item.all_members.to_a)))
+    group.group = item
+    group
   end
 end

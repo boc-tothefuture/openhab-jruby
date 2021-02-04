@@ -43,8 +43,8 @@ def start_openhab
 end
 
 def clear_gem_path
- FileUtils.rm_r gem_home
- FileUtils.mkdir gem_home
+  FileUtils.rm_r gem_home
+  FileUtils.mkdir gem_home
 end
 
 def ensure_openhab_running

@@ -33,3 +33,8 @@ group :docs do
     end
   end
 end
+
+guard :rubocop, all_on_start: false, cli: ['-A'] do
+  watch(/.+\.rb$/)
+  watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
+end
