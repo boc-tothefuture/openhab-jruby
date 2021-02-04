@@ -4,6 +4,8 @@ require_relative 'openhab_rest'
 require 'English'
 require 'tty-command'
 
+Item = Struct.new(:type, :name, :state, :label, :groups, :group_type, :pattern, :function, :params, keyword_init: true)
+
 def openhab_dir
   File.realpath 'tmp/openhab'
 end
@@ -63,15 +65,16 @@ def check_log(entry)
 end
 
 def add_group(name:, group_type: nil, groups: nil, function: nil, params: nil)
-  Rest.add_item(type: 'Group', name: name, groups: groups, group_type: group_type, function: function, params: params)
+  item = Item.new(type: 'Group', name: name, groups: groups, group_type: group_type, function: function, params: params)
+  Rest.add_item(item: item)
 end
 
-def add_item(type:, name:, state: nil, label: nil, groups: nil, pattern: nil)
-  Rest.add_item(type: type, name: name, state: state, label: label, groups: groups, pattern: pattern)
+def add_item(item:)
+  Rest.add_item(item: item)
 end
 
 def truncate_log
-  File.open(openhab_log, File::TRUNC) {}
+  File.open(openhab_log, File::TRUNC)
 end
 
 def delete_things

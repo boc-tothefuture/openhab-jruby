@@ -82,14 +82,51 @@ module OpenHAB
 
               items.each { |item| logger.trace("#{item} truthy? #{item.truthy?}") }
 
+              process_check(check_type: check_type, event: event, items: items, procs: procs)
+            end
+
+            #
+            # Execute the guard check
+            #
+            # @param [Symbol] check_type :only_if or :not_if to check
+            # @param [OpenHAB Event] event event to check if meets guard
+            # @param [Array<Item>] items to check if satisfy criteria
+            # @param [Array] procs to check if satisfy criteria
+            #
+            # @return [Boolean] True if criteria are satisfied, false otherwise
+            #
+            def process_check(check_type:, event:, items:, procs:)
               case check_type
-              when :only_if
-                items.all?(&:truthy?) && procs.all? { |proc| proc.call(event) }
-              when :not_if
-                items.none?(&:truthy?) && procs.none? { |proc| proc.call(event) }
-              else
-                raise ArgumentError, "Unexpected check type: #{check_type}"
+              when :only_if then process_only_if(event, items, procs)
+              when :not_if then  process_not_if(event, items, procs)
+              else raise ArgumentError, "Unexpected check type: #{check_type}"
               end
+            end
+
+            #
+            # Check not_if guard
+            #
+            # @param [OpenHAB Event] event event to check if meets guard
+            # @param [Array<Item>] items to check if satisfy criteria
+            # @param [Array] procs to check if satisfy criteria
+            #
+            # @return [Boolean] True if criteria are satisfied, false otherwise
+            #
+            def process_not_if(event, items, procs)
+              items.none?(&:truthy?) && procs.none? { |proc| proc.call(event) }
+            end
+
+            #
+            # Check only_if guard
+            #
+            # @param [OpenHAB Event] event event to check if meets guard
+            # @param [Array<Item>] items to check if satisfy criteria
+            # @param [Array] procs to check if satisfy criteria
+            #
+            # @return [Boolean] True if criteria are satisfied, false otherwise
+            #
+            def process_only_if(event, items, procs)
+              items.all?(&:truthy?) && procs.all? { |proc| proc.call(event) }
             end
           end
         end

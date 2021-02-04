@@ -13,6 +13,9 @@ module OpenHAB
         #
         # Ruby implementation for OpenHAB quantities
         #
+        # rubocop: disable Metrics/ClassLength
+        # Disabled because this class has a single responsibility, there does not appear a logical
+        # way of breaking it up into multiple classes
         class Quantity < Numeric
           extend Forwardable
           include Logging
@@ -23,6 +26,7 @@ module OpenHAB
           java_import 'tec.uom.se.format.SimpleUnitFormat'
           java_import 'tec.uom.se.AbstractUnit'
 
+          # @return [Hash] Mapping of operation symbols to BigDecimal methods
           OPERATIONS = {
             '+' => 'add',
             '-' => 'subtract',
@@ -44,8 +48,7 @@ module OpenHAB
             @quantity = case quantity
                         when String then QuantityType.new(quantity)
                         when QuantityType then quantity
-                        when NumberItem then QuantityType.new(quantity.to_d.to_java, AbstractUnit::ONE)
-                        when Numeric then QuantityType.new(BigDecimal(quantity).to_java, AbstractUnit::ONE)
+                        when NumberItem, Numeric then QuantityType.new(quantity.to_d.to_java, AbstractUnit::ONE)
                         else raise ArgumentError, "Unexpected type #{quantity.class} provided to Quantity initializer"
                         end
             super()
@@ -105,6 +108,7 @@ module OpenHAB
           # @return [Object] result of delegation
           #
           def method_missing(meth, *args, &block)
+            logger.trace("Method missing, performing dynamic lookup for: #{meth}")
             if quantity.respond_to?(meth)
               quantity.__send__(meth, *args, &block)
             elsif ::Kernel.method_defined?(meth) || ::Kernel.private_method_defined?(meth)
@@ -166,6 +170,7 @@ module OpenHAB
 
           private
 
+          # @return [Array] Array of strings for operations for which the operands will not be unitized
           DIMENSIONLESS_NON_UNITIZED_OPERATIONS = %w[* /].freeze
 
           # Dimensionless numbers should only be unitzed for addition and subtraction
@@ -190,11 +195,7 @@ module OpenHAB
           # @return [Boolean] True if the quantity should be unitzed based on the unit and operation, false otherwise
           #
           def unitize?(quantity, operation)
-            if quantity.unit == AbstractUnit::ONE && DIMENSIONLESS_NON_UNITIZED_OPERATIONS.include?(operation)
-              false
-            else
-              true
-            end
+            !(quantity.unit == AbstractUnit::ONE && DIMENSIONLESS_NON_UNITIZED_OPERATIONS.include?(operation))
           end
 
           #
@@ -288,3 +289,4 @@ module OpenHAB
     end
   end
 end
+# rubocop: enable Metrics/ClassLength

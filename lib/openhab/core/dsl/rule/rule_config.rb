@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+require 'java'
+require 'pp'
+require 'core/dsl/property'
+require 'core/dsl/rule/triggers/cron'
+require 'core/dsl/rule/triggers/changed'
+require 'core/dsl/rule/triggers/channel'
+require 'core/dsl/rule/triggers/command'
+require 'core/dsl/rule/triggers/updated'
+require 'core/dsl/rule/guard'
+require 'core/dsl/entities'
+require 'core/dsl/time_of_day'
+require 'core/dsl'
+require 'core/dsl/timers'
+
 module OpenHAB
   module Core
     module DSL
@@ -12,10 +26,8 @@ module OpenHAB
         #
         class RuleConfig
           include EntityLookup
-          include OpenHAB::Core::DSL::Rule::Cron
+          include OpenHAB::Core::DSL::Rule::Triggers
           include Guard
-          include Item
-          include Channel
           include DSLProperty
           include Logging
           extend OpenHAB::Core::DSL
@@ -67,13 +79,13 @@ module OpenHAB
           # @param [Object] caller_binding The object initializing this configuration.
           #   Used to execute within the object's context
           #
-          def initialize(name, caller_binding)
+          def initialize(rule_name, caller_binding)
             @triggers = []
             @trigger_delays = {}
-            @enabled = true
-            @on_start = false
             @caller = caller_binding.eval 'self'
-            name(name)
+            enabled(true)
+            on_start(false)
+            name(rule_name)
           end
 
           #
@@ -127,10 +139,11 @@ module OpenHAB
           # @return [String] details of the config object
           #
           def inspect
+            "Name: (#{name}) " \
             "Triggers: (#{triggers}) " \
-            "Run blocks: (#{run})" \
-            "on_start: (#{on_start?})" \
-            "Trigger Waits: #{trigger_delays}" \
+            "Run blocks: (#{run}) " \
+            "on_start: (#{on_start?}) " \
+            "Trigger Waits: #{trigger_delays} " \
             "Trigger UIDs: #{triggers.map(&:id).join(', ')}"
           end
         end

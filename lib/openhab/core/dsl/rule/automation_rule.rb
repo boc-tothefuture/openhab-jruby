@@ -12,7 +12,10 @@ module OpenHAB
         #
         # JRuby extension to OpenHAB Rule
         #
-        class Rule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
+        # rubocop: disable Metrics/ClassLength
+        # Disabled because this class has a single responsibility, there does not appear a logical
+        # way of breaking it up into multiple classes
+        class AutomationRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
           include Logging
           include OpenHAB::Core::DSL::Tod
           java_import java.time.ZonedDateTime
@@ -20,14 +23,14 @@ module OpenHAB
           #
           # Create a new Rule
           #
-          # @param [Config] Rule configuration
+          # @param [Config] config Rule configuration
           #
           def initialize(config:)
             super()
             set_name(config.name)
             set_description(config.description)
             set_triggers(config.triggers)
-            @run_queue = config.run_queue
+            @run_queue = config.run
             @guard = config.guard
             between = config.between&.yield_self { between(config.between) }
             @between = between || OpenHAB::Core::DSL::Tod::ALL_DAY
@@ -46,7 +49,8 @@ module OpenHAB
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect}" }
             logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
             if trigger_delay inputs
-              process_trigger_delay(mod, inputs)
+              trigger_delay = trigger_delay(inputs)
+              process_trigger_delay(trigger_delay, mod, inputs)
             else
               # If guards are satisfied execute the run type blocks
               # If they are not satisfied, execute the Othewise blocks
@@ -92,14 +96,15 @@ module OpenHAB
           # Check if trigger guards prevent rule execution
           #
           # @param [Delay] trigger_delay rules delaying trigger because of
-          # @param [Object] old_state previous state of the item, may be nil
-          # @param [Object] new_state current state of the item, may be nil
+          # @param [Map] inputs OpenHAB map object describing rule trigger
           #
           # @return [Boolean] True if the rule should execute, false if trigger guard prevents execution
           #
-          def check_trigger_guards(trigger_delay, old_state, new_state)
-            if trigger_delay.from.nil? || trigger_delay.from == old_state
-              return true if trigger_delay.to.nil? || trigger_delay.to == new_state
+          def check_trigger_guards(trigger_delay, inputs)
+            old_state = inputs['oldState']
+            new_state = inputs['newState']
+            if check_from(trigger_delay, old_state)
+              return true if check_to(trigger_delay, new_state)
 
               logger.trace("Skipped execution of rule '#{name}' because to state #{new_state}"\
                                    " does not equal specified state(#{trigger_delay.to})")
@@ -110,42 +115,88 @@ module OpenHAB
           end
 
           #
+          # Check the from state against the trigger delay
+          #
+          # @param [TriggerDelay] trigger_delay Information about the trigger delay
+          # @param [Item State] state from state to check
+          #
+          # @return [Boolean] true if no from state is defined or defined state equals supplied state
+          #
+          def check_from(trigger_delay, state)
+            trigger_delay.from.nil? || trigger_delay.from == state
+          end
+
+          #
+          # Check the to state against the trigger delay
+          #
+          # @param [TriggerDelay] trigger_delay Information about the trigger delay
+          # @param [Item State] state to-state to check
+          #
+          # @return [Boolean] true if no to state is defined or defined state equals supplied state
+          #
+          def check_to(trigger_delay, state)
+            trigger_delay.to.nil? || trigger_delay.to == state
+          end
+
+          #
           # Process any matching trigger delays
           #
           # @param [Map] mod OpenHAB map object describing rule trigger
-          # @param [Map] inputs OpenHAB map object describing rule trigge
+          # @param [Map] inputs OpenHAB map object describing rule trigger
           #
           #
-          def process_trigger_delay(mod, inputs)
-            trigger_delay = trigger_delay(inputs)
-            if check_trigger_guards(trigger_delay, inputs['old_state'], inputs['new_state'])
+          def process_trigger_delay(trigger_delay, mod, inputs)
+            if check_trigger_guards(trigger_delay, inputs)
               logger.trace("Trigger Guards Matched for #{trigger_delay}, delaying rule execution")
               # Add timer and attach timer to delay object, and also state being tracked to so timer can be cancelled if
               #   state changes
               # Also another timer should not be created if changed to same value again but instead rescheduled
-              if trigger_delay.timer.nil? || trigger_delay.timer.is_active == false
-                logger.trace("Creating timer for rule #{name} and trigger delay #{trigger_delay}")
-                trigger_delay.timer = after(trigger_delay.duration) do
-                  logger.trace("Delay Complete for #{trigger_delay}, executing rule")
-                  trigger_delay.timer = nil
-                  process_queue(@run_queue.dup, mod, inputs)
-                end
-                trigger_delay.tracking_to = inputs['newState']
+              if trigger_delay.timer_active?
+                process_active_timer(inputs, mod, trigger_delay)
               else
-                # Timer active
-                state = inputs['newState']
-                if state != trigger_delay.tracking_to
-                  logger.trace("Item changed to #{state} for #{trigger_delay}, cancelling timer.")
-                  trigger_delay.timer.cancel
-                  # Reprocess trigger delay after cancelling to track new state (if guards matched, etc)
-                  process_trigger_delay(mod, inputs)
-                else
-                  logger.trace("Item changed to #{state} for #{trigger_delay}, rescheduling timer.")
-                  trigger_delay.timer.reschedule(ZonedDateTime.now.plus(duration))
-                end
+                create_trigger_delay_timer(inputs, mod, trigger_delay)
               end
             else
               logger.trace("Trigger Guards did not match for #{trigger_delay}, ignoring trigger.")
+            end
+          end
+
+          #
+          # Creatas a timer for trigger delays
+          #
+          # @param [Hash] inputs rule trigger inputs
+          # @param [Hash] mod rule trigger mods
+          # @param [TriggerDelay] trigger_delay specifications
+          #
+          #
+          def create_trigger_delay_timer(inputs, mod, trigger_delay)
+            logger.trace("Creating timer for rule #{name} and trigger delay #{trigger_delay}")
+            trigger_delay.timer = after(trigger_delay.duration) do
+              logger.trace("Delay Complete for #{trigger_delay}, executing rule")
+              trigger_delay.timer = nil
+              process_queue(@run_queue.dup, mod, inputs)
+            end
+            trigger_delay.tracking_to = inputs['newState']
+          end
+
+          #
+          # Process an active trigger timer
+          #
+          # @param [Hash] inputs rule trigger inputs
+          # @param [Hash] mod rule trigger mods
+          # @param [TriggerDelay] trigger_delay specifications
+          #
+          #
+          def process_active_timer(inputs, mod, trigger_delay)
+            state = inputs['newState']
+            if state == trigger_delay.tracking_to
+              logger.trace("Item changed to #{state} for #{trigger_delay}, rescheduling timer.")
+              trigger_delay.timer.reschedule(ZonedDateTime.now.plus(duration))
+            else
+              logger.trace("Item changed to #{state} for #{trigger_delay}, cancelling timer.")
+              trigger_delay.timer.cancel
+              # Reprocess trigger delay after cancelling to track new state (if guards matched, etc)
+              process_trigger_delay(trigger_delay, mod, inputs)
             end
           end
 
@@ -294,3 +345,4 @@ module OpenHAB
     end
   end
 end
+# rubocop: enable Metrics/ClassLength

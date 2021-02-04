@@ -38,6 +38,11 @@ module OpenHAB
       end
     end
 
+    #
+    # Get the bundle context
+    #
+    # @return [java::org::osgi::framework::BundleContext] OSGI bundle context
+    #
     def self.bundle_context
       @bundle_context ||= bundle.getBundleContext
     end

@@ -214,7 +214,10 @@ module OpenHAB
         # @return [TimeOfDay] TimeOfDay created from supplied object
         #
         private_class_method def to_time_of_day(object)
-          TimeOfDay.parse(start) if start.is_a?(String) || object
+          case object
+          when String then TimeOfDay.parse(object)
+          else object
+          end
         end
 
         MIDNIGHT = TimeOfDay.midnight

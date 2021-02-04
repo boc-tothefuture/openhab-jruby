@@ -88,4 +88,4 @@ Feature: rule_language
       end
       """
     When I deploy the rule
-    Then It should log 'Not creating rule without execution blocks' within 5 seconds
+    Then It should log 'has no execution blocks, not creating rule' within 5 seconds
