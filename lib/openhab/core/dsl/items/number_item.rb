@@ -59,7 +59,7 @@ module OpenHAB
               if dimension
                 [Quantity.new(other), to_qt]
               elsif @number_item.state?
-                [BigDecimal(other), @number_item.state.to_big_decimal.to_d]
+                [other.to_d, @number_item.state.to_big_decimal.to_d]
               end
             else
               logger.trace("#{self} cannot be coereced to #{other.class}")
@@ -85,7 +85,7 @@ module OpenHAB
                 @number_item.state <=> other.state
               end
             when Numeric
-              @number_item.state.to_big_decimal.to_d <=> BigDecimal(other)
+              @number_item.state.to_big_decimal.to_d <=> other.to_d
             when String
               @number_item.state <=> QuantityType.new(other) if dimension
             end
@@ -199,7 +199,7 @@ module OpenHAB
                   to_d.public_send(operation, other.to_d)
                 end
               elsif other.is_a? Numeric
-                to_d.public_send(operation, BigDecimal(other))
+                to_d.public_send(operation, other.to_d)
               elsif dimension && other.is_a?(String)
                 to_qt.public_send(operation, Quantity.new(other))
               elsif other.respond_to? :coerce
