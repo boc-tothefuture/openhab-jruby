@@ -50,6 +50,8 @@ Feature:  quantity
       | quantity               | operator | operand | result |
       | Quantity.new('50 °F')  | *        | 2       | 100 °F |
       | Quantity.new('100 °F') | /        | 2       | 50 °F  |
+      | Quantity.new('50 °F')  | *        | 2.0     | 100 °F |
+      | Quantity.new('100 °F') | /        | 2.0     | 50 °F  |
 
   Scenario Outline: Quantity responds to math operations where operand is a NumberItem with or without dimensions
     Given items:

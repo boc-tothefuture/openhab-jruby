@@ -23,6 +23,10 @@ Feature:  number_item
       | 50      | -        | 2       | 48    |
       | 50      | /        | 2       | 25    |
       | 50      | *        | 2       | 100   |
+      | 50      | +        | 2.0     | 52    |
+      | 50      | -        | 2.0     | 48    |
+      | 50      | /        | 2.0     | 25    |
+      | 50      | *        | 2.0     | 100   |
 
   Scenario Outline: NumberItem can be coerced to support opertations from Ruby number types
     Given item "NumberOne" state is changed to "<initial>"
@@ -38,6 +42,10 @@ Feature:  number_item
       | 50      | -        | 2       | -48   |
       | 50      | /        | 2       | 0.04  |
       | 50      | *        | 2       | 100   |
+      | 50      | +        | 2.0     | 52    |
+      | 50      | -        | 2.0     | -48   |
+      | 50      | /        | 2.0     | 0.04  |
+      | 50      | *        | 2.0     | 100   |
 
   Scenario: to_d provides a BigDecimal class for math operations
     Given code in a rules file
@@ -100,6 +108,17 @@ Feature:  number_item
       """
     When I deploy the rules file
     Then It should log "Number One is less than 50" within 5 seconds
+
+  Scenario: NumberItem states is compareble to floats
+    Given code in a rules file
+      """
+      #Check if number items is less than 50
+      if (0.0...50.0).include?(NumberOne)
+        logger.info("#{NumberOne.id} is in range (0.0...50.0)")
+      end
+      """
+    When I deploy the rules file
+    Then It should log "Number One is in range (0.0...50.0)" within 5 seconds
 
   Scenario: NumberItem has methods from Numeric
     Given code in a rules file
