@@ -8,6 +8,7 @@ require 'core/log'
 module StartupDelay
   include Logging
 
+  # @return [Integer] Number of seconds to wait between checks for automation manager
   CHECK_DELAY = 10
   private_constant :CHECK_DELAY
 

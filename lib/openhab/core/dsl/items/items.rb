@@ -21,7 +21,7 @@ module OpenHAB
             # rubocop: disable Style/GlobalVars
             item = $ir.getItem(name)
             # rubocop: enable Style/GlobalVars
-            item.is_a? GroupItem ? nil : item
+            item.is_a?(GroupItem) ? nil : item
           rescue Java::OrgOpenhabCoreItems::ItemNotFoundException
             nil
           end

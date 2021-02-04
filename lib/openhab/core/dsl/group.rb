@@ -28,7 +28,7 @@ module OpenHAB
           #
           def[](name)
             group = EntityLookup.lookup_item(name)
-            group.is_a? Group ? group : nil
+            group.is_a?(Group) ? group : nil
           end
         end
 

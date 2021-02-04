@@ -11,7 +11,7 @@ module OpenHAB
         #
         # Cron type rules
         #
-        module Cron
+        module Triggers
           java_import org.openhab.core.automation.util.TriggerBuilder
           java_import org.openhab.core.config.core.Configuration
 
@@ -58,18 +58,12 @@ module OpenHAB
           #
           #
           def every(value, at: nil)
-            case value
-            when Symbol
-              expression_map = EXPRESSION_MAP[value]
-              expression_map = at_condition(expression_map, at) if at
-              cron(map_to_cron(expression_map))
-            when Java::JavaTime::Duration
-              raise ArgumentError, '"at" cannot be used with duration' if at
-
-              cron(map_to_cron(duration_to_map(value)))
-            else
-              raise ArgumentExpression, 'Unknown interval' unless expression_map
-            end
+            cron_expression = case value
+                              when Symbol then cron_from_symbol(value, at)
+                              when Java::JavaTime::Duration then cron_from_duration(value, at)
+                              else raise ArgumentExpression, 'Unknown interval'
+                              end
+            cron(cron_expression)
           end
 
           #
@@ -82,6 +76,34 @@ module OpenHAB
           end
 
           private
+
+          #
+          # Create a cron map from a duration
+          #
+          # @param [java::time::Duration] duration
+          # @param [Object] at TimeOfDay or String representing time of day
+          #
+          # @return [Hash] map describing cron expression
+          #
+          def cron_from_duration(duration, at)
+            raise ArgumentError, '"at" cannot be used with duration' if at
+
+            map_to_cron(duration_to_map(duration))
+          end
+
+          #
+          # Create a cron map from a symbol
+          #
+          # @param [Symbol] symbol
+          # @param [Object] at TimeOfDay or String representing time of day
+          #
+          # @return [Hash] map describing cron expression created from symbol
+          #
+          def cron_from_symbol(symbol, at)
+            expression_map = EXPRESSION_MAP[symbol]
+            expression_map = at_condition(expression_map, at) if at
+            map_to_cron(expression_map)
+          end
 
           #
           # Map cron expression to to cron string
@@ -126,7 +148,7 @@ module OpenHAB
           #
           def at_condition(expression_map, at_time)
             if at_time
-              tod = (at_time.is_a? TimeOfDay) ? at_time : TimeOfDay.parse(at_time)
+              tod = at_time.is_a?(TimeOfDay) ? at_time : TimeOfDay.parse(at_time)
               expression_map = expression_map.merge(hour: tod.hour, minute: tod.minute, second: tod.second)
             end
             expression_map

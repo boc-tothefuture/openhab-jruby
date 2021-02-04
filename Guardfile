@@ -29,7 +29,7 @@ group :docs do
   #
   guard :shell do
     watch(%r{lib/.+\.rb}) do |_modified|
-      `yard stats --list-undoc`
+      `yard stats --list-undoc --private`
     end
   end
 end

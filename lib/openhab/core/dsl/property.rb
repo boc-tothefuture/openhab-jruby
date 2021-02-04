@@ -29,7 +29,14 @@ module DSLProperty
     # @param [String] name of the property
     #
     #
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def prop(name)
+      # rubocop rules are disabled because this method is dynamically defined on the calling
+      #   object making calls to other methods in this module impossible, or if done on methods
+      #   in this module than instance variable belong to the module not the calling class
       define_method(name) do |*args, &block|
         if args.length.zero? && block.nil? == true
           instance_variable_get("@#{name}")
@@ -82,4 +89,8 @@ module DSLProperty
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 end

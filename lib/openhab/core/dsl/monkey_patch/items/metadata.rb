@@ -123,25 +123,7 @@ module OpenHAB
               # @return [OpenHAB::Core::DSL::MonkeyPatch::Items::MetadataItem]
               #
               def []=(namespace, value)
-                case value
-                when MetadataItem
-                  meta_value = value.value
-                  configuration = value.__getobj__
-                when Metadata
-                  meta_value = value.value
-                  configuration = value.configuration
-                when Array
-                  raise ArgumentError, 'Array must contain 2 elements: value, config' if value.length < 2
-
-                  meta_value = value[0]
-                  configuration = value[1]
-                when Hash
-                  meta_value = nil
-                  configuration = value
-                else
-                  meta_value = value
-                  configuration = nil
-                end
+                meta_value, configuration = update_from_value(value)
 
                 key = MetadataKey.new(namespace, @item_name)
                 metadata = Metadata.new(key, meta_value, configuration)
@@ -185,12 +167,12 @@ module OpenHAB
               #
               # @return [Boolean] True if the given namespace exists, false otherwise
               #
-              def has_key?(namespace)
+              def key?(namespace)
                 !NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name)).nil?
               end
 
-              alias key? has_key?
-              alias include? has_key?
+              alias has_key? key?
+              alias include? key?
 
               #
               # Merge the given hash with the current metadata. Existing namespace that matches the name
@@ -201,25 +183,9 @@ module OpenHAB
 
                 others.each do |other|
                   case other
-                  when Hash
-                    other.each do |key, new_meta|
-                      if block_given?
-                        current_meta = self[key]&.to_a
-                        new_meta = yield key, current_meta, new_meta unless current_meta.nil?
-                      end
-                      self[key] = new_meta
-                    end
-                  when self.class
-                    other.each do |key, new_value, new_config|
-                      new_meta = new_value, new_config
-                      if block_given?
-                        current_meta = self[key]&.to_a
-                        new_meta = yield key, current_meta, new_meta unless current_meta.nil?
-                      end
-                      self[key] = new_meta
-                    end
-                  else
-                    raise ArgumentError, "merge only supports Hash, or another item's metadata"
+                  when Hash then merge_hash!(other)
+                  when self.class then merge_metadata!(other)
+                  else raise ArgumentError, "merge only supports Hash, or another item's metadata"
                   end
                 end
                 self
@@ -238,7 +204,65 @@ module OpenHAB
               # @return [Java::org::openhab::core::items::MetadataRegistry]
               #
               def self.registry
-                @@registry ||= OpenHAB::OSGI.service('org.openhab.core.items.MetadataRegistry')
+                @registry ||= OpenHAB::OSGI.service('org.openhab.core.items.MetadataRegistry')
+              end
+
+              private
+
+              #
+              # perform an updated based on the supplied value
+              #
+              # @param [MetadataItem,Metadata,Array,Hash] value to perform update from
+              #
+              # @return [Array<Object,Hash>] Array containing the value and configuration based on the
+              #   the supplied object
+              #
+              def update_from_value(value)
+                case value
+                when MetadataItem then [value.value, value.__getobj__]
+                when Metadata then [value.value, value.configuration]
+                when Array
+                  raise ArgumentError, 'Array must contain 2 elements: value, config' if value.length != 2
+
+                  value
+                when Hash then [nil, value]
+                else [value, nil]
+                end
+              end
+
+              #
+              # Merge the metadata from the supplied other metadata object
+              #
+              # @param [Hash] other metadata object to merge
+              # @yield [key, current_metadata, new_meta] to process merge
+              #
+              #
+              def merge_metadata!(other)
+                other.each do |key, new_value, new_config|
+                  new_meta = new_value, new_config
+                  if block_given?
+                    current_meta = self[key]&.to_a
+                    new_meta = yield key, current_meta, new_meta unless current_meta.nil?
+                  end
+                  self[key] = new_meta
+                end
+              end
+
+              #
+              # Merge a hash into the metadata
+              #
+              # @param [Hash] other to merge into metadata
+              # @yield [key, current_metadata, new_meta] to process merge
+              #
+              #
+              def merge_hash!(other)
+                other.each do |key, new_meta|
+                  if block_given?
+                    current_meta = self[key]&.to_a
+                    new_meta = yield key, current_meta, new_meta unless current_meta.nil?
+                  end
+                  self[key] = new_meta
+                end
               end
             end
 

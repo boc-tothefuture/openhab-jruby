@@ -10,7 +10,6 @@ group :test do
   gem 'cuke_linter', '~> 1.2'
   gem 'httparty'
   gem 'persistent_httparty'
-  gem 'rspec'
   gem 'yaml-lint'
 end
 
@@ -24,6 +23,7 @@ group :development do
   gem 'process_exists'
   gem 'rake', '~> 12.0'
   gem 'rubocop', '~> 1.8', require: false
+  gem 'solargraph'
   gem 'tty-command'
   gem 'yard'
 end
