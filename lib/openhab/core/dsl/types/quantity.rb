@@ -46,7 +46,7 @@ module OpenHAB
                         when QuantityType
                           quantity
                         when Numeric
-                          QuantityType.new(BigDecimal(quantity).to_java, AbstractUnit::ONE)
+                          QuantityType.new(quantity.to_d.to_java, AbstractUnit::ONE)
                         else
                           raise "Unexpected type #{quantity.class} provided to Quantity initializer"
                         end
@@ -152,7 +152,7 @@ module OpenHAB
                        logger.trace("Number Item coerced result a(#{a.class})='#{a}' b(#{b.class})='#{b}'")
                        [a.quantity, b.quantity]
                      when Numeric
-                       [quantity, QuantityType.new(BigDecimal(other).to_java, AbstractUnit::ONE)]
+                       [quantity, QuantityType.new(other.to_d.to_java, AbstractUnit::ONE)]
                      else
                        raise TypeError,
                              "Operation '#{operation}' cannot be performed between #{self} and #{other.class}"
