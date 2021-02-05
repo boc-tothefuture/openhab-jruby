@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.14.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.14.0...2.14.1) (2021-02-05)
+
+
+### Bug Fixes
+
+* **number_item:** make math operations and comparisons work with Floats ([3b29aa9](https://github.com/boc-tothefuture/openhab-jruby/commit/3b29aa967f909e80400ed78406c680405b4974f4))
+
 # [2.14.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.13.1...2.14.0) (2021-02-03)
 
 
