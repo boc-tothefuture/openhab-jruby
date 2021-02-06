@@ -58,7 +58,7 @@ module OpenHAB
             when Quantity then coerce_from_quantity(other)
             when Numeric then  coerce_from_numeric(other)
             else
-              logger.trace("#{self} cannot be coereced to #{other.class}")
+              logger.trace("#{self} cannot be coerced to #{other.class}")
               nil
             end
           end
@@ -71,14 +71,19 @@ module OpenHAB
           # @return [Integer] -1,0,1 or nil depending on value supplied,
           #   nil comparison to supplied object is not possible.
           #
+          # rubocop: disable Metrics/AbcSize
           def <=>(other)
-            logger.trace("Comparing #{self} to #{other}")
+            logger.trace("NumberItem #{self} <=> #{other} (#{other.class})")
             case other
             when NumberItem then number_item_compare(other)
-            when Numeric then  @number_item.state.to_big_decimal.to_d <=> other.to_d
-            when String  then  @number_item.state <=> QuantityType.new(other) if dimension
+            when Numeric then @number_item.state.to_big_decimal.to_d <=> other.to_d
+            when String then @number_item.state <=> QuantityType.new(other) if dimension
+            else
+              other = other.state if other.respond_to? :state
+              @number_item.state <=> other
             end
           end
+          # rubocop: enable Metrics/AbcSize
 
           #
           # Convert NumberItem to a Quantity

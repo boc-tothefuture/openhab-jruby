@@ -3,4 +3,5 @@
 # Monkey patch ruby
 require 'openhab/core/dsl/monkey_patch/ruby/range'
 require 'openhab/core/dsl/monkey_patch/ruby/number'
+require 'openhab/core/dsl/monkey_patch/ruby/string'
 require 'bigdecimal/util'
