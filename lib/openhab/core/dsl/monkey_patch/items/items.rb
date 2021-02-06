@@ -6,6 +6,7 @@ require 'bigdecimal'
 
 # Monkey patch items
 require 'openhab/core/dsl/monkey_patch/items/metadata'
+require 'openhab/core/dsl/monkey_patch/items/persistence'
 require 'openhab/core/dsl/monkey_patch/items/contact_item'
 require 'openhab/core/dsl/monkey_patch/items/dimmer_item'
 require 'openhab/core/dsl/monkey_patch/items/switch_item'
@@ -127,4 +128,5 @@ class Java::OrgOpenhabCoreItems::GenericItem
   # rubocop:enable Style/ClassAndModuleChildren
   prepend OpenHAB::Core::DSL::MonkeyPatch::Items::ItemExtensions
   prepend OpenHAB::Core::DSL::MonkeyPatch::Items::Metadata
+  prepend OpenHAB::Core::DSL::MonkeyPatch::Items::Persistence
 end

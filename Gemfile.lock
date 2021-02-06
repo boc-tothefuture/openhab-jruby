@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openhab-scripting (2.14.1)
+    openhab-scripting (2.14.3)
       bundler (~> 2.2)
 
 GEM
@@ -247,4 +247,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.4
+   2.2.7
