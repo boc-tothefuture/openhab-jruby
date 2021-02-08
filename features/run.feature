@@ -81,4 +81,4 @@ Feature:  run
       """
     When I deploy the rules file
     And item "Number1" state is changed to "2"
-    Then It should log "event.item class is OpenHAB::Core::DSL::Items::NumberItem" within 5 seconds
+    Then It should log "event.item class is OpenHAB::DSL::Items::NumberItem" within 5 seconds

@@ -183,5 +183,5 @@ Feature:  items
       logger.info("items['Number1'] class is #{items['Number1'].class}")
       """
     When I deploy the rules file
-    Then It should log "Number1 class is OpenHAB::Core::DSL::Items::NumberItem" within 5 seconds
-    And It should log "items['Number1'] class is OpenHAB::Core::DSL::Items::NumberItem" within 5 seconds
+    Then It should log "Number1 class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
+    And It should log "items['Number1'] class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
