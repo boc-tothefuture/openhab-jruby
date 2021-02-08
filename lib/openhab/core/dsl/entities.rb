@@ -4,6 +4,7 @@ require 'pp'
 require 'java'
 require 'set'
 require 'core/dsl/group'
+require 'core/log'
 require 'core/dsl/items/number_item'
 require 'core/dsl/items/string_item'
 
@@ -25,6 +26,7 @@ end
 # Manages access to OpenHAB entities
 #
 module EntityLookup
+  include Logging
   #
   # Decorate items with Ruby wrappers
   #
@@ -32,14 +34,13 @@ module EntityLookup
   #
   # @return [Array] Array of decorated items
   #
+  # rubocop: disable Metrics/MethodLength
+  # Disabled line length - case dispatch pattern
   def self.decorate_items(*items)
     items.flatten.map do |item|
       case item
       when GroupItem
-        group = item
-        item = OpenHAB::Core::DSL::Groups::Group.new(Set.new(EntityLookup.decorate_items(item.all_members.to_a)))
-        item.group = group
-        item
+        decorate_group(item)
       when Java::Org.openhab.core.library.items::NumberItem
         OpenHAB::Core::DSL::Items::NumberItem.new(item)
       when Java::Org.openhab.core.library.items::StringItem
@@ -49,6 +50,7 @@ module EntityLookup
       end
     end
   end
+  # rubocop: enable Metrics/MethodLength
 
   #
   # Loops up a Thing in the OpenHAB registry replacing '_' with ':'
@@ -58,6 +60,7 @@ module EntityLookup
   # @return [Thing] if found, nil otherwise
   #
   def self.lookup_thing(name)
+    logger.trace("Looking up thing(#{name})")
     # Convert from : syntax to underscore
     name = name.to_s if name.is_a? Symbol
 
@@ -78,6 +81,7 @@ module EntityLookup
   # @return [Item] OpenHAB item if registry contains a matching item, nil othewise
   #
   def self.lookup_item(name)
+    logger.trace("Looking up item(#{name})")
     name = name.to_s if name.is_a? Symbol
     # rubocop: disable Style/GlobalVars
     item = $ir.get(name)
@@ -98,6 +102,39 @@ module EntityLookup
     return if method.to_s == 'scriptLoaded'
     return if method.to_s == 'scriptUnloaded'
 
+    logger.trace("method missing, performing OpenHab Lookup for: #{method}")
     EntityLookup.lookup_item(method) || EntityLookup.lookup_thing(method) || super
+  end
+
+  #
+  # Checks if this method responds to the missing method
+  #
+  # @param [String] method_name Name of the method to check
+  # @param [Boolean] _include_private boolean if private methods should be checked
+  #
+  # @return [Boolean] true if this object will respond to the supplied method, false otherwise
+  #
+  def respond_to_missing?(method_name, _include_private = false)
+    logger.trace("Checking if OpenHAB entites exist for #{method_name}")
+    method_name = method_name.to_s if method_name.is_a? Symbol
+
+    method_name == 'scriptLoaded' ||
+      method_name == 'scriptUnloaded' ||
+      EntityLookup.lookup_item(method_name) ||
+      EntityLookup.lookup_thing(method_name) ||
+      super
+  end
+
+  #
+  # Decorate a group from an item base
+  #
+  # @param [OpenHAB item] item item to convert to a group item
+  #
+  # @return [OpenHAB::Core::DSL::Groups::Group] Group created from supplied item
+  #
+  def self.decorate_group(item)
+    group = OpenHAB::Core::DSL::Groups::Group.new(Set.new(EntityLookup.decorate_items(item.all_members.to_a)))
+    group.group = item
+    group
   end
 end

@@ -28,28 +28,30 @@ def append_identifying_log_line_to_rule(uid)
   @rule += %[\n\nlogger.info("#{identifying_log_line(uid)}")\n\n]
 end
 
-def deploy_rule(filename: '', check_position: :end, check: true)
-  FileUtils.mkdir_p rules_dir
-  uid = SecureRandom.uuid
-
-  log_line = case check_position
-             when :start
-               identifying_started_log_line(uid)
-             when :end
-               identifying_log_line(uid)
-             else raise ArgumentError, 'log_line can either be :start or :end'
-             end
-
-  deploy_path = File.join(rules_dir, filename)
-  prepend_identifying_log_line_to_rule(uid)
-  append_identifying_log_line_to_rule(uid)
-
+def atomic_rule_write(rule_content, deploy_path)
   temp_file = Tempfile.create(['cucumber_test', '.rb'])
-  temp_file.write(@rule)
+  temp_file.write(rule_content)
   temp_file.close
 
   FileUtils.move temp_file, deploy_path
+end
 
+def create_log_markers(uid)
+  prepend_identifying_log_line_to_rule(uid)
+  append_identifying_log_line_to_rule(uid)
+end
+
+def deploy_rule(filename: '', check_position: :end, check: true)
+  uid = SecureRandom.uuid
+
+  log_line = case check_position
+             when :start then identifying_started_log_line(uid)
+             when :end then identifying_log_line(uid)
+             else raise ArgumentError, 'log_line can either be :start or :end'
+             end
+
+  create_log_markers(uid)
+  atomic_rule_write(@rule, File.join(rules_dir, filename))
   wait_until(seconds: 60, msg: 'Rule not added') { check_log(log_line) } if check
 end
 

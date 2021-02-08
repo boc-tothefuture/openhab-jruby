@@ -39,15 +39,11 @@ module OpenHAB
             # occurs before the @timer variable can be set resulting in @timer being nil
             semaphore = Mutex.new
 
-            @block = proc do
-              semaphore.synchronize do
-                block.call(self)
-              end
-            end
+            timer_block = proc { semaphore.synchronize { block.call(self) } }
 
             semaphore.synchronize do
               @timer = ScriptExecution.createTimer(
-                ZonedDateTime.now.plus(@duration), @block
+                ZonedDateTime.now.plus(@duration), timer_block
               )
               super(@timer)
             end

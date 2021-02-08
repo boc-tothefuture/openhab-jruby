@@ -66,30 +66,45 @@ class Rest
     post('/rest/things', headers: json, body: body.to_json)
   end
 
-  def self.add_item(type:, name:, state: nil, label: nil, groups: nil, group_type: nil, function: nil, params: nil, pattern: nil)
+  def self.add_item(item:)
+    body = item_body(item)
+    item_function(body, item)
+    put("/rest/items/#{item.name}", headers: json, body: body.to_json)
+    item_pattern(item)
+    state = item.state || 'UNDEF'
+    set_item_state(item.name, state)
+  end
+
+  def self.item_body(item)
     body = {}
-    body[:type] = type
-    body[:name] = name
-    body[:label] = label if label && label.strip != ''
-    groups = [*groups].compact.map(&:strip).grep_v('')
+    body[:type] = item.type
+    body[:name] = item.name
+    body[:label] = item.label if item.label && item.label.strip != ''
+    item_groups(body, item)
+    body
+  end
+
+  def self.item_pattern(item)
+    return unless item.pattern
+
+    pattern_body = {}
+    pattern_body[:value] = ' '
+    pattern_body[:config] = { pattern: item.pattern }
+    put("/rest/items/#{item.name}/metadata/stateDescription", headers: json, body: pattern_body.to_json)
+  end
+
+  def self.item_function(body, item)
+    return unless item.function
+
+    function_body = {}
+    function_body[:name] = item.function
+    function_body[:params] = item.params if item.params
+    body[:function] = function_body
+  end
+
+  def self.item_groups(body, item)
+    groups = [*item.groups].compact.map(&:strip).grep_v('')
     body[:groupNames] = groups unless groups.empty?
-    body[:groupType] = group_type unless group_type.to_s.empty?
-    if function
-      function_body = {}
-      function_body[:name] = function
-      function_body[:params] = params if params
-      body[:function] = function_body
-    end
-    put("/rest/items/#{name}", headers: json, body: body.to_json)
-
-    if pattern
-      pattern_body = {}
-      pattern_body[:value] = ' '
-      pattern_body[:config] = { pattern: pattern }
-      put("/rest/items/#{name}/metadata/stateDescription", headers: json, body: pattern_body.to_json)
-    end
-
-    state ||= 'UNDEF'
-    set_item_state(name, state)
+    body[:groupType] = item.group_type unless item.group_type.to_s.empty?
   end
 end

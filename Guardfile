@@ -29,7 +29,12 @@ group :docs do
   #
   guard :shell do
     watch(%r{lib/.+\.rb}) do |_modified|
-      `yard stats --list-undoc`
+      `yard stats --list-undoc --private`
     end
   end
+end
+
+guard :rubocop, all_on_start: false, cli: ['-A'] do
+  watch(/.+\.rb$/)
+  watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
 end

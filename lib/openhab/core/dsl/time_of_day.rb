@@ -50,7 +50,8 @@ module OpenHAB
 
           # Constructs a TimeOfDay representing the time when called
           # @since 0.0.1
-          # @param [String] string representation of TimeOfDay. Valid formats include "HH:MM:SS", "HH:MM", "H:MM", "HH", "H", "H:MM am"
+          # @param [String] string representation of TimeOfDay. Valid formats include "HH:MM:SS", "HH:MM",
+          #   "H:MM", "HH", "H", "H:MM am"
           # @return [TimeOfDay] object created by parsing supplied string
           def self.parse(string)
             format = /(am|pm)$/i.match?(string) ? 'h[:mm[:ss]][ ]a' : 'H[:mm[:ss]]'
@@ -67,10 +68,13 @@ module OpenHAB
           # @option opts [Number] :m Minute of the day, defaults to 0
           # @option opts [Number] :s Second of the day, defaults to 0
           # @return [TimeOfDay] representing time when method was invoked
+          # rubocop: disable Naming/MethodParameterName
+          # This method has a better feel with short parameter names
           def initialize(h: 0, m: 0, s: 0)
             @local_time = LocalTime.of(h, m, s)
             freeze
           end
+          # rubocop: enable Naming/MethodParameterName
 
           # Returns true if the time falls within a range
           def between?(range)
@@ -100,14 +104,16 @@ module OpenHAB
 
           # Returns the string representation of the TimeOfDay
           # @since 0.0.1
-          # @return [String] in any of the following formats depending on time representation HH:mm, HH:mm:ss, HH:mm:ss.SSS, HH:mm:ss.SSSSSS, HH:mm:ss.SSSSSSSSS
+          # @return [String] in any of the following formats depending on time representation HH:mm, HH:mm:ss,
+          #   HH:mm:ss.SSS, HH:mm:ss.SSSSSS, HH:mm:ss.SSSSSSSSS
           def to_s
             @local_time.to_s
           end
 
           # Compares one TimeOfDay to another
           # @since 0.0.1
-          # @return [Number, nil] -1,0,1 if other TimeOfDay is less than, equal to, or greater than this TimeOfDay or nil if an object other than TimeOfDay is provided
+          # @return [Number, nil] -1,0,1 if other TimeOfDay is less than, equal to, or greater than this TimeOfDay
+          #   or nil if an object other than TimeOfDay is provided
           def <=>(other)
             case other
             when TimeOfDay
@@ -143,27 +149,35 @@ module OpenHAB
           # @since 2.4.0
           # @return [Number, nil] -1,0,1 if other is less than, equal to, or greater than this TimeOfDay
           def <=>(other)
-            other_second_of_day = case other
-                                  when TimeOfDay
-                                    adjust_second_of_day(other.local_time.to_second_of_day)
-                                  when String
-                                    adjust_second_of_day(TimeOfDay.parse(other).local_time.to_second_of_day)
-                                  when Time
-                                    adjust_second_of_day(TimeOfDay.new(h: other.hour, m: other.min,
-                                                                       s: other.sec).local_time.to_second_of_day)
-                                  when TimeOfDayRangeElement
-                                    other.sod
-                                  else
-                                    raise ArgumentError, 'Supplied argument cannot be converted into Time Of Day Object'
-                                  end
-
+            other_second_of_day = to_second_of_day(other)
             logger.trace do
-              "SOD(#{sod}) other SOD(#{other_second_of_day}) Other Class (#{other.class}) Result (#{sod <=> other_second_of_day})"
+              "SOD(#{sod}) "\
+              "other SOD(#{other_second_of_day}) "\
+              "Other Class (#{other.class}) "\
+              "Result (#{sod <=> other_second_of_day})"
             end
             sod <=> other_second_of_day
           end
 
           private
+
+          #
+          # Convert object to the seconds of a day they reprsent
+          #
+          # @param [Object] object TimeofDay,String,Time, or TimeOfDayRangeElement to convert
+          #
+          # @return [Integer] seconds of day represented by supplied object
+          #
+          def to_second_of_day(object)
+            case object
+            when TimeOfDay then adjust_second_of_day(object.local_time.to_second_of_day)
+            when String then adjust_second_of_day(TimeOfDay.parse(object).local_time.to_second_of_day)
+            when Time then adjust_second_of_day(TimeOfDay.new(h: object.hour, m: object.min,
+                                                              s: object.sec).local_time.to_second_of_day)
+            when TimeOfDayRangeElement then object.sod
+            else raise ArgumentError, 'Supplied argument cannot be converted into Time Of Day Object'
+            end
+          end
 
           def adjust_second_of_day(second_of_day)
             second_of_day += NUM_SECONDS_IN_DAY if second_of_day < @range_begin
@@ -175,14 +189,13 @@ module OpenHAB
         # to see if they are within the range
         # @since 2.4.0
         # @return Range object representing a TimeOfDay Range
+        module_function
+
         def between(range)
           raise ArgumentError, 'Supplied object must be a range' unless range.is_a? Range
 
-          start = range.begin
-          ending = range.end
-
-          start = TimeOfDay.parse(start) if start.is_a? String
-          ending = TimeOfDay.parse(ending) if ending.is_a? String
+          start = to_time_of_day(range.begin)
+          ending = to_time_of_day(range.end)
 
           start_sod = start.local_time.to_second_of_day
           ending_sod = ending.local_time.to_second_of_day
@@ -192,7 +205,20 @@ module OpenHAB
           ending_range = TimeOfDayRangeElement.new(sod: ending_sod, range_begin: start_sod)
           range.exclude_end? ? (start_range...ending_range) : (start_range..ending_range)
         end
-        module_function :between
+
+        #
+        # Convert object to TimeOfDay object
+        #
+        # @param [Object] object TimeOfDay or String to be converted
+        #
+        # @return [TimeOfDay] TimeOfDay created from supplied object
+        #
+        private_class_method def to_time_of_day(object)
+          case object
+          when String then TimeOfDay.parse(object)
+          else object
+          end
+        end
 
         MIDNIGHT = TimeOfDay.midnight
         NOON = TimeOfDay.noon

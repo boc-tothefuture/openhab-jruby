@@ -44,7 +44,8 @@ module Logging
     # Log a message to the OpenHAB Logger
     #
     # @param [Symbol] severity Severity to log message at
-    # @param [Object] msg to log, if no msg supplied and a block is provided, the msg is taken from the result of the block
+    # @param [Object] msg to log, if no msg supplied and a block is provided,
+    #   the msg is taken from the result of the block
     #
     def log(severity:, msg: nil)
       severity = severity.to_sym
@@ -55,13 +56,7 @@ module Logging
       return unless @sl4fj_logger.send("is_#{severity.to_s.downcase}_enabled")
 
       # Process block if no message provided
-      if msg.nil?
-        if block_given?
-          msg = yield
-        else
-          return
-        end
-      end
+      msg = yield if msg.nil? && block_given?
 
       msg = message_to_string(msg: msg)
 

@@ -21,7 +21,7 @@ module OpenHAB
             # rubocop: disable Style/GlobalVars
             item = $ir.getItem(name)
             # rubocop: enable Style/GlobalVars
-            (item.is_a? GroupItem) ? nil : item
+            item.is_a?(GroupItem) ? nil : item
           rescue Java::OrgOpenhabCoreItems::ItemNotFoundException
             nil
           end
@@ -30,7 +30,9 @@ module OpenHAB
           # @param name [String] Item name to check
           # @return [Boolean] true if the item exists, false otherwise
           def include?(name)
+            # rubocop: disable Style/GlobalVars
             !$ir.getItems(name).empty?
+            # rubocop: enable Style/GlobalVars
           end
           alias key? include?
         end

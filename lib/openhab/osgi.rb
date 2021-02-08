@@ -38,6 +38,11 @@ module OpenHAB
       end
     end
 
+    #
+    # Get the bundle context
+    #
+    # @return [java::org::osgi::framework::BundleContext] OSGI bundle context
+    #
     def self.bundle_context
       @bundle_context ||= bundle.getBundleContext
     end
@@ -45,7 +50,9 @@ module OpenHAB
 
     # Get the OSGI Bundle for ScriptExtension Class
     def self.bundle
+      # rubocop: disable Style/GlobalVars
       @bundle ||= FrameworkUtil.getBundle($scriptExtension.class)
+      # rubocop: enable Style/GlobalVars
     end
     private_class_method :bundle
   end
