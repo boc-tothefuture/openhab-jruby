@@ -230,7 +230,7 @@ jobs:
           bundle install --jobs 4 --retry 3
      - name: Build yard docs
        run: |
-          bundle exec rake yard
+          bundle exec rake docs:yard
      - name: Download pickles docs
        uses: actions/download-artifact@v2
        with:
