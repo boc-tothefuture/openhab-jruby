@@ -82,7 +82,8 @@ Given(/(?: I add)?items:/) do |table|
     groups = groups&.flatten
     state = nil_if_blank(row['state'])
     pattern = nil_if_blank(row['pattern'])
-    add_item(type: type, name: name, state: state, label: label, groups: groups, pattern: pattern)
+    item = Item.new(type: type, name: name, state: state, label: label, groups: groups, pattern: pattern)
+    add_item(item: item)
   end
 end
 

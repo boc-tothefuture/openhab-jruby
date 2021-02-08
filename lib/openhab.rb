@@ -36,4 +36,7 @@ module OpenHAB
 end
 
 # Extend caller with OpenHAB methods
+
+# rubocop: disable Style/MixinUsage
 extend OpenHAB
+# rubocop: enable Style/MixinUsage

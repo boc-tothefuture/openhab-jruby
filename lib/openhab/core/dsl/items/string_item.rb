@@ -15,6 +15,7 @@ module OpenHAB
           extend Forwardable
           include Comparable
 
+          # @return [Regex] Regular expression matching blank strings
           BLANK_RE = /\A[[:space:]]*\z/.freeze
           private_constant :BLANK_RE
 
@@ -33,7 +34,8 @@ module OpenHAB
           #
           # Convert the StringItem into a String
           #
-          # @return [String] String representation of the StringItem or nil if underlying OpenHAB StringItem does not have a state
+          # @return [String] String representation of the StringItem or
+          #   nil if underlying OpenHAB StringItem does not have a state
           #
           def to_str
             @string_item.state&.to_full_string&.to_s
@@ -64,7 +66,8 @@ module OpenHAB
           #
           # @param [Object] other object to compare to
           #
-          # @return [Integer] -1,0,1 or nil depending on value supplied, nil comparison to supplied object is not possible.
+          # @return [Integer] -1,0,1 or nil depending on value supplied,
+          #   nil comparison to supplied object is not possible.
           #
           def <=>(other)
             case other
@@ -87,13 +90,28 @@ module OpenHAB
           def method_missing(meth, *args, &block)
             if @string_item.respond_to?(meth)
               @string_item.__send__(meth, *args, &block)
-            elsif @string_item.state? && @string_item.state.to_full_string.to_s.respond_to?(meth)
+            elsif @string_item.state&.to_full_string&.to_s.respond_to?(meth)
               @string_item.state.to_full_string.to_s.__send__(meth, *args, &block)
             elsif ::Kernel.method_defined?(meth) || ::Kernel.private_method_defined?(meth)
               ::Kernel.instance_method(meth).bind_call(self, *args, &block)
             else
               super(meth, *args, &block)
             end
+          end
+
+          #
+          # Checks if this method responds to the missing method
+          #
+          # @param [String] method_name Name of the method to check
+          # @param [Boolean] _include_private boolean if private methods should be checked
+          #
+          # @return [Boolean] true if this object will respond to the supplied method, false otherwise
+          #
+          def respond_to_missing?(method_name, _include_private = false)
+            @string_item.respond_to?(method_name) ||
+              @string_item.state&.to_full_string&.to_s.respond_to?(method_name) ||
+              ::Kernel.method_defined?(method_name) ||
+              ::Kernel.private_method_defined?(method_name)
           end
         end
       end

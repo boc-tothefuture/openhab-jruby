@@ -28,7 +28,7 @@ module OpenHAB
           #
           def[](name)
             group = EntityLookup.lookup_item(name)
-            (group.is_a? Group) ? group : nil
+            group.is_a?(Group) ? group : nil
           end
         end
 
@@ -38,7 +38,9 @@ module OpenHAB
         # @return [Set] of OpenHAB Groups
         #
         def groups
+          # rubocop: disable Style/GlobalVars
           Groups.new(EntityLookup.decorate_items($ir.items.select { |item| item.is_a? GroupItem }))
+          # rubocop: enable Style/GlobalVars
         end
 
         # Group class that provides access to OpenHAB group object and delegates other methods to
