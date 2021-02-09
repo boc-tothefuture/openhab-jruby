@@ -89,3 +89,10 @@ Feature: rule_language
       """
     When I deploy the rule
     Then It should log 'has no execution blocks, not creating rule' within 5 seconds
+
+  Scenario: Library version should be logged on start
+    Given code in a rules file:
+      """
+      """
+    When I deploy the rules file
+    Then It should log 'OpenHAB JRuby Scripting Library Version' within 5 seconds
