@@ -75,6 +75,8 @@ module OpenHAB
               @string_item.state <=> other.state
             when String
               @string_item.state.to_s <=> other
+            else
+              @string_item.state <=> other
             end
           end
 
