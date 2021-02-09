@@ -1,5 +1,14 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.14.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.14.2...2.14.3) (2021-02-09)
+
+
+### Bug Fixes
+
+* multiple delayed triggers overwrite the previous triggers ([6f14429](https://github.com/boc-tothefuture/openhab-jruby/commit/6f14429113375907a39207bc25d75108897d61ca))
+
+## [2.14.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.14.1...2.14.2) (2021-02-08)
+
 ## [2.14.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.14.0...2.14.1) (2021-02-05)
 
 

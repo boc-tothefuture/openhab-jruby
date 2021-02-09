@@ -19,6 +19,7 @@ require 'core/dsl/gems'
 require 'core/dsl/units'
 require 'core/dsl/types/quantity'
 require 'core/dsl/states'
+require 'core/dsl/persistence'
 
 module OpenHAB
   #
@@ -30,6 +31,7 @@ module OpenHAB
     #
     module DSL
       # Extend the calling module/class with the DSL
+      # rubocop: disable Metrics/MethodLength
       def self.extended(base)
         base.send :include, OpenHAB::Core::DSL::Rule
         base.send :include, OpenHAB::Core::DSL::Items
@@ -40,8 +42,10 @@ module OpenHAB
         base.send :include, OpenHAB::Core::DSL::Timers
         base.send :include, OpenHAB::Core::DSL::States
         base.send :include, OpenHAB::Core::DSL::Tod
+        base.send :include, OpenHAB::Core::DSL::Persistence
         base.send :include, Things
       end
+      # rubocop: enable Metrics/MethodLength
     end
   end
 end

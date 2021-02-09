@@ -69,7 +69,7 @@ module OpenHAB
             end
             logger.trace("Creating Changed Wait Change Trigger for #{config}")
             trigger = append_trigger(trigger, config)
-            @trigger_delays = { trigger.id => TriggerDelay.new(to: to, from: from, duration: duration) }
+            @trigger_delays[trigger.id] = TriggerDelay.new(to: to, from: from, duration: duration)
           end
 
           #
