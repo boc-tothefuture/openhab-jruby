@@ -3,14 +3,14 @@
 require 'java'
 
 #
-# MonkeyPatching Decimal Type
+# MonkeyPatching QuantityType
 #
 # rubocop:disable Style/ClassAndModuleChildren
-class Java::OrgOpenhabCoreLibraryTypes::DecimalType
+class Java::OrgOpenhabCoreLibraryTypes::QuantityType
   # rubocop:enable Style/ClassAndModuleChildren
 
   #
-  # Compare DecimalType to supplied object
+  # Compare QuantityType to supplied object
   #
   # @param [Object] other object to compare to
   #
@@ -19,10 +19,9 @@ class Java::OrgOpenhabCoreLibraryTypes::DecimalType
   def <=>(other)
     logger.trace("#{self.class} #{self} <=> #{other} (#{other.class})")
     case other
-    when Numeric
-      to_big_decimal.compare_to(other.to_d)
-    when Java::OrgOpenhabCoreTypes::UnDefType
-      1
+    when Java::OrgOpenhabCoreTypes::UnDefType then 1
+    when String then self <=> Quantity.new(other)
+    when OpenHAB::Core::DSL::Types::Quantity then self <=> other.quantity
     else
       other = other.state if other.respond_to? :state
       compare_to(other)
@@ -30,31 +29,30 @@ class Java::OrgOpenhabCoreLibraryTypes::DecimalType
   end
 
   #
-  # Coerce objects into a DecimalType
+  # Coerce objects into a QuantityType
   #
-  # @param [Object] other object to coerce to a DecimalType if possible
+  # @param [Object] other object to coerce to a QuantityType if possible
   #
   # @return [Object] Numeric when applicable
   #
   def coerce(other)
     logger.trace("Coercing #{self} as a request from #{other.class}")
     case other
-    when Numeric
-      [other.to_d, to_big_decimal]
+    when String
+      [Quantity.new(other), self]
     else
       [other, self]
     end
   end
 
   #
-  # Compare self to other through the spaceship operator
+  # Compare self to other using the spaceship operator
   #
   # @param [Object] other object to compare to
   #
   # @return [Boolean] True if equals
   #
   def ==(other)
-    logger.trace("#{self.class} #{self} == #{other} (#{other.class})")
     (self <=> other).zero?
   end
 end

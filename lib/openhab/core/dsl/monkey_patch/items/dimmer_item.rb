@@ -96,12 +96,27 @@ class Java::OrgOpenhabCoreLibraryItems::DimmerItem
   def <=>(other)
     logger.trace("Comparing #{self} to #{other}")
     case other
-    when DimmerItem, NumberItem
-      state <=> other.state
-    when DecimalType
-      state <=> other
+    when Java::OrgOpenhabCoreItems::GenericItem, NumberItem then state <=> other.state
+    when DecimalType then state <=> other
+    when Numeric then state.to_big_decimal.to_d <=> other.to_d
+    else compare_to(other)
+    end
+  end
+
+  #
+  # Coerce objects into a DimmerItem
+  #
+  # @param [Object] other object to coerce to a DimmerItem if possible
+  #
+  # @return [Object] Numeric when applicable
+  #
+  def coerce(other)
+    logger.trace("Coercing #{self} as a request from  #{other.class}")
+    case other
+    when Numeric
+      [other, state.to_big_decimal.to_d]
     else
-      to_i <=> other.to_i
+      [other, state]
     end
   end
 
