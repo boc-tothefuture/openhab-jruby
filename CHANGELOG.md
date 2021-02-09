@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.15.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.14.3...2.15.0) (2021-02-09)
+
+
+### Features
+
+* add Persistence support ([9cab1ff](https://github.com/boc-tothefuture/openhab-jruby/commit/9cab1ff24e2b2f87b0558385cd1c82d623547df6))
+
 ## [2.14.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.14.2...2.14.3) (2021-02-09)
 
 
