@@ -102,3 +102,27 @@ Feature: changed_duration
       | ON   | OFF | changed Switches, to: ON, for: 10.seconds            | should not |
       | OFF  | ON  | changed Switches, from: OFF, to: ON, for: 10.seconds | should     |
       | OFF  | ON  | changed Switches, from: ON, to: ON, for: 10.seconds  | should not |
+
+  Scenario: Multiple changed with duration triggers
+    Given items:
+      | type   | name       | label      | group | state |
+      | Switch | Switch_One | Switch One |       | OFF   |
+      | Switch | Switch_Two | Switch Two |       | OFF   |
+    And a rule:
+      """
+      rule 'A rule with multiple changed duration triggers' do
+        changed Switch_One, to: ON, for: 4.seconds
+        changed Switch_Two, to: ON, for: 8.seconds
+        triggered do |item|
+          logger.info("#{item.name} changed")
+        end
+      end
+      """
+    When I deploy the rule
+    And item "Switch_One" state is changed to "ON"
+    And item "Switch_Two" state is changed to "ON"
+    Then It should not log "Switch_One changed" within 2 seconds
+    And It should not log "Switch_Two changed" within 5 seconds
+    And It should log "Switch_One changed" within 6 seconds
+    And It should log "Switch_Two changed" within 10 seconds
+
