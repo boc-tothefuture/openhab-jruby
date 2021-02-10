@@ -127,7 +127,7 @@ module OpenHAB
         end
 
         # Modules that refines the Ruby Range object cover? and include? methods to support TimeOfDay ranges
-        class TimeOfDayRangeElement
+        class TimeOfDayRangeElement < Numeric
           include Comparable
           include Logging
 
@@ -138,6 +138,8 @@ module OpenHAB
           def initialize(sod:, range_begin:)
             @sod = sod
             @range_begin = range_begin
+
+            super()
           end
 
           # Returns the current second of day advanced by 1 second
