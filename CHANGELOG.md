@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.16.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.15.0...2.16.0) (2021-02-10)
+
+
+### Features
+
+* support comparisons between various numeric item/state types ([510d6db](https://github.com/boc-tothefuture/openhab-jruby/commit/510d6db9041afc91e261b43afd4d8e4b3ad135d3))
+
 # [2.15.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.14.3...2.15.0) (2021-02-09)
 
 
