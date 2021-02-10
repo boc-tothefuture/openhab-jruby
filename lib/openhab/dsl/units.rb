@@ -3,7 +3,7 @@
 require 'java'
 
 # Import Imperial and SI Units overriding provided values
-%i[ImperialUnits SIUnits].each do |type|
+%i[Units ImperialUnits SIUnits].each do |type|
   Object.send(:remove_const, type)
   java_import "org.openhab.core.library.unit.#{type}"
 end
