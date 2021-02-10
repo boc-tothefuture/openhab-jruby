@@ -221,20 +221,18 @@ module OpenHAB
           end
 
           #
-          # Patch event to include event.item when it doesn't exist
-          # This is to patch a bug see https://github.com/boc-tothefuture/openhab-jruby/issues/75
-          # It may be fixed in the openhab core in the future, in which case, this patch will no longer be necessary
+          # Patch event to decorate event.item with our item wrapper
           #
-          # @param [OpenHAB Event] event to check for item accessor
-          # @param [OpenHAB Event Inputs] inputs inputs to running rule
+          # @param [OpenHAB Event] event patch
           #
-          def add_event_item(event, inputs)
-            return if event.nil? || defined?(event.item)
+          def decorate_event_item(event)
+            return if event.nil?
 
             class << event
-              attr_accessor :item
+              def item
+                EntityLookup.lookup_item(item_name)
+              end
             end
-            event.item = inputs&.dig('triggeringItem')
           end
 
           #
@@ -266,6 +264,7 @@ module OpenHAB
           #
           #
           def process_otherwise_task(event, task)
+            decorate_event_item(event)
             logger.trace { "Executing rule '#{name}' otherwise block with event(#{event})" }
             task.block.call(event)
           end
@@ -292,9 +291,7 @@ module OpenHAB
           #
           #
           def process_trigger_task(event, task)
-            # rubocop: disable Style/GlobalVars
-            triggering_item = $ir.get(event&.itemName)
-            # rubocop: enable Style/GlobalVars
+            triggering_item = EntityLookup.lookup_item(event&.itemName)
             logger.trace { "Executing rule '#{name}' trigger block with item (#{triggering_item})" }
             task.block.call(triggering_item) if triggering_item
           end
@@ -307,8 +304,8 @@ module OpenHAB
           # @param [Run] task to execute
           #
           #
-          def process_run_task(event, inputs, task)
-            add_event_item(event, inputs)
+          def process_run_task(event, _inputs, task)
+            decorate_event_item(event)
             logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
             task.block.call(event)
           end

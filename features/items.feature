@@ -172,3 +172,16 @@ Feature:  items
     Then It should log 'DimmerTest include? true' within 5 seconds
     And It should log 'SimmerTest include? false' within 5 seconds
     And It should log 'SimmerTest item nil? true' within 5 seconds
+
+  Scenario: Verify decoration of item
+    Given items:
+      | type   | name    | state |
+      | Number | Number1 | 1     |
+    And code in a rules file
+      """
+      logger.info("Number1 class is #{Number1.class}")
+      logger.info("items['Number1'] class is #{items['Number1'].class}")
+      """
+    When I deploy the rules file
+    Then It should log "Number1 class is OpenHAB::Core::DSL::Items::NumberItem" within 5 seconds
+    And It should log "items['Number1'] class is OpenHAB::Core::DSL::Items::NumberItem" within 5 seconds
