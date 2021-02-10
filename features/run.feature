@@ -68,4 +68,17 @@ Feature:  run
     Then It should log 'from OFF' within 5 seconds
     Then It should log 'to ON' within 5 seconds
 
-
+  Scenario: Verify decoration of event.item
+    Given items:
+      | type   | name    | state |
+      | Number | Number1 | 1     |
+    And code in a rules file
+      """
+      rule 'Run event item' do
+        changed Number1
+        run { |event| logger.info("event.item class is #{event.item.class}") }
+      end
+      """
+    When I deploy the rules file
+    And item "Number1" state is changed to "2"
+    Then It should log "event.item class is OpenHAB::Core::DSL::Items::NumberItem" within 5 seconds
