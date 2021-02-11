@@ -35,6 +35,7 @@ Trigger defined as:
 - When: a member of an item group recieves a command
 - Group: Reset_5Seconds
 - Command: ON
+
 ```ruby
 require 'openhab'
 
@@ -50,6 +51,7 @@ Trigger defined as:
 - When: the state of a member of an item group is updated
 - Group: MotionSensors
 - State: ON
+
 ```ruby
 require 'openhab'
 
