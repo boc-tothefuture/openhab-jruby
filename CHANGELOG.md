@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.16.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.0...2.16.1) (2021-02-11)
+
+
+### Performance Improvements
+
+* **timeofdayrangeelement:** subclass Numeric to make comparisons more efficient ([c2482e8](https://github.com/boc-tothefuture/openhab-jruby/commit/c2482e832fa3a4803bafef71217c6cfe1fdd2bed))
+
 # [2.16.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.15.0...2.16.0) (2021-02-10)
 
 
