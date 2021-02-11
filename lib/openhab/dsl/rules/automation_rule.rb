@@ -190,7 +190,7 @@ module OpenHAB
           state = inputs['newState']
           if state == trigger_delay.tracking_to
             logger.trace("Item changed to #{state} for #{trigger_delay}, rescheduling timer.")
-            trigger_delay.timer.reschedule(ZonedDateTime.now.plus(duration))
+            trigger_delay.timer.reschedule(ZonedDateTime.now.plus(trigger_delay.duration))
           else
             logger.trace("Item changed to #{state} for #{trigger_delay}, cancelling timer.")
             trigger_delay.timer.cancel
