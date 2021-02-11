@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.16.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.1...2.16.2) (2021-02-11)
+
+
+### Bug Fixes
+
+* decorate items[itemname], event.item, and triggered item ([ce4ef03](https://github.com/boc-tothefuture/openhab-jruby/commit/ce4ef03afc3a9f10e96af17fccd61a0acf84cc4d))
+
 ## [2.16.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.0...2.16.1) (2021-02-11)
 
 
