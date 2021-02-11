@@ -27,6 +27,7 @@ end
 #
 module EntityLookup
   include Logging
+
   #
   # Decorate items with Ruby wrappers
   #
@@ -34,26 +35,32 @@ module EntityLookup
   #
   # @return [Array] Array of decorated items
   #
-  # rubocop: disable Metrics/MethodLength
-  # Disabled line length - case dispatch pattern
   def self.decorate_items(*items)
-    items.flatten.map do |item|
-      case item
-      when GroupItem
-        decorate_group(item)
-      when Java::Org.openhab.core.library.items::NumberItem
-        OpenHAB::Core::DSL::Items::NumberItem.new(item)
-      when Java::Org.openhab.core.library.items::StringItem
-        OpenHAB::Core::DSL::Items::StringItem.new(item)
-      else
-        item
-      end
-    end
+    items.flatten.map { |item| decorate_item(item) }
   end
-  # rubocop: enable Metrics/MethodLength
 
   #
-  # Loops up a Thing in the OpenHAB registry replacing '_' with ':'
+  # Decorate item with Ruby wrappers
+  #
+  # @param [Object] item the item object to decorate
+  #
+  # @return [Object] the ruby wrapper for the item
+  #
+  def self.decorate_item(item)
+    case item
+    when GroupItem
+      decorate_group(item)
+    when Java::Org.openhab.core.library.items::NumberItem
+      OpenHAB::Core::DSL::Items::NumberItem.new(item)
+    when Java::Org.openhab.core.library.items::StringItem
+      OpenHAB::Core::DSL::Items::StringItem.new(item)
+    else
+      item
+    end
+  end
+
+  #
+  # Looks up a Thing in the OpenHAB registry replacing '_' with ':'
   #
   # @param [String] name of Thing to lookup in Thing registry
   #
@@ -86,7 +93,7 @@ module EntityLookup
     # rubocop: disable Style/GlobalVars
     item = $ir.get(name)
     # rubocop: enable Style/GlobalVars
-    EntityLookup.decorate_items(item).first
+    EntityLookup.decorate_item(item)
   end
 
   #
