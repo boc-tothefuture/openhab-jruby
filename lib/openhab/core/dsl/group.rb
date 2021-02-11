@@ -86,6 +86,15 @@ module OpenHAB
           def to_s
             "[#{map(&:to_s).join(',')}]"
           end
+
+          #
+          # Get an ID for the group, using the label if set, otherwise group name
+          #
+          # @return [String] label if set otherwise name
+          #
+          def id
+            label || name
+          end
         end
       end
     end
