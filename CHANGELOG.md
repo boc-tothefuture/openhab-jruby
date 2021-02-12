@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.16.4](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.3...2.16.4) (2021-02-12)
+
+
+### Bug Fixes
+
+* **changed_duration:** timer reschedule duration bug ([6bc8862](https://github.com/boc-tothefuture/openhab-jruby/commit/6bc8862f1d8b7631ef0ff79ac9599433e53a7259))
+
 ## [2.16.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.2...2.16.3) (2021-02-12)
 
 ## [2.16.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.1...2.16.2) (2021-02-11)
