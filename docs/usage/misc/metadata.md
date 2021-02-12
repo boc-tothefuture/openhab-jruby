@@ -13,13 +13,14 @@ Item metadata can be accessed through `Item.meta` using the hash syntax. The `It
 
 In addition to the Enumerable methods, the following methods are available for `Item.meta`:
 
-| Method     | Parameters               | Description                                | Example                          |
-| ---------- | ------------------------ | ------------------------------------------ | -------------------------------- |
-| clear      |                          | Deletes all metadata namespaces            | `Item1.meta.clear`               |
-| delete     | namespace                | Delete the given namespace                 | `Item1.meta.delete 'namespace1'` |
-| each       | namespace, value, config | Loops through all the item's namespaces    |                                  |
-| merge!     | **other                  | Merge a hash or other item's metadata      |                                  |
-| namespace? | namespace                | Returns true if the given namespace exists |                                  |
+| Method     | Parameters               | Description                                           | Example                                     |
+| ---------- | ------------------------ | ----------------------------------------------------- | ------------------------------------------- |
+| clear      |                          | Deletes all metadata namespaces                       | `Item1.meta.clear`                          |
+| delete     | namespace                | Delete the given namespace                            | `Item1.meta.delete 'namespace1'`            |
+| dig        | key, *keys               | Dig through the namespace to find the specified value | `Item1.meta.dig('namespace1', 'foo', 'bar') |
+| each       | namespace, value, config | Loops through all the item's namespaces               |                                             |
+| merge!     | **other                  | Merge a hash or other item's metadata                 |                                             |
+| namespace? | namespace                | Returns true if the given namespace exists            |                                             |
 
 Metadata configuration is a hash and can be accessed using a subscript of `Item.meta['namespace']`. For example, the following Item metadata
 
@@ -60,6 +61,11 @@ Item1.meta['namespace1'].value
 
 # Access namespace1's configuration
 Item1.meta['namespace1']['config1']
+
+# Safely search for the specified value - no errors are raised, only nil returned if a key
+# in the chain doesn't exist
+Item1.meta.dig('namespace1', 'config1') #=> 'foo'
+Item1.meta.dig('namespace2', 'config1') #=> nil
 
 # Set item's metadata value, preserving its config
 # Item1's metadata before: { namespace1="value" [ config1="foo", config2="bar" ] }
