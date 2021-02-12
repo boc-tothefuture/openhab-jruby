@@ -8,23 +8,23 @@ grand_parent: Usage
 ---
 
 
-#### Number Item
+# Number Item
 
 | Method          | Parameters | Description                                                                                                                                              | Example                                                                      |
 | --------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | truthy?         |            | Item state not UNDEF, not NULL and is not Zero                                                                                                           | `puts "#{item.name} is truthy" if item.truthy?`                              |
 | +,-,\*,/        | amount     | Perform the operation between the state of the number item and the supplied value*                                                                       | `NumberItem << NumberItem - 5` or `NumberItem << 10 + NumberItem`            |
 | \|              | unit       | Convert the supplied NumberItem to the supplied unit. Unit can either be a Unit class or string representation of the symbol, returns a Quantity object. | `NumberItem` &#124; `ImperialUnits::FAHRENHEIT` or `NumberItem `&#124;`'°F'` |
-| to_d            |            | Returns the state as a BigDecimal or nil if state is UNEF or NULL                                                                                        | `NumberOne.to_d`                                                             |
-| to_i            |            | Returns the state as an Integer or nil if state is UNEF or NULL                                                                                          | `NumberOne.to_i`                                                             |
-| to_f            |            | Returns the state as a Float or nil if state is UNEF or NULL                                                                                             | `NumberOne.to_f`                                                             |
+| to_d            |            | Returns the state as a BigDecimal or nil if state is UNDEF or NULL                                                                                       | `NumberOne.to_d`                                                             |
+| to_i            |            | Returns the state as an Integer or nil if state is UNDEF or NULL                                                                                         | `NumberOne.to_i`                                                             |
+| to_f            |            | Returns the state as a Float or nil if state is UNDEF or NULL                                                                                            | `NumberOne.to_f`                                                             |
 | dimension       |            | Returns the dimension of the Number Item, nil if the number is dimensionless                                                                             | `Numberone.dimension`                                                        |
 | Numeric Methods |            | All methods for [Ruby Numeric](https://ruby-doc.org/core-2.5.0/Numeric.html)                                                                             |                                                                              |
 
  Math operations for dimensionless numbers return a type of [Ruby BigDecimal](https://ruby-doc.org/stjjdlib-2.5.1/libdoc/bigdecimal/rdoc/BigDecimal.html).  Check [Quantities section](#Quantities) for details of how math operations impact dimensioned numbers. 
 
 
-##### Examples
+## Examples
 
 Math operations can be performed directly on the NumberItem
 
@@ -42,19 +42,20 @@ Number Items can be selected in an enumerable with grep.
 ```ruby
 # Get all NumberItems
 items.grep(NumberItem)
-      .each { |number| logger.info("#{number.id} is a Number Item") }
+     .each { |number| logger.info("#{number.id} is a Number Item") }
 ```
 
 Number Item work with ranges and can be used in grep.
 
 ```ruby
 # Get numbers in group Numbers with a state of less than 50
-      # Get all NumberItems less than 50
-      Numbers.grep(0...50)
-           .each { |number| logger.info("#{number.id} is less than 50") }
+# Get all NumberItems less than 50
+Numbers.grep(0...50)
+       .each { |number| logger.info("#{number.id} is less than 50") }
 ```
 
 Number Items can also be used in case statements with ranges.
+
 ```ruby
 #Check if number items is less than 50
 case NumberOne
@@ -65,8 +66,25 @@ when (50..100)
 end
 ```
 
+Number Items can be compared directly against Numeric
 
-#### Quantities 
+```ruby
+if NumberOne > 10
+  logger.info("Item #{NumberOne.name} is greater than 10")
+end
+```
+
+Number Items can be compared against the value of another Number Item
+
+```ruby
+if NumberOne > NumberTwo
+  logger.info("Item #{NumberOne.name} (#{NumberOne}) is greater than #{NumberTwo.name} (#{NumberTwo})")
+end
+```
+
+
+
+## Quantities 
 Quantities are part of the [Units of Measurement](https://www.openhab.org/docs/concepts/units-of-measurement.html) framework in OpenHAB.  The quantity object acts as ruby wrapper around the OpenHAB QuantityType.
 
 | Method             | Parameters | Description                                                                                                                | Example                                                                      |
@@ -76,7 +94,7 @@ Quantities are part of the [Units of Measurement](https://www.openhab.org/docs/c
 | quantity           |            | Returns the underlying OpenHAB QuantityType object                                                                         | `Numberone.dimension`                                                        |
 | Numeric Methods    |            | All methods for [Ruby Numeric](https://ruby-doc.org/core-2.5.0/Numeric.html)                                               |                                                                              |
 
-###### Examples
+### Examples
 
 Quantity types can perform math operations between them.  
 
