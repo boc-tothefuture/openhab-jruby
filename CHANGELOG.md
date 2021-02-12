@@ -1,5 +1,7 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.16.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.2...2.16.3) (2021-02-12)
+
 ## [2.16.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.1...2.16.2) (2021-02-11)
 
 
