@@ -96,3 +96,10 @@ Feature: rule_language
       """
     When I deploy the rules file
     Then It should log 'OpenHAB JRuby Scripting Library Version' within 5 seconds
+
+  Scenario: Library waits until automation manager is ready before processing rules
+    Given code in a rules file:
+      """
+      """
+    When I deploy the rules file
+    Then It should log 'OpenHAB ready for rule processing' within 5 seconds
