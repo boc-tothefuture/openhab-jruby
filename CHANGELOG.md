@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.18.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.17.0...2.18.0) (2021-02-14)
+
+
+### Features
+
+* add DateTime Item type ([a3cc139](https://github.com/boc-tothefuture/openhab-jruby/commit/a3cc139d87b2df344bb1f0f78c3a68558e3e4fd5))
+
 # [2.17.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.16.4...2.17.0) (2021-02-12)
 
 
