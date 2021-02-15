@@ -8,6 +8,7 @@ require 'openhab/log/logger'
 require 'openhab/dsl/items/number_item'
 require 'openhab/dsl/items/string_item'
 require 'openhab/dsl/items/datetime_item'
+require 'openhab/dsl/items/rollershutter_item'
 
 # Automation lookup and injection of OpenHab entities
 java_import org.openhab.core.items.GroupItem
@@ -86,7 +87,8 @@ module OpenHAB
       # @return [Object] the ruby wrapper for the item
       #
       # rubocop: disable Metrics/MethodLength
-      # Method length check disabled - case dispatch pattern
+      # rubocop: disable Metrics/AbcSize
+      # Disabled line length and branch size - case dispatch pattern
       private_class_method def self.decorate_item(item)
         case item
         when GroupItem
@@ -97,10 +99,13 @@ module OpenHAB
           OpenHAB::DSL::Items::StringItem.new(item)
         when Java::Org.openhab.core.library.items::DateTimeItem
           OpenHAB::DSL::Items::DateTimeItem.new(item)
+        when Java::Org.openhab.core.library.items::RollershutterItem
+          OpenHAB::DSL::Items::RollershutterItem.new(item)
         else
           item
         end
       end
+      # rubocop: enable Metrics/AbcSize
       # rubocop: enable Metrics/MethodLength
 
       #
