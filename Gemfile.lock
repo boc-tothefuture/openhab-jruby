@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openhab-scripting (2.16.3)
+    openhab-scripting (2.19.1)
       bundler (~> 2.2)
 
 GEM
