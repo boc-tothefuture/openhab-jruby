@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.19.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.19.0...2.19.1) (2021-02-15)
+
+
+### Bug Fixes
+
+* **changed_duration:** cancel 'changed for' timer correctly ([1bf4aa3](https://github.com/boc-tothefuture/openhab-jruby/commit/1bf4aa390e8671e926fa44505cedd8f07d1d4260))
+
 # [2.19.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.18.0...2.19.0) (2021-02-15)
 
 
