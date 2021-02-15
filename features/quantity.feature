@@ -104,3 +104,18 @@ Feature:  quantity
       | Quantity.new('50 °F') | ==         | '50 °F'    | true   |
       | Quantity.new('50 °F') | <          | '25 °C'    | true   |
 
+  Scenario Outline: Quantity responds to math operations where operand is DecimalType
+    Given code in a rules file
+      """
+        java_import org.openhab.core.library.types.DecimalType
+        result = <quantity><operator> <operand>
+        logger.info("Result is #{result}")
+      """
+    When I deploy the rules file
+    Then It should log 'Result is <result>' within 5 seconds
+    Examples:
+      | quantity               | operator | operand              | result   |
+      | Quantity.new('50 °F')  | *        | DecimalType.new(2)   | 100 °F   |
+      | Quantity.new('100 °F') | /        | DecimalType.new(2)   | 50 °F    |
+      | Quantity.new('50 °F')  | *        | DecimalType.new(2.0) | 100.0 °F |
+      | Quantity.new('100 °F') | /        | DecimalType.new(2.0) | 5E+1 °F  |

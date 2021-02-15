@@ -50,3 +50,17 @@ persistence(:influxdb) do
   Item1.average_since(12.hours)
 end
 ```
+
+## Quantity
+
+Most persistence functions (`xxx_since` and `evolution_rate`) return a DecimalType object. This can be converted to Quantity using the `|` operator for comparison against other Quantity based data.
+
+### Example
+
+```ruby
+# Item1's persistence data is stored in Watt unit
+watt_average = Item1.average_since(1.hour) | 'W' 
+if watt_average > '2 kW' # compare Quantity object against kW
+  logger.info('The average power consumption in the past hour is greater than 2kW')
+end
+```

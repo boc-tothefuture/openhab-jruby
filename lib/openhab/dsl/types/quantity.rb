@@ -22,6 +22,7 @@ module OpenHAB
         def_delegator :@quantity, :to_s
 
         java_import org.openhab.core.library.types.QuantityType
+        java_import org.openhab.core.library.types.DecimalType
         java_import 'tec.uom.se.format.SimpleUnitFormat'
         java_import 'tec.uom.se.AbstractUnit'
 
@@ -92,6 +93,7 @@ module OpenHAB
           case other
           when Quantity then [other.quantity, quantity]
           when QuantityType then [other, quantity]
+          when DecimalType then [Quantity.new(other.to_big_decimal.to_d), quantity]
           when NumberItem then [other.to_qt.quantity, quantity]
           when Numeric, String then [Quantity.new(other), self]
           end
