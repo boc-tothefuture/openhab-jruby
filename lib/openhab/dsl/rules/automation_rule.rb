@@ -145,16 +145,14 @@ module OpenHAB
         #
         #
         def process_trigger_delay(trigger_delay, mod, inputs)
-          if check_trigger_guards(trigger_delay, inputs)
+          if trigger_delay.timer_active?
+            process_active_timer(inputs, mod, trigger_delay)
+          elsif check_trigger_guards(trigger_delay, inputs)
             logger.trace("Trigger Guards Matched for #{trigger_delay}, delaying rule execution")
             # Add timer and attach timer to delay object, and also state being tracked to so timer can be cancelled if
             #   state changes
             # Also another timer should not be created if changed to same value again but instead rescheduled
-            if trigger_delay.timer_active?
-              process_active_timer(inputs, mod, trigger_delay)
-            else
-              create_trigger_delay_timer(inputs, mod, trigger_delay)
-            end
+            create_trigger_delay_timer(inputs, mod, trigger_delay)
           else
             logger.trace("Trigger Guards did not match for #{trigger_delay}, ignoring trigger.")
           end
