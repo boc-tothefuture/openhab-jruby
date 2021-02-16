@@ -22,11 +22,14 @@ module OpenHAB
 
         def_delegator :datetime, :to_s
         def_delegator :zoned_date_time, :month_value, :month
+        def_delegator :zoned_date_time, :day_of_month, :mday
+        def_delegator :zoned_date_time, :day_of_year, :yday
         def_delegator :zoned_date_time, :minute, :min
         def_delegator :zoned_date_time, :second, :sec
         def_delegator :zoned_date_time, :nano, :nsec
         def_delegator :zoned_date_time, :to_epoch_second, :to_i
         alias inspect to_s
+        alias day mday
 
         java_import Java::OrgOpenhabCoreLibraryTypes::DateTimeType
         java_import java.time.ZonedDateTime
@@ -179,6 +182,15 @@ module OpenHAB
         #
         def utc?
           utc_offset.zero?
+        end
+
+        #
+        # Returns an integer representing the day of the week, 0..6, with Sunday == 0.
+        #
+        # @return [Integer] The day of week
+        #
+        def wday
+          zoned_date_time.day_of_week.value % 7
         end
 
         #
