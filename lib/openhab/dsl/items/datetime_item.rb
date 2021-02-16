@@ -4,6 +4,7 @@ require 'forwardable'
 require 'java'
 require 'time'
 require 'openhab/dsl/types/datetime'
+require 'openhab/dsl/items/item_delegate'
 
 module OpenHAB
   module DSL
@@ -16,6 +17,7 @@ module OpenHAB
       class DateTimeItem
         extend Forwardable
         include Comparable
+        include OpenHAB::DSL::Items::ItemDelegate
 
         def_delegator :@datetime_item, :to_s
 
@@ -27,6 +29,8 @@ module OpenHAB
         #
         def initialize(datetime_item)
           @datetime_item = datetime_item
+          item_delegate { @datetime_item }
+          item_delegate { to_dt }
         end
 
         #
@@ -60,36 +64,6 @@ module OpenHAB
         #
         def zone
           to_dt.zone if state?
-        end
-
-        #
-        # Check if missing method can be delegated to other contained objects
-        #
-        # @param [String, Symbol] meth The method name to check for
-        #
-        # @return [Boolean] true if DateTimeItem or DateTime responds to the method, false otherwise
-        #
-        def respond_to_missing?(meth, *)
-          @datetime_item.respond_to?(meth) || to_dt.respond_to?(meth)
-        end
-
-        #
-        # Forward missing methods to the OpenHAB Item, or a DateTime object wrapping its state
-        #
-        # @param [String] meth method name
-        # @param [Array] args arguments for method
-        # @param [Proc] block <description>
-        #
-        # @return [Object] Value from delegated method in OpenHAB NumberItem
-        #
-        def method_missing(meth, *args, &block)
-          if @datetime_item.respond_to?(meth)
-            @datetime_item.__send__(meth, *args, &block)
-          elsif state?
-            to_dt.send(meth, *args, &block)
-          else
-            raise NoMethodError, "undefined method `#{meth}' for #{self.class}"
-          end
         end
       end
     end
