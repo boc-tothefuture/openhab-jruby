@@ -16,10 +16,11 @@ module OpenHAB
       #
       class DateTimeItem
         extend Forwardable
-        include Comparable
-        include OpenHAB::DSL::Items::ItemDelegate
+        extend OpenHAB::DSL::Items::ItemDelegate
 
-        def_delegator :@datetime_item, :to_s
+        include Comparable
+
+        def_item_delegator :@datetime_item
 
         #
         # Create a new DateTimeItem
@@ -29,8 +30,8 @@ module OpenHAB
         #
         def initialize(datetime_item)
           @datetime_item = datetime_item
-          item_delegate { @datetime_item }
-          item_delegate { to_dt }
+          item_missing_delegate { @datetime_item }
+          item_missing_delegate { to_dt }
         end
 
         #

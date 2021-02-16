@@ -2,6 +2,7 @@
 
 require 'java'
 require 'openhab/log/logger'
+require 'forwardable'
 
 module OpenHAB
   module DSL
@@ -11,6 +12,36 @@ module OpenHAB
       #
       module ItemDelegate
         include OpenHAB::Log
+
+        # @return [Array<Symbol>] Array of methods that by default will be forwarded to an OpenHAB Item.
+        DEFAULT_DELEGATION_METHODS = %i[to_s groups].freeze
+        private_constant :DEFAULT_DELEGATION_METHODS
+
+        #
+        # Extends calling object with DSL and helper methods
+        #
+        # @param [Object] base Object to decorate with DSL and helper methods
+        #
+        #
+        def self.extended(base)
+          base.extend Forwardable
+          base.include OpenHAB::DSL::Items::ItemDelegate
+        end
+
+        #
+        # Delegate a set of methods to the supplied delegator
+        #
+        # @param [Java::OrgOpenhabCoreItems::GenericItem] item to delegate methods to
+        # @param [Symbol] methods to delegate, if not supplied default methods are used
+        #
+        #
+        def def_item_delegator(item, *methods)
+          methods = DEFAULT_DELEGATION_METHODS if methods.size.zero?
+          methods.each do |method|
+            logger.trace("Creating delegate for (#{method}) to #{item}) for #{self.class}")
+            def_delegator item, method
+          end
+        end
 
         #
         # Delegates methods to the object returned from the supplied block if
@@ -22,7 +53,7 @@ module OpenHAB
         # @param [Proc] &delegate delgegate block
         #
         #
-        def item_delegate(&delegate)
+        def item_missing_delegate(&delegate)
           @delegates ||= []
           @delegates << delegate
         end

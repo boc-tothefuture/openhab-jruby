@@ -187,3 +187,19 @@ Feature:  items
     When I deploy the rules file
     Then It should log "Number1 class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
     And It should log "items['Number1'] class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
+
+  Scenario: Verify items can access groups
+    Given groups:
+      | name         |
+      | Numbers      |
+      | EvenNumbers  |
+      | PrimeNumbers |
+    Given items:
+      | type   | name    | groups                |
+      | Number | Number3 | Numbers, PrimeNumbers |
+    And code in a rules file
+      """
+      logger.info("Number3 is in groups #{Number3.groups.map(&:name).join(', ')}")
+      """
+    When I deploy the rules file
+    Then It should log "Number3 is in groups Numbers, PrimeNumbers" within 5 seconds
