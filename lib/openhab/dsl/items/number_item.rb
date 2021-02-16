@@ -4,6 +4,7 @@ require 'bigdecimal'
 require 'forwardable'
 require 'java'
 require 'openhab/dsl/types/quantity'
+require 'openhab/dsl/items/item_delegate'
 
 module OpenHAB
   module DSL
@@ -16,6 +17,8 @@ module OpenHAB
       # way of breaking it up into multiple classes
       class NumberItem < Numeric
         extend Forwardable
+
+        include OpenHAB::DSL::Items::ItemDelegate
 
         def_delegator :@number_item, :to_s
 
@@ -31,6 +34,7 @@ module OpenHAB
         #
         def initialize(number_item)
           @number_item = number_item
+          item_delegate { @number_item }
           super()
         end
 
@@ -144,40 +148,6 @@ module OpenHAB
         #
         def dimension
           @number_item.dimension
-        end
-
-        #
-        # Forward missing methods to Openhab Number Item if they are defined
-        #
-        # @param [String] meth method name
-        # @param [Array] args arguments for method
-        # @param [Proc] block <description>
-        #
-        # @return [Object] Value from delegated method in OpenHAB NumberItem
-        #
-        def method_missing(meth, *args, &block)
-          logger.trace("Method missing, performing dynamic lookup for: #{meth}")
-          if @number_item.respond_to?(meth)
-            @number_item.__send__(meth, *args, &block)
-          elsif ::Kernel.method_defined?(meth) || ::Kernel.private_method_defined?(meth)
-            ::Kernel.instance_method(meth).bind_call(self, *args, &block)
-          else
-            super(meth, *args, &block)
-          end
-        end
-
-        #
-        # Checks if this method responds to the missing method
-        #
-        # @param [String] method_name Name of the method to check
-        # @param [Boolean] _include_private boolean if private methods should be checked
-        #
-        # @return [Boolean] true if this object will respond to the supplied method, false otherwise
-        #
-        def respond_to_missing?(method_name, _include_private = false)
-          @number_item.respond_to?(method_name) ||
-            ::Kernel.method_defined?(method_name) ||
-            ::Kernel.private_method_defined?(method_name)
         end
 
         %w[+ - * /].each do |operation|
