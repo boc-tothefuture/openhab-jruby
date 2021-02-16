@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'openhab/dsl/items/item_command'
 
 module OpenHAB
   module DSL
@@ -20,24 +21,11 @@ module OpenHAB
         # Monkey patch Contact Item with Ruby methods
         #
         class ContactItem
-          java_import org.openhab.core.library.types.OpenClosedType
-          #
-          # Check if the contact is open
-          #
-          # @return [Boolean] True if contact has state and is open, false otherwise
-          #
-          def open?
-            state? && state == OpenClosedType::OPEN
-          end
+          extend OpenHAB::DSL::Items::ItemCommand
 
-          #
-          # Check if the contact is closed
-          #
-          # @return [Boolean] True if contact has state and is closed, false otherwise
-          #
-          def closed?
-            state? && state == OpenClosedType::CLOSED
-          end
+          java_import Java::OrgOpenhabCoreLibraryTypes::OpenClosedType
+
+          item_state Java::OrgOpenhabCoreLibraryTypes::OpenClosedType
 
           #
           # Compares contacts to OpenClosedTypes
