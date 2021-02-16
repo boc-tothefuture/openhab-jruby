@@ -43,7 +43,7 @@ module OpenHAB
         # @return [Java::OrgOpenhabCoreLibraryTypes::PercentType] the position of the rollershutter
         #
         def position
-          state.as(PercentType)
+          state&.as(PercentType)
         end
 
         #
@@ -54,6 +54,8 @@ module OpenHAB
         # @return [Integer] -1, 0 or 1 depending on the result of the comparison
         #
         def <=>(other)
+          return nil unless state?
+
           case other
           when PercentType, Java::OrgOpenhabCoreLibraryTypes::DecimalType then position.compare_to(other)
           when Numeric then position.int_value <=> other
@@ -73,8 +75,8 @@ module OpenHAB
           raise ArgumentError, "Cannot coerce to #{other.class}" unless other.is_a? Numeric
 
           case other
-          when Integer then [other, position.int_value]
-          when Float then [other, position.float_value]
+          when Integer then [other, position&.int_value]
+          when Float then [other, position&.float_value]
           end
         end
 
@@ -84,7 +86,7 @@ module OpenHAB
         %i[+ - * / %].each do |operator|
           define_method(operator) do |other|
             right, left = coerce(other)
-            left.send(operator, right)
+            left&.send(operator, right)
           end
         end
       end
