@@ -171,7 +171,8 @@ module OpenHAB
           trigger_delay.timer = after(trigger_delay.duration) do
             logger.trace("Delay Complete for #{trigger_delay}, executing rule")
             trigger_delay.timer = nil
-            process_queue(@run_queue.dup, mod, inputs)
+            queue = create_queue(inputs)
+            process_queue(queue, mod, inputs)
           end
           trigger_delay.tracking_to = inputs['newState']
         end

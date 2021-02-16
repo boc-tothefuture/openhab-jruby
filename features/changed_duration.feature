@@ -142,3 +142,22 @@ Feature: changed_duration
     And It should log "Switch_One changed" within 6 seconds
     And It should log "Switch_Two changed" within 10 seconds
 
+  Scenario Outline: Changed with duration triggers with guard
+    Given items:
+      | type   | name       | label      | group | state |
+      | Switch | Switch_One | Switch One |       | OFF   |
+    And a rule:
+      """
+      rule 'A rule with a changed duration and a condition' do
+        changed Switch_One, to: ON, for: 1.second
+        only_if { <condition> }
+        triggered { |item| logger.info("Rule #{item.name} changed") }
+      end
+      """
+    When I deploy the rule
+    And item "Switch_One" state is changed to "ON"
+    Then It <should> log "Rule Switch_One changed" within 5 seconds
+    Examples:
+      | condition | should     |
+      | false     | should not |
+      | true      | should     |
