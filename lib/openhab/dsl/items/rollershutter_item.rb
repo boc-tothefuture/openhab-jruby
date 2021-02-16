@@ -2,6 +2,7 @@
 
 require 'forwardable'
 require 'java'
+require 'openhab/dsl/items/item_command'
 
 module OpenHAB
   module DSL
@@ -11,6 +12,7 @@ module OpenHAB
       #
       class RollershutterItem < Numeric
         extend Forwardable
+        extend OpenHAB::DSL::Items::ItemCommand
         include Comparable
 
         def_delegator :@rollershutter_item, :to_s
@@ -18,6 +20,10 @@ module OpenHAB
         java_import Java::OrgOpenhabCoreLibraryTypes::PercentType
         java_import Java::OrgOpenhabCoreLibraryTypes::UpDownType
         java_import Java::OrgOpenhabCoreLibraryTypes::StopMoveType
+
+        item_command Java::OrgOpenhabCoreLibraryTypes::StopMoveType
+        item_command Java::OrgOpenhabCoreLibraryTypes::UpDownType
+        item_state   Java::OrgOpenhabCoreLibraryTypes::UpDownType
 
         #
         # Creates a new RollershutterItem
@@ -30,24 +36,6 @@ module OpenHAB
           @rollershutter_item = rollershutter_item
 
           super()
-        end
-
-        #
-        # Check if the rollershutter is up
-        #
-        # @return [Boolean] true if the rollershutter is up, false otherwise
-        #
-        def up?
-          state.as(UpDownType) == UpDownType::UP
-        end
-
-        #
-        # Check if the rollershutter is down
-        #
-        # @return [Boolean] true if the rollershutter is down, false otherwise
-        #
-        def down?
-          state.as(UpDownType) == UpDownType::DOWN
         end
 
         #
@@ -102,34 +90,6 @@ module OpenHAB
           super unless other.is_a? UpDownType
 
           state.as(UpDownType).equals(other)
-        end
-
-        #
-        # Sends an UP command to the Item
-        #
-        def up
-          command UpDownType::UP
-        end
-
-        #
-        # Sends a DOWN command to the Item
-        #
-        def down
-          command UpDownType::DOWN
-        end
-
-        #
-        # Sends a STOP command to the Item
-        #
-        def stop
-          command StopMoveType::STOP
-        end
-
-        #
-        # Sends a MOVE command to the Item
-        #
-        def move
-          command StopMoveType::MOVE
         end
 
         #
