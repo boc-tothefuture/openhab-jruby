@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.19.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.19.1...2.19.2) (2021-02-16)
+
+
+### Bug Fixes
+
+* **changed_duration:** guards not evaluated for changed duration ([48a63e8](https://github.com/boc-tothefuture/openhab-jruby/commit/48a63e82db6b82cdcf7a8855681db1fa65f23abc))
+
 ## [2.19.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.19.0...2.19.1) (2021-02-15)
 
 
