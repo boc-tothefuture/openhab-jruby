@@ -128,6 +128,8 @@ Feature:  items
       | Dimmer  | 50             |
       | Contact | OPEN           |
       | Number  | 90.6           |
+      | Number  | NULL           |
+      | Number  | UNDEF          |
 
 
   Scenario: Items in array work with array methods
