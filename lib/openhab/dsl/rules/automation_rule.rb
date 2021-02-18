@@ -122,7 +122,7 @@ module OpenHAB
         # @return [Boolean] true if no from state is defined or defined state equals supplied state
         #
         def check_from(trigger_delay, state)
-          trigger_delay.from.nil? || trigger_delay.from == state
+          trigger_delay.from.nil? || state == trigger_delay.from
         end
 
         #
@@ -134,7 +134,7 @@ module OpenHAB
         # @return [Boolean] true if no to state is defined or defined state equals supplied state
         #
         def check_to(trigger_delay, state)
-          trigger_delay.to.nil? || trigger_delay.to == state
+          trigger_delay.to.nil? || state == trigger_delay.to
         end
 
         #
