@@ -49,7 +49,12 @@ module OpenHAB
               if timestamp.is_a? Java::JavaTimeTemporal::TemporalAmount
                 timestamp = Java::JavaTime::ZonedDateTime.now.minus(timestamp)
               end
-              PersistenceExtensions.public_send(method, self, timestamp, service&.to_s)
+              result = PersistenceExtensions.public_send(method, self, timestamp, service&.to_s)
+              if result.is_a?(Java::OrgOpenhabCoreLibraryTypes::DecimalType) && respond_to?(:unit) && unit
+                Quantity.new(Java::OrgOpenhabCoreLibraryTypes::QuantityType.new(result.to_big_decimal, unit))
+              else
+                result
+              end
             end
           end
 

@@ -30,6 +30,23 @@ grand_parent: Usage
 
 * The `timestamp` parameter accepts a java ZonedDateTime or a [Duration](../duration/) object that specifies how far back in time.
 * The `service` optional parameter accepts the name of the persistence service to use, as a String or Symbol. When not specified, the system's default persistence service will be used.
+* The return value of the persistence methods is a Quantity when the corresponding item is a dimensioned NumberItem
+
+### Examples:
+
+Given the following items are configured to persist on every change:
+```
+Number        UV_Index
+Number:Power  Power_Usage "Power Usage [%.2f W]"
+```
+
+```ruby
+# UV_Index average will return a DecimalType
+logger.info("UV_Index Average: #{UV_Index.average_since(12.hours)}") 
+# Power_Usage has a Unit of Measurement, so 
+# Power_Usage.average_since will return a Quantity with the same unit
+logger.info("Power_Usage Average: #{Power_Usage.average_since(12.hours)}") 
+```
 
 ## Persistence Block
 
