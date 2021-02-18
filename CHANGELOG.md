@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.21.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.20.3...2.21.0) (2021-02-18)
+
+
+### Features
+
+* **persistence:** automatically convert to quantity for dimensioned items ([7e352d4](https://github.com/boc-tothefuture/openhab-jruby/commit/7e352d4cc1b4ff8ab50e409cf0ef56f4a6d74fae))
+
 ## [2.20.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.20.2...2.20.3) (2021-02-18)
 
 
