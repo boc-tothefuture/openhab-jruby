@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'java'
+require 'openhab/dsl/items/item_command'
+
 module OpenHAB
   module DSL
     module MonkeyPatch
@@ -16,42 +19,14 @@ module OpenHAB
         # Monkeypatching SwitchItem to add Ruby Support methods
         #
         class SwitchItem
+          extend OpenHAB::DSL::Items::ItemCommand
+
           java_import Java::OrgOpenhabCoreLibraryTypes::OnOffType
-          #
-          # Send the OFF command to the switch
-          #
-          #
-          def off
-            command(OnOffType::OFF)
-          end
 
-          #
-          # Send the OFF command to the switch
-          #
-          #
-          def on
-            command(OnOffType::ON)
-          end
-
-          #
-          # Check if a switch is on
-          #
-          # @return [Boolean] True if the switch is on, false otherwise
-          #
-          def on?
-            state? && state == OnOffType::ON
-          end
+          item_command Java::OrgOpenhabCoreLibraryTypes::OnOffType
+          item_state Java::OrgOpenhabCoreLibraryTypes::OnOffType
 
           alias truthy? on?
-
-          #
-          # Check if a switch is off
-          #
-          # @return [Boolean] True if the switch is off, false otherwise
-          #
-          def off?
-            state? && state == OnOffType::OFF
-          end
 
           #
           # Send a command to invert the state of the switch
