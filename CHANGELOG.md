@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.20.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.20.0...2.20.1) (2021-02-18)
+
+
+### Bug Fixes
+
+* **items:** to_s did not include UNDEF and NULL ([71f3de4](https://github.com/boc-tothefuture/openhab-jruby/commit/71f3de4c1f3fde6412ebe1748550a62e989187e0))
+
 # [2.20.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.19.3...2.20.0) (2021-02-18)
 
 
