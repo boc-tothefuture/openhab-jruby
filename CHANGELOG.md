@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.19.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.19.2...2.19.3) (2021-02-18)
+
+
+### Bug Fixes
+
+* **rule:** otherwise blocks are always executed ([dd5d5e5](https://github.com/boc-tothefuture/openhab-jruby/commit/dd5d5e5cd6a6eb02b57e5e70d34a27e512bc0d0e))
+
 ## [2.19.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.19.1...2.19.2) (2021-02-16)
 
 
