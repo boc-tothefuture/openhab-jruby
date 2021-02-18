@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.20.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.20.2...2.20.3) (2021-02-18)
+
+
+### Bug Fixes
+
+* **changed_duration:** stringitem from/to comparison didn't work ([21721e7](https://github.com/boc-tothefuture/openhab-jruby/commit/21721e74a7595de83d94cd2a9143ebde4b36938b))
+
 ## [2.20.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.20.1...2.20.2) (2021-02-18)
 
 ## [2.20.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.20.0...2.20.1) (2021-02-18)
