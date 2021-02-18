@@ -101,10 +101,10 @@ module OpenHAB
           #
           # Get the string representation of the state of the item
           #
-          # @return [String] State of the item as a string if not UNDEF or NULL, nil otherwise
+          # @return [String] State of the item as a string
           #
           def to_s
-            state&.to_s
+            method(:state).super_method.call.to_s # call the super state to include UNDEF/NULL
           end
 
           #
