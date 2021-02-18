@@ -161,3 +161,20 @@ Feature: changed_duration
       | condition | should     |
       | false     | should not |
       | true      | should     |
+
+  Scenario: Changed duration with StringItem
+    Given items:
+      | type   | name       | label      | state |
+      | String | String_One | String One | ONE   |
+    And a rule:
+      """
+    rule 'Changed String' do
+      changed String_One, to: 'TWO', for: 2.seconds
+      triggered do |item|
+        logger.info("Changed rule: #{item.name} changed")
+      end
+    end
+      """
+    When I deploy the rule
+    And item "String_One" state is changed to "TWO"
+    Then It should log "Changed rule: String_One changed" within 5 seconds
