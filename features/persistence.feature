@@ -71,14 +71,13 @@ Feature: persistence
       """
       rule 'update persistence' do
         on_start
-        delay 2.seconds
         run do
-          Number_Power.update '1kW'
-          Number_Power.persist :mapdb
+          sleep 1
           Number_Power.update '3kW'
-          logger.info("Average: #{Number_Power.average_since(2.seconds, :mapdb)}")
+          Number_Power.persist :mapdb
+          logger.info("Average: #{Number_Power.average_since(1.second, :mapdb)}")
         end
       end
       """
     When I deploy the rule
-    Then It should log 'Average: 2 kW' within 5 seconds
+    Then It should log 'Average: 3 kW' within 10 seconds
