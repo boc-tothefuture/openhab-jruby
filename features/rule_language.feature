@@ -63,7 +63,7 @@ Feature: rule_language
     When I deploy the rules file
     Then It should log 'Found Dimmer Switch' within 5 seconds
 
-  Scenario: Rule supports executing different block if guards are not satisfied
+  Scenario Outline: Rule supports executing different block if guards are not satisfied
     Given items:
       | type   | name       | state |
       | Switch | TestSwitch | ON    |
@@ -73,11 +73,15 @@ Feature: rule_language
         on_start
         run { TestSwitch << ON }
         otherwise { TestSwitch << OFF }
-        only_if { false }
+        only_if { <condition> }
       end
       """
     When I deploy the rule
-    Then "TestSwitch" should be in state "OFF" within 5 seconds
+    Then "TestSwitch" should be in state "<outcome>" within 5 seconds
+    Examples: Check different conditions
+      | condition | outcome |
+      | true      | ON      |
+      | false     | OFF     |
 
 
   Scenario: Rule logs a warning and isn't created if it contains no execution blocks
