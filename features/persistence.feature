@@ -3,7 +3,7 @@ Feature: persistence
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
-    And feature 'openhab-persistence-rrd4j' installed
+    And feature 'openhab-persistence-mapdb' installed
     And items:
       | type   | name    |
       | Number | Number1 |
@@ -62,3 +62,23 @@ Feature: persistence
       """
     When I deploy the rule
     Then It should log 'Persistence checks done' within 5 seconds
+
+  Scenario: Persistence data with Units of Measurement
+    Given items:
+      | type         | name         | label | pattern |
+      | Number:Power | Number_Power | Power | %.1f kW |
+    And code in a rules file:
+      """
+      rule 'update persistence' do
+        on_start
+        delay 2.seconds
+        run do
+          Number_Power.update '1kW'
+          Number_Power.persist :mapdb
+          Number_Power.update '3kW'
+          logger.info("Average: #{Number_Power.average_since(2.seconds, :mapdb)}")
+        end
+      end
+      """
+    When I deploy the rule
+    Then It should log 'Average: 2 kW' within 5 seconds
