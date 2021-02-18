@@ -21,7 +21,7 @@ module OpenHAB
           #
           def ==(other)
             case other
-            when OpenHAB::DSL::Types::Quantity, QuantityType
+            when OpenHAB::DSL::Types::Quantity, QuantityType, Java::OrgOpenhabCoreLibraryTypes::StringType
               other == self
             else
               super
