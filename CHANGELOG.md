@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.20.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.19.3...2.20.0) (2021-02-18)
+
+
+### Features
+
+* add dig-method to top level metadata ([2975cd5](https://github.com/boc-tothefuture/openhab-jruby/commit/2975cd565fb7dbf8c994fcb306d40ae75f2e8c03))
+
 ## [2.19.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.19.2...2.19.3) (2021-02-18)
 
 
