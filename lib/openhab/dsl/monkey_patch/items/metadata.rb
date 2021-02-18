@@ -135,6 +135,18 @@ module OpenHAB
             end
 
             #
+            # Implements Hash#dig-like functionaity to metadata
+            #
+            # @param [String] key The first key
+            # @param [Array<String, Symbol>] keys More keys to dig deeper
+            #
+            # @return [OpenHAB::DSL::MonkeyPatch::Items::MetadataItem], or nil if the namespace doesn't exist
+            #
+            def dig(key, *keys)
+              keys.empty? ? self[key]&.value : self[key]&.dig(*keys)
+            end
+
+            #
             # Enumerates through all the namespaces
             #
             def each

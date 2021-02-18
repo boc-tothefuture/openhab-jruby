@@ -274,5 +274,29 @@ Feature:  metadata
     Then It should log 'TestSwitch ts1: value=foo config={"bar"=>"baz"}' within 5 seconds
     Then It should log 'TestSwitch ts2: value=boo config={"moo"=>"goo"}' within 5 seconds
 
+  Scenario: Dig works on top level metadata namespace
+    Given metadata added to "TestSwitch" in namespace "test":
+      """
+      {
+      "value": "foo",
+      "config": {
+      "bar": 'baz',
+      "qux": 'quux'
+      }
+      }
+      """
+    And code in a rules file:
+      """
+      logger.info("TestSwitch value for dig('test') is: #{TestSwitch.meta.dig('test')}")
+      logger.info("TestSwitch value for dig('test', 'qux') is: #{TestSwitch.meta.dig('test', 'qux')}")
+      logger.info("TestSwitch value for dig('nonexistent', 'qux') is nil?: #{TestSwitch.meta.dig('nonexistent', 'qux').nil?}")
+      logger.info("TestSwitch value for dig('test', 'nonexistent') is nil?: #{TestSwitch.meta.dig('test', 'nonexistent').nil?}")
+      """
+    When I deploy the rules file
+    Then It should log "TestSwitch value for dig('test') is: foo" within 5 seconds
+    And It should log "TestSwitch value for dig('test', 'qux') is: quux" within 5 seconds
+    And It should log "TestSwitch value for dig('nonexistent', 'qux') is nil?: true" within 5 seconds
+    And It should log "TestSwitch value for dig('test', 'nonexistent') is nil?: true" within 5 seconds
+
 
 
