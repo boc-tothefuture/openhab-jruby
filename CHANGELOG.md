@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.22.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.21.0...2.22.0) (2021-02-19)
+
+
+### Features
+
+* add conversion operator for DecimalType to Quantity ([42bc5de](https://github.com/boc-tothefuture/openhab-jruby/commit/42bc5de8321d6e5b4554afd84fd5759d672bf992))
+
 # [2.21.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.20.3...2.21.0) (2021-02-18)
 
 
