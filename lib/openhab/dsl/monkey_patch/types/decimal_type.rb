@@ -63,6 +63,27 @@ module OpenHAB
             logger.trace("#{self.class} #{self} == #{other} (#{other.class})")
             (self <=> other).zero?
           end
+
+          #
+          # Convert DecimalType to a Quantity
+          #
+          # @param [Object] other String or Unit representing an OpenHAB Unit
+          #
+          # @return [OpenHAB::Core::DSL::Types::Quantity] NumberItem converted to supplied Unit
+          #
+          def |(other)
+            other = SimpleUnitFormat.instance.unitFor(other) if other.is_a? String
+            Quantity.new(QuantityType.new(to_big_decimal, other))
+          end
+
+          #
+          # Provide details about DecimalType object
+          #
+          # @return [String] Representing details about the DecimalType object
+          #
+          def inspect
+            to_string
+          end
         end
       end
     end
