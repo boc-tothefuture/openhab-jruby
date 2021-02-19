@@ -244,21 +244,6 @@ module OpenHAB
         end
 
         #
-        # Patch event to decorate event.item with our item wrapper
-        #
-        # @param [OpenHAB Event] event patch
-        #
-        def decorate_event_item(event)
-          return if event.nil?
-
-          class << event
-            def item
-              OpenHAB::Core::EntityLookup.lookup_item(item_name)
-            end
-          end
-        end
-
-        #
         # Process the run queue
         #
         # @param [Array] run_queue array of procs of various types to execute
@@ -287,7 +272,6 @@ module OpenHAB
         #
         #
         def process_otherwise_task(event, task)
-          decorate_event_item(event)
           logger.trace { "Executing rule '#{name}' otherwise block with event(#{event})" }
           task.block.call(event)
         end
@@ -314,9 +298,10 @@ module OpenHAB
         #
         #
         def process_trigger_task(event, task)
-          triggering_item = OpenHAB::Core::EntityLookup.lookup_item(event&.itemName)
-          logger.trace { "Executing rule '#{name}' trigger block with item (#{triggering_item})" }
-          task.block.call(triggering_item) if triggering_item
+          return unless event&.item
+
+          logger.trace { "Executing rule '#{name}' trigger block with item (#{event.item})" }
+          task.block.call(event.item)
         end
 
         #
@@ -327,7 +312,6 @@ module OpenHAB
         #
         #
         def process_run_task(event, task)
-          decorate_event_item(event)
           logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
           task.block.call(event)
         end
