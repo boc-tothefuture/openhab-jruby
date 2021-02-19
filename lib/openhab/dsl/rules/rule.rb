@@ -27,6 +27,8 @@ module OpenHAB
         config.guard = Guard::Guard.new(only_if: config.only_if, not_if: config.not_if)
         logger.trace { config.inspect }
         process_rule_config(config)
+      rescue StandardError => e
+        re_raise_with_backtrace(e)
       end
 
       #
@@ -43,6 +45,16 @@ module OpenHAB
       end
 
       private
+
+      #
+      # Re-raises a rescued error to OpenHAB with added rule name and stack trace
+      #
+      # @param [Exception] error A rescued error
+      #
+      def re_raise_with_backtrace(error)
+        error = logger.clean_backtrace(error)
+        raise error, "#{error.message}\nIn rule: #{@rule_name}\n#{error.backtrace.join("\n")}"
+      end
 
       #
       # Process a rule based on the supplied configuration

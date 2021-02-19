@@ -107,3 +107,30 @@ Feature: rule_language
       """
     When I deploy the rules file
     Then It should log 'OpenHAB ready for rule processing' within 5 seconds
+
+  Scenario: Errors in a run block is logged with stack trace and exits rule
+    Given code in a rules file
+      """
+      def test
+        test2
+      end
+
+      def test2
+        raise 'Something is wrong'
+      end
+
+      rule 'test' do
+        on_start
+        run { test }
+        delay 5.seconds
+        run { logger.info('This one works!') }
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'Something is wrong (RuntimeError)' within 5 seconds
+    And It should log 'In rule: test' within 5 seconds
+    And It should log "<script>:12:in `test2'" within 5 seconds
+    And It should log "<script>:8:in `test'" within 5 seconds
+    And It should log "<script>:17:in `block in <main>'" within 5 seconds
+    And It should log "<script>:15:in `<main>'" within 5 seconds
+    And It should not log 'This one works!' within 10 seconds
