@@ -30,7 +30,12 @@ grand_parent: Usage
 
 * The `timestamp` parameter accepts a java ZonedDateTime or a [Duration](../duration/) object that specifies how far back in time.
 * The `service` optional parameter accepts the name of the persistence service to use, as a String or Symbol. When not specified, the system's default persistence service will be used.
-* The return value of the persistence methods is a Quantity when the corresponding item is a dimensioned NumberItem
+* The return value of the following persistence methods is a [Quantity](../items/number.md#quantity) when the corresponding item is a dimensioned NumberItem:
+  * `average_since`
+  * `delta_since`
+  * `deviation_since`
+  * `sum_since`
+  * `variance_since`
 
 ### Examples:
 
@@ -46,6 +51,17 @@ logger.info("UV_Index Average: #{UV_Index.average_since(12.hours)}")
 # Power_Usage has a Unit of Measurement, so 
 # Power_Usage.average_since will return a Quantity with the same unit
 logger.info("Power_Usage Average: #{Power_Usage.average_since(12.hours)}") 
+```
+
+Comparison using Quantity
+
+```ruby
+# Because Power_Usage has a unit, the return value 
+# from average_since is a Quantity which can be
+# compared against a string with quantity
+if Power_Usage.average_since(15.minutes) > '5 kW'
+  logger.info("The power usage exceeded its 15 min average)
+end
 ```
 
 ## Persistence Block
@@ -65,19 +81,5 @@ persistence(:influxdb) do
   Item1.persist
   Item1.changed_since(1.hour)
   Item1.average_since(12.hours)
-end
-```
-
-## Quantity
-
-Most persistence functions (`xxx_since` and `evolution_rate`) return a DecimalType object. This can be converted to Quantity using the `|` operator for comparison against other Quantity based data.
-
-### Example
-
-```ruby
-# Item1's persistence data is stored in Watt unit
-watt_average = Item1.average_since(1.hour) | 'W' 
-if watt_average > '2 kW' # compare Quantity object against kW
-  logger.info('The average power consumption in the past hour is greater than 2kW')
 end
 ```
