@@ -65,18 +65,15 @@ Feature: persistence
 
   Scenario: Persistence data with Units of Measurement
     Given items:
-      | type         | name         | label | pattern |
-      | Number:Power | Number_Power | Power | %.1f kW |
+      | type         | name         | label | pattern | state |
+      | Number:Power | Number_Power | Power | %.1f kW | 0 kW  |
     And code in a rules file:
       """
       rule 'update persistence' do
         on_start
-        run do
-          sleep 1
-          Number_Power.update '3kW'
-          Number_Power.persist :mapdb
-          logger.info("Average: #{Number_Power.average_since(1.second, :mapdb)}")
-        end
+        run { Number_Power.update "3 kW" }
+        delay 3.second
+        run { logger.info("Average: #{Number_Power.average_since(10.seconds, :mapdb)}") }
       end
       """
     When I deploy the rule
