@@ -8,7 +8,23 @@ module OpenHAB
         # Persistence extension for Items
         #
         module Persistence
-          %w[persist last_update].each do |method|
+          # All persistence methods that could return a Quantity
+          QUANTITY_METHODS = %i[average_since
+                                delta_since
+                                deviation_since
+                                sum_since
+                                variance_since].freeze
+
+          # All persistence methods that require a timestamp
+          PERSISTENCE_METHODS = (QUANTITY_METHODS +
+                                %i[changed_since
+                                   evolution_rate
+                                   historic_state
+                                   maximum_since
+                                   minimum_since
+                                   updated_since]).freeze
+
+          %i[persist last_update].each do |method|
             define_method(method) do |service = nil|
               service ||= persistence_service
               PersistenceExtensions.public_send(method, self, service&.to_s)
@@ -31,34 +47,47 @@ module OpenHAB
             PersistenceExtensions.previous_state(self, skip_equal, service&.to_s)
           end
 
-          %w[
-            average_since
-            changed_since
-            delta_since
-            deviation_since
-            evolution_rate
-            historic_state
-            maximum_since
-            minimum_since
-            sum_since
-            updated_since
-            variance_since
-          ].each do |method|
+          PERSISTENCE_METHODS.each do |method|
             define_method(method) do |timestamp, service = nil|
               service ||= persistence_service
-              if timestamp.is_a? Java::JavaTimeTemporal::TemporalAmount
-                timestamp = Java::JavaTime::ZonedDateTime.now.minus(timestamp)
-              end
-              result = PersistenceExtensions.public_send(method, self, timestamp, service&.to_s)
-              if result.is_a?(Java::OrgOpenhabCoreLibraryTypes::DecimalType) && respond_to?(:unit) && unit
-                Quantity.new(Java::OrgOpenhabCoreLibraryTypes::QuantityType.new(result.to_big_decimal, unit))
-              else
-                result
-              end
+              result = PersistenceExtensions.public_send(method, self, to_zdt(timestamp), service&.to_s)
+              QUANTITY_METHODS.include?(method) ? quantify(result) : result
             end
           end
 
           private
+
+          #
+          # Convert timestamp to ZonedDateTime if it's a TemporalAmount
+          #
+          # @param [Object] timestamp to convert
+          #
+          # @return [ZonedDateTime]
+          #
+          def to_zdt(timestamp)
+            if timestamp.is_a? Java::JavaTimeTemporal::TemporalAmount
+              logger.trace("Converting #{timestamp} (#{timestamp.class}) to ZonedDateTime")
+              Java::JavaTime::ZonedDateTime.now.minus(timestamp)
+            else
+              timestamp
+            end
+          end
+
+          #
+          # Convert value to Quantity if it is a DecimalType and a unit is defined
+          #
+          # @param [Object] value The value to convert
+          #
+          # @return [Object] Quantity or the original value
+          #
+          def quantify(value)
+            if value.is_a?(Java::OrgOpenhabCoreLibraryTypes::DecimalType) && respond_to?(:unit) && unit
+              logger.trace("Unitizing #{value} with unit #{unit}")
+              Quantity.new(Java::OrgOpenhabCoreLibraryTypes::QuantityType.new(value.to_big_decimal, unit))
+            else
+              value
+            end
+          end
 
           #
           # Get the specified persistence service from the current thread local variable
