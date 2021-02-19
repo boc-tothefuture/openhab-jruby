@@ -255,12 +255,27 @@ module OpenHAB
           event = inputs&.dig('event')
 
           while (task = run_queue.shift)
-            case task
-            when RuleConfig::Run then process_run_task(event, task)
-            when RuleConfig::Trigger then process_trigger_task(event, task)
-            when RuleConfig::Delay then process_delay_task(inputs, mod, run_queue, task)
-            when RuleConfig::Otherwise then process_otherwise_task(event, task)
+            if task.is_a? RuleConfig::Delay
+              process_delay_task(inputs, mod, run_queue, task)
+            else
+              process_task(event, task)
             end
+          end
+        rescue StandardError => e
+          print_backtrace(e)
+        end
+
+        #
+        # Dispatch execution block tasks to different methods
+        #
+        # @param [OpenHab Event] event that triggered the rule
+        # @param [Task] task task containing otherwise block to execute
+        #
+        def process_task(event, task)
+          case task
+          when RuleConfig::Run then process_run_task(event, task)
+          when RuleConfig::Trigger then process_trigger_task(event, task)
+          when RuleConfig::Otherwise then process_otherwise_task(event, task)
           end
         end
 
@@ -314,6 +329,16 @@ module OpenHAB
         def process_run_task(event, task)
           logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
           task.block.call(event)
+        end
+
+        #
+        # Print error and stack trace without calls to internal classes
+        #
+        # @param [Exception] error A rescued error
+        #
+        def print_backtrace(error)
+          error = logger.clean_backtrace(error)
+          logger.error { "#{error.message} (#{error.class})\nIn rule: #{name}\n#{error.backtrace&.join("\n")}" }
         end
 
         #

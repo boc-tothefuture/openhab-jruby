@@ -16,7 +16,14 @@ module OpenHAB
       java_import org.slf4j.LoggerFactory
 
       # @return [Array] Supported logging levels
-      LEVELS = %i[TRACE DEBUG WARN INFO ERROR].freeze
+      LEVELS = %i[trace debug warn info error].freeze
+      private_constant :LEVELS
+
+      #
+      # Regex for matching internal calls in a stack trace
+      #
+      INTERNAL_CALL_REGEX = %r{(openhab-scripting-.*/lib)|(org/jruby/)}.freeze
+      private_constant :INTERNAL_CALL_REGEX
 
       #
       # Create a new logger
@@ -32,11 +39,30 @@ module OpenHAB
       # def <level>(msg=nil, &block)
       #   log(severity: <level>, msg: msg, &block)
       # end
+      #
+      # Also creates methods to check if the different logging levels are enabled
+      #
       LEVELS.each do |level|
-        method = level.to_s.downcase
-        define_method(method.to_s) do |msg = nil, &block|
+        define_method(level) do |msg = nil, &block|
           log(severity: level, msg: msg, &block)
         end
+        define_method("#{level}_enabled?") { @sl4fj_logger.send("is_#{level}_enabled") }
+      end
+
+      #
+      # Cleans the backtrace of an error to remove internal calls. If logging is set
+      # to debug or lower, the full backtrace is kept
+      #
+      # @param [Exception] error An exception to be cleaned
+      #
+      # @return [Exception] the exception, potentially with a cleaned backtrace.
+      #
+      def clean_backtrace(error)
+        return error if debug_enabled?
+
+        backtrace = error.backtrace_locations.reject { |line| INTERNAL_CALL_REGEX.match? line.to_s }
+        error.set_backtrace(backtrace.map(&:to_s))
+        error
       end
 
       private
@@ -54,7 +80,7 @@ module OpenHAB
         raise ArgumentError, "Unknown Severity #{severity}" unless LEVELS.include? severity
 
         # Dynamically check enablement of underlying logger, this expands to "is_<level>_enabled"
-        return unless @sl4fj_logger.send("is_#{severity.to_s.downcase}_enabled")
+        return unless send("#{severity}_enabled?")
 
         # Process block if no message provided
         msg = yield if msg.nil? && block_given?
@@ -62,7 +88,7 @@ module OpenHAB
         msg = message_to_string(msg: msg)
 
         # Dynamically invoke underlying logger, this expands to "<level>(message)"
-        @sl4fj_logger.send(severity.to_s.downcase, msg)
+        @sl4fj_logger.send(severity, msg)
       end
 
       #
@@ -121,7 +147,7 @@ module OpenHAB
         configure_logger_for(classname)
       end
 
-     private
+      private
 
       #
       # Configure a logger for the supplied classname
@@ -153,7 +179,7 @@ module OpenHAB
                         .first
                         .yield_self { |caller| File.basename(caller, '.*') }
       end
-   end
+    end
 
     #
     # Add logger method to the object that includes this module
