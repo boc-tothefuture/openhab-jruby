@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.22.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.22.0...2.22.1) (2021-02-20)
+
+
+### Bug Fixes
+
+* **changed:** for parameter with thing chaged trigger ([cd08922](https://github.com/boc-tothefuture/openhab-jruby/commit/cd08922fe7c9f4b2687b0b19000ecc3ba687bc9e))
+
 # [2.22.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.21.0...2.22.0) (2021-02-19)
 
 
