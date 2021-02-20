@@ -7,19 +7,23 @@ Feature:  run
       | type   | name       | label       | state |
       | Switch | TestSwitch | Test Switch | OFF   |
 
-  Scenario: Rules have access to event information in run blocks
+  Scenario Outline: Rules have access to event information in run blocks
     Given a rule
       """
       rule 'Access Event Properties' do
-        changed TestSwitch
+        <trigger> TestSwitch
         run do |event|
-          logger.info("#{event.item.id} triggered from #{event.last} to #{event.state}")
+          logger.info("#{event.item.id} triggered to #{event.state}")
          end
       end
       """
     When I deploy the rule
     And item "TestSwitch" state is changed to "ON"
-    Then It should log 'Test Switch triggered from OFF to ON' within 5 seconds
+    Then It should log 'Test Switch triggered to ON' within 5 seconds
+    Examples: Test various triggers
+      | trigger |
+      | updated |
+      | changed |
 
 
   Scenario: Single line run blocks supported
@@ -82,3 +86,4 @@ Feature:  run
     When I deploy the rules file
     And item "Number1" state is changed to "2"
     Then It should log "event.item class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
+
