@@ -58,8 +58,10 @@ Feature:  dimmer_item
       | initial_state | command              | final_state |
       | 50            | DimmerOne.dim 2      | 48          |
       | 50            | DimmerOne.brighten 2 | 52          |
+      | 50            | DimmerOne.dim        | 49          |
+      | 50            | DimmerOne.brighten   | 51          |
 
-  Scenario Outline: dim/-=/brighten/+= of 1 should send the decrease command
+  Scenario Outline: decrease/increase should send the increase or decrease command
     Given code in a rules file
       """
       # Turn on switches in opposite state
@@ -69,9 +71,29 @@ Feature:  dimmer_item
     Then It should log "Sending Command <command_log> to Dimmer One" within 5 seconds
     Examples:
       | command            | command_log |
-      | DimmerOne.dim      | DECREASE    |
-      | DimmerOne.brighten | INCREASE    |
+      | DimmerOne.decrease | DECREASE    |
+      | DimmerOne.increase | INCREASE    |
 
+  Scenario Outline: math operations (+,-,/,*) should work on dimmer items
+    Given item states:
+      | item      | state           |
+      | DimmerOne | <initial_state> |
+    And code in a rules file
+      """
+      # Turn on switches in opposite state
+      <command>
+      """
+    When I deploy the rules file
+    Then "DimmerOne" should be in state "<final_state>" within 5 seconds
+    Examples:
+      | initial_state | command                       | final_state |
+      | 50            | DimmerOne << DimmerOne +  2   | 52          |
+      | 50            | DimmerOne << 2 +  DimmerOne   | 52          |
+      | 50            | DimmerOne << DimmerOne -  2   | 48          |
+      | 50            | DimmerOne << 98  -  DimmerOne | 48          |
+      | 50            | DimmerOne << DimmerOne /  2   | 25          |
+      | 50            | DimmerOne << 100 / DimmerOne  | 2           |
+      | 50            | DimmerOne << 2 * DimmerOne    | 100         |
 
   Scenario: Dimmer should work with grep
     Given code in a rules file
@@ -82,6 +104,22 @@ Feature:  dimmer_item
       """
     When I deploy the rules file
     Then It should log "Dimmer One is a Dimmer" within 5 seconds
+
+  Scenario Outline: Dimmer should log provide its state on to_s
+    Given item states:
+      | item      | state           |
+      | DimmerOne | <initial_state> |
+    And code in a rules file
+      """
+        logger.info("#{DimmerOne.id} is set to #{DimmerOne}")
+      """
+    When I deploy the rules file
+    Then It should log "Dimmer One is set to <initial_state>" within 5 seconds
+    Examples:
+      | initial_state |
+      | 50            |
+      | 0             |
+
 
 
   Scenario: Dimmer should work with grep in ranges
