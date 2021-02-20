@@ -58,16 +58,8 @@ module OpenHAB
         # @return [Array] Array of current TriggerDelay objects
         #
         def changed_wait(item, duration:, to: nil, from: nil)
-          # If GroupItems specified, use the group state trigger instead
-          if item.is_a? GroupItems
-            config = { 'groupName' => item.group.name }
-            trigger = Trigger::GROUP_STATE_CHANGE
-          else
-            config = { 'itemName' => item.name }
-            trigger = Trigger::ITEM_STATE_CHANGE
-          end
-          logger.trace("Creating Changed Wait Change Trigger for #{config}")
-          trigger = append_trigger(trigger, config)
+          trigger = create_changed_trigger(item, nil, nil)
+          logger.trace("Creating Changed Wait Change Trigger for #{item}")
           @trigger_delays[trigger.id] = TriggerDelay.new(to: to, from: from, duration: duration)
         end
 

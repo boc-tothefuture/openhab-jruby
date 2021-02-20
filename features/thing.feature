@@ -86,4 +86,28 @@ Feature:  thing
       | :online    | :uninitialized | should     |
       | :unknown   | :uninitialized | should not |
 
+  Scenario Outline: Rule supports thing status changes with duration
+    Given a deployed rule:
+      """
+      rule 'Execute rule when thing is changed for 10 seconds' do
+        changed things['astro:sun:home'], :to => :uninitialized, for: 10.seconds
+        run { |event| logger.info("Thing #{event.uid} status changed to #{event.status}") }
+      end
+      """
+    And thing "astro:sun:home" is enabled
+    When thing "astro:sun:home" is disabled
+    Then It should log 'Thing astro:sun:home status changed to UNINITIALIZED' within 15 seconds
 
+  Scenario Outline: Rule supports thing status changes with duration
+    Given a deployed rule:
+      """
+      rule 'Execute rule when thing is changed for 20 seconds' do
+        changed things['astro:sun:home'], :to => :uninitialized, for: 20.seconds
+        run { |event| logger.info("Thing #{event.uid} status changed to #{event.status}") }
+      end
+      """
+    And thing "astro:sun:home" is enabled
+    When thing "astro:sun:home" is disabled
+    Then if I wait 5 seconds
+    And thing "astro:sun:home" is enabled
+    Then It should not log 'Thing astro:sun:home status changed to UNINITIALIZED' within 20 seconds

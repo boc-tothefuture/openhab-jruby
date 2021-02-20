@@ -105,6 +105,10 @@ When('thing {string} is disabled') do |thing|
   openhab_client("openhab:things disable #{thing}")
 end
 
+When('thing {string} is enabled') do |thing|
+  openhab_client("openhab:things enable #{thing}")
+end
+
 Given('item states:') do |table|
   table.hashes.each do |row|
     item = row['item']
