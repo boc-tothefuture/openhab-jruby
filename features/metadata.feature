@@ -298,5 +298,28 @@ Feature:  metadata
     And It should log "TestSwitch value for dig('nonexistent', 'qux') is nil?: true" within 5 seconds
     And It should log "TestSwitch value for dig('test', 'nonexistent') is nil?: true" within 5 seconds
 
+  Scenario Outline: Item assigned to metadata value
+    Given items:
+      | type   | name   | state   |
+      | <type> | <item> | <state> |
+    And code in a rules file:
+      """
+      TestSwitch.meta['test'] = <item>
+      logger.info("TestSwitch metadata value for 'test' is: #{TestSwitch.meta['test'].value}")
+      """
+    When I deploy the rules file
+    Then It should log "TestSwitch metadata value for 'test' is: <state>" within 5 seconds
+    Examples: using different item types
+      | type               | item     | state  |
+      # | Color | Col_Item | 10,20,30 | # TODO: COLOR Item is not yet properly implemented to return its values
+      | Contact            | Ctc_Item | CLOSED |
+      | Dimmer             | Dim_Item | 60     |
+      | Number             | Num_Item | 1.12   |
+      | Number:Temperature | Tmp_Item | 12 °C  |
+      | Rollershutter      | Rol_Item | 33     |
+      | String             | Str_Item | foo    |
+      | Switch             | Swc_Item | ON     |
+
+
 
 
