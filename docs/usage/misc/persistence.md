@@ -30,7 +30,7 @@ grand_parent: Usage
 
 * The `timestamp` parameter accepts a java ZonedDateTime or a [Duration](../duration/) object that specifies how far back in time.
 * The `service` optional parameter accepts the name of the persistence service to use, as a String or Symbol. When not specified, the system's default persistence service will be used.
-* The return value of the following persistence methods is a [Quantity](../items/number.md#quantity) when the corresponding item is a dimensioned NumberItem:
+* The return value of the following persistence methods is a [Quantity](../items/number/#quantities) when the corresponding item is a dimensioned NumberItem:
   * `average_since`
   * `delta_since`
   * `deviation_since`
