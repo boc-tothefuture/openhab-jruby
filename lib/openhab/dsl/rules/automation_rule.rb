@@ -100,8 +100,7 @@ module OpenHAB
         # @return [Boolean] True if the rule should execute, false if trigger guard prevents execution
         #
         def check_trigger_guards(trigger_delay, inputs)
-          old_state = inputs['oldState']
-          new_state = inputs['newState']
+          new_state, old_state = retrieve_states(inputs)
           if check_from(trigger_delay, old_state)
             return true if check_to(trigger_delay, new_state)
 
@@ -111,6 +110,32 @@ module OpenHAB
             logger.trace("Skipped execution of rule '#{name}' because old state #{old_state}"\
                                  " does not equal specified state(#{trigger_delay.from})")
           end
+        end
+
+        #
+        # Rerieve the newState and oldState, alternatively newStatus and oldStatus
+        # from the input map
+        #
+        # @param [Map] inputs OpenHAB map object describing rule trigger
+        #
+        # @return [Array] An array of the values for [newState, oldState] or [newStatus, oldStatus]
+        #
+        def retrieve_states(inputs)
+          old_state = inputs['oldState'] || thing_status_to_sym(inputs['oldStatus'])
+          new_state = inputs['newState'] || thing_status_to_sym(inputs['newStatus'])
+
+          [new_state, old_state]
+        end
+
+        #
+        # Converts a ThingStatus object to a ruby Symbol
+        #
+        # @param [Java::OrgOpenhabCoreThing::ThingStatus] status A ThingStatus instance
+        #
+        # @return [Symbol] A corresponding symbol, in lower case
+        #
+        def thing_status_to_sym(status)
+          status&.to_s&.downcase&.to_sym
         end
 
         #
@@ -174,7 +199,7 @@ module OpenHAB
             queue = create_queue(inputs)
             process_queue(queue, mod, inputs)
           end
-          trigger_delay.tracking_to = inputs['newState']
+          trigger_delay.tracking_to, = retrieve_states(inputs)
         end
 
         #
@@ -186,7 +211,7 @@ module OpenHAB
         #
         #
         def process_active_timer(inputs, mod, trigger_delay)
-          state = inputs['newState']
+          state, = retrieve_states(inputs)
           if state == trigger_delay.tracking_to
             logger.trace("Item changed to #{state} for #{trigger_delay}, rescheduling timer.")
             trigger_delay.timer.reschedule(ZonedDateTime.now.plus(trigger_delay.duration))
