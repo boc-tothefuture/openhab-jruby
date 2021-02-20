@@ -29,7 +29,7 @@ module OpenHAB
             def_delegator :@metadata, :value
 
             def initialize(metadata: nil, key: nil, value: nil, config: nil)
-              @metadata = metadata || Metadata.new(key || MetadataKey.new('', ''), value, config)
+              @metadata = metadata || Metadata.new(key || MetadataKey.new('', ''), value&.to_s, config)
               super(@metadata&.configuration)
             end
 
@@ -60,9 +60,7 @@ module OpenHAB
             # @return [Java::Org::openhab::core::items::Metadata] the old metadata
             #
             def value=(value)
-              raise ArgumentError, 'Value must be a string' unless value.is_a? String
-
-              metadata = Metadata.new(@metadata&.uID, value, @metadata&.configuration)
+              metadata = Metadata.new(@metadata&.uID, value&.to_s, @metadata&.configuration)
               NamespaceAccessor.registry.update(metadata) if @metadata&.uID
             end
 
@@ -125,7 +123,7 @@ module OpenHAB
               meta_value, configuration = update_from_value(value)
 
               key = MetadataKey.new(namespace, @item_name)
-              metadata = Metadata.new(key, meta_value, configuration)
+              metadata = Metadata.new(key, meta_value&.to_s, configuration)
               # registry.get can be omitted, but registry.update will log a warning for nonexistent metadata
               if NamespaceAccessor.registry.get(key)
                 NamespaceAccessor.registry.update(metadata)
