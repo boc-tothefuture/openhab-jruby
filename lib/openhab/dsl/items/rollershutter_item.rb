@@ -3,6 +3,7 @@
 require 'forwardable'
 require 'java'
 require 'openhab/dsl/items/item_command'
+require 'openhab/dsl/items/item_delegate'
 
 module OpenHAB
   module DSL
@@ -13,6 +14,7 @@ module OpenHAB
       class RollershutterItem < Numeric
         extend Forwardable
         extend OpenHAB::DSL::Items::ItemCommand
+        include OpenHAB::DSL::Items::ItemDelegate
         include Comparable
 
         def_delegator :@rollershutter_item, :to_s
@@ -34,6 +36,9 @@ module OpenHAB
         def initialize(rollershutter_item)
           logger.trace("Wrapping #{rollershutter_item}")
           @rollershutter_item = rollershutter_item
+
+          item_delegate { @rollershutter_item }
+          item_delegate { position }
 
           super()
         end
@@ -80,57 +85,12 @@ module OpenHAB
         end
 
         #
-        # Case equality
-        #
-        # @param [Java::OrgOpenhabCoreLibraryTypes::UpDownType, Numeric] other Other object to compare against
-        #
-        # @return [Boolean] true if self can be defined as other, false otherwise
-        #
-        def ===(other)
-          super unless other.is_a? UpDownType
-
-          state.as(UpDownType).equals(other)
-        end
-
-        #
         # Define math operations
         #
         %i[+ - * / %].each do |operator|
           define_method(operator) do |other|
             right, left = coerce(other)
             left.send(operator, right)
-          end
-        end
-
-        #
-        # Checks if this method responds to the missing method
-        #
-        # @param [String] meth Name of the method to check
-        # @param [Boolean] _include_private boolean if private methods should be checked
-        #
-        # @return [Boolean] true if this object will respond to the supplied method, false otherwise
-        #
-        def respond_to_missing?(meth, _include_private = false)
-          @rollershutter_item.respond_to?(meth) || position.respond_to?(meth)
-        end
-
-        #
-        # Forward missing methods to Openhab RollershutterItem or the PercentType representing it's state
-        #   if they are defined
-        #
-        # @param [String] meth method name
-        # @param [Array] args arguments for method
-        # @param [Proc] block <description>
-        #
-        # @return [Object] Value from delegated method in OpenHAB NumberItem
-        #
-        def method_missing(meth, *args, &block)
-          if @rollershutter_item.respond_to?(meth)
-            @rollershutter_item.__send__(meth, *args, &block)
-          elsif position.respond_to?(meth)
-            position.__send__(meth, *args, &block)
-          else
-            raise NoMethodError, "No method `#{meth}' defined for #{self.class}"
           end
         end
       end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'openhab/dsl/items/item_command'
+require 'forwardable'
 
 module OpenHAB
   module DSL
@@ -25,31 +27,13 @@ module OpenHAB
           java_import Java::OrgOpenhabCoreLibraryTypes::DecimalType
           java_import Java::OrgOpenhabCoreLibraryTypes::IncreaseDecreaseType
 
-          #
-          # Add the current dimmer value to the supplied object
-          #
-          # @param [Object] other object to add the dimmer value to
-          #
-          # @return [Integer] Current dimmer value plus value of supplied object
-          #
-          def +(other)
-            return unless state?
+          extend Forwardable
+          extend OpenHAB::DSL::Items::ItemCommand
 
-            state.to_big_decimal.intValue + other
-          end
+          item_state Java::OrgOpenhabCoreLibraryTypes::OnOffType
+          item_command Java::OrgOpenhabCoreLibraryTypes::IncreaseDecreaseType
 
-          #
-          # Subtract the supplied object from the current value of the dimmer
-          #
-          # @param [Object] other object to subtract from the dimmer value
-          #
-          # @return [Integer] Current dimmer value minus value of supplied object
-          #
-          def -(other)
-            return unless state?
-
-            state.to_big_decimal.intValue - other
-          end
+          def_delegator :state, :to_s
 
           #
           # Dim the dimmer
@@ -59,17 +43,9 @@ module OpenHAB
           # @return [Integer] level target for dimmer
           #
           def dim(amount = 1)
-            return unless state?
-
-            target = [state.to_big_decimal.intValue - amount, 0].max
-
-            if amount == 1
-              command(IncreaseDecreaseType::DECREASE)
-            else
-              command(target)
-            end
-
-            target
+            [state&.to_big_decimal&.intValue&.-(amount), 0].compact
+                                                           .max
+                                                           .tap { |target| command(target) }
           end
 
           #
@@ -80,16 +56,7 @@ module OpenHAB
           # @return [Integer] level target for dimmer
           #
           def brighten(amount = 1)
-            return unless state?
-
-            target = state.to_big_decimal.intValue + amount
-
-            if amount == 1
-              command(IncreaseDecreaseType::INCREASE)
-            else
-              command(target)
-            end
-            target
+            state&.to_big_decimal&.intValue&.+(amount)&.tap { |target| command(target) }
           end
 
           #
@@ -120,10 +87,8 @@ module OpenHAB
           def coerce(other)
             logger.trace("Coercing #{self} as a request from  #{other.class}")
             case other
-            when Numeric
-              [other, state.to_big_decimal.to_d]
-            else
-              [other, state]
+            when Numeric then [other, state.to_big_decimal.to_d]
+            else [other, state]
             end
           end
 
@@ -138,6 +103,16 @@ module OpenHAB
           #
           def ==(other)
             (self <=> other).zero?
+          end
+
+          #
+          # Define math operations
+          #
+          %i[+ - / *].each do |operator|
+            define_method(operator) do |other|
+              right, left = coerce(other)
+              left.send(operator, right)
+            end
           end
 
           #
@@ -159,33 +134,6 @@ module OpenHAB
           end
 
           alias to_int to_i
-
-          #
-          # Return the string representation of the dimmer item
-          #
-          # @return [String] String version of the dimmer value
-          #
-          def to_s
-            to_i.to_s
-          end
-
-          #
-          # Check if dimmer is on
-          #
-          # @return [Boolean] True if item is not UNDEF or NULL and has a value greater than 0
-          #
-          def on?
-            state&.to_big_decimal&.intValue&.positive?
-          end
-
-          #
-          # Check if dimmer is off
-          #
-          # @return [Boolean] True if item is not UNDEF or NULL and has a state of 0
-          #
-          def off?
-            state&.to_big_decimal&.intValue&.zero?
-          end
         end
       end
     end
