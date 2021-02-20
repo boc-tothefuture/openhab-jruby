@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.23.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.22.1...2.23.0) (2021-02-20)
+
+
+### Bug Fixes
+
+* **metadata:** convert value to string before assignment ([dba5db7](https://github.com/boc-tothefuture/openhab-jruby/commit/dba5db7d56f25ea279723c653c154c65c3fe030a))
+
+
+### Features
+
+* **event:** add event.state for update trigger ([d4eb4f7](https://github.com/boc-tothefuture/openhab-jruby/commit/d4eb4f78043ac108e54c0491affb72b383397b45))
+
 ## [2.22.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.22.0...2.22.1) (2021-02-20)
 
 
