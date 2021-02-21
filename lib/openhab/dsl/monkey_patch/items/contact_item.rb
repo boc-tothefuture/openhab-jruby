@@ -25,7 +25,7 @@ module OpenHAB
 
           java_import Java::OrgOpenhabCoreLibraryTypes::OpenClosedType
 
-          item_state Java::OrgOpenhabCoreLibraryTypes::OpenClosedType
+          item_type Java::OrgOpenhabCoreLibraryItems::ContactItem
 
           #
           # Compares contacts to OpenClosedTypes

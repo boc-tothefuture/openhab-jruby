@@ -19,13 +19,7 @@ module OpenHAB
 
         def_item_delegator :@rollershutter_item
 
-        java_import Java::OrgOpenhabCoreLibraryTypes::PercentType
-        java_import Java::OrgOpenhabCoreLibraryTypes::UpDownType
-        java_import Java::OrgOpenhabCoreLibraryTypes::StopMoveType
-
-        item_command Java::OrgOpenhabCoreLibraryTypes::StopMoveType
-        item_command Java::OrgOpenhabCoreLibraryTypes::UpDownType
-        item_state   Java::OrgOpenhabCoreLibraryTypes::UpDownType
+        item_type Java::OrgOpenhabCoreLibraryItems::RollershutterItem
 
         #
         # Creates a new RollershutterItem
