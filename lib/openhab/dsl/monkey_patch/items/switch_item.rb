@@ -23,8 +23,7 @@ module OpenHAB
 
           java_import Java::OrgOpenhabCoreLibraryTypes::OnOffType
 
-          item_command Java::OrgOpenhabCoreLibraryTypes::OnOffType
-          item_state Java::OrgOpenhabCoreLibraryTypes::OnOffType
+          item_type Java::OrgOpenhabCoreLibraryItems::SwitchItem
 
           alias truthy? on?
 

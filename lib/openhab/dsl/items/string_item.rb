@@ -13,7 +13,7 @@ module OpenHAB
       #
       class StringItem
         extend Forwardable
-
+        extend OpenHAB::DSL::Items::ItemCommand
         include Comparable
         extend OpenHAB::DSL::Items::ItemDelegate
 
@@ -22,6 +22,8 @@ module OpenHAB
         private_constant :BLANK_RE
 
         def_item_delegator :@string_item
+
+        item_type Java::OrgOpenhabCoreLibraryItems::StringItem
 
         #
         # Create a new StringItem

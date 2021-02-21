@@ -17,10 +17,12 @@ module OpenHAB
       class DateTimeItem
         extend Forwardable
         extend OpenHAB::DSL::Items::ItemDelegate
-
+        extend OpenHAB::DSL::Items::ItemCommand
         include Comparable
 
         def_item_delegator :@datetime_item
+
+        item_type Java::OrgOpenhabCoreLibraryItems::DateTimeItem
 
         #
         # Create a new DateTimeItem
