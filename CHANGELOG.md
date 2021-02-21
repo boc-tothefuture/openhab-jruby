@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.23.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.23.2...2.23.3) (2021-02-21)
+
+
+### Bug Fixes
+
+* **persistence:** selective conversion to Quantity ([3187de7](https://github.com/boc-tothefuture/openhab-jruby/commit/3187de7bdb1bea47e8ba8d288332da5c227e3892))
+
 ## [2.23.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.23.1...2.23.2) (2021-02-21)
 
 ## [2.23.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.23.0...2.23.1) (2021-02-20)
