@@ -47,10 +47,10 @@ Number:Power  Power_Usage "Power Usage [%.2f W]"
 
 ```ruby
 # UV_Index average will return a DecimalType
-logger.info("UV_Index Average: #{UV_Index.average_since(12.hours)}") 
+logger.info("UV_Index Average: #{UV_Index.average_since(12.hours, :influxdb)}") 
 # Power_Usage has a Unit of Measurement, so 
 # Power_Usage.average_since will return a Quantity with the same unit
-logger.info("Power_Usage Average: #{Power_Usage.average_since(12.hours)}") 
+logger.info("Power_Usage Average: #{Power_Usage.average_since(12.hours, :influxdb)}") 
 ```
 
 Comparison using Quantity
@@ -81,5 +81,27 @@ persistence(:influxdb) do
   Item1.persist
   Item1.changed_since(1.hour)
   Item1.average_since(12.hours)
+end
+```
+
+## Setting The Default Persistence Service
+
+The default persistence service can be set at the beginning of the execution block (run, triggered, otherwise), and it will affect all persistence operations within that block, unless a specific service is specified in the argument or within a persistence block.
+
+Note that this does not alter the system-wide default persistence service that is configured 
+on the OpenHAB installation. This simply affects the current execution block.
+
+To specify the default persistence service, call the `def_default_persistence` function at the beginning
+of the execution block. Example:
+
+```ruby
+require 'openhab'
+
+rule 'Test rule' do
+  on_start
+  run do
+    def_default_persistence :influxdb
+    logger.info("Item1's last_update: #{Item1.last_update}") 
+  end
 end
 ```

@@ -15,10 +15,20 @@ module OpenHAB
       #
       #
       def persistence(service)
+        previous_persistence = Thread.current.thread_variable_get(:persistence_service)
         Thread.current.thread_variable_set(:persistence_service, service)
         yield
       ensure
-        Thread.current.thread_variable_set(:persistence_service, nil)
+        Thread.current.thread_variable_set(:persistence_service, previous_persistence)
+      end
+
+      #
+      # Sets the default persistence for the script
+      #
+      # @param [Object] service service either as a String or a Symbol
+      #
+      def def_default_persistence(service)
+        Thread.current.thread_variable_set(:persistence_service, service)
       end
     end
   end

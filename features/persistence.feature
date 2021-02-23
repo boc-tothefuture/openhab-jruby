@@ -78,3 +78,26 @@ Feature: persistence
       """
     When I deploy the rule
     Then It should log 'Average: 3 kW' within 10 seconds
+
+  Scenario: Set default persistence
+    Given items:
+      | type         | name         | label | pattern | state |
+      | Number:Power | Number_Power | Power | %.1f kW | 2 kW  |
+    And code in a rules file:
+      """
+      rule 'use default persistence service' do
+        on_start
+        run { logger.info("Without Default Average: '#{Number_Power.average_since(10.seconds)}'") }
+      end
+
+      rule 'use default persistence service' do
+        on_start
+        run do
+          def_default_persistence :mapdb
+          logger.info("With Default Average: '#{Number_Power.average_since(10.seconds)}'")
+        end
+      end
+      """
+    When I deploy the rule
+    Then It should log "With Default Average: '2 kW'" within 5 seconds
+    And It should log "Without Default Average: ''" within 5 seconds
