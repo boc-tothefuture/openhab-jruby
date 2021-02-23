@@ -15,13 +15,13 @@ module OpenHAB
         extend Forwardable
 
         include Comparable
-        include OpenHAB::DSL::Items::ItemDelegate
+        extend OpenHAB::DSL::Items::ItemDelegate
 
         # @return [Regex] Regular expression matching blank strings
         BLANK_RE = /\A[[:space:]]*\z/.freeze
         private_constant :BLANK_RE
 
-        def_delegator :@string_item, :to_s
+        def_item_delegator :@string_item
 
         #
         # Create a new StringItem
@@ -31,8 +31,8 @@ module OpenHAB
         def initialize(string_item)
           @string_item = string_item
 
-          item_delegate { @string_item }
-          item_delegate { @string_item.state&.to_full_string&.to_s }
+          item_missing_delegate { @string_item }
+          item_missing_delegate { @string_item.state&.to_full_string&.to_s }
 
           super()
         end

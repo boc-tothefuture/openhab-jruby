@@ -14,10 +14,10 @@ module OpenHAB
       class RollershutterItem < Numeric
         extend Forwardable
         extend OpenHAB::DSL::Items::ItemCommand
-        include OpenHAB::DSL::Items::ItemDelegate
+        extend OpenHAB::DSL::Items::ItemDelegate
         include Comparable
 
-        def_delegator :@rollershutter_item, :to_s
+        def_item_delegator :@rollershutter_item
 
         java_import Java::OrgOpenhabCoreLibraryTypes::PercentType
         java_import Java::OrgOpenhabCoreLibraryTypes::UpDownType
@@ -37,8 +37,8 @@ module OpenHAB
           logger.trace("Wrapping #{rollershutter_item}")
           @rollershutter_item = rollershutter_item
 
-          item_delegate { @rollershutter_item }
-          item_delegate { position }
+          item_missing_delegate { @rollershutter_item }
+          item_missing_delegate { position }
 
           super()
         end
