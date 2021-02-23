@@ -115,6 +115,15 @@ module OpenHAB
           def inspect
             toString
           end
+
+          #
+          # Return all groups that this item is part of
+          #
+          # @return [Array<Group>] All groups that this item is part of
+          #
+          def groups
+            group_names.map { |name| OpenHAB::DSL::Groups.groups[name] }
+          end
         end
 
         java_import Java::OrgOpenhabCoreItems::GenericItem

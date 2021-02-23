@@ -16,11 +16,9 @@ module OpenHAB
       # Disabled because this class has a single responsibility, there does not appear a logical
       # way of breaking it up into multiple classes
       class NumberItem < Numeric
-        extend Forwardable
+        extend OpenHAB::DSL::Items::ItemDelegate
 
-        include OpenHAB::DSL::Items::ItemDelegate
-
-        def_delegator :@number_item, :to_s
+        def_item_delegator :@number_item
 
         java_import org.openhab.core.library.types.DecimalType
         java_import org.openhab.core.library.types.QuantityType
@@ -34,7 +32,7 @@ module OpenHAB
         #
         def initialize(number_item)
           @number_item = number_item
-          item_delegate { @number_item }
+          item_missing_delegate { @number_item }
           super()
         end
 
