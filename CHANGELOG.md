@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.24.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.23.3...2.24.0) (2021-02-23)
+
+
+### Features
+
+* **groups:** adds supports for item groups ([127ab17](https://github.com/boc-tothefuture/openhab-jruby/commit/127ab17a69ec2ff2eac8674bba1c3ee2102a4fa9))
+
 ## [2.23.3](https://github.com/boc-tothefuture/openhab-jruby/compare/2.23.2...2.23.3) (2021-02-21)
 
 
