@@ -43,7 +43,7 @@ module OpenHAB
         #
         def create_received_trigger(commands, item)
           commands.each do |command|
-            if item.is_a? GroupItems
+            if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupItems
               config, trigger = create_group_command_trigger(item)
             else
               config, trigger = create_item_command_trigger(item)

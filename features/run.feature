@@ -111,8 +111,8 @@ Feature:  run
       """
     When I deploy the rules file
     And item "Switches" state is changed to "ON"
-    Then It should log "run event.item class is OpenHAB::DSL::Groups::Group" within 5 seconds
-    And It should log "triggered item class is OpenHAB::DSL::Groups::Group" within 5 seconds
+    Then It should log "run event.item class is OpenHAB::DSL::Items::GroupItem" within 5 seconds
+    And It should log "triggered item class is OpenHAB::DSL::Items::GroupItem" within 5 seconds
     Examples: Test different triggers
       | trigger          |
       # | updated          | # Groups don't seem to receive Updated triggers

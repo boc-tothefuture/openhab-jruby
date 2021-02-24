@@ -21,7 +21,7 @@ Feature:  groups
     Given code in a rules file
       """
       logger.info("Total Temperatures: #{Temperatures.count}")
-      logger.info("Temperatures: #{House.sort_by(&:label).map(&:label).join(', ')}")
+      logger.info("Temperatures: #{House.all_members.sort_by(&:label).map(&:label).join(', ')}")
       """
     When I deploy the rules file
     Then It should log 'Total Temperatures: 3' within 5 seconds
@@ -31,7 +31,7 @@ Feature:  groups
   Scenario: Access to group data via group method
     Given code in a rules file
       """
-      logger.info("Group: #{Temperatures.group.name}")
+      logger.info("Group: #{Temperatures.name}")
       """
     When I deploy the rules file
     Then It should log 'Group: Temperatures' within 5 seconds
@@ -40,8 +40,8 @@ Feature:  groups
   Scenario: Ability to operate on the items in nested group using enumerable methods
     Given code in a rules file
       """
-      logger.info("House Count: #{House.count}")
-      logger.info("Items: #{House.sort_by(&:label).map(&:label).join(', ')}")
+      logger.info("House Count: #{House.all_members.count}")
+      logger.info("Items: #{House.all_members.sort_by(&:label).map(&:label).join(', ')}")
       """
     When I deploy the rules file
     Then It should log 'House Count: 3' within 5 seconds
@@ -50,8 +50,8 @@ Feature:  groups
   Scenario: Access to sub groups using the `groups` method
     Given code in a rules file
       """
-      logger.info("House Sub Groups: #{House.groups.count}")
-      logger.info("Groups: #{House.groups.sort_by(&:id).map(&:id).join(', ')}")
+      logger.info("House Sub Groups: #{House.count}")
+      logger.info("Groups: #{House.sort_by(&:id).map(&:id).join(', ')}")
       """
     When I deploy the rules file
     Then It should log 'House Sub Groups: 2' within 5 seconds

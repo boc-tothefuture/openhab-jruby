@@ -73,7 +73,8 @@ module OpenHAB
         #
         def create_changed_trigger(item, from, to)
           trigger, config = case item
-                            when GroupItems then create_group_changed_trigger(item, from, to)
+                            when OpenHAB::DSL::Items::GroupItem::GroupItems
+                              create_group_changed_trigger(item, from, to)
                             when Thing then create_thing_changed_trigger(item, from, to)
                             else create_item_changed_trigger(item, from, to)
                             end
