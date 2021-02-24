@@ -60,10 +60,14 @@ Given('groups:') do |table|
   table.hashes.each do |row|
     group_type = row['type']
     name = row['name']
-    function = row['function']
-    params = row['params']&.split(',')
+    label = nil_if_blank(row['label'])
+    pattern = nil_if_blank(row['pattern'])
+    function = nil_if_blank(row['function'])
+    params = row['params']&.split(',')&.map(&:strip)
     groups = [row['group']]
-    add_group(name: name, group_type: group_type, groups: groups, function: function, params: params)
+    item = Item.new(type: 'Group', name: name, label: label, groups: groups, pattern: pattern, group_type: group_type,
+                    function: function, params: params)
+    add_item(item: item)
   end
 end
 

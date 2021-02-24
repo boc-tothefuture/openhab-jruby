@@ -4,10 +4,14 @@ Feature: persistence
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
     And feature 'openhab-persistence-mapdb' installed
+    And groups:
+      | name       | type   | function |
+      | Test_Group | Number | MIN      |
+
     And items:
-      | type   | name    |
-      | Number | Number1 |
-      | Number | Number2 |
+      | type   | name    | groups     |
+      | Number | Number1 | Test_Group |
+      | Number | Number2 | Test_Group |
 
   Scenario: Check that PersistenceExtensions is available
     Given code in a rules file:
@@ -38,7 +42,9 @@ Feature: persistence
           sleep 1
           persistence(:rrd4j) do
             Number1.persist
+            Test_Group.persist
             logger.info("Last update: #{Number1.last_update}")
+            logger.info("Last update: #{Test_Group.last_update}")
             %w[
             average_since
             changed_since
@@ -54,6 +60,8 @@ Feature: persistence
             ].each do |method|
               logger.info("#{method}: #{Number1.send(method, 1.minute)}")
               logger.info("#{method}: #{Number1.send(method, ZonedDateTime.now.minusMinutes(1))}")
+              logger.info("#{method}: #{Test_Group.send(method, 1.minute)}")
+              logger.info("#{method}: #{Test_Group.send(method, ZonedDateTime.now.minusMinutes(1))}")
             end
             logger.info("Persistence checks done")
           end
@@ -64,17 +72,26 @@ Feature: persistence
     Then It should log 'Persistence checks done' within 5 seconds
 
   Scenario: Persistence data with Units of Measurement
-    Given items:
-      | type         | name         | label | pattern | state |
-      | Number:Power | Number_Power | Power | %.1f kW | 0 kW  |
+    Given groups:
+      | type         | name      | label     | pattern | function |
+      | Number:Power | Max_Power | Max Power | %.1f kW | MAX      |
+
+    And items:
+      | type         | name         | label | pattern | state | groups     |
+      | Number:Power | Number_Power | Power | %.1f kW | 0 kW  | Max_Power  |
+
     And code in a rules file:
       """
       rule 'update persistence' do
         on_start
         run { Number_Power.update "3 kW" }
         delay 3.second
-        run { logger.info("Average: #{Number_Power.average_since(10.seconds, :mapdb)}") }
+        run do
+          logger.info("Average: #{Number_Power.average_since(10.seconds, :mapdb)}")
+          logger.info("Average Max: #{Max_Power.average_since(10.seconds, :mapdb)}")
+        end
       end
       """
     When I deploy the rule
     Then It should log 'Average: 3 kW' within 10 seconds
+    And It should log 'Average Max: 3 kW' within 10 seconds

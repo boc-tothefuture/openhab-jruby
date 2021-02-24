@@ -3,6 +3,15 @@ Feature: comparisons
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
+    And groups:
+      | name         | type               | function | params       |
+      | Temperatures | Number:Temperature | AVG      |              |
+      | Switches     | Switch             | AND      | ON, OFF      |
+      | Contacts     | Contact            | OR       | OPEN, CLOSED |
+      | Dates        | DateTime           | LATEST   |              |
+      | Shutters     | Rollershutter      | AND      | UP, DOWN     |
+      | ShuttersPos  | Rollershutter      | MAX      |              |
+
     And items:
       | type               | name       | label         | group | state |
       | Number             | Number5    | Number Five   |       | 5     |
@@ -15,6 +24,20 @@ Feature: comparisons
       | Number:Temperature | Number20C  | Number Twenty |       | 20°C  |
       | Dimmer             | Dimmer5    | Dimmer Five   |       | 5     |
       | Dimmer             | Dimmer10   | Dimmer Ten    |       | 10    |
+
+    And items:
+      | type               | name            | label                   | state                     | groups                |
+      | Number:Temperature | Livingroom_Temp | Living Room temperature | 70 °F                     | Temperatures          |
+      | Number:Temperature | Bedroom_Temp    | Bedroom temperature     | 50 °F                     | Temperatures          |
+      | Number:Temperature | Den_Temp        | Den temperature         | 30 °F                     | Temperatures          |
+      | Switch             | SwitchOne       | Switch One              | ON                        | Switches              |
+      | Switch             | SwitchTwo       | Switch Two              | OFF                       | Switches              |
+      | Contact            | ContactOne      | Contact One             | OPEN                      | Contacts              |
+      | Contact            | ContactTwo      | Contact Two             | CLOSED                    | Contacts              |
+      | DateTime           | DateOne         | Date One                | 2021-01-01T00:00:00+00:00 | Dates                 |
+      | DateTime           | DateTwo         | Date Two                | 2021-02-01T12:00:00+00:00 | Dates                 |
+      | Rollershutter      | ShutterOne      | Shutter One             | 0                         | Shutters, ShuttersPos |
+      | Rollershutter      | ShutterTwo      | Shutter Two             | 50                        | Shutters, ShuttersPos |
 
   Scenario: Comparisons can be done against different types
     Given code in a rules file
@@ -317,6 +340,45 @@ Feature: comparisons
         [ 10                         , '<'  , DecimalType.new(5)         , false ]  ,
         [ 10                         , '>'  , DecimalType.new(5)         , true  ]  ,
         [ 10                         , '>'  , DecimalType.new(10)        , false ]  ,
+
+        # Groups
+        [ Temperatures               , '<'  , Temperatures.max           , true  ]  ,
+        [ Temperatures               , '>'  , 0                          , true  ]  ,
+        [ Temperatures               , '>'  , '0 °C'                     , true  ]  ,
+        [ Switches                   ,'=='  , ON                         , false ]  ,
+        [ Switches                   ,'=='  , OFF                        , true  ]  ,
+        [ Switches                   ,'=='  , SwitchTwo                  , true  ]  ,
+        [ Switches                   ,'=='  , SwitchOne                  , false ]  ,
+        [ Contacts                   ,'=='  , OPEN                       , true  ]  ,
+        [ Contacts                   ,'=='  , CLOSED                     , false ]  ,
+        [ Dates                      , '<'  , Time.now                   , true  ]  ,
+        [ Dates                      , '>'  , DateOne                    , true  ]  ,
+        [ Dates                      ,'=='  , DateTwo                    , true  ]  ,
+        [ Dates                      ,'=='  , DateOne                    , false ]  ,
+        [ Dates                      ,'=='  , TimeOfDay.noon             , true  ]  ,
+        [ Shutters                   ,'=='  , UP                         , false ]  ,
+        [ Shutters                   ,'=='  , DOWN                       , true  ]  ,
+        [ ShuttersPos                ,'=='  , 50                         , true  ]  ,
+        [ ShuttersPos                , '<'  , 20                         , false ]  ,
+
+        [ Temperatures.max           , '<'  , Temperatures               , false ]  ,
+        # [ 0                          , '>'  , Temperatures               , false ]  ,
+        [ '0 °C'                     , '<'  , Temperatures               , true  ]  ,
+        # [ ON                         ,'=='  , Switches                   , false ]  ,
+        # [ OFF                        ,'=='  , Switches                   , true  ]  ,
+        # [ SwitchTwo                  ,'=='  , Switches                   , true  ]  ,
+        # [ SwitchOne                  ,'=='  , Switches                   , false ]  ,
+        # [ OPEN                       ,'=='  , Contacts                   , true  ]  ,
+        # [ CLOSED                     ,'=='  , Contacts                   , false ]  ,
+        # [ Time.now                   , '<'  , Dates                      , false ]  ,
+        # [ DateOne                    , '>'  , Dates                      , false ]  ,
+        # [ DateTwo                    ,'=='  , Dates                      , true  ]  ,
+        # [ DateOne                    ,'=='  , Dates                      , false ]  ,
+        [ TimeOfDay.noon             ,'=='  , Dates                      , true  ]  ,
+        # [ UP                         ,'=='  , Shutters                   , false ]  ,
+        # [ DOWN                       ,'=='  , Shutters                   , true  ]  ,
+        [ 50                         ,'=='  , ShuttersPos                , true  ]  ,
+        [ 20                         , '<'  , ShuttersPos                , true  ]
 
       ]
 

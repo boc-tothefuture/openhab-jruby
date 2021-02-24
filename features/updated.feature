@@ -66,7 +66,7 @@ Feature:  updated
     Given a deployed rule:
       """
       rule 'Execute rule when member of group is changed to any state' do
-        updated AlarmModes.items
+        updated AlarmModes.members
         triggered { |item| logger.info("Group item #{item.id} updated")}
       end
       """
@@ -77,7 +77,7 @@ Feature:  updated
     Given a deployed rule:
       """
       rule 'Execute rule when member of group is changed to one of many states' do
-        updated AlarmModes.items, to: [7,14]
+        updated AlarmModes.members, to: [7,14]
         triggered { |item| logger.info("Group item #{item.id} updated")}
       end
       """

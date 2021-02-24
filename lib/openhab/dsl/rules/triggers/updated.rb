@@ -20,7 +20,7 @@ module OpenHAB
         # @return [Trigger] Trigger for updated entity
         #
         def updated(*items, to: nil)
-          items.flatten.each do |item|
+          separate_groups(items).flatten.each do |item|
             logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
             [to].flatten.each do |to_state|
               trigger, config = create_update_trigger(item, to_state)
@@ -42,7 +42,7 @@ module OpenHAB
         #
         def create_update_trigger(item, to_state)
           case item
-          when GroupItems then group_update(item, to_state)
+          when OpenHAB::DSL::Items::GroupItem::GroupMembers then group_update(item, to_state)
           when Thing then thing_update(item, to_state)
           else item_update(item, to_state)
           end

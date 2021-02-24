@@ -182,7 +182,7 @@ Feature:  guards
     Given a deployed rule:
       """
       rule 'Set OutsideDimmer to 50% if any switch in group Switches starting with Outside is switched On' do
-        changed Switches.items, to: ON
+        changed Switches.members, to: ON
         run { OutsideDimmer << 50 }
         only_if { |event| event.item.name.start_with? 'Outside' }
       end
