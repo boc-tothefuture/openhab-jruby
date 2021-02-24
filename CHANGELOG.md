@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.25.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.24.0...2.25.0) (2021-02-24)
+
+
+### Features
+
+* **groups:** support command and << ([dd140aa](https://github.com/boc-tothefuture/openhab-jruby/commit/dd140aa6f28f6138e197fdc2274f960ff304664e))
+
 # [2.24.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.23.3...2.24.0) (2021-02-23)
 
 
