@@ -31,7 +31,7 @@ module OpenHAB
         # @return [Trigger] OpenHAB trigger
         #
         def changed(*items, to: nil, from: nil, for: nil)
-          items.flatten.each do |item|
+          separate_groups(items).each do |item|
             logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
             # for is a reserved word in ruby, so use local_variable_get :for
             if (wait_duration = binding.local_variable_get(:for))
@@ -73,7 +73,8 @@ module OpenHAB
         #
         def create_changed_trigger(item, from, to)
           trigger, config = case item
-                            when GroupItems then create_group_changed_trigger(item, from, to)
+                            when OpenHAB::DSL::Items::GroupItem::GroupMembers
+                              create_group_changed_trigger(item, from, to)
                             when Thing then create_thing_changed_trigger(item, from, to)
                             else create_item_changed_trigger(item, from, to)
                             end

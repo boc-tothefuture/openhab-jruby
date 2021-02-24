@@ -8,6 +8,7 @@ module OpenHAB
         # Persistence extension for Items
         #
         module Persistence
+          java_import Java::OrgOpenhabCoreTypesUtil::UnitUtils
           # All persistence methods that could return a Quantity
           QUANTITY_METHODS = %i[average_since
                                 delta_since
@@ -81,9 +82,10 @@ module OpenHAB
           # @return [Object] Quantity or the original value
           #
           def quantify(value)
-            if value.is_a?(Java::OrgOpenhabCoreLibraryTypes::DecimalType) && respond_to?(:unit) && unit
-              logger.trace("Unitizing #{value} with unit #{unit}")
-              Quantity.new(Java::OrgOpenhabCoreLibraryTypes::QuantityType.new(value.to_big_decimal, unit))
+            if value.is_a?(Java::OrgOpenhabCoreLibraryTypes::DecimalType) && state_description&.pattern
+              item_unit = UnitUtils.parse_unit(state_description.pattern)
+              logger.trace("Unitizing #{value} with unit #{item_unit}")
+              Quantity.new(Java::OrgOpenhabCoreLibraryTypes::QuantityType.new(value.to_big_decimal, item_unit))
             else
               value
             end

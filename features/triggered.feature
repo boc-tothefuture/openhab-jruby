@@ -28,7 +28,7 @@ Feature:  triggered
     And a deployed rule:
       """
       rule 'Triggered item is item changed when a group item is changed.' do
-        changed Switches.items
+        changed Switches.members
         triggered { |item| logger.info("Switch #{item.id} changed to #{item}")}
       end
       """
@@ -44,7 +44,7 @@ Feature:  triggered
     And a deployed rule:
       """
       rule 'Turn off any switch that changes' do
-        changed Switches.items
+        changed Switches.members
         triggered(&:off)
       end
       """
@@ -61,7 +61,7 @@ Feature:  triggered
     And a deployed rule:
       """
       rule 'Turn a switch off and log it, 5 seconds after turning it on' do
-        changed Switches.items, to: ON
+        changed Switches.members, to: ON
         delay 5.seconds
         triggered(&:off)
         triggered {|item| logger.info("#{item.label} turned off") }
