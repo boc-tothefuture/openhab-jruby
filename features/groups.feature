@@ -93,3 +93,17 @@ Feature:  groups
       """
     When I deploy the rules file
     Then It should log 'event.item is Livingroom_Temp' within 5 seconds
+
+  Scenario Outline: Commands sent to a group are propagated to the group items
+    Given code in a rules file
+      """
+        GroundFloor.<method> <value>
+      """
+    When I deploy the rules file
+    Then "Bedroom_Temp" should be in state "<value>" within 5 seconds
+    And "Den_Temp" should be in state "<value>" within 5 seconds
+    Examples:
+      | method  | value |
+      | <<      | 55    |
+      | command | 60    |
+

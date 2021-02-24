@@ -47,7 +47,7 @@ module OpenHAB
       class Group < SimpleDelegator
         extend Forwardable
 
-        java_import org.openhab.core.items.GroupItem
+        java_import Java::OrgOpenhabCoreItems::GroupItem
 
         # @return [org.openhab.core.items.GroupItem] OpenHAB Java Group Item
         attr_accessor :group
@@ -56,8 +56,9 @@ module OpenHAB
         #   @!method $2
         #     Forwards to org.openhab.core.items.GroupItem
         #     @see org::openhab::core::items::GroupItem
-        def_delegator :@group, :name
-        def_delegator :@group, :label
+        %i[name label << command].each do |method|
+          def_delegator :@group, method
+        end
 
         #
         # Gets members of this group that are themselves a group
@@ -65,7 +66,7 @@ module OpenHAB
         # @return [Set] Set of members that are of type group
         #
         def groups
-          group.members.grep(org.openhab.core.items.GroupItem)
+          group.members.grep(GroupItem)
         end
 
         #
