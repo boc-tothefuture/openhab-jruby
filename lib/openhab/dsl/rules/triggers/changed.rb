@@ -31,21 +31,38 @@ module OpenHAB
         # @return [Trigger] OpenHAB trigger
         #
         def changed(*items, to: nil, from: nil, for: nil)
-          items.flatten.each do |item|
-            logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
+          items.flatten.each_with_index do |item, i|
+            next if item.is_a? Symbol
+
             # for is a reserved word in ruby, so use local_variable_get :for
-            if (wait_duration = binding.local_variable_get(:for))
-              changed_wait(item, to: to, from: from, duration: wait_duration)
-            else
-              # Place in array and flatten to support multiple to elements or single or nil
-              [to].flatten.each do |to_state|
-                create_changed_trigger(item, from, to_state)
-              end
-            end
+            duration = binding.local_variable_get(:for)
+            changed_item(item, to: to, from: from, duration: duration, group: items[i + 1] == :members)
           end
         end
 
         private
+
+        #
+        # Creates a changed trigger for a single Item/Thing
+        #
+        # @param [Object] item Item or Thing to create trigger for
+        # @param [to] to state for object to change for
+        # @param [from] from <description>
+        # @param [OpenHAB::Core::Duration] duration Duration to delay trigger until to state is met
+        #
+        # @return [Trigger] OpenHAB trigger
+        #
+        def changed_item(item, to: nil, from: nil, duration: nil, group: false)
+          logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
+          if duration
+            changed_wait(item, to: to, from: from, duration: duration, group: group)
+          else
+            # Place in array and flatten to support multiple to elements or single or nil
+            [to].flatten.each do |to_state|
+              create_changed_trigger(item, from, to_state, group)
+            end
+          end
+        end
 
         #
         # Create a TriggerDelay for for an item or group that is changed for a specific duration
@@ -57,8 +74,8 @@ module OpenHAB
         #
         # @return [Array] Array of current TriggerDelay objects
         #
-        def changed_wait(item, duration:, to: nil, from: nil)
-          trigger = create_changed_trigger(item, nil, nil)
+        def changed_wait(item, duration:, to: nil, from: nil, group: false)
+          trigger = create_changed_trigger(item, nil, nil, group)
           logger.trace("Creating Changed Wait Change Trigger for #{item}")
           @trigger_delays[trigger.id] = TriggerDelay.new(to: to, from: from, duration: duration)
         end
@@ -71,12 +88,13 @@ module OpenHAB
         # @param [String] to state restrict trigger to
         #
         #
-        def create_changed_trigger(item, from, to)
-          trigger, config = case item
-                            when OpenHAB::DSL::Items::GroupItem::GroupItems
+        def create_changed_trigger(item, from, to, group)
+          trigger, config = if group && item.is_a?(OpenHAB::DSL::Items::GroupItem)
                               create_group_changed_trigger(item, from, to)
-                            when Thing then create_thing_changed_trigger(item, from, to)
-                            else create_item_changed_trigger(item, from, to)
+                            elsif item.is_a? Thing
+                              create_thing_changed_trigger(item, from, to)
+                            else
+                              create_item_changed_trigger(item, from, to)
                             end
           append_trigger(trigger, config)
         end
@@ -124,7 +142,7 @@ module OpenHAB
         #  second element is a Hash configuring trigger
         #
         def create_group_changed_trigger(group, from, to)
-          config = { 'groupName' => group.group.name }
+          config = { 'groupName' => group.name }
           config['state'] = to.to_s if to
           config['previousState'] = from.to_s if from
           trigger = Trigger::GROUP_STATE_CHANGE

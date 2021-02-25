@@ -84,12 +84,12 @@ Feature: changed_duration
     Then It <should> log 'Alarm Two Mode Changed' within 5 seconds
 
     Examples: Checks multiple from and to states
-      | from | to | rule                                                   | should     |
-      | 8    | 14 | changed Modes.items, for: 10.seconds                   | should     |
-      | 8    | 14 | changed Modes.items, to: 14, for: 10.seconds           | should     |
-      | 8    | 10 | changed Modes.items, to: 14, for: 10.seconds           | should not |
-      | 8    | 14 | changed Modes.items, from: 8, to: 14, for: 10.seconds  | should     |
-      | 8    | 10 | changed Modes.items, from: 10, to: 14, for: 10.seconds | should not |
+      | from | to | rule                                                       | should     |
+      | 8    | 14 | changed Modes, :members, for: 10.seconds                   | should     |
+      | 8    | 14 | changed Modes, :members, to: 14, for: 10.seconds           | should     |
+      | 8    | 10 | changed Modes, :members, to: 14, for: 10.seconds           | should not |
+      | 8    | 14 | changed Modes, :members, from: 8, to: 14, for: 10.seconds  | should     |
+      | 8    | 10 | changed Modes, :members, from: 10, to: 14, for: 10.seconds | should not |
 
   Scenario Outline: Changed groups supports duration and/or to and/or from.
     Given groups:

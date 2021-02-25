@@ -90,7 +90,7 @@ Feature:  changed
     And a deployed rule:
       """
       rule 'Execute rule when item is changed to any state' do
-        changed Switches.items
+        changed Switches, :members
         triggered { |item| logger.info("Switch #{item.id} changed")}
       end
       """
@@ -105,7 +105,7 @@ Feature:  changed
     And a deployed rule:
       """
       rule 'Execute rule when item is changed to any state' do
-        changed Switches.items
+        changed Switches, :members
         triggered { |item| logger.info("Switch #{item.id} changed")}
       end
       """
