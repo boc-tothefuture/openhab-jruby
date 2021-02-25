@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'delegate'
 require 'forwardable'
 require 'java'
 require 'openhab/dsl/items/item_command'
@@ -9,6 +10,20 @@ require 'openhab/core/entity_lookup'
 module OpenHAB
   module DSL
     module Items
+
+
+    class GroupMembers < SimpleDelegator
+
+      attr_reader :group
+
+      def initialize(group_item)
+        @group = group_item
+        super(OpenHAB::Core::EntityLookup.decorate_items(@group.members.to_a))
+      end
+
+    end
+
+
       #
       # Delegator to OpenHAB Group Item
       #
@@ -35,6 +50,11 @@ module OpenHAB
           item_missing_delegate { @group_item }
           add_state_methods
           add_command_methods
+        end
+
+
+        def members
+          GroupMembers.new(@group_item)
         end
 
         #

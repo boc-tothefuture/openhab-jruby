@@ -89,7 +89,7 @@ module OpenHAB
         #
         #
         def create_changed_trigger(item, from, to, group)
-          trigger, config = if group && item.is_a?(OpenHAB::DSL::Items::GroupItem)
+          trigger, config = if group && item.is_a?(OpenHAB::DSL::Items::Groupmembers)
                               create_group_changed_trigger(item, from, to)
                             elsif item.is_a? Thing
                               create_thing_changed_trigger(item, from, to)

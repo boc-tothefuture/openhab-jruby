@@ -107,3 +107,23 @@ Feature:  groups
       | <<      | 55    |
       | command | 60    |
 
+  Scenario: members on groups indicates to rules engine to trigger on changes to any members of the group
+    Given a deployed rule:
+      """
+      rule 'group member updated' do
+        updated Temperatures.members
+        run do |event|
+          logger.info("Group temperature updated")
+        end
+      end
+      """
+    When update state for item "Livingroom_Temp" to "65"
+    Then It should log 'Group temperature updated' within 5 seconds
+
+  Scenario: Can iterate group members
+    Given code in a rules file:
+      """
+      logger.info("Ground Floor: #{GroundFloor.members.sort_by(&:name).map(&:name).join(', ')}")
+      """
+    When I deploy the rules file
+    Then It should log 'Ground Floor: Bedroom_Temp, Den_Temp, Livingroom' within 5 seconds

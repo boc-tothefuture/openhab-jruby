@@ -42,7 +42,7 @@ module OpenHAB
         #
         def create_update_trigger(item, to_state)
           case item
-          when OpenHAB::DSL::Items::GroupItem::GroupItems then group_update(item, to_state)
+          when OpenHAB::DSL::Items::GroupItem::GroupMembers then group_update(item, to_state)
           when Thing then thing_update(item, to_state)
           else item_update(item, to_state)
           end
