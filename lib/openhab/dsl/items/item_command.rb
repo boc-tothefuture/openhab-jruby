@@ -51,6 +51,21 @@ module OpenHAB
           end
           # rubocop:enable Style/HashEachMethods
         end
+
+        #
+        # Extract the accepted state and command types from the specified OpenHAB
+        # Item class and pass them to item_state/item_command
+        #
+        # @param [Java::JavaLang::Class] item_class a Class that implements Java::OrgOpenhabCoreItems::Item
+        #
+        def item_type(item_class)
+          item_class.field_reader(:ACCEPTED_DATA_TYPES)
+          item_class.field_reader(:ACCEPTED_COMMAND_TYPES)
+          item_class.ACCEPTED_DATA_TYPES.select(&:is_enum).grep_v(UnDefType).each { |type| item_state(type.ruby_class) }
+          item_class.ACCEPTED_COMMAND_TYPES.select(&:is_enum).grep_v(UnDefType).each do |type|
+            item_command(type.ruby_class)
+          end
+        end
       end
     end
   end

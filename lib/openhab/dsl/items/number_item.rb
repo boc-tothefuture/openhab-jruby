@@ -17,6 +17,7 @@ module OpenHAB
       # way of breaking it up into multiple classes
       class NumberItem < Numeric
         extend OpenHAB::DSL::Items::ItemDelegate
+        extend OpenHAB::DSL::Items::ItemCommand
 
         def_item_delegator :@number_item
 
@@ -24,6 +25,8 @@ module OpenHAB
         java_import org.openhab.core.library.types.QuantityType
         java_import 'tec.uom.se.format.SimpleUnitFormat'
         java_import 'tec.uom.se.AbstractUnit'
+
+        item_type Java::OrgOpenhabCoreLibraryItems::NumberItem
 
         #
         # Create a new NumberItem
