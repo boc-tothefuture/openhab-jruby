@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.25.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.25.1...2.25.2) (2021-02-28)
+
+
+### Performance Improvements
+
+* **datetime:** delegate more methods directly to ZonedDateTime ([ea31954](https://github.com/boc-tothefuture/openhab-jruby/commit/ea3195402b5c4179090feafaba2d53476342251d))
+
 ## [2.25.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.25.0...2.25.1) (2021-02-28)
 
 # [2.25.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.24.0...2.25.0) (2021-02-24)
