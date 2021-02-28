@@ -30,8 +30,7 @@ module OpenHAB
           extend Forwardable
           extend OpenHAB::DSL::Items::ItemCommand
 
-          item_state Java::OrgOpenhabCoreLibraryTypes::OnOffType
-          item_command Java::OrgOpenhabCoreLibraryTypes::IncreaseDecreaseType
+          item_type Java::OrgOpenhabCoreLibraryItems::DimmerItem
 
           def_delegator :state, :to_s
 
