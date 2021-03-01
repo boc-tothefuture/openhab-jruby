@@ -79,7 +79,7 @@ module OpenHAB
             procs, items = conditions.flatten.partition { |condition| condition.is_a? Proc }
             logger.trace("Procs: #{procs} Items: #{items}")
 
-            items.each { |item| logger.trace("#{item} truthy? #{item.truthy?}") }
+            items.each { |item| logger.trace { "#{item} truthy? #{item.truthy?}" } }
 
             process_check(check_type: check_type, event: event, items: items, procs: procs)
           end
