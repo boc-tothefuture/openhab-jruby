@@ -87,25 +87,25 @@ module OpenHAB
       # @return [Object] the ruby wrapper for the item
       #
       # rubocop: disable Metrics/MethodLength
-      # rubocop: disable Metrics/AbcSize
       # Disabled line length and branch size - case dispatch pattern
       private_class_method def self.decorate_item(item)
         case item
         when GroupItem
           decorate_group(item)
-        when Java::Org.openhab.core.library.items::NumberItem
+        when Java::OrgOpenhabCoreLibraryItems::NumberItem
           OpenHAB::DSL::Items::NumberItem.new(item)
-        when Java::Org.openhab.core.library.items::StringItem
+        when Java::OrgOpenhabCoreLibraryItems::StringItem
           OpenHAB::DSL::Items::StringItem.new(item)
-        when Java::Org.openhab.core.library.items::DateTimeItem
+        when Java::OrgOpenhabCoreLibraryItems::DateTimeItem
           OpenHAB::DSL::Items::DateTimeItem.new(item)
-        when Java::Org.openhab.core.library.items::RollershutterItem
+        when Java::OrgOpenhabCoreLibraryItems::RollershutterItem
           OpenHAB::DSL::Items::RollershutterItem.new(item)
+        when Java::OrgOpenhabCoreLibraryItems::PlayerItem
+          OpenHAB::DSL::Items::PlayerItem.new(item)
         else
           item
         end
       end
-      # rubocop: enable Metrics/AbcSize
       # rubocop: enable Metrics/MethodLength
 
       #
