@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [2.26.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.26.0...2.26.1) (2021-03-02)
+
+
+### Performance Improvements
+
+* **logging:** use block syntax to log method calls ([9657e72](https://github.com/boc-tothefuture/openhab-jruby/commit/9657e72c4d80b2c7adb722de428b830efb75e75f))
+
 # [2.26.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.25.2...2.26.0) (2021-03-02)
 
 
