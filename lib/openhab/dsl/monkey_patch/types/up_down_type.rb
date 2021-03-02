@@ -22,9 +22,13 @@ module OpenHAB
           # @return [Boolean] True if the other object is a RollershutterItem and has the same state
           #
           def ===(other)
-            super unless other.is_a? OpenHAB::DSL::Items::RollershutterItem
-
-            equals(other.state.as(UpDownType))
+            if other.respond_to?(:state)
+              self == other.state&.as(UpDownType)
+            elsif other.is_a? UpDownType
+              self == other
+            else
+              super
+            end
           end
         end
       end

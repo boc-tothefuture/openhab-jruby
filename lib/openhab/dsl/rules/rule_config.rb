@@ -31,8 +31,6 @@ module OpenHAB
         include OpenHAB::DSL::Rules::Property
         extend OpenHAB::DSL
 
-        java_import org.openhab.core.library.items.SwitchItem
-
         # @return [Array] Of triggers
         attr_reader :triggers
 

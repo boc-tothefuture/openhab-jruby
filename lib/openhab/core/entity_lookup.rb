@@ -9,9 +9,9 @@ require 'openhab/dsl/items/number_item'
 require 'openhab/dsl/items/string_item'
 require 'openhab/dsl/items/datetime_item'
 require 'openhab/dsl/items/rollershutter_item'
+require 'openhab/dsl/items/group_item'
 
 # Automation lookup and injection of OpenHab entities
-java_import org.openhab.core.items.GroupItem
 
 module OpenHAB
   module Core
@@ -88,10 +88,10 @@ module OpenHAB
       #
       # rubocop: disable Metrics/MethodLength
       # Disabled line length and branch size - case dispatch pattern
-      private_class_method def self.decorate_item(item)
+      def self.decorate_item(item)
         case item
-        when GroupItem
-          decorate_group(item)
+        when Java::OrgOpenhabCoreItems::GroupItem
+          OpenHAB::DSL::Items::GroupItem.new(item)
         when Java::OrgOpenhabCoreLibraryItems::NumberItem
           OpenHAB::DSL::Items::NumberItem.new(item)
         when Java::OrgOpenhabCoreLibraryItems::StringItem
@@ -143,19 +143,6 @@ module OpenHAB
         item = $ir.get(name)
         # rubocop: enable Style/GlobalVars
         decorate_item(item)
-      end
-
-      #
-      # Decorate a group from an item base
-      #
-      # @param [OpenHAB item] item item to convert to a group item
-      #
-      # @return [OpenHAB::DSL::Groups::Group] Group created from supplied item
-      #
-      private_class_method def self.decorate_group(item)
-        group = OpenHAB::DSL::Groups::Group.new(Set.new(decorate_items(item.all_members.to_a)))
-        group.group = item
-        group
       end
     end
   end

@@ -25,8 +25,8 @@ This class is aliased to **Switch** so you can compare compare item types using 
 Switches respond to `on`, `off`, and `toggle`
 
 ```ruby
-# Turn on all switches in a group called Switches
-Switches.each(&:on)
+# Turn on all switches in a `Group:Switch` called Switches
+Switches.on
 ```
 
 Check state with `off?` and `on?`

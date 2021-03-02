@@ -22,7 +22,7 @@ module OpenHAB
         #
         #
         def received_command(*items, command: nil, commands: nil)
-          items.flatten.each do |item|
+          separate_groups(items).flatten.each do |item|
             logger.trace("Creating received command trigger for item(#{item})"\
                          "command(#{command}) commands(#{commands})")
 
@@ -43,7 +43,7 @@ module OpenHAB
         #
         def create_received_trigger(commands, item)
           commands.each do |command|
-            if item.is_a? GroupItems
+            if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers
               config, trigger = create_group_command_trigger(item)
             else
               config, trigger = create_item_command_trigger(item)

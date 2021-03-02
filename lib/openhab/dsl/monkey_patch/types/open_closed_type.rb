@@ -25,9 +25,13 @@ module OpenHAB
           # @return [Boolean] True if the other object is a ContactItem and has the same state
           #
           def ===(other)
-            super unless other.is_a? ContactItem
-
-            self == other.state
+            if other.respond_to?(:state)
+              self == other.state
+            elsif other.is_a? OpenClosedType
+              self == other
+            else
+              super
+            end
           end
         end
       end
