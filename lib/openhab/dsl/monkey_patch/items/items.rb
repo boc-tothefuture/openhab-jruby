@@ -10,7 +10,6 @@ require 'openhab/dsl/monkey_patch/items/persistence'
 require 'openhab/dsl/monkey_patch/items/contact_item'
 require 'openhab/dsl/monkey_patch/items/dimmer_item'
 require 'openhab/dsl/monkey_patch/items/switch_item'
-require 'openhab/dsl/monkey_patch/items/group_item'
 
 module OpenHAB
   module DSL

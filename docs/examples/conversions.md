@@ -41,7 +41,7 @@ end
 Ruby
 ```ruby
 rule 'Snap Fan to preset percentages' do
-  changed(*CeilingFans)
+  changed CeilingFans.members
   triggered do |item|
     snapped = case item
               when 0...25 then 25
@@ -49,7 +49,7 @@ rule 'Snap Fan to preset percentages' do
               when 67...100 then 100
               end
     if snapped
-       logger.info("Snapping fan #{item.id} to #{snapped}")
+      logger.info("Snapping fan #{item.id} to #{snapped}")
       item << snapped
     else
       logger.info("#{item.id} set to snapped percentage, no action taken.")
@@ -115,7 +115,7 @@ rule 'Use supplemental heat in office' do
   only_if Office_Occupied
   only_if { OfficeDoor == CLOSED }
   only_if { Thermostate_Upstairs_Heat_Set > Office_Temperature }
-  only_if { unit(°F') { Thermostat_Upstairs_Temp - Office_Temperature > 2 } }
+  only_if { unit('°F') { Thermostat_Upstairs_Temp - Office_Temperature > 2 } }
   otherwise { Lights_Office_Outlet << OFF if Lights_Office_Outlet.on? }
 end
 ```

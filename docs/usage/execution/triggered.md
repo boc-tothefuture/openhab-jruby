@@ -24,13 +24,13 @@ Triggered items are highly useful when working with groups
 #Switches is a group of Switch items
 
 rule 'Triggered item is item changed when a group item is changed.' do
-  changed Switches.items
+  changed Switches.members
   triggered { |item| logger.info("Switch #{item.id} changed to #{item}")}
 end
 
 
 rule 'Turn off any switch that changes' do
-  changed Switches.items
+  changed Switches.members
   triggered(&:off)
 end
 
@@ -39,7 +39,7 @@ end
 Like other execution blocks, multiple triggered blocks are supported in a single rule
 ```ruby
 rule 'Turn a switch off and log it, 5 seconds after turning it on' do
-  changed Switches.items, to: ON
+  changed Switches.members, to: ON
   delay 5.seconds
   triggered(&:off)
   triggered {|item| logger.info("#{item.label} turned off") }

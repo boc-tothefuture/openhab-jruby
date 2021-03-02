@@ -51,7 +51,7 @@ end
 Real world example:
 ```ruby
 rule 'Log (or notify) when an exterior door is left open for more than 5 minutes' do
-  changed ExteriorDoors, to: OPEN, for: 5.minutes
+  changed ExteriorDoors.members, to: OPEN, for: 5.minutes
   triggered {|door| logger.info("#{door.id} has been left open!")}
 end
 ```

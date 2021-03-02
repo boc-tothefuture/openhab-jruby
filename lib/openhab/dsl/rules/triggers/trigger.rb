@@ -54,6 +54,20 @@ module OpenHAB
         end
 
         #
+        # Separates groups from items, and flattens any nested arrays of items
+        #
+        # @param [Array] item_array Array of items passed to a trigger
+        #
+        # @return [Array] A new flat array with any GroupMembers object left intact
+        #
+        def separate_groups(item_array)
+          return item_array if item_array.length <= 1 && item_array.grep(Array).length.zero?
+
+          groups, items = item_array.partition { |item| item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers }
+          groups + separate_groups(items.flatten(1))
+        end
+
+        #
         # Class for creating and managing triggers
         #
         class Trigger

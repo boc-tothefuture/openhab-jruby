@@ -90,7 +90,7 @@ Feature:  changed
     And a deployed rule:
       """
       rule 'Execute rule when item is changed to any state' do
-        changed Switches.items
+        changed Switches.members
         triggered { |item| logger.info("Switch #{item.id} changed")}
       end
       """
@@ -105,7 +105,7 @@ Feature:  changed
     And a deployed rule:
       """
       rule 'Execute rule when item is changed to any state' do
-        changed Switches.items
+        changed Switches.members
         triggered { |item| logger.info("Switch #{item.id} changed")}
       end
       """
@@ -135,3 +135,35 @@ Feature:  changed
       | OFF           | ON    | should     |
       | ON            | ON    | should not |
       | ON            | OFF   | should     |
+
+  Scenario: GroupMembers are separated from items in triggers
+    Given groups:
+      | type    | name     |
+      | Switch  | Switches |
+      | Contact | Contacts |
+
+    And items:
+      | type    | name     | group    |
+      | Switch  | Switch1  | Switches |
+      | Switch  | Switch2  | Switches |
+      | Switch  | Switch3  |          |
+      | Contact | Contact1 | Contacts |
+      | Contact | Contact2 | Contacts |
+
+    And a deployed rule:
+      """
+      rule 'Nested groups' do
+        changed Switches.members, [[Contacts.members], Switch3]
+        triggered { |item| logger.info("#{item.id} triggered the rule") }
+      end
+      """
+    When I add items:
+      | type    | name     | group    |
+      | Contact | Contact3 | Contacts |
+    And item "<item>" state is changed to "<state>"
+    Then It should log "<item> triggered the rule" within 2 seconds
+    Examples:
+        | item     | state |
+        | Switch1  | ON    |
+        | Switch3  | ON    |
+        | Contact3 | OPEN  |

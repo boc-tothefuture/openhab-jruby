@@ -320,6 +320,29 @@ Feature:  metadata
       | String             | Str_Item | foo    |
       | Switch             | Swc_Item | ON     |
 
+  Scenario: Metadata works for groups
+    Given group "TestGroup"
+    And metadata added to "TestGroup" in namespace "test":
+      """
+      {
+      "value": "foo",
+      "config": {
+      "bar": 'baz',
+      "qux": 'quux'
+      }
+      }
+      """
+    And code in a rules file:
+      """
+      logger.info("TestGroup value for namespace test is: #{TestGroup.meta['test'].value}")
+      logger.info("TestGroup value for config bar is: #{TestGroup.meta['test']['bar']}")
+      logger.info("TestGroup value for config qux is: #{TestGroup.meta['test'].dig('qux')}")
+      """
+    When I deploy the rules file
+    Then It should log 'TestGroup value for namespace test is: foo' within 5 seconds
+    And It should log 'TestGroup value for config bar is: baz' within 5 seconds
+    And It should log 'TestGroup value for config qux is: quux' within 5 seconds
+
 
 
 

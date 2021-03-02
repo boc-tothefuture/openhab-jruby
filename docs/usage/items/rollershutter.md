@@ -27,7 +27,7 @@ This class extends the Rollershutter Item type with additional methods
 Roll up all Rollershutters in a group
 
 ```ruby
-Shutters.each(&:up)
+Shutters.up
 ```
 
 Log a warning for all rollershutters that are not up
