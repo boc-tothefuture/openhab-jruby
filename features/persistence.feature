@@ -77,8 +77,8 @@ Feature: persistence
       | Number:Power | Max_Power | Max Power | %.1f kW | MAX      |
 
     And items:
-      | type         | name         | label | pattern | state | groups     |
-      | Number:Power | Number_Power | Power | %.1f kW | 0 kW  | Max_Power  |
+      | type         | name         | label | pattern | state | groups    |
+      | Number:Power | Number_Power | Power | %.1f kW | 0 kW  | Max_Power |
 
     And code in a rules file:
       """
@@ -95,3 +95,24 @@ Feature: persistence
     When I deploy the rule
     Then It should log 'Average: 3 kW' within 10 seconds
     And It should log 'Average Max: 3 kW' within 10 seconds
+
+  Scenario: Check that HistoricState directly returns a state
+    Given items:
+      | type         | name         | label | pattern | state |
+      | Number:Power | Number_Power | Power | %.1f kW | 0 kW  |
+
+    And code in a rules file:
+      """
+      rule 'Check HistoricState' do
+        on_start
+        run { Number_Power.update "3 kW" }
+        delay 3.second
+        run do
+          max = Number_Power.maximum_since(10.seconds, :mapdb)
+          logger.info("Max time: #{max.timestamp}") # If this caused an error, the next line won't execute
+          logger.info("Max: #{max}") if max == max.state
+        end
+      end
+      """
+    When I deploy the rule
+    Then It should log 'Max: 3 kW' within 10 seconds

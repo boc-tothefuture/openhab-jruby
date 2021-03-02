@@ -9,6 +9,18 @@ module OpenHAB
         #
         module Persistence
           java_import Java::OrgOpenhabCoreTypesUtil::UnitUtils
+
+          # A wrapper for OpenHAB's HistoricItem that returns the state directly
+          class HistoricState < SimpleDelegator
+            attr_reader :timestamp, :state
+
+            def initialize(state, timestamp)
+              @state = state
+              @timestamp = timestamp
+              super(@state)
+            end
+          end
+
           # All persistence methods that could return a Quantity
           QUANTITY_METHODS = %i[average_since
                                 delta_since
@@ -45,13 +57,18 @@ module OpenHAB
           #
           def previous_state(service = nil, skip_equal: false)
             service ||= persistence_service
-            PersistenceExtensions.previous_state(self, skip_equal, service&.to_s)
+            result = PersistenceExtensions.previous_state(self, skip_equal, service&.to_s)
+            HistoricState.new(quantify(result.state), result.timestamp)
           end
 
           PERSISTENCE_METHODS.each do |method|
             define_method(method) do |timestamp, service = nil|
               service ||= persistence_service
               result = PersistenceExtensions.public_send(method, self, to_zdt(timestamp), service&.to_s)
+              if result.is_a? Java::OrgOpenhabCorePersistence::HistoricItem
+                return HistoricState.new(quantify(result.state), result.timestamp)
+              end
+
               QUANTITY_METHODS.include?(method) ? quantify(result) : result
             end
           end
