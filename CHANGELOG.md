@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.26.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.25.2...2.26.0) (2021-03-02)
+
+
+### Features
+
+* add stack trace to errors ([572114e](https://github.com/boc-tothefuture/openhab-jruby/commit/572114e74f688bc85925f0f33d2cf0bc3e06d4f8))
+
 ## [2.25.2](https://github.com/boc-tothefuture/openhab-jruby/compare/2.25.1...2.25.2) (2021-02-28)
 
 
