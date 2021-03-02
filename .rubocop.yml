@@ -3,3 +3,6 @@ AllCops:
   NewCops: enable
   SuggestExtensions: false
 
+Style/HashSyntax:
+  UseHashRocketsWithSymbolValues: true
+
