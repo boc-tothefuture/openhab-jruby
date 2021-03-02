@@ -43,7 +43,7 @@ module OpenHAB
         #
         DEFAULT_FILTERS = {
           groups: ->(item) { item.is_a?(Java::OrgOpenhabCoreItems::GroupItem) },
-          all: ->(_item) { true }
+          all: -> { true }
         }.freeze
 
         private_constant :DEFAULT_FILTERS
