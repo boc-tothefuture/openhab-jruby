@@ -33,7 +33,7 @@ module OpenHAB
         alias key? include?
       end
 
-      java_import org.openhab.core.items.GroupItem
+      java_import Java::OrgOpenhabCoreItems::GroupItem
       # Fetches all non-group items from the item registry
       # @return [OpenHAB::DSL::Items::Items]
       def items
