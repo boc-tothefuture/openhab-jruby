@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.0.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.27.1...3.0.0) (2021-03-02)
+
+
+### Features
+
+* **groups:** groups now act as items ([210e507](https://github.com/boc-tothefuture/openhab-jruby/commit/210e50721adbf908a2f888cae7f46fc1687be4f9))
+
+
+### BREAKING CHANGES
+
+* **groups:** `items` no longer acts as a indicator to rules to
+trigger on member changes, it has been replaced with `members`
+
 ## [2.27.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.27.0...2.27.1) (2021-03-02)
 
 # [2.27.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.26.1...2.27.0) (2021-03-02)
