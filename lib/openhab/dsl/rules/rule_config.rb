@@ -62,10 +62,10 @@ module OpenHAB
         #
         Delay = Struct.new(:duration)
 
-        prop_array :run, array_name: :run_queue, wrapper: Run
-        prop_array :triggered, array_name: :run_queue, wrapper: Trigger
-        prop_array :delay, array_name: :run_queue, wrapper: Delay
-        prop_array :otherwise, array_name: :run_queue, wrapper: Otherwise
+        prop_array :run, :array_name => :run_queue, :wrapper => Run
+        prop_array :triggered, :array_name => :run_queue, :wrapper => Trigger
+        prop_array :delay, :array_name => :run_queue, :wrapper => Delay
+        prop_array :otherwise, :array_name => :run_queue, :wrapper => Otherwise
 
         prop :name
         prop :description

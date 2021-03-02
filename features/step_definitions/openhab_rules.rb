@@ -77,7 +77,7 @@ When('I deploy a rule with an error') do
 end
 
 When('I start deploying the rule') do
-  deploy_rule(check_position: :start)
+  deploy_rule(:check_position => :start)
 end
 
 Given('code in a rules file(:)') do |doc_string|
