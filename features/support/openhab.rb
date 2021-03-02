@@ -12,7 +12,7 @@ end
 
 def openhab_client(command)
   karaf_client_path = File.join(openhab_dir, 'runtime/bin/client')
-  cmd = TTY::Command.new(printer: :null)
+  cmd = TTY::Command.new(:printer => :null)
   cmd.run("#{karaf_client_path} -p habopen #{command}", only_output_on_error: true)
 end
 
@@ -50,7 +50,7 @@ def clear_gem_path
 end
 
 def ensure_openhab_running
-  cmd = TTY::Command.new(printer: :null)
+  cmd = TTY::Command.new(:printer => :null)
   cmd.run(File.join(openhab_dir, 'runtime/bin/status'), only_output_on_error: true)
 end
 

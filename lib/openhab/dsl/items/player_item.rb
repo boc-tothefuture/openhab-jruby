@@ -18,8 +18,10 @@ module OpenHAB
 
         def_item_delegator :@player_item
 
-        item_type Java::OrgOpenhabCoreLibraryItems::PlayerItem, play?: :playing?, pause?: :paused?,
-                                                                rewind?: :rewinding?, fastforward?: :fastforwarding?
+        item_type Java::OrgOpenhabCoreLibraryItems::PlayerItem, :play? => :playing?,
+                                                                :pause? => :paused?,
+                                                                :rewind? => :rewinding?,
+                                                                :fastforward? => :fastforwarding?
 
         # rubocop: disable Style/Alias
         # Disabled because 'alias' does not work with the dynamically defined methods
