@@ -103,8 +103,7 @@ module OpenHAB
             # @return [OpenHAB::DSL::MonkeyPatch::Items::MetadataItem], or nil if the namespace doesn't exist
             #
             def [](namespace)
-              logger.trace("Namespaces (#{NamespaceAccessor.registry.getAll})")
-              logger.trace("Namespace (#{NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name))})")
+              logger.trace("Getting metadata for item: #{@item_name}, namespace '#{namespace}'")
               metadata = NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name))
               MetadataItem.new(metadata: metadata) if metadata
             end

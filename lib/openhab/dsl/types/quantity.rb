@@ -144,8 +144,10 @@ module OpenHAB
 
         OPERATIONS.each do |operation, method|
           define_method(operation) do |other|
-            logger.trace("Executing math operation '#{operation}' on quantity #{inspect} "\
-                         "with other type #{other.class} and value #{other.inspect}")
+            logger.trace do
+              "Executing math operation '#{operation}' on quantity #{inspect} "\
+                         "with other type #{other.class} and value #{other.inspect}"
+            end
 
             a, b = to_qt(coerce(other).reverse)
             logger.trace("Coerced a='#{a}' with b='#{b}'")
