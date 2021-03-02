@@ -24,7 +24,7 @@ namespace :openhab do
   CLEAN << @deploy_dir
 
   def command_success?(command)
-    cmd = TTY::Command.new(printer: :null)
+    cmd = TTY::Command.new(:printer => :null)
     cmd.run!(command).success?
   end
 
@@ -49,7 +49,7 @@ namespace :openhab do
       fail_on_error("#{@karaf_client} 'system:version'")
       true
     else
-      cmd = TTY::Command.new(printer: :null)
+      cmd = TTY::Command.new(:printer => :null)
       cmd.run!("#{@karaf_client} 'system:version'").success?
     end
   end

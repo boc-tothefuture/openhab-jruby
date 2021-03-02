@@ -32,7 +32,7 @@ class Rest
   end
 
   def self.item_state(name)
-    (get "/rest/items/#{name}/state", headers: text, format: :text).chomp
+    (get "/rest/items/#{name}/state", :headers => text, :format => :text).chomp
   end
 
   def self.delete_item(name)
