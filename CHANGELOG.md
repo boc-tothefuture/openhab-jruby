@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [2.27.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.26.1...2.27.0) (2021-03-02)
+
+
+### Features
+
+* **player:** add support for player items ([70418ab](https://github.com/boc-tothefuture/openhab-jruby/commit/70418abfa0c504ed819e15c0508ad05e486fcf0d))
+
 ## [2.26.1](https://github.com/boc-tothefuture/openhab-jruby/compare/2.26.0...2.26.1) (2021-03-02)
 
 
