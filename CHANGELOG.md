@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.0.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.0.0...3.0.1) (2021-03-03)
+
+
+### Bug Fixes
+
+* triggering on multiple items caused a stack overflow ([a1fac1d](https://github.com/boc-tothefuture/openhab-jruby/commit/a1fac1d84269fb462acd8e378c8f5f460e2d447b))
+
 # [3.0.0](https://github.com/boc-tothefuture/openhab-jruby/compare/2.27.1...3.0.0) (2021-03-02)
 
 
