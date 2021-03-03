@@ -66,11 +66,14 @@ module OpenHAB
           # @return [ZonedDateTime]
           #
           def to_zdt(timestamp)
-            if timestamp.is_a? Java::JavaTimeTemporal::TemporalAmount
-              logger.trace("Converting #{timestamp} (#{timestamp.class}) to ZonedDateTime")
-              Java::JavaTime::ZonedDateTime.now.minus(timestamp)
-            else
-              timestamp
+            logger.trace("Converting #{timestamp} (#{timestamp.class}) to ZonedDateTime")
+            return timestamp.to_zdt if timestamp.respond_to? :to_zdt
+
+            case timestamp
+            when ZonedDateTime then timestamp
+            when Java::JavaTimeTemporal::TemporalAmount then ZonedDateTime.now.minus(timestamp)
+            when String then OpenHAB::DSL::TimeOfDay::TimeOfDay.parse(timestamp).to_zdt
+            else raise ArgumentError, "Invalid timestamp: #{timestamp} (#{timestamp.class})"
             end
           end
 

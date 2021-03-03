@@ -110,6 +110,15 @@ module OpenHAB
           @local_time.to_s
         end
 
+        #
+        # Fill in today's date and return a ZonedDateTime object
+        #
+        # @return [ZonedDateTime] Today's date + the time represented by this object
+        #
+        def to_zdt
+          ZonedDateTime.now.withHour(hour).withMinute(minute).withSecond(second).withNano(0)
+        end
+
         # Compares one TimeOfDay to another
         # @since 0.0.1
         # @return [Number, nil] -1,0,1 if other TimeOfDay is less than, equal to, or greater than this TimeOfDay

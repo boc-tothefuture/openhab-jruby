@@ -40,7 +40,7 @@ Feature: persistence
         run do
           Number1.update 10
           sleep 1
-          persistence(:rrd4j) do
+          persistence(:mapdb) do
             Number1.persist
             Test_Group.persist
             logger.info("Last update: #{Number1.last_update}")
@@ -77,8 +77,8 @@ Feature: persistence
       | Number:Power | Max_Power | Max Power | %.1f kW | MAX      |
 
     And items:
-      | type         | name         | label | pattern | state | groups     |
-      | Number:Power | Number_Power | Power | %.1f kW | 0 kW  | Max_Power  |
+      | type         | name         | label | pattern | state | groups    |
+      | Number:Power | Number_Power | Power | %.1f kW | 0 kW  | Max_Power |
 
     And code in a rules file:
       """
@@ -95,3 +95,18 @@ Feature: persistence
     When I deploy the rule
     Then It should log 'Average: 3 kW' within 10 seconds
     And It should log 'Average Max: 3 kW' within 10 seconds
+
+  Scenario Outline: Persistence supports various types of timestamp
+    Given code in a rules file:
+      """
+      logger.info("Updated since <since>: #{Number1.updated_since(<since>, :mapdb)}")
+      """
+    When I deploy the rule
+    Then It should log "Updated since <since>: " within 5 seconds
+    Examples:
+      | since                           |
+      | ZonedDateTime.now.minusHours(1) |
+      | MIDNIGHT                        |
+      | NOON                            |
+      | '6am'                           |
+      | 1.hour                          |

@@ -28,7 +28,7 @@ grand_parent: Usage
 | `updated_since`   | timestamp, service                    |                                                                 |
 | `variance_since`  | timestamp, service                    |                                                                 |
 
-* The `timestamp` parameter accepts a java ZonedDateTime or a [Duration](../duration/) object that specifies how far back in time.
+* The `timestamp` parameter accepts a java ZonedDateTime, a [Duration](../duration/) object that specifies how far back in time, or a [TimeOfDay](../time_of_day/) string or object that represents the time of day today. `TimeOfDay` constants such as `MIDNIGHT` and `NOON` can be used.
 * The `service` optional parameter accepts the name of the persistence service to use, as a String or Symbol. When not specified, the system's default persistence service will be used.
 * The return value of the following persistence methods is a [Quantity](../../items/number/#quantities) when the corresponding item is a dimensioned NumberItem:
   * `average_since`
@@ -50,7 +50,8 @@ Number:Power  Power_Usage "Power Usage [%.2f W]"
 logger.info("UV_Index Average: #{UV_Index.average_since(12.hours)}") 
 # Power_Usage has a Unit of Measurement, so 
 # Power_Usage.average_since will return a Quantity with the same unit
-logger.info("Power_Usage Average: #{Power_Usage.average_since(12.hours)}") 
+logger.info("Power_Usage Average: #{Power_Usage.average_since(MIDNIGHT)}") 
+logger.info("Power_Usage Average: #{Power_Usage.average_since('7am')}") 
 ```
 
 Comparison using Quantity
