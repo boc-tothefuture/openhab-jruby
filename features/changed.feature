@@ -136,6 +136,46 @@ Feature:  changed
       | ON            | ON    | should not |
       | ON            | OFF   | should     |
 
+  Scenario Outline: Changed trigger for multiple items
+    Given items:
+      | type   | name        | label        |
+      | Number | Alarm_Mode1 | Alarm Mode 1 |
+      | Number | Alarm_Mode2 | Alarm Mode 2 |
+    And a rule
+      """
+      rule 'Execute rule when either item is changed to any state' do
+        changed Alarm_Mode1, Alarm_Mode2
+        triggered { |item| logger.info("Multi item rule: #{item.name} changed to <state>")}
+      end
+      """
+    When I deploy the rule
+    And item "<item>" state is changed to "<state>"
+    Then It should log 'Multi item rule: <item> changed to <state>' within 5 seconds
+    Examples: Change items
+      | item        | state |
+      | Alarm_Mode1 | 3     |
+      | Alarm_Mode2 | 4     |
+
+  Scenario Outline: Changed trigger for multiple items in an array
+    Given items:
+      | type   | name        | label        |
+      | Number | Alarm_Mode1 | Alarm Mode 1 |
+      | Number | Alarm_Mode2 | Alarm Mode 2 |
+    And a rule
+      """
+      rule 'Execute rule when either item is changed to any state' do
+        changed [Alarm_Mode1, Alarm_Mode2]
+        triggered { |item| logger.info("Multi item rule: #{item.name} changed to <state>")}
+      end
+      """
+    When I deploy the rule
+    And item "<item>" state is changed to "<state>"
+    Then It should log 'Multi item rule: <item> changed to <state>' within 5 seconds
+    Examples: Change items
+      | item        | state |
+      | Alarm_Mode1 | 3     |
+      | Alarm_Mode2 | 4     |
+
   Scenario: GroupMembers are separated from items in triggers
     Given groups:
       | type    | name     |
@@ -163,7 +203,8 @@ Feature:  changed
     And item "<item>" state is changed to "<state>"
     Then It should log "<item> triggered the rule" within 2 seconds
     Examples:
-        | item     | state |
-        | Switch1  | ON    |
-        | Switch3  | ON    |
-        | Contact3 | OPEN  |
+      | item     | state |
+      | Switch1  | ON    |
+      | Switch3  | ON    |
+      | Contact3 | OPEN  |
+
