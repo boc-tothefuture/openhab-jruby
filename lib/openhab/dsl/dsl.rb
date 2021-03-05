@@ -22,8 +22,7 @@ require 'openhab/dsl/time_of_day'
 require 'openhab/dsl/gems'
 require 'openhab/dsl/persistence'
 require 'openhab/dsl/units'
-require 'openhab/dsl/types/datetime'
-require 'openhab/dsl/types/quantity'
+require 'openhab/dsl/types/types'
 require 'openhab/dsl/states'
 
 module OpenHAB

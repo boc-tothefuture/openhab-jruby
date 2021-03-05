@@ -41,6 +41,8 @@ module OpenHAB
             logger.trace("Creating delegate for (#{method}) to #{item}) for #{self.class}")
             def_delegator item, method
           end
+          # Provide uniform access to the underlying oh_item
+          def_delegator item, :java_object, :oh_item
         end
 
         #
