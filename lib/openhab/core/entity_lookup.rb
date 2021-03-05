@@ -10,6 +10,7 @@ require 'openhab/dsl/items/string_item'
 require 'openhab/dsl/items/datetime_item'
 require 'openhab/dsl/items/rollershutter_item'
 require 'openhab/dsl/items/group_item'
+require 'openhab/dsl/items/location_item'
 
 # Automation lookup and injection of OpenHab entities
 
@@ -106,6 +107,8 @@ module OpenHAB
           OpenHAB::DSL::Items::PlayerItem.new(item)
         when Java::OrgOpenhabCoreLibraryItems::ImageItem
           OpenHAB::DSL::Items::ImageItem.new(item)
+        when Java::OrgOpenhabCoreLibraryItems::LocationItem
+          OpenHAB::DSL::Items::LocationItem.new(item)
         else
           logger.trace("Returning undecorated item #{item.class}")
           item
