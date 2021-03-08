@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.1.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.1.0...3.1.1) (2021-03-08)
+
+
+### Bug Fixes
+
+* **rollershutter_item:** add safe navigation and nil checks ([1e98464](https://github.com/boc-tothefuture/openhab-jruby/commit/1e984646d50f97fd3ccd933e548c08e4f8290704))
+
 # [3.1.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.0.1...3.1.0) (2021-03-08)
 
 
