@@ -29,6 +29,7 @@ module OpenHAB
           set_name(config.name)
           set_description(config.description)
           set_triggers(config.triggers)
+          @run_context = config.caller
           @run_queue = config.run
           @guard = config.guard
           between = config.between&.yield_self { between(config.between) }
@@ -288,7 +289,7 @@ module OpenHAB
         #
         def process_otherwise_task(event, task)
           logger.trace { "Executing rule '#{name}' otherwise block with event(#{event})" }
-          task.block.call(event)
+          @run_context.instance_exec(event, &task.block)
         end
 
         #
@@ -316,7 +317,7 @@ module OpenHAB
           return unless event&.item
 
           logger.trace { "Executing rule '#{name}' trigger block with item (#{event.item})" }
-          task.block.call(event.item)
+          @run_context.instance_exec(event.item, &task.block)
         end
 
         #
@@ -328,7 +329,7 @@ module OpenHAB
         #
         def process_run_task(event, task)
           logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
-          task.block.call(event)
+          @run_context.instance_exec(event, &task.block)
         end
 
         #
