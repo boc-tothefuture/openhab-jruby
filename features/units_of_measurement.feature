@@ -73,20 +73,6 @@ Feature:  units_of_measurement
     When I deploy the rules file
     Then It should log 'Result is true' within 5 seconds
 
-  Scenario Outline: Comparisons work with dimensioned numbers and strings representing quantities
-    Given code in a rules file
-      """
-        result = <code_line>
-        logger.info("Result is #{result}")
-      """
-    When I deploy the rules file
-    Then It should log 'Result is <result>' within 5 seconds
-    Examples:
-      | code_line          | result |
-      | NumberC > '4 °F'   | true   |
-      | NumberC == '23 °C' | true   |
-
-
   Scenario: Each unit needs to be normalized for all operations when combining operators with comparitors.
     Given code in a rules file
       """
