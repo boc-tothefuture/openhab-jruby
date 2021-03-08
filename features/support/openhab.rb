@@ -98,3 +98,7 @@ def delete_items
   end
   wait_until(seconds: 30, msg: 'Items not empty') { Rest.items.length.zero? }
 end
+
+def set_log_level(bundle, level)
+  openhab_client("log:set #{level.upcase} #{bundle}")
+end

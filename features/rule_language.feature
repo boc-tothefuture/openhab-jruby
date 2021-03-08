@@ -108,8 +108,10 @@ Feature: rule_language
     When I deploy the rules file
     Then It should log 'OpenHAB ready for rule processing' within 5 seconds
 
+  @log_level_changed
   Scenario: Errors in a run block is logged with stack trace and exits rule
-    Given code in a rules file
+    Given log level INFO
+    And code in a rules file
       """
       def test
         test2
@@ -133,4 +135,25 @@ Feature: rule_language
     And It should log "<script>:8:in `test'" within 5 seconds
     And It should log "<script>:17:in `block in <main>'" within 5 seconds
     And It should log "<script>:15:in `<main>'" within 5 seconds
-    And It should not log 'This one works!' within 10 seconds
+    But It should not log 'This one works!' within 10 seconds
+
+  @log_level_changed
+  Scenario: Native java exceptions are handled
+    Given log level INFO
+    And code in a rules file
+      """
+      def test
+        Java::JavaLang::Integer.parseInt('k')
+      end
+
+      rule 'test' do
+        on_start
+        run { test }
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'For input string: "k" (Java::JavaLang::NumberFormatException)' within 5 seconds
+    And It should log 'In rule: test' within 5 seconds
+    And It should log "RUBY.test(<script>:8)" within 5 seconds
+    And It should log "RUBY.<main>(<script>:13)" within 5 seconds
+    And It should log "RUBY.<main>(<script>:11)" within 5 seconds
