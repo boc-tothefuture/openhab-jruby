@@ -141,7 +141,7 @@ When('item {string} state is changed to {string}') do |item, state|
 end
 
 When('update state for item {string} to {string}') do |item, state|
-  openhab_client("openhab:update #{item} #{state}")
+  openhab_client("openhab:update #{item} \"#{state}\"")
 end
 
 When('channel {string} is triggered') do |channel|

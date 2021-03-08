@@ -87,8 +87,10 @@ module OpenHAB
       # @return [Object] the ruby wrapper for the item
       #
       # rubocop: disable Metrics/MethodLength
+      # rubocop: disable Metrics/CyclomaticComplexity
       # Disabled line length and branch size - case dispatch pattern
       def self.decorate_item(item)
+        logger.trace("Decorating #{item.class}")
         case item
         when Java::OrgOpenhabCoreItems::GroupItem
           OpenHAB::DSL::Items::GroupItem.new(item)
@@ -102,11 +104,15 @@ module OpenHAB
           OpenHAB::DSL::Items::RollershutterItem.new(item)
         when Java::OrgOpenhabCoreLibraryItems::PlayerItem
           OpenHAB::DSL::Items::PlayerItem.new(item)
+        when Java::OrgOpenhabCoreLibraryItems::ImageItem
+          OpenHAB::DSL::Items::ImageItem.new(item)
         else
+          logger.trace("Returning undecorated item #{item.class}")
           item
         end
       end
       # rubocop: enable Metrics/MethodLength
+      # rubocop: enable Metrics/CyclomaticComplexity
 
       #
       # Looks up a Thing in the OpenHAB registry replacing '_' with ':'
