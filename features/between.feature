@@ -61,3 +61,21 @@ Feature: between
       | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | '<%=(Time.now).strftime('%H:%M:%S')%>' | should     |
       | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | '<%=(Time.now).strftime('%H:%M:%S')%>' | should not |
 
+
+  Scenario Outline: Between ranges work inside of rule execution blocks
+    Given a rule template:
+      """
+      rule 'Testing Between Range' do
+        on_start
+        run do
+          range = between <between>
+          logger.info("Within time range") if range.cover? <compare>
+        end
+      end
+      """
+    When I deploy the rule
+    Then It <should> log "Within time range" within 5 seconds
+    Examples: Checks Time, TimeOfDay and Strings
+      | between                                                                                           | compare  | should     |
+      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | Time.now | should     |
+      | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | Time.now | should not |
