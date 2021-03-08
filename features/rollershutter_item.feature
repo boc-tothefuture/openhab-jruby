@@ -52,20 +52,6 @@ Feature: rollershutter_item
       | 50      | stop   | STOP    |
       | 50      | move   | MOVE    |
 
-  Scenario: Comparisons work
-    Given item "RollerOne" state is changed to "50"
-    And item "RollerTwo" state is changed to "0"
-    And code in a rules file
-      """
-      logger.info(RollerOne <operator> <operand>)
-      """
-    When I deploy the rules file
-    Then It should log "<result>" within 5 seconds
-    Examples:
-      | operator | operand   | result |
-      | ==       | 50        | true   |
-      | >        | RollerTwo | true   |
-
   Scenario: up? and down? methods work
     Given item "RollerOne" state is changed to "<initial>"
     And code in a rules file

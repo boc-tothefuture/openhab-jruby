@@ -27,21 +27,6 @@ Feature: datetime_item
         | 1970-01-31T08:00:00+0000 | +        | 20.minutes | 1970-01-31T08:20:00.000+0000 |
         | 1970-01-31T08:00:00+0000 | -        | 20.minutes | 1970-01-31T07:40:00.000+0000 |
 
-    Scenario Outline: DateTime Items support comparisons
-      Given code in a rules file
-        """
-        logger.info(DateOne <operator> <operand>)
-        """
-      When I deploy the rules file
-      Then It should log "<result>" within 5 seconds
-      Examples:
-        | operator | operand                     | result |
-        | <        | DateTwo                     | true   |
-        | <=       | '2021-02-09'                | true   |
-        | >        | Time.now                    | false  |
-        | ==       | '1970-01-01T00:00:00+00:00' | true   |
-        | !=       | '1970-01-01T00:00:00+01:00' | true   |
-
     Scenario Outline: Ruby Time methods work
       Given code in a rules file      
         """

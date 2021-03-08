@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'openhab/dsl/types/quantity'
+require 'openhab/dsl/types/datetime'
+require 'openhab/dsl/items/datetime_item'
 
 module OpenHAB
   module DSL
@@ -21,7 +23,8 @@ module OpenHAB
           #
           def ==(other)
             case other
-            when OpenHAB::DSL::Types::Quantity, QuantityType, Java::OrgOpenhabCoreLibraryTypes::StringType
+            when OpenHAB::DSL::Types::Quantity, QuantityType, Java::OrgOpenhabCoreLibraryTypes::StringType,
+              OpenHAB::DSL::Types::DateTime, OpenHAB::DSL::Items::DateTimeItem
               other == self
             else
               super
