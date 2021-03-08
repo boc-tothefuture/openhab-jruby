@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.1.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.0.1...3.1.0) (2021-03-08)
+
+
+### Features
+
+* **image:** support for image items ([dacc7a8](https://github.com/boc-tothefuture/openhab-jruby/commit/dacc7a8531dcbe256c16a7ac8685ecb0c7e5dcc1))
+
 ## [3.0.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.0.0...3.0.1) (2021-03-03)
 
 
