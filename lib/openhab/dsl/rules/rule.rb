@@ -27,6 +27,7 @@ module OpenHAB
         config.guard = Guard::Guard.new(only_if: config.only_if, not_if: config.not_if)
         logger.trace { config.inspect }
         process_rule_config(config)
+        config
       rescue StandardError => e
         re_raise_with_backtrace(e)
       end

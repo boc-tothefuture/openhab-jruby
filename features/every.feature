@@ -7,9 +7,9 @@ Feature:  every
   Scenario: Using cron shortcuts ':minute'
     Given a rule
       """
-      rule 'Log the rule name every minute' do
+      log_rule = rule 'Log the rule name every minute' do
         every :minute
-        run { logger.info "Rule '#{name}' executed" }
+        run { logger.info "Rule '#{log_rule.name}' executed" }
       end
       """
     When I deploy the rule
@@ -26,9 +26,9 @@ Feature:  every
               TimeOfDay.parse(five_seconds_from_now_string)
             end
 
-            rule 'Simple' do
+            simple_rule = rule 'Simple' do
               every  <%= ":#{Date.today.strftime('%A').downcase.to_sym}" %>, at: <five_seconds_from_now>
-              run { logger.info "Rule #{name} executed" }
+              run { logger.info "Rule #{simple_rule.name} executed" }
             end
       """
     When I deploy the rule
@@ -42,9 +42,9 @@ Feature:  every
   Scenario: Using durations
     Given a rule
       """
-      rule 'Every 5 seconds' do
+      duration_rule = rule 'Every 5 seconds' do
         every 5.seconds
-        run { logger.info "Rule #{name} executed" }
+        run { logger.info "Rule #{duration_rule.name} executed" }
       end
       """
     When I deploy the rule

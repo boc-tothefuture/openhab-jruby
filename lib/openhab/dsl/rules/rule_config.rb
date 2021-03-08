@@ -40,6 +40,9 @@ module OpenHAB
         # @return [Array] Of trigger guards
         attr_accessor :guard
 
+        # @return [Object] object that invoked rule method
+        attr_accessor :caller
+
         #
         # Struct holding a run block
         #
