@@ -113,6 +113,8 @@ Feature: rollershutter_item
       when DOWN then logger.info('RollerOne is DOWN')
       when (51...100) then logger.info('RollerOne is in range 51...100')
       when (1..50) then logger.info('RollerOne is in range 1..50')
+      else
+        logger.info('RollerOne is NULL')
       end
       """
     When I deploy the rules file
@@ -122,3 +124,4 @@ Feature: rollershutter_item
       | 0       | UP             |
       | 100     | DOWN           |
       | 25      | in range 1..50 |
+      | NULL    | NULL           |
