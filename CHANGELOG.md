@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.1.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.1.1...3.1.2) (2021-03-09)
+
+
+### Bug Fixes
+
+* **scope:** change execution block binding to be object that based a block to rule ([b529684](https://github.com/boc-tothefuture/openhab-jruby/commit/b5296844e6a677452388dfb70e743f18a66d3fd6))
+
 ## [3.1.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.1.0...3.1.1) (2021-03-08)
 
 
