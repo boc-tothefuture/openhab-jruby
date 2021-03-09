@@ -36,37 +36,37 @@ grand_parent: Usage
 # Examples
 
 ```ruby
-rule 'Log the rule name every minute' do
+rule 'Log the rule name every minute' do |rule|
   description 'This rule will create a log every minute'
   every :minute
-  run { logger.info "Rule '#{name}' executed" }
+  run { logger.info "Rule '#{rule.name}' executed" }
 end
 ```
 
 ```ruby
-rule 'Log an entry at 11:21' do
+rule 'Log an entry at 11:21' do |rule|
   every :day, at: '11:21'
-  run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
+  run { logger.info("Rule #{rule.name} run at #{TimeOfDay.now}") }
 end
 
 # The above rule could also be expressed using TimeOfDay class as below
 
-rule 'Log an entry at 11:21' do
+rule 'Log an entry at 11:21' do |rule|
   every :day, at: TimeOfDay.new(h: 11, m: 21)
-  run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
+  run { logger.info("Rule #{rule.name} run at #{TimeOfDay.now}") }
 end
 ```
 
 ```ruby
-rule 'Log an entry Wednesdays at 11:21' do
+rule 'Log an entry Wednesdays at 11:21' do |rule|
   every :wednesday, at: '11:21'
-  run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
+  run { logger.info("Rule #{rule.name} run at #{TimeOfDay.now}") }
 end
 ```
 
 ```ruby
-rule 'Every 5 seconds' do
+rule 'Every 5 seconds' do |rule|
   every 5.seconds
-  run { logger.info "Rule #{name} executed" }
+  run { logger.info "Rule #{rule.name} executed" }
 end
 ```
