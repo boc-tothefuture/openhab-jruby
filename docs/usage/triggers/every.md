@@ -36,37 +36,37 @@ grand_parent: Usage
 # Examples
 
 ```ruby
-rule 'Log the rule name every minute' do
+name_rule = rule 'Log the rule name every minute' do
   description 'This rule will create a log every minute'
   every :minute
-  run { logger.info "Rule '#{name}' executed" }
+  run { logger.info "Rule '#{name_rule.name}' executed" }
 end
 ```
 
 ```ruby
-rule 'Log an entry at 11:21' do
+log_time_rule = rule 'Log an entry at 11:21' do
   every :day, at: '11:21'
-  run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
+  run { logger.info("Rule #{log_time_rule.name} run at #{TimeOfDay.now}") }
 end
 
 # The above rule could also be expressed using TimeOfDay class as below
 
-rule 'Log an entry at 11:21' do
+log_time_rule2 = rule 'Log an entry at 11:21' do
   every :day, at: TimeOfDay.new(h: 11, m: 21)
-  run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
+  run { logger.info("Rule #{log_time_rule2.name} run at #{TimeOfDay.now}") }
 end
 ```
 
 ```ruby
-rule 'Log an entry Wednesdays at 11:21' do
+everywed_rule = rule 'Log an entry Wednesdays at 11:21' do
   every :wednesday, at: '11:21'
-  run { logger.info("Rule #{name} run at #{TimeOfDay.now}") }
+  run { logger.info("Rule #{everywed_rule.name} run at #{TimeOfDay.now}") }
 end
 ```
 
 ```ruby
-rule 'Every 5 seconds' do
+every5_rule = rule 'Every 5 seconds' do
   every 5.seconds
-  run { logger.info "Rule #{name} executed" }
+  run { logger.info "Rule #{every5_rule.name} executed" }
 end
 ```

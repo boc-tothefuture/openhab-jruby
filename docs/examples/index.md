@@ -10,9 +10,9 @@ has_children: true
 ### Log "Rule *name* executed" an entry every minute
 
 ```ruby
-rule 'Simple' do
+simple_rule = rule 'Simple' do
   every :minute
-  run { logger.info "Rule #{name} executed" }
+  run { logger.info "Rule #{simple_rule.name} executed" }
 end
 
 ```
