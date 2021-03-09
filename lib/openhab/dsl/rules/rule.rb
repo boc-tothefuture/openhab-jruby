@@ -23,10 +23,11 @@ module OpenHAB
       def rule(rule_name, &block)
         @rule_name = rule_name
         config = RuleConfig.new(rule_name, block.binding)
-        config.instance_eval(&block)
+        config.instance_exec(config, &block)
         config.guard = Guard::Guard.new(only_if: config.only_if, not_if: config.not_if)
         logger.trace { config.inspect }
         process_rule_config(config)
+        config
       rescue StandardError => e
         re_raise_with_backtrace(e)
       end
