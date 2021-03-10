@@ -21,4 +21,10 @@ After('@reset_library') do
   start_openhab
 end
 
+After('@log_level_changed') do
+  set_log_level('jsr223.jruby', 'TRACE')
+  set_log_level('org.openhab.binding.jrubyscripting', 'TRACE')
+  set_log_level('org.openhab.core.automation', 'TRACE')
+end
+
 prepare_openhab

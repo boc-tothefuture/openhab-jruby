@@ -168,3 +168,13 @@ Given('metadata added to {string} in namespace {string}:') do |item, namespace, 
   response = Rest.add_metadata(item: item, namespace: namespace, config: config)
   raise "Response #{response.pretty_inspect} Request #{response.request.pretty_inspect}" unless response.success?
 end
+
+Given('(set )log level (to ){word}') do |level|
+  set_log_level('jsr223.jruby', level)
+  set_log_level('org.openhab.binding.jrubyscripting', level)
+  set_log_level('org.openhab.core.automation', level)
+end
+
+Given('log level for {word} is set to {word}') do |bundle, level|
+  set_log_level(bundle, level)
+end

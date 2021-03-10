@@ -22,8 +22,20 @@ module OpenHAB
       #
       # Regex for matching internal calls in a stack trace
       #
-      INTERNAL_CALL_REGEX = %r{(openhab-scripting-.*/lib)|(org/jruby/)}.freeze
+      INTERNAL_CALL_REGEX = %r{(openhab-scripting-.*/lib)|org[./]jruby}.freeze
       private_constant :INTERNAL_CALL_REGEX
+
+      #
+      # Regex for matching internal calls in a java stack trace
+      #
+      EXCLUDED_JAVA_PACKAGES = /jdk\.internal\.reflect|java\.lang\.reflect|org\.openhab|java\.lang\.Thread\.run/.freeze
+      private_constant :EXCLUDED_JAVA_PACKAGES
+
+      #
+      # Regex for matching internal calls in a java stack trace
+      #
+      JAVA_INTERNAL_CALL_REGEX = Regexp.union(INTERNAL_CALL_REGEX, EXCLUDED_JAVA_PACKAGES).freeze
+      private_constant :JAVA_INTERNAL_CALL_REGEX
 
       #
       # Create a new logger
@@ -60,8 +72,13 @@ module OpenHAB
       def clean_backtrace(error)
         return error if debug_enabled?
 
-        backtrace = error.backtrace_locations.reject { |line| INTERNAL_CALL_REGEX.match? line.to_s }
-        error.set_backtrace(backtrace.map(&:to_s))
+        if error.respond_to? :backtrace_locations
+          backtrace = error.backtrace_locations.map(&:to_s).reject { |line| INTERNAL_CALL_REGEX.match? line }
+          error.set_backtrace(backtrace)
+        elsif error.respond_to? :stack_trace
+          backtrace = error.stack_trace.reject { |line| JAVA_INTERNAL_CALL_REGEX.match? line.to_s }
+          error.set_stack_trace(backtrace)
+        end
         error
       end
 
