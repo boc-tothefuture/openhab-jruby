@@ -5,6 +5,7 @@ require 'java'
 require 'time'
 require 'openhab/dsl/types/datetime'
 require 'openhab/dsl/items/item_delegate'
+require 'openhab/dsl/items/item_command'
 
 module OpenHAB
   module DSL

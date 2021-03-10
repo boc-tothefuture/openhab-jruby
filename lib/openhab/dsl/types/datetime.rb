@@ -75,13 +75,13 @@ module OpenHAB
         # @return [Integer] -1, 0 or 1 depending on the outcome
         #
         def <=>(other)
+          if other.respond_to?(:zoned_date_time)
+            return zoned_date_time.to_instant.compare_to(other.zoned_date_time.to_instant)
+          end
+
           case other
-          when DateTime, DateTimeType, DateTimeItem
-            zoned_date_time.to_instant.compare_to(other.zoned_date_time.to_instant)
-          when TimeOfDay::TimeOfDay, TimeOfDay::TimeOfDayRangeElement
-            to_tod <=> other
-          when String
-            self <=> DateTime.parse(DATE_ONLY_REGEX =~ other ? "#{other}'T'00:00:00#{zone}" : other)
+          when TimeOfDay::TimeOfDay, TimeOfDay::TimeOfDayRangeElement then to_tod <=> other
+          when String then self <=> DateTime.parse(DATE_ONLY_REGEX =~ other ? "#{other}'T'00:00:00#{zone}" : other)
           else
             self <=> DateTime.from(other)
           end

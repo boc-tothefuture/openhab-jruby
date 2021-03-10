@@ -36,6 +36,8 @@ module OpenHAB
           #   result from super if not supplied an OpenClosedType
           #
           def ==(other)
+            other = other.get_state_as(OpenClosedType) if other.respond_to?(:get_state_as)
+
             if other.is_a? OpenClosedType
               state? && state == other
             else

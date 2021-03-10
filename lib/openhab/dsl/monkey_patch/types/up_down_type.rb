@@ -30,6 +30,21 @@ module OpenHAB
               super
             end
           end
+
+          #
+          # Test for equality
+          #
+          # @param [Object] other Other object to compare against
+          #
+          # @return [Boolean] true if self and other can be considered equal, false otherwise
+          #
+          def ==(other)
+            if other.respond_to?(:get_state_as)
+              self == other.get_state_as(UpDownType)
+            else
+              super
+            end
+          end
         end
       end
     end

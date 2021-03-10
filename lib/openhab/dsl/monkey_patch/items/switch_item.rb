@@ -56,6 +56,8 @@ module OpenHAB
           #   otherwise result from super
           #
           def ==(other)
+            other = other.get_state_as(OnOffType) if other.respond_to?(:get_state_as)
+
             if other.is_a? OnOffType
               state? && state == other
             else
