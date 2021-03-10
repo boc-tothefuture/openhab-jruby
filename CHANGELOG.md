@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.2.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.1.2...3.2.0) (2021-03-10)
+
+
+### Features
+
+* support more comparisons ([3898d2d](https://github.com/boc-tothefuture/openhab-jruby/commit/3898d2da40994e322ffb2773fe35184debf0d261))
+
 ## [3.1.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.1.1...3.1.2) (2021-03-09)
 
 
