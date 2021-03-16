@@ -11,31 +11,31 @@ grand_parent: Usage
 
 [Persistence](https://www.openhab.org/docs/configuration/persistence.html) functions can be accessed through the item object. The following methods related to persistence are available: 
 
-| Method            | Parameters                            | Example                                                         |
-| ----------------- | ------------------------------------- | --------------------------------------------------------------- |
-| `persist`         | service                               | `Item1.persist`                                                 |
-| `last_update`     | service                               | `Item1.last_update`                                             |
-| `previous_state`  | skip_equal: (default: false), service | `Item1.previous_state` `Item1.previous_state(skip_equal: true)` |
-| `average_since`   | timestamp, service                    | `Item1.average_since(-1.hours, :influxdb)`                      |
-| `changed_since`   | timestamp, service                    |                                                                 |
-| `delta_since`     | timestamp, service                    |                                                                 |
-| `deviation_since` | timestamp, service                    |                                                                 |
-| `evolution_rate`  | timestamp, service                    |                                                                 |
-| `historic_state`  | timestamp, service                    |                                                                 |
-| `maximum_since`   | timestamp, service                    |                                                                 |
-| `minimum_since`   | timestamp, service                    |                                                                 |
-| `sum_since`       | timestamp, service                    |                                                                 |
-| `updated_since`   | timestamp, service                    |                                                                 |
-| `variance_since`  | timestamp, service                    |                                                                 |
+| Method            | Parameters                            | Return Value            | Example                                                         |
+| ----------------- | ------------------------------------- | ----------------------- | --------------------------------------------------------------- |
+| `persist`         | service                               | Nil                     | `Item1.persist`                                                 |
+| `last_update`     | service                               | ZonedDateTime           | `Item1.last_update`                                             |
+| `previous_state`  | skip_equal: (default: false), service | item state              | `Item1.previous_state` `Item1.previous_state(skip_equal: true)` |
+| `average_since`   | timestamp, service                    | DecimalType or Quantity | `Item1.average_since(-1.hours, :influxdb)`                      |
+| `changed_since`   | timestamp, service                    | boolean                 |                                                                 |
+| `delta_since`     | timestamp, service                    | DecimalType or Quantity |                                                                 |
+| `deviation_since` | timestamp, service                    | DecimalType or Quantity |                                                                 |
+| `evolution_rate`  | timestamp, service                    | DecimalType             |                                                                 |
+| `historic_state`  | timestamp, service                    | HistoricState           |                                                                 |
+| `maximum_since`   | timestamp, service                    | HistoricState           |                                                                 |
+| `minimum_since`   | timestamp, service                    | HistoricState           |                                                                 |
+| `sum_since`       | timestamp, service                    | DecimalType or Quantity |                                                                 |
+| `updated_since`   | timestamp, service                    | boolean                 |                                                                 |
+| `variance_since`  | timestamp, service                    | DecimalType or Quantity |                                                                 |
 
 * The `timestamp` parameter accepts a java ZonedDateTime or a [Duration](../duration/) object that specifies how far back in time.
 * The `service` optional parameter accepts the name of the persistence service to use, as a String or Symbol. When not specified, the system's default persistence service will be used.
-* The return value of the following persistence methods is a [Quantity](../../items/number/#quantities) when the corresponding item is a dimensioned NumberItem:
-  * `average_since`
-  * `delta_since`
-  * `deviation_since`
-  * `sum_since`
-  * `variance_since`
+* Dimensioned NumberItems will return a [Quantity](../../items/number/#quantities) object
+* `HistoricState` holds the item state and the timestamp data from OpenHAB's [HistoricItem](https://openhab.org/javadoc/latest/org/openhab/core/persistence/historicitem). It contains the following properties:
+  * `timestamp` - a ZonedDateTime object indicating the timestamp of the persisted data
+  * `state` - the state of the item persisted at the timestamp above. This will be a Quantity for dimensioned NumberItem. It is not necessary to access the `state` property, as the HistoricState itself will return the state. See the example below.
+  
+  
 
 ### Examples:
 
@@ -62,6 +62,13 @@ Comparison using Quantity
 if Power_Usage.average_since(15.minutes) > '5 kW'
   logger.info("The power usage exceeded its 15 min average)
 end
+```
+
+HistoricState
+
+```ruby
+max = Power_Usage.maximum_since(24.hours)
+logger.info("Max power usage: #{max}, at: #{max.timestamp})
 ```
 
 ## Persistence Block
