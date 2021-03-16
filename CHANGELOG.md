@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.3.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.2.1...3.3.0) (2021-03-16)
+
+
+### Features
+
+* **persistence:** convert HistoricItem methods to directly return its state ([942d7ea](https://github.com/boc-tothefuture/openhab-jruby/commit/942d7ea22edafc697b5a3bf8c222a1ecb1860551))
+
 ## [3.2.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.2.0...3.2.1) (2021-03-11)
 
 
