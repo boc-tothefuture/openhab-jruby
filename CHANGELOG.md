@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.4.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.3.0...3.4.0) (2021-03-22)
+
+
+### Features
+
+* **thing:** add boolean methods for checking thing's status ([58bda12](https://github.com/boc-tothefuture/openhab-jruby/commit/58bda12449d72c7ac1d8e1ee1d7c2876897a0851))
+
 # [3.3.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.2.1...3.3.0) (2021-03-16)
 
 
