@@ -111,3 +111,19 @@ Feature:  thing
     Then if I wait 5 seconds
     And thing "astro:sun:home" is enabled
     Then It should not log 'Thing astro:sun:home status changed to UNINITIALIZED' within 20 seconds
+
+  Scenario Outline: Rule supports boolean thing status methods
+    Given thing "astro:sun:home" is <enable>
+    And if I wait 5 seconds
+    And code in a rules file
+      """
+      logger.info("Thing is <method> #{things['astro:sun:home'].<method>}")
+      """
+    When I deploy the rules file
+    Then It should log 'Thing is <method> <result>' within 20 seconds
+    Examples:
+      | method         | enable   | result |
+      | online?        | enabled  | true   |
+      | online?        | disabled | false  |
+      | uninitialized? | disabled | true   |
+      | uninitialized? | enabled  | false  |
