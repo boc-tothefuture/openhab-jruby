@@ -11,6 +11,7 @@ module OpenHAB
     # Support for OpenHAB Things
     #
     module Things
+      java_import Java::OrgOpenhabCoreThing::ThingStatus
       include OpenHAB::Log
 
       #
@@ -23,6 +24,22 @@ module OpenHAB
         def initialize(thing)
           super
           define_action_methods
+        end
+
+        #
+        # Defines boolean thing status methods
+        #   uninitialized?
+        #   initializing?
+        #   unknown?
+        #   online?
+        #   offline?
+        #   removing?
+        #   removed?
+        #
+        # @return [Boolean] true if the thing status matches the name
+        #
+        ThingStatus.constants.each do |thingstatus|
+          define_method("#{thingstatus.to_s.downcase}?") { status == ThingStatus.value_of(thingstatus) }
         end
 
         private
