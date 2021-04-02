@@ -30,7 +30,7 @@ module OpenHAB
 
             def initialize(metadata: nil, key: nil, value: nil, config: nil)
               @metadata = metadata || Metadata.new(key || MetadataKey.new('', ''), value&.to_s, config)
-              super(@metadata&.configuration)
+              super(to_ruby(@metadata&.configuration))
             end
 
             #
@@ -84,6 +84,44 @@ module OpenHAB
             #
             def to_a
               [@metadata&.value, @metadata&.configuration || {}]
+            end
+
+            private
+
+            #
+            # Recursively convert the supplied Hash object into a Ruby Hash and recreate the keys and values
+            #
+            # @param [Hash] Hash to convert
+            #
+            # @return [Hash] The converted hash
+            #
+            def to_ruby_hash(hash)
+              return unless hash.respond_to? :each_with_object
+
+              hash.each_with_object({}) { |(key, value), ruby_hash| ruby_hash[to_ruby(key)] = to_ruby(value) }
+            end
+
+            #
+            # Recursively convert the supplied array to a Ruby array and recreate all String values
+            #
+            # @param [Object] array to convert
+            #
+            # @return [Array] The converted array
+            #
+            def to_ruby_array(array)
+              return unless array.respond_to? :each_with_object
+
+              array.each_with_object([]) { |value, ruby_array| ruby_array << to_ruby(value) }
+            end
+
+            # Convert the given object to Ruby equivalent
+            def to_ruby(value)
+              case value
+              when Hash, Java::JavaUtil::Map then to_ruby_hash(value)
+              when Array, Java::JavaUtil::List then to_ruby_array(value)
+              when String then String.new(value)
+              else value
+              end
             end
           end
 
