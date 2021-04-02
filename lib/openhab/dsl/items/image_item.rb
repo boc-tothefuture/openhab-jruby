@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require 'base64'
+require 'pathname'
 require 'net/http'
 require 'java'
-require 'mimemagic'
+require 'marcel'
 require 'openhab/dsl/items/item_command'
 require 'openhab/dsl/items/item_delegate'
 
@@ -57,7 +58,7 @@ module OpenHAB
         #
         def update_from_file(file, mime_type: nil)
           file_data = IO.binread(file)
-          mime_type ||= (MimeMagic.by_path(file) || MimeMagic.by_magic(file_data))&.type
+          mime_type ||= Marcel::MimeType.for(Pathname.new(file)) || Marcel::MimeType.for(file_data)
           update_from_bytes(file_data, mime_type: mime_type)
         end
 
@@ -130,7 +131,7 @@ module OpenHAB
         #
         def detect_mime_from_bytes(bytes:)
           logger.trace('Detecting mime type from file image contents')
-          MimeMagic.by_magic(bytes)&.type
+          Marcel::MimeType.for(bytes)
         end
       end
     end
