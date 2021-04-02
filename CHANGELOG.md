@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.4.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.4.0...3.4.1) (2021-04-02)
+
+
+### Bug Fixes
+
+* **dependency:** swapped mimemagic for marcel for mime type detection ([b1ec891](https://github.com/boc-tothefuture/openhab-jruby/commit/b1ec8915a05dff6236677df1a0e3e115b8cb0d51))
+
 # [3.4.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.3.0...3.4.0) (2021-03-22)
 
 
