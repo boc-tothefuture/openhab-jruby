@@ -30,11 +30,8 @@ module OpenHAB
             dow: '?'
           }
         end
-        # Rubocop check is disabled because YARD cannot process the method if placed in front of
-        #   the method definition
-        # rubocop:disable Style/AccessModifierDeclarations
+
         module_function :cron_expression_map
-        # rubocop:enable Style/AccessModifierDeclarations
 
         # @return [Hash] Map of days of the week from symbols to to OpenHAB cron strings
         DAY_OF_WEEK_MAP = {
