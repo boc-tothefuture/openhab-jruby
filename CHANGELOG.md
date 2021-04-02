@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.4.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.4.1...3.4.2) (2021-04-02)
+
+
+### Bug Fixes
+
+* **metadata:** convert loaded metadata config into Ruby objects ([aa8e2b7](https://github.com/boc-tothefuture/openhab-jruby/commit/aa8e2b78987d792d6b2299df6e262e68716827ca))
+
 ## [3.4.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.4.0...3.4.1) (2021-04-02)
 
 
