@@ -17,7 +17,8 @@ module OpenHAB
         extend OpenHAB::DSL::Items::ItemDelegate
         include Comparable
 
-        def_item_delegator :@rollershutter_item
+        def_item_delegator :@oh_item
+        attr_reader :oh_item
 
         item_type Java::OrgOpenhabCoreLibraryItems::RollershutterItem
 
@@ -29,9 +30,9 @@ module OpenHAB
         #
         def initialize(rollershutter_item)
           logger.trace("Wrapping #{rollershutter_item}")
-          @rollershutter_item = rollershutter_item
+          @oh_item = rollershutter_item
 
-          item_missing_delegate { @rollershutter_item }
+          item_missing_delegate { @oh_item }
           item_missing_delegate { position }
 
           super()

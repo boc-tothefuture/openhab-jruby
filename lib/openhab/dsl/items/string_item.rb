@@ -21,7 +21,8 @@ module OpenHAB
         BLANK_RE = /\A[[:space:]]*\z/.freeze
         private_constant :BLANK_RE
 
-        def_item_delegator :@string_item
+        def_item_delegator :@oh_item
+        attr_reader :oh_item
 
         item_type Java::OrgOpenhabCoreLibraryItems::StringItem
 
@@ -31,10 +32,10 @@ module OpenHAB
         # @param [Java::Org::openhab::core::library::items::StringItem] string_item OpenHAB string item to delegate to
         #
         def initialize(string_item)
-          @string_item = string_item
+          @oh_item = string_item
 
-          item_missing_delegate { @string_item }
-          item_missing_delegate { @string_item.state&.to_full_string&.to_s }
+          item_missing_delegate { @oh_item }
+          item_missing_delegate { @oh_item.state&.to_full_string&.to_s }
 
           super()
         end
@@ -46,7 +47,7 @@ module OpenHAB
         #   nil if underlying OpenHAB StringItem does not have a state
         #
         def to_str
-          @string_item.state&.to_full_string&.to_s
+          @oh_item.state&.to_full_string&.to_s
         end
 
         #
@@ -55,9 +56,9 @@ module OpenHAB
         # @return [Boolean] True if string item is not set or contains only whitespace, false otherwise
         #
         def blank?
-          return true unless @string_item.state?
+          return true unless @oh_item.state?
 
-          @string_item.state.to_full_string.to_s.empty? || BLANK_RE.match?(self)
+          @oh_item.state.to_full_string.to_s.empty? || BLANK_RE.match?(self)
         end
 
         #
@@ -66,7 +67,7 @@ module OpenHAB
         # @return [Boolean] True if item is not in state UNDEF or NULL and value is not blank
         #
         def truthy?
-          @string_item.state? && blank? == false
+          @oh_item.state? && blank? == false
         end
 
         #
@@ -80,11 +81,11 @@ module OpenHAB
         def <=>(other)
           case other
           when StringItem
-            @string_item.state <=> other.state
+            @oh_item.state <=> other.state
           when String
-            @string_item.state.to_s <=> other
+            @oh_item.state.to_s <=> other
           else
-            @string_item.state <=> other
+            @oh_item.state <=> other
           end
         end
       end

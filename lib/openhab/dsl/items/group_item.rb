@@ -36,7 +36,8 @@ module OpenHAB
         include Enumerable
         include Comparable
 
-        def_item_delegator :@group_item
+        def_item_delegator :@oh_item
+        attr_reader :oh_item
 
         #
         # @return [Hash] A hash of lambdas with default filters for `all_members`
@@ -54,9 +55,9 @@ module OpenHAB
         # @param [Java::Org::openhab::core::items::GroupItem] group_item OpenHAB GroupItem to delegate to
         #
         def initialize(group_item)
-          @group_item = group_item
+          @oh_item = group_item
 
-          item_missing_delegate { @group_item }
+          item_missing_delegate { @oh_item }
           item_missing_delegate { OpenHAB::Core::EntityLookup.decorate_item(base_item) }
         end
 
@@ -66,14 +67,14 @@ module OpenHAB
         # @return [GroupMembers] A GroupMembers object
         #
         def members
-          GroupMembers.new(@group_item)
+          GroupMembers.new(@oh_item)
         end
 
         #
         # Iterates through the direct members of the Group
         #
         def each(&block)
-          OpenHAB::Core::EntityLookup.decorate_items(@group_item.members.to_a).each(&block)
+          OpenHAB::Core::EntityLookup.decorate_items(@oh_item.members.to_a).each(&block)
         end
 
         #
@@ -87,9 +88,9 @@ module OpenHAB
         def all_members(filter = nil, &block)
           predicate = DEFAULT_FILTERS[filter] || block
 
-          return OpenHAB::Core::EntityLookup.decorate_items(@group_item.all_members.to_a) unless predicate
+          return OpenHAB::Core::EntityLookup.decorate_items(@oh_item.all_members.to_a) unless predicate
 
-          OpenHAB::Core::EntityLookup.decorate_items(@group_item.get_members(&predicate).to_a)
+          OpenHAB::Core::EntityLookup.decorate_items(@oh_item.get_members(&predicate).to_a)
         end
 
         #

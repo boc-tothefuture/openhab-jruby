@@ -18,7 +18,8 @@ module OpenHAB
         extend OpenHAB::DSL::Items::ItemCommand
         extend OpenHAB::DSL::Items::ItemDelegate
 
-        def_item_delegator :@image_item
+        def_item_delegator :@oh_item
+        attr_reader :oh_item
 
         item_type Java::OrgOpenhabCoreLibraryItems::ImageItem
 
@@ -30,9 +31,9 @@ module OpenHAB
         #
         def initialize(image_item)
           logger.trace("Wrapping #{image_item}")
-          @image_item = image_item
+          @oh_item = image_item
 
-          item_missing_delegate { @image_item }
+          item_missing_delegate { @oh_item }
 
           super()
         end
@@ -46,7 +47,7 @@ module OpenHAB
         #
         def update(base_64_encoded_image)
           logger.trace { "Updating #{self} with Base64 image #{base_64_encoded_image}" }
-          @image_item.update base_64_encoded_image
+          @oh_item.update base_64_encoded_image
         end
 
         #

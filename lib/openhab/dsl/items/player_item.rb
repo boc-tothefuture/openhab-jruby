@@ -16,7 +16,8 @@ module OpenHAB
         extend OpenHAB::DSL::Items::ItemDelegate
         extend Forwardable
 
-        def_item_delegator :@player_item
+        def_item_delegator :@oh_item
+        attr_reader :oh_item
 
         item_type Java::OrgOpenhabCoreLibraryItems::PlayerItem, :play? => :playing?,
                                                                 :pause? => :paused?,
@@ -37,9 +38,9 @@ module OpenHAB
         #
         def initialize(player_item)
           logger.trace("Wrapping #{player_item}")
-          @player_item = player_item
+          @oh_item = player_item
 
-          item_missing_delegate { @player_item }
+          item_missing_delegate { @oh_item }
 
           super()
         end

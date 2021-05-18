@@ -21,7 +21,8 @@ module OpenHAB
         extend OpenHAB::DSL::Items::ItemCommand
         include Comparable
 
-        def_item_delegator :@datetime_item
+        def_item_delegator :@oh_item
+        attr_reader :oh_item
 
         item_type Java::OrgOpenhabCoreLibraryItems::DateTimeItem
 
@@ -32,8 +33,8 @@ module OpenHAB
         # delegate to
         #
         def initialize(datetime_item)
-          @datetime_item = datetime_item
-          item_missing_delegate { @datetime_item }
+          @oh_item = datetime_item
+          item_missing_delegate { @oh_item }
           item_missing_delegate { to_dt }
         end
 
@@ -43,7 +44,7 @@ module OpenHAB
         # @return [OpenHAB::DSL::Types::DateTime] Wrapper for the Item's state, or nil if it has no state
         #
         def to_dt
-          OpenHAB::DSL::Types::DateTime.new(@datetime_item.state) if state?
+          OpenHAB::DSL::Types::DateTime.new(@oh_item.state) if state?
         end
 
         #

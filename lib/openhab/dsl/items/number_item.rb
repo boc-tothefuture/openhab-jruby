@@ -19,7 +19,8 @@ module OpenHAB
         extend OpenHAB::DSL::Items::ItemDelegate
         extend OpenHAB::DSL::Items::ItemCommand
 
-        def_item_delegator :@number_item
+        def_item_delegator :@oh_item
+        attr_reader :oh_item
 
         java_import org.openhab.core.library.types.DecimalType
         java_import org.openhab.core.library.types.QuantityType
@@ -34,8 +35,8 @@ module OpenHAB
         # @param [Java::Org::openhab::core::library::items::NumberItem] number_item OpenHAB number item to delegate to
         #
         def initialize(number_item)
-          @number_item = number_item
-          item_missing_delegate { @number_item }
+          @oh_item = number_item
+          item_missing_delegate { @oh_item }
           super()
         end
 
@@ -45,7 +46,7 @@ module OpenHAB
         # @return [Boolean] True if item is not in state UNDEF or NULL and value is not zero.
         #
         def truthy?
-          @number_item.state? && @number_item.state != DecimalType::ZERO
+          @oh_item.state? && @oh_item.state != DecimalType::ZERO
         end
 
         #
@@ -109,7 +110,7 @@ module OpenHAB
         #
         def to_qt
           if dimension
-            Quantity.new(@number_item.get_state_as(QuantityType))
+            Quantity.new(@oh_item.get_state_as(QuantityType))
           else
             Quantity.new(QuantityType.new(to_d.to_java, AbstractUnit::ONE))
           end
@@ -139,7 +140,7 @@ module OpenHAB
         # @return [BigDecimal] NumberItem as a BigDecimal
         #
         def to_d
-          @number_item.state.to_big_decimal.to_d if @number_item.state.respond_to? :to_big_decimal
+          @oh_item.state.to_big_decimal.to_d if @oh_item.state.respond_to? :to_big_decimal
         end
 
         #
@@ -148,7 +149,7 @@ module OpenHAB
         # @return [Java::org::openhab::core::library::types::QuantityType] dimension
         #
         def dimension
-          @number_item.dimension
+          @oh_item.dimension
         end
 
         %w[+ - * /].each do |operation|
@@ -170,7 +171,7 @@ module OpenHAB
         #
         def state_compare(other)
           other = other.state if other.respond_to? :state
-          @number_item.state <=> other
+          @oh_item.state <=> other
         end
 
         #
@@ -182,7 +183,7 @@ module OpenHAB
         #   nil if this number item does not have a dimension
         #
         def string_compare(other)
-          @number_item.state <=> QuantityType.new(other) if dimension
+          @oh_item.state <=> QuantityType.new(other) if dimension
         end
 
         #
@@ -193,7 +194,7 @@ module OpenHAB
         # @return [Integer] -1,0,1 depending on less than, equal to or greater than other
         #
         def numeric_compare(other)
-          @number_item.state.to_big_decimal.to_d <=> other.to_d
+          @oh_item.state.to_big_decimal.to_d <=> other.to_d
         end
 
         #
@@ -284,7 +285,7 @@ module OpenHAB
             logger.trace('Other is dimensioned, converting self and other to QuantityTypes to compare')
             to_qt <=> other.to_qt
           else
-            @number_item.state <=> other.state
+            @oh_item.state <=> other.state
           end
         end
 
@@ -299,8 +300,8 @@ module OpenHAB
         def coerce_from_numeric(other)
           if dimension
             [Quantity.new(other), to_qt]
-          elsif @number_item.state?
-            [other.to_d, @number_item.state.to_big_decimal.to_d]
+          elsif @oh_item.state?
+            [other.to_d, @oh_item.state.to_big_decimal.to_d]
           end
         end
 
