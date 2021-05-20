@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.4.3](https://github.com/boc-tothefuture/openhab-jruby/compare/3.4.2...3.4.3) (2021-05-20)
+
+
+### Bug Fixes
+
+* **build:** updated version of OpenHab ([ef1b792](https://github.com/boc-tothefuture/openhab-jruby/commit/ef1b7923e10ba67800eef7aae32b3d5eb0d5e729))
+
 ## [3.4.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.4.1...3.4.2) (2021-04-02)
 
 
