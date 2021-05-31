@@ -41,6 +41,7 @@ module OpenHAB
             logger.trace("Creating delegate for (#{method}) to #{item}) for #{self.class}")
             def_delegator item, method
           end
+          define_method(:oh_item) { instance_variable_get(item) }
         end
 
         #
