@@ -48,7 +48,8 @@ module OpenHAB
       # @return [StateStorage] item states
       #
       def store_states(*items)
-        states = StateStorage.new(BusEvent.storeStates(*items.flatten).to_h)
+        items = items.flatten.map { |item| item.respond_to?(:oh_item) ? item.oh_item : item }
+        states = StateStorage.new(BusEvent.storeStates(*items).to_h)
         if block_given?
           yield
           states.restore
