@@ -89,10 +89,40 @@ jobs:
             bundle exec yard stats --list-undoc --private
             bundle exec yard stats --private | grep "100.00% documented"
 
-
- openhab-setup:
+ openhab-matrix:
    runs-on: ubuntu-18.04
    if: "!contains(github.event.head_commit.message, 'ci skip')"
+   outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+   steps: 
+     - uses: actions/checkout@v2
+     - uses: actions/setup-ruby@v1
+       with:
+         ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Install bundler
+       run: gem install bundler:2.2.7 -N
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+     - id: set-matrix
+       run: |
+         JSON=$(bundle exec rake github:oh_versions)
+         echo $JSON
+         echo "::set-output name=matrix::$( echo "$JSON" )"
+
+
+ openhab-setup:
+   needs: [openhab-matrix]
+   runs-on: ubuntu-18.04
+   if: "!contains(github.event.head_commit.message, 'ci skip')"
+   strategy:
+    matrix:  ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
@@ -118,9 +148,11 @@ jobs:
        uses: actions/cache@v2
        with: 
         path: tmp/
-        key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
+        key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}-${{ matrix.openhab_version }}
      - name: Setup OpenHAB
        if: steps.cache.outputs.cache-hit != 'true'
+       env:
+          OPENHAB_VERSION: ${{ matrix.openhab_version }} 
        run: bundle exec rake openhab:setup
  
  cucumber-matrix:
@@ -133,15 +165,20 @@ jobs:
      - uses: actions/setup-ruby@v1
        with:
          ruby-version: ${{ env.RUBY_VERSION }}
+     - name: Install bundler
+       run: gem install bundler:2.2.7 -N
+     - name: Gem Cache
+       uses: actions/cache@v2
+       with: 
+        path: vendor/bundle
+        key: gems-${{ hashFiles('**/Gemfile.lock') }}
+     - name: Install gems
+       run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
      - id: set-matrix
        run: |
-         JSON=$(ruby -e '
-           require "json"
-           feature_maps = Dir["features/**/*.feature"].map { |feature| { feature: File.basename(feature,".feature"), file: feature } } 
-           include_map = {}
-           include_map["include"]= feature_maps
-           puts include_map.to_json
-         ') 
+         JSON=$(bundle exec rake github:matrix)
          echo $JSON
          echo "::set-output name=matrix::$( echo "$JSON" )"
 
@@ -175,7 +212,7 @@ jobs:
         uses: actions/cache@v2
         with: 
           path: tmp/
-          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}
+          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}-${{ matrix.openhab_version }}
       - name: Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Generate OpenHAB Dump
