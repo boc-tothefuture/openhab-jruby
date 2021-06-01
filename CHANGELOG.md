@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.6.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.5.0...3.6.0) (2021-06-01)
+
+
+### Features
+
+* **build:** support testing of multiple versions of openhab ([600bc88](https://github.com/boc-tothefuture/openhab-jruby/commit/600bc88b281332f907948f65f59b11f7f66948c6))
+
 # [3.5.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.4.3...3.5.0) (2021-06-01)
 
 
