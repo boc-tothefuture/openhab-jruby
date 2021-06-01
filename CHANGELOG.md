@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.5.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.4.3...3.5.0) (2021-06-01)
+
+
+### Bug Fixes
+
+* **store_states:** error when given a decorated item ([ae7e1bc](https://github.com/boc-tothefuture/openhab-jruby/commit/ae7e1bcf250a3bac18d080efc7b966397cb84279))
+
+
+### Features
+
+* add oh_item to item wrappers through def_item_delegator ([079314f](https://github.com/boc-tothefuture/openhab-jruby/commit/079314f3c9213e5e0b3d29e2824a22e2c36d8a0b))
+
 ## [3.4.3](https://github.com/boc-tothefuture/openhab-jruby/compare/3.4.2...3.4.3) (2021-05-20)
 
 
