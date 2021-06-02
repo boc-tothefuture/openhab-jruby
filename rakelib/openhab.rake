@@ -9,7 +9,7 @@ require 'digest/md5'
 # rubocop: disable Metrics/BlockLength
 # Disabled due to part of buid / potentially refactor into classes
 namespace :openhab do
-  @openhab_version = '3.0.2'
+  @openhab_version = ENV['OPENHAB_VERSION'] || '3.0.2'
   @jruby_bundle = 'https://github.com/boc-tothefuture/openhab2-addons/releases/download/3.1.0/org.openhab.automation.jrubyscripting-3.1.0-SNAPSHOT.jar'
   karaf_client_path = File.join(OPENHAB_DIR, 'runtime/bin/client')
   karaf_client_args = [karaf_client_path, '-p', 'habopen'].freeze
@@ -116,14 +116,24 @@ namespace :openhab do
   task download: [OPENHAB_DIR] do |task|
     state(task.name) do
       openhab_zip = "openhab-#{@openhab_version}.zip"
+      download_url = case @openhab_version
+                     when /.*\.(M\d)|(RC\d)/
+                       'https://openhab.jfrog.io/openhab/libs-milestone-local/org/openhab/distro/openhab/'\
+                       "#{@openhab_version}/#{openhab_zip}"
+                     when /.*-SNAPSHOT/
+                       'https://ci.openhab.org/job/openHAB3-Distribution/lastSuccessfulBuild/artifact/'\
+                       "distributions/openhab/target/#{openhab_zip}"
+                     else
+                       'https://openhab.jfrog.io/openhab/libs-release/org/openhab/distro/openhab/'\
+                       "#{@openhab_version}/#{openhab_zip}"
+                     end
       Dir.chdir(OPENHAB_DIR) do
-        puts "Downloading #{openhab_zip}"
-        IO.copy_stream(
-          open('https://openhab.jfrog.io/openhab/libs-release/org/openhab/distro/openhab/'\
-               "#{@openhab_version}/openhab-#{@openhab_version}.zip"), openhab_zip
-        )
+        # rubocop: disable Security/Open
+        puts "Downloading #{openhab_zip} from #{download_url}"
+        IO.copy_stream(open(download_url), openhab_zip)
         fail_on_error("unzip #{openhab_zip}")
         rm openhab_zip
+        # rubocop: enable Security/Open
       end
     end
   end
@@ -177,6 +187,7 @@ namespace :openhab do
       karaf('log:set TRACE org.openhab.core.automation')
       karaf('log:set TRACE org.openhab.binding.jrubyscripting')
       karaf('openhab:users add foo foo administrator')
+      karaf('config:property-set -p org.openhab.restauth allowBasicAuth true')
       sh 'rsync', '-aih', 'config/userdata/', File.join(OPENHAB_DIR, 'userdata')
     end
   end
