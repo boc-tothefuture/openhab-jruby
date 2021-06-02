@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.6.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.1...3.6.2) (2021-06-02)
+
+
+### Bug Fixes
+
+* **items:** format BigDecimal state as a string the parser accepts ([c752711](https://github.com/boc-tothefuture/openhab-jruby/commit/c752711b7057c819c1a372a9d35e1e85bf4c54b5))
+
 ## [3.6.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.0...3.6.1) (2021-06-02)
 
 # [3.6.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.5.0...3.6.0) (2021-06-01)
