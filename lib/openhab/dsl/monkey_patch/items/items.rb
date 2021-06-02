@@ -33,7 +33,7 @@ module OpenHAB
           #
           #
           def command(command)
-            command = command.to_java.strip_trailing_zeros if command.is_a? BigDecimal
+            command = command.to_java.strip_trailing_zeros.to_plain_string if command.is_a? BigDecimal
             logger.trace "Sending Command #{command} to #{id}"
             BusEvent.sendCommand(self, command.to_s)
           end

@@ -10,6 +10,7 @@ module OpenHAB
       #
       module Types
         java_import Java::OrgOpenhabCoreLibraryTypes::DecimalType
+        java_import org.openhab.core.types.util.UnitUtils
 
         #
         # MonkeyPatching Decimal Type
@@ -72,7 +73,7 @@ module OpenHAB
           # @return [OpenHAB::Core::DSL::Types::Quantity] NumberItem converted to supplied Unit
           #
           def |(other)
-            other = SimpleUnitFormat.instance.unitFor(other) if other.is_a? String
+            other = UnitUtils.parse_unit(other) if other.is_a? String
             Quantity.new(QuantityType.new(to_big_decimal, other))
           end
 
