@@ -23,8 +23,8 @@ module OpenHAB
 
         java_import org.openhab.core.library.types.QuantityType
         java_import org.openhab.core.library.types.DecimalType
-        java_import 'tec.uom.se.format.SimpleUnitFormat'
-        java_import 'tec.uom.se.AbstractUnit'
+        java_import org.openhab.core.types.util.UnitUtils
+        java_import org.openhab.core.library.unit.Units
 
         # @return [Hash] Mapping of operation symbols to BigDecimal methods
         OPERATIONS = {
@@ -48,7 +48,7 @@ module OpenHAB
           @quantity = case quantity
                       when String then QuantityType.new(quantity)
                       when QuantityType then quantity
-                      when NumberItem, Numeric then QuantityType.new(quantity.to_d.to_java, AbstractUnit::ONE)
+                      when NumberItem, Numeric then QuantityType.new(quantity.to_d.to_java, Units::ONE)
                       else raise ArgumentError, "Unexpected type #{quantity.class} provided to Quantity initializer"
                       end
           super()
@@ -62,7 +62,7 @@ module OpenHAB
         # @return [Quantity] This quantity converted to another unit
         #
         def |(other)
-          other = SimpleUnitFormat.instance.unitFor(other) if other.is_a? String
+          other = UnitUtils.parse_unit(other) if other.is_a? String
 
           Quantity.new(quantity.to_unit(other))
         end
@@ -164,7 +164,7 @@ module OpenHAB
         # @return [String] Representing details about the quantity object
         #
         def inspect
-          if @quantity.unit == AbstractUnit::ONE
+          if @quantity.unit == Units::ONE
             "unit=#{@quantity.unit}, value=#{@quantity.to_string}"
           else
             @quantity.to_string
@@ -198,7 +198,7 @@ module OpenHAB
         # @return [Boolean] True if the quantity should be unitzed based on the unit and operation, false otherwise
         #
         def unitize?(quantity, operation)
-          !(quantity.unit == AbstractUnit::ONE && DIMENSIONLESS_NON_UNITIZED_OPERATIONS.include?(operation))
+          !(quantity.unit == Units::ONE && DIMENSIONLESS_NON_UNITIZED_OPERATIONS.include?(operation))
         end
 
         #
@@ -214,7 +214,7 @@ module OpenHAB
           case quantity.unit
           when unit
             quantity
-          when AbstractUnit::ONE
+          when Units::ONE
             convert_unit_from_dimensionless(quantity, unit)
           else
             convert_unit_from_dimensioned(quantity, unit)
@@ -263,7 +263,12 @@ module OpenHAB
         def unitize(quantity_a, quantity_b, operation = nil)
           logger.trace("Unitizing (#{quantity_a}) and (#{quantity_b})")
           quantity_a, quantity_b = [quantity_a, quantity_b].map do |qt|
-            unitize?(qt, operation) ? convert_unit(qt) : qt
+            unitize?(qt, operation) ? convert_unit(qt) : qt.to_big_decimal
+          end
+
+          # Make sure the operation is called on the QuantityType
+          if quantity_a.is_a?(Java::JavaMath::BigDecimal) && quantity_b.is_a?(QuantityType) && operation == '*'
+            quantity_a, quantity_b = [quantity_b, quantity_a]
           end
           return yield quantity_a, quantity_b if block_given?
 

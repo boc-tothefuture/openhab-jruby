@@ -4,7 +4,7 @@ Feature:  gem_install
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
-  @reset_library
+  @reset_library @wip
   Scenario: Install OpenHAB helper library
     Given OpenHAB is stopped
     And GEM_HOME is empty

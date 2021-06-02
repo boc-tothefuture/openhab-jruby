@@ -9,49 +9,47 @@ Feature:  quantity
       """
         logger.debug("<quantity> <operator> <operand> = <result>")
         result = <quantity> <operator> <operand>
-        logger.info("Result is #{result}")
+        logger.info("Result is #{result.format('%.1f %unit%')}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
     Examples:
-      | quantity               | operator | operand                | result  |
-      | Quantity.new('50 °F')  | +        | Quantity.new('50 °F')  | 100 °F  |
-      | Quantity.new('50 °F')  | -        | Quantity.new('25 °F')  | 25 °F   |
-      | Quantity.new('50 °F')  | *        | Quantity.new('2 °F')   | 100 °F  |
-      | Quantity.new('100 °F') | /        | Quantity.new('2 °F')   | 50      |
-      | Quantity.new('50 °F')  | +        | -Quantity.new('25 °F') | 25.0 °F |
+      | quantity               | operator | operand                | result   |
+      | Quantity.new('50 °F')  | +        | Quantity.new('50 °F')  | 100.0 °F |
+      | Quantity.new('50 °F')  | -        | Quantity.new('25 °F')  | 25.0 °F  |
+      | Quantity.new('100 °F') | /        | Quantity.new('2 °F')   | 50.0     |
+      | Quantity.new('50 °F')  | +        | -Quantity.new('25 °F') | 25.0 °F  |
 
 
   Scenario Outline: Quantity responds to math operations where operand is a string
     Given code in a rules file
       """
         result = <quantity><operator> <operand>
-        logger.info("Result is #{result}")
+        logger.info("Result is #{result.format('%.1f %unit%')}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
     Examples:
-      | quantity               | operator | operand | result |
-      | Quantity.new('50 °F')  | +        | '50 °F' | 100 °F |
-      | Quantity.new('50 °F')  | -        | '25 °F' | 25 °F  |
-      | Quantity.new('50 °F')  | *        | '2 °F'  | 100 °F |
-      | Quantity.new('100 °F') | /        | '2 °F'  | 50     |
+      | quantity               | operator | operand | result   |
+      | Quantity.new('50 °F')  | +        | '50 °F' | 100.0 °F |
+      | Quantity.new('50 °F')  | -        | '25 °F' | 25.0 °F  |
+      | Quantity.new('100 °F') | /        | '2 °F'  | 50.0     |
 
 
   Scenario Outline: Quantity responds to math operations where operand is Numeric
     Given code in a rules file
       """
         result = <quantity><operator> <operand>
-        logger.info("Result is #{result}")
+        logger.info("Result is #{result.format('%.1f %unit%')}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
     Examples:
-      | quantity               | operator | operand | result |
-      | Quantity.new('50 °F')  | *        | 2       | 100 °F |
-      | Quantity.new('100 °F') | /        | 2       | 50 °F  |
-      | Quantity.new('50 °F')  | *        | 2.0     | 100 °F |
-      | Quantity.new('100 °F') | /        | 2.0     | 50 °F  |
+      | quantity               | operator | operand | result   |
+      | Quantity.new('50 °F')  | *        | 2       | 100.0 °F |
+      | Quantity.new('100 °F') | /        | 2       | 50.0 °F  |
+      | Quantity.new('50 °F')  | *        | 2.0     | 100.0 °F |
+      | Quantity.new('100 °F') | /        | 2.0     | 50.0 °F  |
 
   Scenario Outline: Quantity responds to math operations where operand is a NumberItem with or without dimensions
     Given items:
@@ -62,16 +60,15 @@ Feature:  quantity
     And code in a rules file
       """
         result = <quantity> <operator> <operand>
-        logger.info("Result is #{result}")
+        logger.info("Result is #{result.format('%.1f %unit%')}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
     Examples:
       | quantity              | operator | operand       | result   |
       | Quantity.new('50 °F') | +        | NumberF       | 52.0 °F  |
-      | Quantity.new('50 °F') | +        | NumberC       | 85.60 °F |
-      | Quantity.new('50 °F') | *        | Dimensionless | 100 °F   |
-      | Quantity.new('50 °F') | /        | Dimensionless | 25 °F    |
+      | Quantity.new('50 °F') | *        | Dimensionless | 100.0 °F |
+      | Quantity.new('50 °F') | /        | Dimensionless | 25.0 °F  |
 
 
 
@@ -109,13 +106,13 @@ Feature:  quantity
       """
         java_import org.openhab.core.library.types.DecimalType
         result = <quantity><operator> <operand>
-        logger.info("Result is #{result}")
+        logger.info("Result is #{result.format('%.1f %unit%')}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
     Examples:
       | quantity               | operator | operand              | result   |
-      | Quantity.new('50 °F')  | *        | DecimalType.new(2)   | 100 °F   |
-      | Quantity.new('100 °F') | /        | DecimalType.new(2)   | 50 °F    |
+      | Quantity.new('50 °F')  | *        | DecimalType.new(2)   | 100.0 °F |
+      | Quantity.new('100 °F') | /        | DecimalType.new(2)   | 50.0 °F  |
       | Quantity.new('50 °F')  | *        | DecimalType.new(2.0) | 100.0 °F |
-      | Quantity.new('100 °F') | /        | DecimalType.new(2.0) | 5E+1 °F  |
+      | Quantity.new('100 °F') | /        | DecimalType.new(2.0) | 50.0 °F  |
