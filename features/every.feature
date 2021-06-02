@@ -13,7 +13,7 @@ Feature:  every
       end
       """
     When I deploy the rule
-    Then It should log "Rule 'Log the rule name every minute' executed" within 60 seconds
+    Then It should log "Rule 'Log the rule name every minute' executed" within 62 seconds
 
   Scenario Outline: Cron support days of the week and time of day
     Given a rule template:
