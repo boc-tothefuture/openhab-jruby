@@ -47,6 +47,7 @@ module OpenHAB
           #
           #
           def update(update)
+            update = update.to_java.strip_trailing_zeros.to_plain_string if update.is_a? BigDecimal
             logger.trace "Sending Update #{update} to #{id}"
             BusEvent.postUpdate(self, update.to_s)
           end
