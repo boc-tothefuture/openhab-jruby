@@ -21,6 +21,7 @@ module OpenHAB
     module EntityLookup
       include OpenHAB::Log
 
+      @decorated_items = {}
       #
       # Automatically looks up OpenHAB items and things in appropriate registries
       #
@@ -88,31 +89,37 @@ module OpenHAB
       #
       # rubocop: disable Metrics/MethodLength
       # rubocop: disable Metrics/CyclomaticComplexity
+      # rubocop: disable Metrics/AbcSize
       # Disabled line length and branch size - case dispatch pattern
       def self.decorate_item(item)
         logger.trace("Decorating #{item.class}")
-        case item
-        when Java::OrgOpenhabCoreItems::GroupItem
-          OpenHAB::DSL::Items::GroupItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::NumberItem
-          OpenHAB::DSL::Items::NumberItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::StringItem
-          OpenHAB::DSL::Items::StringItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::DateTimeItem
-          OpenHAB::DSL::Items::DateTimeItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::RollershutterItem
-          OpenHAB::DSL::Items::RollershutterItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::PlayerItem
-          OpenHAB::DSL::Items::PlayerItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::ImageItem
-          OpenHAB::DSL::Items::ImageItem.new(item)
-        else
-          logger.trace("Returning undecorated item #{item.class}")
-          item
+        if @decorated_items[item].respond_to?(:oh_item) && @decorated_items[item].oh_item.equal?(item)
+          return @decorated_items[item]
         end
+
+        @decorated_items[item] = case item
+                                 when Java::OrgOpenhabCoreItems::GroupItem
+                                   OpenHAB::DSL::Items::GroupItem.new(item)
+                                 when Java::OrgOpenhabCoreLibraryItems::NumberItem
+                                   OpenHAB::DSL::Items::NumberItem.new(item)
+                                 when Java::OrgOpenhabCoreLibraryItems::StringItem
+                                   OpenHAB::DSL::Items::StringItem.new(item)
+                                 when Java::OrgOpenhabCoreLibraryItems::DateTimeItem
+                                   OpenHAB::DSL::Items::DateTimeItem.new(item)
+                                 when Java::OrgOpenhabCoreLibraryItems::RollershutterItem
+                                   OpenHAB::DSL::Items::RollershutterItem.new(item)
+                                 when Java::OrgOpenhabCoreLibraryItems::PlayerItem
+                                   OpenHAB::DSL::Items::PlayerItem.new(item)
+                                 when Java::OrgOpenhabCoreLibraryItems::ImageItem
+                                   OpenHAB::DSL::Items::ImageItem.new(item)
+                                 else
+                                   logger.trace("Returning undecorated item #{item.class}")
+                                   item
+                                 end
       end
       # rubocop: enable Metrics/MethodLength
       # rubocop: enable Metrics/CyclomaticComplexity
+      # rubocop: enable Metrics/AbcSize
 
       #
       # Looks up a Thing in the OpenHAB registry replacing '_' with ':'

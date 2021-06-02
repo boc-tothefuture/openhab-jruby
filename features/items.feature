@@ -238,3 +238,15 @@ Feature:  items
       """
     When I deploy the rules file
     Then It should not log "missing oh_item for DSL GroupItem" within 5 seconds
+
+  Scenario: Ensure only one instance is created for a decorated item
+    # Ref: https://github.com/boc-tothefuture/openhab-jruby/issues/252
+    Given items:
+      | type   | name    |
+      | Number | Number1 |
+    And code in a rules file
+      """
+      logger.info("Consistent hash") if Number1.hash == Number1.hash
+      """
+    When I deploy the rules file
+    Then It should log "Consistent hash" within 5 seconds
