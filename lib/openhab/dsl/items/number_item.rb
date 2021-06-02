@@ -23,8 +23,8 @@ module OpenHAB
 
         java_import org.openhab.core.library.types.DecimalType
         java_import org.openhab.core.library.types.QuantityType
-        java_import 'tec.uom.se.format.SimpleUnitFormat'
-        java_import 'tec.uom.se.AbstractUnit'
+        java_import org.openhab.core.types.util.UnitUtils
+        java_import org.openhab.core.library.unit.Units
 
         item_type Java::OrgOpenhabCoreLibraryItems::NumberItem
 
@@ -93,7 +93,7 @@ module OpenHAB
         # @return [OpenHAB::DSL::Types::Quantity] NumberItem converted to supplied Unit
         #
         def |(other)
-          other = SimpleUnitFormat.instance.unitFor(other) if other.is_a? String
+          other = UnitUtils.parse_unit(other) if other.is_a? String
 
           if dimension
             to_qt | other
@@ -111,7 +111,7 @@ module OpenHAB
           if dimension
             Quantity.new(@number_item.get_state_as(QuantityType))
           else
-            Quantity.new(QuantityType.new(to_d.to_java, AbstractUnit::ONE))
+            Quantity.new(QuantityType.new(to_d.to_java, Units::ONE))
           end
         end
 

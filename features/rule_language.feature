@@ -131,10 +131,10 @@ Feature: rule_language
     When I deploy the rules file
     Then It should log 'Something is wrong (RuntimeError)' within 5 seconds
     And It should log 'In rule: test' within 5 seconds
-    And It should log "<script>:12:in `test2'" within 5 seconds
-    And It should log "<script>:8:in `test'" within 5 seconds
-    And It should log "<script>:17:in `block in <main>'" within 5 seconds
-    And It should log "<script>:15:in `<main>'" within 5 seconds
+    And It should log ":12:in `test2'" within 5 seconds
+    And It should log ":8:in `test'" within 5 seconds
+    And It should log ":17:in `block in <main>'" within 5 seconds
+    And It should log ":15:in `<main>'" within 5 seconds
     But It should not log 'This one works!' within 10 seconds
 
   @log_level_changed
@@ -154,6 +154,6 @@ Feature: rule_language
     When I deploy the rules file
     Then It should log 'For input string: "k" (Java::JavaLang::NumberFormatException)' within 5 seconds
     And It should log 'In rule: test' within 5 seconds
-    And It should log "RUBY.test(<script>:8)" within 5 seconds
-    And It should log "RUBY.<main>(<script>:13)" within 5 seconds
-    And It should log "RUBY.<main>(<script>:11)" within 5 seconds
+    And It should log "RUBY.test(" within 5 seconds
+    And It should log "RUBY.<main>(" within 5 seconds
+    And It should log "RUBY.<main>(" within 5 seconds

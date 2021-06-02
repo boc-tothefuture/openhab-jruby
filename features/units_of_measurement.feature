@@ -14,10 +14,10 @@ Feature:  units_of_measurement
     Given code in a rules file
       """
         result = <convert_line>
-        logger.info("#{NumberC.id} is #{result} in Fahrenheit")
+        logger.info("#{NumberC.id} is #{result.format('%.1f %unit%')} in Fahrenheit")
       """
     When I deploy the rules file
-    Then It should log 'NumberC is 73.40 °F in Fahrenheit' within 5 seconds
+    Then It should log 'NumberC is 73.4 °F in Fahrenheit' within 5 seconds
     Examples:
       | convert_line                        |
       | NumberC \|ImperialUnits::FAHRENHEIT |
@@ -27,33 +27,20 @@ Feature:  units_of_measurement
     Given code in a rules file
       """
         result = <convert_line>
-        logger.info("#{Dimensionless.id} is #{result} in Fahrenheit")
+        logger.info("#{Dimensionless.id} is #{result.format('%.1f %unit%')} in Fahrenheit")
       """
     When I deploy the rules file
-    Then It should log 'Dimensionless is 2 °F in Fahrenheit' within 5 seconds
+    Then It should log 'Dimensionless is 2.0 °F in Fahrenheit' within 5 seconds
     Examples:
       | convert_line                              |
       | Dimensionless \|ImperialUnits::FAHRENHEIT |
       | Dimensionless \|'°F'                      |
 
-  Scenario Outline: Operators work on quantities of different units
-    Given code in a rules file
-      """
-        result = <code_line>
-        logger.info("Result is #{result}")
-      """
-    When I deploy the rules file
-    Then It should log 'Result is <result>' within 5 seconds
-    Examples:
-      | code_line         | result                               |
-      | NumberC - NumberF | 1.8888888888888888888888888888889 °C |
-      | NumberF + NumberC | 143.40 °F                            |
-
   Scenario Outline: Dimensionless Numbers can be used for multiplication and division
     Given code in a rules file
       """
         result = <code_line>
-        logger.info("Result is #{result}")
+        logger.info("Result is #{result.format('%.1f %unit%')}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
@@ -86,24 +73,24 @@ Feature:  units_of_measurement
     Given code in a rules file
       """
         result = <code_line>
-        logger.info("Result is #{result}")
+        logger.info("Result is #{result.is_a?(Quantity) ? result.format('%.1f %unit%') : result}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
     Examples:
-      | code_line                                                         | result                                |
-      | unit('°F') { NumberC - NumberF < 4 }                              | true                                  |
-      | unit('°F') { NumberC - '24 °C' < 4 }                              | true                                  |
-      | unit('°F') { Quantity.new('24 °C') - NumberC < 4 }                | true                                  |
-      | unit('°C') { NumberF - '20 °C' < 2 }                              | true                                  |
-      | unit('°C') { NumberF - Dimensionless  }                           | 19.1111111111111111111111111111111 °C |
-      | unit('°C') { NumberC + NumberF  }                                 | 44.1111111111111111111111111111111 °C |
-      | unit('°C') { NumberF - Dimensionless < 20 }                       | true                                  |
-      | unit('°C') { Dimensionless + NumberC == 25 }                      | true                                  |
-      | unit('°C') { 2 + NumberC == 25 }                                  | true                                  |
-      | unit('°C') { Dimensionless * NumberC == 46 }                      | true                                  |
-      | unit('°C') { 2 * NumberC == 46 }                                  | true                                  |
-      | unit('°C') { ( (2 * (NumberF + NumberC) ) / Dimensionless ) < 45} | true                                  |
-      | unit('°C') { [NumberC, NumberF, Dimensionless].min }              | 2                                     |
+      | code_line                                                         | result  |
+      | unit('°F') { NumberC - NumberF < 4 }                              | true    |
+      | unit('°F') { NumberC - '24 °C' < 4 }                              | true    |
+      | unit('°F') { Quantity.new('24 °C') - NumberC < 4 }                | true    |
+      | unit('°C') { NumberF - '20 °C' < 2 }                              | true    |
+      | unit('°C') { NumberF - Dimensionless  }                           | 19.1 °C |
+      | unit('°C') { NumberC + NumberF  }                                 | 44.1 °C |
+      | unit('°C') { NumberF - Dimensionless < 20 }                       | true    |
+      | unit('°C') { Dimensionless + NumberC == 25 }                      | true    |
+      | unit('°C') { 2 + NumberC == 25 }                                  | true    |
+      | unit('°C') { Dimensionless * NumberC == 46 }                      | true    |
+      | unit('°C') { 2 * NumberC == 46 }                                  | true    |
+      | unit('°C') { ( (2 * (NumberF + NumberC) ) / Dimensionless ) < 45} | true    |
+      | unit('°C') { [NumberC, NumberF, Dimensionless].min }              | 2       |
 
 
