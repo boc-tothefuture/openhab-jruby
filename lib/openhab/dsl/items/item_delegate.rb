@@ -42,6 +42,8 @@ module OpenHAB
             def_delegator item, method
           end
           define_method(:oh_item) { instance_variable_get(item) }
+          define_method(:hash) { oh_item.hash_code }
+          define_method(:eql?) { |other| hash == other.hash }
         end
 
         #
