@@ -4,14 +4,14 @@ Feature:  gem_install
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
-  @reset_library @wip
+  @reset_library
   Scenario: Install OpenHAB helper library
     Given OpenHAB is stopped
     And GEM_HOME is empty
     And a services template filed named "jruby.cfg"
       """
       org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
-      org.openhab.automation.jrubyscripting:gems=openhab-scripting=~>2.9
+      org.openhab.automation.jrubyscripting:gems=openhab-scripting=~>3.0
       """
     And code in a rules file:
       """
