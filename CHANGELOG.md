@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.6.3](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.2...3.6.3) (2021-06-03)
+
+
+### Bug Fixes
+
+* improve reliability of some tests ([22bc48e](https://github.com/boc-tothefuture/openhab-jruby/commit/22bc48e677b2021c28366ca9b57b06ca91a10e54))
+
 ## [3.6.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.1...3.6.2) (2021-06-02)
 
 
