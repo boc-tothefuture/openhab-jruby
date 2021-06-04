@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.6.4](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.3...3.6.4) (2021-06-04)
+
+
+### Bug Fixes
+
+* **items:** decorated items could not be used as hash keys ([a4ff086](https://github.com/boc-tothefuture/openhab-jruby/commit/a4ff0869171ff10c1bae505fe3bc3af480d0cb54))
+
 ## [3.6.3](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.2...3.6.3) (2021-06-03)
 
 
