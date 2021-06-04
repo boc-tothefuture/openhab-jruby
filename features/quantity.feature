@@ -116,3 +116,32 @@ Feature:  quantity
       | Quantity.new('100 °F') | /        | DecimalType.new(2)   | 50.0 °F  |
       | Quantity.new('50 °F')  | *        | DecimalType.new(2.0) | 100.0 °F |
       | Quantity.new('100 °F') | /        | DecimalType.new(2.0) | 50.0 °F  |
+
+  Scenario Outline: Quantity responds to positive?, negative?, and zero?
+    Given items:
+      | type               | name      | state  | pattern |
+      | Number:Temperature | NumberF   | 2 °F   | %d °F   |
+      | Number:Temperature | NumberC   | 2 °C   | %d °C   |
+      | Number:Power       | PowerPos  | 100 W  |         |
+      | Number:Power       | PowerNeg  | -100 W |         |
+      | Number:Power       | PowerZero | 0 W    |         |
+      | Number             | Number1   | 20     |         |
+    And code in a rules file
+      """
+      logger.info("<object>.<test> #{<object>.<test>}")
+      """
+    When I deploy the rules file
+    Then It should log "<object>.<test> <result>" within 5 seconds
+    Examples:
+      | object                | test      | result |
+      | Quantity.new('50°F')  | positive? | true   |
+      | Quantity.new('-50°F') | negative? | true   |
+      | Quantity.new('10W')   | positive? | true   |
+      | Quantity.new('-1kW')  | positive? | false  |
+      | Quantity.new('0W')    | zero?     | true   |
+      | NumberF               | positive? | true   |
+      | NumberC               | negative? | false  |
+      | PowerPos              | positive? | true   |
+      | PowerNeg              | negative? | true   |
+      | PowerZero             | zero?     | true   |
+      | Number1               | positive? | true   |
