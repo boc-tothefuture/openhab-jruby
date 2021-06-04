@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.7.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.4...3.7.0) (2021-06-04)
+
+
+### Features
+
+* **quantity:** implement positive?, negative?, and zero? for quantity and dimensioned numberitem ([0d2c43c](https://github.com/boc-tothefuture/openhab-jruby/commit/0d2c43ca99db6abeef068adff7dca5f3bdf71703))
+
 ## [3.6.4](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.3...3.6.4) (2021-06-04)
 
 
