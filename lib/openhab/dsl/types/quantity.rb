@@ -20,6 +20,7 @@ module OpenHAB
         include OpenHAB::Log
 
         def_delegator :@quantity, :to_s
+        def_delegators '@quantity.double_value', :positive?, :negative?, :zero?
 
         java_import org.openhab.core.library.types.QuantityType
         java_import org.openhab.core.library.types.DecimalType
@@ -185,8 +186,8 @@ module OpenHAB
         #
         # @return [Array]  Array of QuantityType objects
         #
-        def to_qt(*quanities)
-          [quanities].flatten.compact.map { |item| item.is_a?(Quantity) ? item.quantity : item }
+        def to_qt(*quantities)
+          [quantities].flatten.compact.map { |item| item.is_a?(Quantity) ? item.quantity : item }
         end
 
         #
