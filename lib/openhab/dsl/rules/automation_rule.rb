@@ -29,7 +29,7 @@ module OpenHAB
           set_name(config.name)
           set_description(config.description)
           set_triggers(config.triggers)
-          @run_context = config.caller
+          @run_context = config
           @run_queue = config.run
           @guard = config.guard
           between = config.between&.yield_self { between(config.between) }
