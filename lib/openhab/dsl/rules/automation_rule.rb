@@ -106,10 +106,10 @@ module OpenHAB
             return true if check_to(trigger_delay, new_state)
 
             logger.trace("Skipped execution of rule '#{name}' because to state #{new_state}"\
-                                 " does not equal specified state(#{trigger_delay.to})")
+                         " does not equal specified state(#{trigger_delay.to})")
           else
             logger.trace("Skipped execution of rule '#{name}' because old state #{old_state}"\
-                                 " does not equal specified state(#{trigger_delay.from})")
+                         " does not equal specified state(#{trigger_delay.from})")
           end
         end
 
@@ -237,7 +237,7 @@ module OpenHAB
             return true if @between.cover? now
 
             logger.trace("Skipped execution of rule '#{name}' because the current time #{now} "\
-                                 "is not between #{@between.begin} and #{@between.end}")
+                         "is not between #{@between.begin} and #{@between.end}")
           else
             logger.trace("Skipped execution of rule '#{name}' because of guard #{@guard}")
           end
