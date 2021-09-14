@@ -9,7 +9,7 @@ grand_parent: Usage
 
 # Contact Item
 
-This class is aliased to **Contact** so you can compare compare item types using ` item.is_a? Contact or grep(Contact)`
+This class is aliased to **Contact** so you can compare item types using `item.is_a? Contact or grep(Contact)`
 
 
 | Method  | Description                          | Example                                   |
