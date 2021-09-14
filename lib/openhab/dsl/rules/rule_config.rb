@@ -140,11 +140,11 @@ module OpenHAB
         #
         def inspect
           "Name: (#{name}) " \
-          "Triggers: (#{triggers}) " \
-          "Run blocks: (#{run}) " \
-          "on_start: (#{on_start?}) " \
-          "Trigger Waits: #{trigger_delays} " \
-          "Trigger UIDs: #{triggers.map(&:id).join(', ')}"
+            "Triggers: (#{triggers}) " \
+            "Run blocks: (#{run}) " \
+            "on_start: (#{on_start?}) " \
+            "Trigger Waits: #{trigger_delays} " \
+            "Trigger UIDs: #{triggers.map(&:id).join(', ')}"
         end
       end
     end
