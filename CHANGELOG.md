@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.7.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.7.0...3.7.1) (2021-09-14)
+
+
+### Bug Fixes
+
+* **test:** fix rubocop violations against newest rubocop ([e8b859b](https://github.com/boc-tothefuture/openhab-jruby/commit/e8b859b795ac57fb1873b199f2e7723313240433))
+
 # [3.7.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.6.4...3.7.0) (2021-06-04)
 
 
