@@ -153,9 +153,9 @@ module OpenHAB
           other_second_of_day = to_second_of_day(other)
           logger.trace do
             "SOD(#{sod}) "\
-            "other SOD(#{other_second_of_day}) "\
-            "Other Class (#{other.class}) "\
-            "Result (#{sod <=> other_second_of_day})"
+              "other SOD(#{other_second_of_day}) "\
+              "Other Class (#{other.class}) "\
+              "Result (#{sod <=> other_second_of_day})"
           end
           sod <=> other_second_of_day
         end
