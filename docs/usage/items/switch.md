@@ -9,7 +9,7 @@ grand_parent: Usage
 
 
 # Switch Item
-This class is aliased to **Switch** so you can compare compare item types using ` item.is_a? Switch or grep(Switch)`
+This class is aliased to **Switch** so you can compare item types using `item.is_a? Switch or grep(Switch)`
 
 | Method  | Description                                  | Example                                         |
 | ------- | -------------------------------------------- | ----------------------------------------------- |
