@@ -9,7 +9,7 @@ grand_parent: Usage
 
 # Dimmer 
 
-DimmerItem  is aliased to **Dimmer** so you can compare compare item types using 
+DimmerItem  is aliased to **Dimmer** so you can compare item types using
 
 `item.is_a? Dimmer or grep(Dimmer)`
 
