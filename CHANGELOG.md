@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.7.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.7.1...3.7.2) (2021-09-14)
+
+
+### Bug Fixes
+
+* **docs:** remove duplicated "compare" in a few places ([2a9af7b](https://github.com/boc-tothefuture/openhab-jruby/commit/2a9af7b2ae4eed5668218d9ec01f4585369d6a3c))
+
 ## [3.7.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.7.0...3.7.1) (2021-09-14)
 
 
