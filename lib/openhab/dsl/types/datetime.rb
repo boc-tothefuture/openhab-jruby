@@ -152,7 +152,7 @@ module OpenHAB
         # @return [Float] Number of seconds since the Epoch, with nanosecond presicion
         #
         def to_f
-          zoned_date_time.to_epoch_second + zoned_date_time.nano / 1_000_000_000
+          zoned_date_time.to_epoch_second + (zoned_date_time.nano / 1_000_000_000)
         end
 
         #
