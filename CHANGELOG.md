@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.7.4](https://github.com/boc-tothefuture/openhab-jruby/compare/3.7.3...3.7.4) (2021-09-15)
+
+
+### Bug Fixes
+
+* **test:** test against released version of openhab 3.1 and set default to 3.1 ([b8d09c1](https://github.com/boc-tothefuture/openhab-jruby/commit/b8d09c106ae708107ac75bcb66406b66e483b7ee))
+
 ## [3.7.3](https://github.com/boc-tothefuture/openhab-jruby/compare/3.7.2...3.7.3) (2021-09-15)
 
 
