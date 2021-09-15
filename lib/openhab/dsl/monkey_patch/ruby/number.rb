@@ -26,14 +26,58 @@ module OpenHAB
           alias minute minutes
           alias hour hours
         end
+
+        #
+        # Extend float to create duration object
+        #
+        module FloatExtensions
+          #
+          # Create Duration with number of milliseconds
+          #
+          # @return [Java::JavaTime::Duration] Duration truncated to an integral number of milliseconds from self
+          #
+          def millis
+            Java::JavaTime::Duration.of_millis(to_i)
+          end
+
+          #
+          # Create Duration with number of seconds
+          #
+          # @return [Java::JavaTime::Duration] Duration with number of seconds from self
+          #
+          def seconds
+            (self * 1000).millis
+          end
+
+          #
+          # Create Duration with number of minutes
+          #
+          # @return [Java::JavaTime::Duration] Duration with number of minutes from self
+          #
+          def minutes
+            (self * 60).seconds
+          end
+
+          #
+          # Create Duration with number of hours
+          #
+          # @return [Java::JavaTime::Duration] Duration with number of hours from self
+          #
+          def hours
+            (self * 60).minutes
+          end
+
+          alias second seconds
+          alias millisecond millis
+          alias milliseconds millis
+          alias ms millis
+          alias minute minutes
+          alias hour hours
+        end
       end
     end
   end
 end
 
-#
-# Prepend Integer class with duration extensions
-#
-class Integer
-  prepend OpenHAB::DSL::MonkeyPatch::Ruby::IntegerExtensions
-end
+Integer.prepend(OpenHAB::DSL::MonkeyPatch::Ruby::IntegerExtensions)
+Float.prepend(OpenHAB::DSL::MonkeyPatch::Ruby::FloatExtensions)
