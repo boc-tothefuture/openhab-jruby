@@ -2,15 +2,25 @@
 
 
 <p align="center">
+  <a href="https://github.com/boc-tothefuture/openhab-jruby/releases">
     <img alt="GitHub release (latest SemVer including pre-releases)" src="https://img.shields.io/github/v/release/boc-tothefuture/openhab-jruby?include_prereleases"/>
+  </a>
+  <a href="https://github.com/boc-tothefuture/openhab-jruby/actions/workflows/workflow.yml?query=event%3Apush">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/boc-tothefuture/openhab-jruby/Openhab-JRuby-Scripting"/>
+  </a>
+  <a href="https://github.com/boc-tothefuture/openhab-jruby/graphs/contributors">
     <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/boc-tothefuture/openhab-jruby"/>
+  </a>
+  <a href="https://github.com/boc-tothefuture/openhab-jruby/graphs/commit-activity">
     <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/boc-tothefuture/openhab-jruby">
+  </a>
+  <a href="https://semver.org/">
     <img alt="SemVer version observance" src="https://img.shields.io/badge/semver-2.0.0-blue"/>
-    <a href="https://conventionalcommits.org"/>
-       <img alt="Convention commits observance" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg"/>
-	</a>
-  </p>
+  </a>
+  <a href="https://conventionalcommits.org/">
+      <img alt="Convention commits observance" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg"/>
+  </a>
+ </p>
 
 
 ## Usage
