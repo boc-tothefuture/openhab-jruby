@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.8.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.7.4...3.8.0) (2021-09-15)
+
+
+### Features
+
+* **duration:** support duration methods on Float too ([fae9daf](https://github.com/boc-tothefuture/openhab-jruby/commit/fae9daf8b0dd0d3b854652a54663c4fb5d963cc8)), closes [#263](https://github.com/boc-tothefuture/openhab-jruby/issues/263)
+
 ## [3.7.4](https://github.com/boc-tothefuture/openhab-jruby/compare/3.7.3...3.7.4) (2021-09-15)
 
 
