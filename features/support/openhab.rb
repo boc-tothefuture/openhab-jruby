@@ -24,6 +24,10 @@ def rules_dir
   File.join(openhab_dir, 'conf/automation/jsr223/ruby/personal/')
 end
 
+def ruby_lib_dir
+  File.join(openhab_dir, 'conf/automation/lib/ruby/personal/')
+end
+
 def gem_home
   File.join(openhab_dir, 'conf/automation/lib/ruby/gem_home')
 end
@@ -88,6 +92,10 @@ def delete_rules
     Rest.delete_rule(uid)
   end
   wait_until(seconds: 30, msg: 'Rules not empty') { Rest.rules.length.zero? }
+end
+
+def delete_shared_libraries
+  FileUtils.rm Dir.glob(File.join(ruby_lib_dir, '*.rb'))
 end
 
 def delete_items

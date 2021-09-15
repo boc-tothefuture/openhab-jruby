@@ -20,12 +20,12 @@ def identifying_log_line(uid)
   "Processing Complete for #{uid}"
 end
 
-def prepend_identifying_log_line_to_rule(uid)
-  @rule.insert require_openhab.length, %[\n\nlogger.info("#{identifying_started_log_line(uid)}")\n\n]
+def prepend_identifying_log_line_to_rule(code, uid)
+  code.insert require_openhab.length, %[\n\nlogger.info("#{identifying_started_log_line(uid)}")\n\n]
 end
 
-def append_identifying_log_line_to_rule(uid)
-  @rule += %[\n\nlogger.info("#{identifying_log_line(uid)}")\n\n]
+def append_identifying_log_line_to_rule(code, uid)
+  code << %[\n\nlogger.info("#{identifying_log_line(uid)}")\n\n]
 end
 
 def atomic_rule_write(rule_content, deploy_path)
@@ -36,12 +36,21 @@ def atomic_rule_write(rule_content, deploy_path)
   FileUtils.move temp_file, deploy_path
 end
 
-def create_log_markers(uid)
-  prepend_identifying_log_line_to_rule(uid)
-  append_identifying_log_line_to_rule(uid)
+def create_log_markers(code, uid)
+  prepend_identifying_log_line_to_rule(code, uid)
+  append_identifying_log_line_to_rule(code, uid)
 end
 
-def deploy_rule(filename: '', check_position: :end, check: true)
+def deploy_shared_file(**kwargs)
+  # check is always false, because shared code is never run immmediately
+  deploy_ruby_file(directory: ruby_lib_dir, check: false, **kwargs)
+end
+
+def deploy_rule(**kwargs)
+  deploy_ruby_file(directory: rules_dir, code: @rule, **kwargs)
+end
+
+def deploy_ruby_file(code:, directory:, filename: '', check_position: :end, check: true)
   uid = SecureRandom.uuid
 
   log_line = case check_position
@@ -50,8 +59,8 @@ def deploy_rule(filename: '', check_position: :end, check: true)
              else raise ArgumentError, 'log_line can either be :start or :end'
              end
 
-  create_log_markers(uid)
-  atomic_rule_write(@rule, File.join(rules_dir, filename))
+  create_log_markers(code, uid) if check
+  atomic_rule_write(code, File.join(directory, filename))
   wait_until(seconds: 60, msg: 'Rule not added') { check_log(log_line) } if check
 end
 
@@ -87,6 +96,11 @@ end
 Given('code in a deployed rules file(:)') do |doc_string|
   @rule = doc_string_to_rule(doc_string)
   deploy_rule
+end
+
+Given('code in a shared file named {string}(:)') do |file, doc_string|
+  code = doc_string_to_rule(doc_string)
+  deploy_shared_file(filename: file, code: code)
 end
 
 When('I deploy the rules file') do

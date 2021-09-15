@@ -148,7 +148,7 @@ jobs:
        uses: actions/cache@v2
        with: 
         path: tmp/
-        key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}-${{ matrix.openhab_version }}
+        key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
      - name: Setup OpenHAB
        if: steps.cache.outputs.cache-hit != 'true'
        env:
@@ -212,7 +212,7 @@ jobs:
         uses: actions/cache@v2
         with: 
           path: tmp/
-          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile') }}-${{ matrix.openhab_version }}
+          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: Cucumber
         run: bundle exec rake features[${{ matrix.file }}]
       - name: Generate OpenHAB Dump
