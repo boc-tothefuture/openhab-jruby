@@ -16,6 +16,18 @@ Feature:  timer
     But if I wait 2 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
+  Scenario: Timers support non-integral durations
+    Given code in a rules file
+      """
+      after 2.5.seconds do
+        logger.info("Timer Fired")
+      end
+      """
+    When I deploy the rules file
+    Then It should not log 'Timer Fired' within 1 seconds
+    But if I wait 3 seconds
+    Then It should log 'Timer Fired' within 5 seconds
+
   Scenario: Timers support 'active?', 'running?' and 'terminated?'
     Given code in a rules file
       """
