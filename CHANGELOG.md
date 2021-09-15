@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.8.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.8.1...3.8.2) (2021-09-15)
+
+
+### Bug Fixes
+
+* **dev:** add binstubs ([a425401](https://github.com/boc-tothefuture/openhab-jruby/commit/a425401ca5a588960a81ecaaf793be140c3a316f))
+
 ## [3.8.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.8.0...3.8.1) (2021-09-15)
 
 
