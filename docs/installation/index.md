@@ -21,6 +21,7 @@ has_children: false
    ```
    org.openhab.automation.jrubyscripting:gem_home=<OPENHAB_CONF>/automation/lib/ruby/gem_home
    org.openhab.automation.jrubyscripting:gems=openhab-scripting=~>3.0
+   org.openhab.automation.jrubyscripting:rubylib=<OPENHAB_CONF>/automation/lib/ruby/personal
    ```
 
    Replace <openhab_base_dir> with your base dir. This configuration with the openhab-scripting gem specified with [pessimistic versioning](https://thoughtbot.com/blog/rubys-pessimistic-operator) will install any version of openhab-scripting greater than or equal to 3.0 but less than 4.0. On system restart if any (non-breaking) new versions of the library are available they will automatically be installed.

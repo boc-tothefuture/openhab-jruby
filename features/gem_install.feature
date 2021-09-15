@@ -12,6 +12,7 @@ Feature:  gem_install
       """
       org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
       org.openhab.automation.jrubyscripting:gems=openhab-scripting=~>3.0
+      org.openhab.automation.jrubyscripting:rubylib=<%= ruby_lib_dir %>
       """
     And code in a rules file:
       """
