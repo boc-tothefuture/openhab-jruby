@@ -9,7 +9,7 @@ require 'digest/md5'
 # rubocop: disable Metrics/BlockLength
 # Disabled due to part of buid / potentially refactor into classes
 namespace :openhab do
-  @openhab_version = ENV['OPENHAB_VERSION'] || '3.0.2'
+  @openhab_version = ENV['OPENHAB_VERSION'] || '3.1.0'
   @jruby_bundle = 'https://github.com/boc-tothefuture/openhab2-addons/releases/download/3.2/org.openhab.automation.jrubyscripting-3.2.0-SNAPSHOT.jar'
   karaf_client_path = File.join(OPENHAB_DIR, 'runtime/bin/client')
   karaf_client_args = [karaf_client_path, '-p', 'habopen'].freeze
