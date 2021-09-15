@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.8.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.8.0...3.8.1) (2021-09-15)
+
+
+### Bug Fixes
+
+* **build:** commit the Gemfile.lock ([17def5c](https://github.com/boc-tothefuture/openhab-jruby/commit/17def5c097fd95cc844c8651e155cfdbe631b512))
+
 # [3.8.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.7.4...3.8.0) (2021-09-15)
 
 
