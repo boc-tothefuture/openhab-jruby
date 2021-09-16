@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.8.3](https://github.com/boc-tothefuture/openhab-jruby/compare/3.8.2...3.8.3) (2021-09-16)
+
+
+### Bug Fixes
+
+* **docs:** make shields in readme actual links ([962eec7](https://github.com/boc-tothefuture/openhab-jruby/commit/962eec794e05ae0f4ac507dcf2f34b1a33ff085a))
+
 ## [3.8.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.8.1...3.8.2) (2021-09-15)
 
 
