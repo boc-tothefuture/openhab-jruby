@@ -50,6 +50,17 @@ def deploy_rule(**kwargs)
   deploy_ruby_file(directory: rules_dir, code: @rule, **kwargs)
 end
 
+def wait_for_rule(log_line)
+  if ENV['RELOAD_SCRIPTS_BUNDLE']
+    # force the bundle for ScriptFileWatcher to re-scan immediately; otherwise
+    # it can take up to 20s to notice the new rule file when Java's
+    # WatchService doesn't support actively watching, and only polls (i.e. on
+    # MacOS)
+    openhab_client("bundle:restart `bundle:id 'openHAB Core :: Bundles :: Automation Script RuleSupport'`")
+  end
+  wait_until(seconds: 60, msg: 'Rule not added') { check_log(log_line) }
+end
+
 def deploy_ruby_file(code:, directory:, filename: '', check_position: :end, check: true)
   uid = SecureRandom.uuid
 
@@ -61,7 +72,7 @@ def deploy_ruby_file(code:, directory:, filename: '', check_position: :end, chec
 
   create_log_markers(code, uid) if check
   atomic_rule_write(code, File.join(directory, filename))
-  wait_until(seconds: 60, msg: 'Rule not added') { check_log(log_line) } if check
+  wait_for_rule(log_line) if check
 end
 
 Given('a rule(:)') do |doc_string|
