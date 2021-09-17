@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.9.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.0...3.9.1) (2021-09-17)
+
+
+### Bug Fixes
+
+* **tests:** speed up tests by avoiding unnecessary work ([64c759c](https://github.com/boc-tothefuture/openhab-jruby/commit/64c759c9ee7b483f909db8e10b02467c0e3a6767))
+* **tests:** speed up tests by forcing openhab to find rules ([d05a9e5](https://github.com/boc-tothefuture/openhab-jruby/commit/d05a9e51f15e7683b66ab52797ee2d4bd20a24ff))
+
 # [3.9.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.8.3...3.9.0) (2021-09-17)
 
 
