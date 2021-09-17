@@ -91,6 +91,11 @@ namespace :openhab do
     File.join(full_path, '/conf/automation/lib/ruby/gem_home')
   end
 
+  def ruby_lib_dir
+    full_path = File.realpath OPENHAB_DIR
+    File.join(full_path, '/conf/automation/lib/ruby/personal')
+  end
+
   def ruby_env
     { 'GEM_HOME' => gem_home }
   end
@@ -142,8 +147,10 @@ namespace :openhab do
   task :services, [:force] => [:download] do |task, args|
     state(task.name, args) do
       mkdir_p gem_home
+      mkdir_p ruby_lib_dir
       services_config = ERB.new <<~SERVICES
         org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
+        org.openhab.automation.jrubyscripting:rubylib=<%= ruby_lib_dir %>
       SERVICES
       File.write(@services_config_file, services_config.result)
     end

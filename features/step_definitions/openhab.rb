@@ -5,6 +5,7 @@ require 'json'
 
 Given('Clean OpenHAB with latest Ruby Libraries') do
   delete_rules
+  delete_shared_libraries
   delete_items
   delete_things
   truncate_log
