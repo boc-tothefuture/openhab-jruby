@@ -26,7 +26,8 @@
     [
       "semantic-release-rubygem",
       {
-        "gemFileDir": "pkg/"
+        "gemFileDir": "pkg/",
+        "updateGemfileLock": true
       }
     ],
     [
@@ -34,7 +35,8 @@
       {
         "assets": [
           "CHANGELOG.md",
-          "lib/openhab/version.rb"
+          "lib/openhab/version.rb",
+          "Gemfile.lock"
         ]
       }
     ],
