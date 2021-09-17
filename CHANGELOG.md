@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [3.9.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.8.3...3.9.0) (2021-09-17)
+
+
+### Features
+
+* **load_path:** apply $RUBYLIB ([29b6a34](https://github.com/boc-tothefuture/openhab-jruby/commit/29b6a34f050e82788f2e18d5de8e0025207de2c3))
+
 ## [3.8.3](https://github.com/boc-tothefuture/openhab-jruby/compare/3.8.2...3.8.3) (2021-09-16)
 
 
