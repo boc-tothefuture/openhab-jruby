@@ -31,9 +31,24 @@ For compatibility, `last` is also aliased to `was`.
 ## Command Event Properties
 The following properties exist when a run block is triggered from a [received_command](#received_command) trigger.
 
-| Property | Description          |
-| -------- | -------------------- |
-| command  | Command sent to item |
+| Property     | Description                   |
+| ------------ | ----------------------------- |
+| command      | Command sent to item          |
+| refresh?     | If the command is REFRESH     |
+| on?          | If the command is ON          |
+| off?         | If the command is OFF         |
+| increase?    | If the command is INCREASE    |
+| decrease?    | If the command is DECREASE    |
+| up?          | If the command is UP          |
+| down?        | If the command is DOWN        |
+| stop?        | If the command is STOP        |
+| move?        | If the command is MOVE        |
+| play?        | If the command is PLAY        |
+| pause?       | If the command is PAUSE       |
+| rewind?      | If the command is REWIND      |
+| fastforward? | If the command is FASTFORWARD |
+| next?        | If the command is NEXT        |
+| previous?    | If the command is PREVIOUS    |
 
 ## Thing Event Properties
 The following properties exist when a run block is triggered from an  [updated](#updated) or [changed](#changed) trigger on a Thing.
