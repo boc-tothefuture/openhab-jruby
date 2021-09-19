@@ -143,6 +143,6 @@ Item1.meta['other_state'] = StringItem1
 # Store event's state
 rule 'save event state' do
   changed StringItem1
-  run { |event| Item1.meta['last_event'] = event.last }
+  run { |event| Item1.meta['last_event'] = event.was }
 end
 ```
