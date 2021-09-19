@@ -6,6 +6,7 @@
 /docs/yard/
 /coverage/
 /doc/
+/lib/openhab/dsl/gems.locked
 /pkg/
 /spec/reports/
 /tmp/
