@@ -7,18 +7,10 @@ OPENHAB_VERSIONS = ['3.0.2', '3.1.0'].freeze
 # rubocop: disable Metrics/BlockLength
 # Disabled due to part of buid / potentially refactor into classes
 namespace :github do
-  def md5(filename)
-    md5 = Digest::MD5.new
-    File.open(filename) do |file|
-      file.each(nil, 4096) { |chunk| md5 << chunk }
-    end
-    md5.hexdigest
-  end
-
   desc 'Release JRuby Binding'
   task :release, [:file] do |_, args|
     bundle = args[:file]
-    hash = md5(bundle)
+    hash = Digest::MD5.hexdigest(File.read(bundle))
     _, version, = File.basename(bundle, '.jar').split('-')
     sh 'gh', 'release', 'delete', version, '-y', '-R', 'boc-tothefuture/openhab2-addons'
     sh 'gh', 'release', 'create', version, '-p', '-t', 'JRuby Binding Prerelease', '-n', "md5: #{hash}", '-R',

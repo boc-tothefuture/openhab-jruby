@@ -23,6 +23,8 @@ group :development do
   gem 'process_exists'
   gem 'rake', '~> 12.0'
   gem 'rubocop', '~> 1.8', require: false
+  gem 'rubocop-performance', '~> 1.11', require: false
+  gem 'rubocop-rake', '~> 0.6', require: false
   gem 'solargraph'
   gem 'tty-command'
   gem 'yard'
