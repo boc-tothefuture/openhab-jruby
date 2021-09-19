@@ -48,6 +48,8 @@ module OpenHAB
               super
             end
           end
+
+          alias inspect to_s
         end
       end
     end
