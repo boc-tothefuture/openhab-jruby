@@ -20,6 +20,23 @@ Feature:  received_command
     When item "Alarm_Mode" state is changed to "7"
     Then It should log 'Item received command: 7' within 5 seconds
 
+  Scenario: Rule supports helper predicates for named commands
+    Given a deployed rule:
+      """
+      rule 'Execute rule when item received command' do
+        received_command Alarm_Mode
+        run do |event|
+          %i[refresh? on? off? increase? decrease? up? down? stop? move? play? pause? rewind? fastforward? next? previous?].each do |pred|
+            logger.info("Item received #{pred[0..-2]}: #{event.send(pred)}")
+          end
+        end
+      end
+      """
+    When item "Alarm_Mode" state is changed to "REFRESH"
+    Then It should log 'Item received up: false' within 5 seconds
+    And It should log 'Item received play: false' within 5 seconds
+    And It should log 'Item received refresh: true' within 5 seconds
+
   Scenario Outline: Rule supports received_command with specific values
     Given a deployed rule:
       """

@@ -2,6 +2,7 @@
 
 require 'java'
 require 'openhab/log/logger'
+require 'openhab/dsl/monkey_patch/events/item_command'
 
 module OpenHAB
   module DSL
@@ -28,7 +29,7 @@ module OpenHAB
           command_enum.values.each do |command|
             command_method = command.to_s.downcase
             command_method = methods.transform_keys(&:to_sym).fetch(command_method.to_sym, command_method)
-            logger.trace("Creating command method (#{command_method}) for #{self.class}")
+            logger.trace("Creating command method (#{command_method}) for #{self}")
             define_method(command_method) do
               self.command(command)
             end
@@ -54,7 +55,7 @@ module OpenHAB
           command_enum.values.each do |command|
             status_method = "#{command.to_s.downcase}?"
             status_method = methods.transform_keys(&:to_sym).fetch(status_method.to_sym, status_method)
-            logger.trace("Creating status method (#{status_method}) for #{self.class}")
+            logger.trace("Creating status method (#{status_method}) for #{self}")
             define_method(status_method) do
               state? && state.as(command_enum) == command
             end
@@ -70,7 +71,7 @@ module OpenHAB
         # @param [Hash] optional hash in which if a generated method name mactches a key, the value of that key
         #   will be used as the method name instead, for example `:play? => :playing?`
         #
-        def item_type(item_class, methods = {})
+        def item_type(item_class, methods = {}) # rubocop:disable Metrics/MethodLength
           item_class.field_reader(:ACCEPTED_DATA_TYPES)
           item_class.field_reader(:ACCEPTED_COMMAND_TYPES)
           item_class.ACCEPTED_DATA_TYPES.select(&:is_enum)
@@ -78,7 +79,10 @@ module OpenHAB
                     .each { |type| item_state(type.ruby_class, methods) }
           item_class.ACCEPTED_COMMAND_TYPES.select(&:is_enum)
                     .grep_v(UnDefType)
-                    .each { |type| item_command(type.ruby_class, methods) }
+                    .each do |type|
+                      item_command(type.ruby_class, methods)
+                      MonkeyPatch::Events::ItemCommandEvent.def_enum_predicates(type.ruby_class)
+                    end
         end
       end
     end
