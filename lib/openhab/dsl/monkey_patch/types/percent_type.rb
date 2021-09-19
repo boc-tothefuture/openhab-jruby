@@ -25,6 +25,15 @@ module OpenHAB
             super
           end
           # rubocop:enable Lint/UselessMethodDefinition
+
+          #
+          # Provide details about PercentType object
+          #
+          # @return [String] Representing details about the PercentType object
+          #
+          def inspect
+            "#{to_string}%"
+          end
         end
       end
     end
