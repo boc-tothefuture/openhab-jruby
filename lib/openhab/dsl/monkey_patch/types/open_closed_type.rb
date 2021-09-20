@@ -25,13 +25,9 @@ module OpenHAB
           # @return [Boolean] True if the other object is a ContactItem and has the same state
           #
           def ===(other)
-            if other.respond_to?(:state)
-              self == other.state
-            elsif other.is_a? OpenClosedType
-              self == other
-            else
+            (open? && other.respond_to?(:open?) && other.open?) ||
+              (closed? && other.respond_to?(:closed?) && other.closed?) ||
               super
-            end
           end
 
           #
@@ -47,6 +43,24 @@ module OpenHAB
             else
               super
             end
+          end
+
+          #
+          # Check if the state is OPEN
+          #
+          # @return [Boolean] true if OPEN, false otherwise
+          #
+          def open?
+            self == OPEN
+          end
+
+          #
+          # Check if the state is CLOSED
+          #
+          # @return [Boolean] true if CLOSED, false otherwise
+          #
+          def closed?
+            self == CLOSED
           end
 
           alias inspect to_s
