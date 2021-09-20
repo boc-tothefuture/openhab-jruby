@@ -46,6 +46,24 @@ module OpenHAB
             end
           end
 
+          #
+          # Check if the state is UP
+          #
+          # @return [Boolean] true if UP, false otherwise
+          #
+          def up?
+            self == UP
+          end
+
+          #
+          # Check if the state is DOWN
+          #
+          # @return [Boolean] true if DOWN, false otherwise
+          #
+          def down?
+            self == DOWN
+          end
+
           alias inspect to_s
         end
       end
