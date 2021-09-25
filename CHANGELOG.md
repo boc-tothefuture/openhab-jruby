@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.9.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.1...3.9.2) (2021-09-25)
+
+
+### Bug Fixes
+
+* **dev:** ignore lockfile for file named gems.rb ([8e31e0d](https://github.com/boc-tothefuture/openhab-jruby/commit/8e31e0d882a77c6a0422015ac5dd06c0b0c7ab9c))
+* **release:** pin npm release versions to prevent build failures on upgrade of semantec release ([e1dc2a3](https://github.com/boc-tothefuture/openhab-jruby/commit/e1dc2a329e085ab7a0092762a0d3cd8c8df92737))
+
 ## [3.9.1](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.0...3.9.1) (2021-09-17)
 
 
