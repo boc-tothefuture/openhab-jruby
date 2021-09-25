@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [3.9.4](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.3...3.9.4) (2021-09-25)
+
+
+### Bug Fixes
+
+* **build:** have release process keep Gemfile.lock up to date ([178cf4d](https://github.com/boc-tothefuture/openhab-jruby/commit/178cf4de37e7a50106697d43b33f673319a3c4ea))
+
 ## [3.9.3](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.2...3.9.3) (2021-09-25)
 
 ## [3.9.2](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.1...3.9.2) (2021-09-25)
