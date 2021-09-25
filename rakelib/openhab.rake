@@ -8,6 +8,7 @@ require 'digest/md5'
 
 # rubocop: disable Metrics/BlockLength
 # Disabled due to part of buid / potentially refactor into classes
+# rubocop: disable Rake/MethodDefinitionInTask Legacy code
 namespace :openhab do
   @openhab_version = ENV['OPENHAB_VERSION'] || '3.1.0'
   @jruby_bundle = 'https://github.com/boc-tothefuture/openhab2-addons/releases/download/3.2/org.openhab.automation.jrubyscripting-3.2.0-SNAPSHOT.jar'
@@ -102,7 +103,7 @@ namespace :openhab do
 
   def state(task, args = nil)
     Rake::Task[@state_dir.to_s].execute
-    task_file = File.join(@state_dir, task).gsub(':', '_')
+    task_file = File.join(@state_dir, task).tr(':', '_')
     force = args&.key? :force
     if File.exist?(task_file) && !force
       puts "Skipping task(#{task}), task already up to date"
@@ -332,3 +333,4 @@ namespace :openhab do
 end
 
 # rubocop: enable Metrics/BlockLength
+# rubocop: enable Rake/MethodDefinitionInTask

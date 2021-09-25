@@ -129,7 +129,7 @@ module OpenHAB
         # Thing UIDs have at least 3 segements
         return if name.count('_') < 3
 
-        name = name.gsub('_', ':')
+        name = name.tr('_', ':')
         # rubocop: disable Style/GlobalVars
         $things.get(Java::OrgOpenhabCoreThing::ThingUID.new(name))
         # rubocop: enable Style/GlobalVars

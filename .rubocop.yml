@@ -1,7 +1,16 @@
+require:
+  - rubocop-performance
+  - rubocop-rake
+
+inherit_mode:
+  merge:
+    - Exclude # we want our Exclude to build on the excludes from the default config
+
 AllCops:
   TargetRubyVersion: 2.5
   NewCops: enable
-  SuggestExtensions: false
+  Exclude:
+    - bin/*
 
 Style/HashSyntax:
   UseHashRocketsWithSymbolValues: true
