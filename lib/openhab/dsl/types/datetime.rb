@@ -81,7 +81,7 @@ module OpenHAB
 
           case other
           when TimeOfDay::TimeOfDay, TimeOfDay::TimeOfDayRangeElement then to_tod <=> other
-          when String then self <=> DateTime.parse(DATE_ONLY_REGEX =~ other ? "#{other}'T'00:00:00#{zone}" : other)
+          when String then self <=> DateTime.parse(DATE_ONLY_REGEX.match?(other) ? "#{other}'T'00:00:00#{zone}" : other)
           else
             self <=> DateTime.from(other)
           end
@@ -120,7 +120,7 @@ module OpenHAB
           when Numeric then DateTime.from(to_time - other)
           when String
             dt = DateTime.parse(other)
-            TIME_ONLY_REGEX =~ other ? self - dt.to_f : time_diff(dt)
+            TIME_ONLY_REGEX.match?(other) ? self - dt.to_f : time_diff(dt)
           when Duration then DateTime.new(zoned_date_time.minus(other))
           when Time, DateTime, DateTimeType, DateTimeItem then time_diff(other)
           end
@@ -298,7 +298,7 @@ module OpenHAB
         # @return [Java::org::openhab::core::library::types::DateTimeType] Object representing the same time
         #
         def self.parse(time_string)
-          time_string += 'Z' if TIME_ONLY_REGEX =~ time_string
+          time_string += 'Z' if TIME_ONLY_REGEX.match?(time_string)
           DateTime.new(DateTimeType.new(time_string))
         rescue Java::JavaLang::StringIndexOutOfBoundsException, Java::JavaLang::IllegalArgumentException
           # Try ruby's Time.parse if OpenHAB's DateTimeType parser fails

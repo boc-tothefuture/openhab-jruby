@@ -31,14 +31,14 @@ module OpenHAB
         # @param [Duration] duration Duration until timer should fire
         # @param [Block] block Block to execute when timer fires
         #
-        def initialize(duration:, &block)
+        def initialize(duration:)
           @duration = duration
 
           # A semaphore is used to prevent a race condition in which calling the block from the timer thread
           # occurs before the @timer variable can be set resulting in @timer being nil
           semaphore = Mutex.new
 
-          timer_block = proc { semaphore.synchronize { block.call(self) } }
+          timer_block = proc { semaphore.synchronize { yield(self) } }
 
           semaphore.synchronize do
             @timer = ScriptExecution.createTimer(
