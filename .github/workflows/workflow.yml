@@ -308,12 +308,12 @@ jobs:
           bundle install --jobs 4 --retry 3
      - name: Install Semantic Release
        run: |
-         npm install semantic-release
-         npm install @semantic-release/changelog -D
-         npm install @semantic-release/git -D
-         npm install semantic-release-rubygem -D
-         npm install conventional-changelog-conventionalcommits -D
-         npm install @semantic-release/changelog -D
+         npm install semantic-release@^17.0.0
+         npm install @semantic-release/changelog@^5.0.0 -D
+         npm install @semantic-release/git@^9.0.0 -D
+         npm install semantic-release-rubygem@^1.0.0 -D
+         npm install conventional-changelog-conventionalcommits@^4.0.0 -D
+         npm install @semantic-release/changelog@^5.0.0 -D
      - name: Release
        run: |
           npx semantic-release
