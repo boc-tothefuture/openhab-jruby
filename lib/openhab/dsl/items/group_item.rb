@@ -13,7 +13,9 @@ module OpenHAB
       #
       # Class for indicating to triggers that a group trigger should be used
       #
-      class GroupMembers < SimpleDelegator
+      class GroupMembers
+        include Enumerable
+
         attr_reader :group
 
         #
@@ -23,8 +25,24 @@ module OpenHAB
         #
         def initialize(group_item)
           @group = group_item
-          super(OpenHAB::Core::EntityLookup.decorate_items(@group.members.to_a))
         end
+
+        # Calls the given block once for each group member, passing that
+        # item as a parameter. Returns self.
+        #
+        # If no block is given, an Enumerator is returned.
+        def each(&block)
+          to_a.each(&block)
+          self
+        end
+
+        # explicit conversion to array
+        # more efficient than letting Enumerable do it
+        def to_a
+          OpenHAB::Core::EntityLookup.decorate_items(group.members.to_a)
+        end
+        # implicitly convertible to array
+        alias to_ary to_a
       end
 
       #
@@ -73,7 +91,7 @@ module OpenHAB
         # Iterates through the direct members of the Group
         #
         def each(&block)
-          OpenHAB::Core::EntityLookup.decorate_items(@group_item.members.to_a).each(&block)
+          members.each(&block)
         end
 
         #
