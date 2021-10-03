@@ -20,7 +20,7 @@ module OpenHAB
         # @return [Trigger] Trigger for updated entity
         #
         def updated(*items, to: nil)
-          separate_groups(items).flatten.each do |item|
+          separate_groups(items).each do |item|
             logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
             [to].flatten.each do |to_state|
               trigger, config = create_update_trigger(item, to_state)
