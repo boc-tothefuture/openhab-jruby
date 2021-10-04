@@ -66,7 +66,7 @@ Feature:  received_command
     Given a deployed rule:
       """
       rule 'Execute rule when member of group receives any command' do
-        received_command AlarmModes.items
+        received_command AlarmModes.members
         triggered { |item| logger.info("Group item #{item.id} received command")}
       end
       """
@@ -77,7 +77,7 @@ Feature:  received_command
     Given a deployed rule:
       """
       rule 'Execute rule when member of group is changed to one of many states' do
-        received_command AlarmModes.items, commands: [7,14]
+        received_command AlarmModes.members, commands: [7,14]
         triggered { |item| logger.info("Group item #{item.id} received command")}
       end
       """
