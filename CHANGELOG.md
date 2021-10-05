@@ -1,5 +1,27 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.0.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.4...4.0.0) (2021-10-05)
+
+
+### Features
+
+* **command:** add predicate methods for named commands ([a347bb5](https://github.com/boc-tothefuture/openhab-jruby/commit/a347bb5942e28825a4be5e2adc450bd033b91e0a))
+* **group_item:** alias items to members ([8e91ffc](https://github.com/boc-tothefuture/openhab-jruby/commit/8e91ffccc8d4f0dd2cc8a72aedd502459f140028))
+* **states:** add predicate methods to several states ([5f987cc](https://github.com/boc-tothefuture/openhab-jruby/commit/5f987cc1ce7f86e8ab02b411635f55c8bbc4210f)), closes [#237](https://github.com/boc-tothefuture/openhab-jruby/issues/237)
+* **types:** ensure (almost) all command types are inspectable ([2073072](https://github.com/boc-tothefuture/openhab-jruby/commit/2073072920a3becdb280d67048ab3fb2817e86eb))
+
+
+* feat(events)!: wrap event.state same as item.state ([cbe6e5c](https://github.com/boc-tothefuture/openhab-jruby/commit/cbe6e5c275a30f84ca2ee3e32f1e3ae773b48e7e))
+
+
+### BREAKING CHANGES
+
+*  * event.state returns nil it's NULL or UNDEF.
+ * event.last renamed to event.was (the predicate methods make much more
+  sense calling it was instead of last, similar to Rail's tracking of
+  changed attributes).
+ * event.was returns nil if's NULL or UNDEF
+
 ## [3.9.4](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.3...3.9.4) (2021-09-25)
 
 
