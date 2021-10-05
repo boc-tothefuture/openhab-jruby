@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.0.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.0.0...4.0.1) (2021-10-05)
+
+
+### Performance Improvements
+
+* **things, items:** improves performance on array accessors '[]' ([24bb04b](https://github.com/boc-tothefuture/openhab-jruby/commit/24bb04b34cc13ebbd4906fe547e31154d55e737c))
+
 # [4.0.0](https://github.com/boc-tothefuture/openhab-jruby/compare/3.9.4...4.0.0) (2021-10-05)
 
 
