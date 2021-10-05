@@ -61,9 +61,13 @@ module OpenHAB
         # @return [Array] A new flat array with any GroupMembers object left intact
         #
         def separate_groups(item_array)
-          return item_array if item_array.grep(Array).length.zero?
+          # we want to support anything that can be flattened... i.e. responds to to_ary
+          # we want to be more lenient than only things that are currently Array,
+          # but Enumerable is too lenient because Array#flatten won't traverse interior
+          # Enumerables
+          return item_array unless item_array.find { |item| item.respond_to?(:to_ary) }
 
-          groups, items = item_array.partition { |item| item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers }
+          groups, items = item_array.partition { |item| item.is_a?(OpenHAB::DSL::Items::GroupItem::GroupMembers) }
           groups + separate_groups(items.flatten(1))
         end
 

@@ -22,7 +22,7 @@ module OpenHAB
         #
         #
         def received_command(*items, command: nil, commands: nil)
-          separate_groups(items).flatten.each do |item|
+          separate_groups(items).each do |item|
             logger.trace("Creating received command trigger for item(#{item})"\
                          "command(#{command}) commands(#{commands})")
 
