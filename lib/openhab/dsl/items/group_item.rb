@@ -68,6 +68,7 @@ module OpenHAB
         def members
           GroupMembers.new(@group_item)
         end
+        alias items members
 
         #
         # Iterates through the direct members of the Group
