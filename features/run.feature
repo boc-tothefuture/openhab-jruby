@@ -31,7 +31,7 @@ Feature:  run
       """
       rule 'Access Event Properties' do
         changed TestSwitch
-        run { |event| logger.info("#{event.item.id} triggered from #{event.last} to #{event.state}") }
+        run { |event| logger.info("#{event.item.id} triggered from #{event.was} to #{event.state}") }
       end
       """
     When I deploy the rule
@@ -45,8 +45,8 @@ Feature:  run
         changed TestSwitch
         run do |event|
           logger.info("#{event.item.id} triggered")
-          logger.info("from #{event.last}") if event.last
-          logger.info("to #{event.last}") if event.state
+          logger.info("from #{event.was}") if event.was
+          logger.info("to #{event.state}") if event.state
         end
       end
       """
@@ -62,8 +62,8 @@ Feature:  run
       rule 'Multiple Run Blocks' do
         changed TestSwitch
         run { |event| logger.info("#{event.item.id} triggered") }
-        run { |event| logger.info("from #{event.last}") if event.last }
-        run { |event| logger.info("to #{event.last}") if event.state  }
+        run { |event| logger.info("from #{event.was}") if event.was }
+        run { |event| logger.info("to #{event.state}") if event.state  }
       end
       """
     When I deploy the rule
@@ -118,3 +118,50 @@ Feature:  run
       # | updated          | # Groups don't seem to receive Updated triggers
       | changed          |
       | received_command |
+
+  Scenario Outline: Verify event state predicates on update
+    And code in a rules file
+      """
+      rule 'log event state info' do
+        updated TestSwitch
+        run do |event|
+          logger.info("event is null: #{event.null?}")
+          logger.info("event is undef: #{event.undef?}")
+          logger.info("event state?: #{event.state?}")
+          logger.info("event state: #{event.state.inspect}")
+        end
+      end
+      """
+    When I deploy the rules file
+    And update state for item "TestSwitch" to "<updated_state>"
+    Then It should log "event is null: <null>" within 5 seconds
+    And It should log "event is undef: <undef>" within 5 seconds
+    And It should log "event state?: false" within 5 seconds
+    And It should log "event state: nil" within 5 seconds
+    Examples: Test different states
+      | updated_state | null  | undef |
+      | NULL      | true  | false |
+      | UNDEF     | false | true  |
+
+  Scenario Outline: Verify event state predicates on change
+    And code in a rules file
+      """
+      rule 'log event state info' do
+        changed TestSwitch
+        run do |event|
+          logger.info("event state: #{event.null?} #{event.undef?} #{event.state?} #{event.state.inspect}")
+          logger.info("event was: #{event.was_null?} #{event.was_undef?} #{event.was?} #{event.was.inspect}")
+        end
+      end
+      """
+    When update state for item "TestSwitch" to "<initial_state>"
+    And I deploy the rules file
+    And update state for item "TestSwitch" to "<updated_state>"
+    Then It should log "event state: <new_null> <new_undef> <new_state_p> <new_state>" within 5 seconds
+    And It should log "event was: <was_null> <was_undef> <was_state_p> <was_state>" within 5 seconds
+    Examples: Test different states
+      | initial_state | updated_state | new_null | new_undef | new_state_p | new_state | was_null | was_undef | was_state_p | was_state |
+      | ON            | NULL          | true     | false     | false       | nil       | false    | false     | true        | ON        |
+      | ON            | UNDEF         | false    | true      | false       | nil       | false    | false     | true        | ON        |
+      | NULL          | ON            | false    | false     | true        | ON        | true     | false     | false       | nil       |
+      | UNDEF         | ON            | false    | false     | true        | ON        | false    | true      | false       | nil       |

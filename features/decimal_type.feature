@@ -13,4 +13,11 @@ Feature:  decimal_type
     When I deploy the rules file
     Then It should log "DecimalType to °C: 10 °C equals quantity: true" within 5 seconds
 
-
+  Scenario: DecimalType is inspectable
+    Given code in a rules file
+      """
+      java_import org.openhab.core.library.types.DecimalType
+      logger.info("DecimalType inspected: #{DecimalType.new(10).inspect}")
+      """
+    When I deploy the rules file
+    Then It should log "DecimalType inspected: 10" within 5 seconds
