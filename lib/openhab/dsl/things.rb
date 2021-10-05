@@ -4,6 +4,7 @@ require 'java'
 require 'openhab/log/logger'
 require 'openhab/dsl/actions'
 require 'delegate'
+require 'singleton'
 
 module OpenHAB
   module DSL
@@ -76,32 +77,54 @@ module OpenHAB
       #
       # Wraps all Things in a delegator to underlying set and provides lookup method
       #
-      class Things < SimpleDelegator
+      class Things
         java_import org.openhab.core.thing.ThingUID
+
+        include Enumerable
+        include Singleton
 
         # Gets a specific thing by name in the format binding_id:type_id:thing_id
         # @return Thing specified by name or nil if name does not exist in thing registry
-        def[](uid)
+        def [](uid)
           thing_uid = ThingUID.new(*uid.split(':'))
-          # rubocop: disable Style/GlobalVars
-          thing = $things.get(thing_uid)
-          # rubocop: enable Style/GlobalVars
+          thing = $things.get(thing_uid) # rubocop: disable Style/GlobalVars
           return unless thing
 
           logger.trace("Retrieved Thing(#{thing}) from registry for uid: #{uid}")
           Thing.new(thing)
         end
+
+        alias include? []
+        alias key? []
+
+        # Calls the given block once for each Thing, passing that Thing as a
+        # parameter. Returns self.
+        #
+        # If no block is given, an Enumerator is returned.
+        def each(&block)
+          # ideally we would do this lazily, but until ruby 2.7
+          # there's no #eager method to convert back to a non-lazy
+          # enumerator
+          to_a.each(&block)
+          self
+        end
+
+        # explicit conversion to array
+        # more efficient than letting Enumerable do it
+        def to_a
+          $things.getAll.map { |thing| Thing.new(thing) } # rubocop: disable Style/GlobalVars
+        end
+        # implicitly convertible to array
+        alias to_ary to_a
       end
 
       #
       # Get all things known to OpenHAB
       #
-      # @return [Set] of all Thing objects known to openhab
+      # @return [Things] all Thing objects known to OpenHAB
       #
       def things
-        # rubocop: disable Style/GlobalVars
-        Things.new($things.getAll.map { |thing| Thing.new(thing) }.to_set)
-        # rubocop: enable Style/GlobalVars
+        Things.instance
       end
     end
   end
