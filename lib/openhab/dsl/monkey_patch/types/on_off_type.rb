@@ -33,16 +33,15 @@ module OpenHAB
           #  nil if object cannot be compared
           #
           def ===(other)
-            # A case statement here causes and infinite loop
-            # rubocop:disable Style/CaseLikeIf
-            if self == ON
-              other.on? if other.respond_to? :on?
+            if other.instance_of?(self.class)
+              self == other
+            elsif self == ON
+              other.on? if other.respond_to?(:on?)
             elsif self == OFF
-              other.off? if other.respond_to?('off?')
+              other.off? if other.respond_to?(:off?)
             else
               false
             end
-            # rubocop:enable Style/CaseLikeIf
           end
 
           #
