@@ -21,3 +21,23 @@ Feature:  decimal_type
       """
     When I deploy the rules file
     Then It should log "DecimalType inspected: 10" within 5 seconds
+
+  Scenario Outline: DecimalType has numeric predicates
+    Given code in a rules file
+      """
+      java_import org.openhab.core.library.types.DecimalType
+      logger.info("DecimalType is <predicate>: #{DecimalType.new(<value>).<predicate>}")
+      """
+    When I deploy the rules file
+    Then It should log "DecimalType is <predicate>: <result>" within 5 seconds
+    Examples:
+      | value | predicate  | result |
+      | 0     | zero?      | true   |
+      | 0     | positive?  | false  |
+      | 0     | negative?  | false  |
+      | 1     | zero?      | false  |
+      | 1     | positive?  | true   |
+      | 1     | negative?  | false  |
+      | -1    | zero?      | false  |
+      | -1    | positive?  | false  |
+      | -1    | negative?  | true   |

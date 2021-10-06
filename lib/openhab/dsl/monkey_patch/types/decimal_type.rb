@@ -16,6 +16,11 @@ module OpenHAB
         # MonkeyPatching Decimal Type
         #
         class DecimalType
+          extend Forwardable
+
+          delegate %i[to_d zero?] => :to_big_decimal
+          delegate %i[positive? negative?] => :to_d
+
           #
           # @param [Object] other object to compare to
           #
