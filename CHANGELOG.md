@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.1.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.0.1...4.1.0) (2021-10-06)
+
+
+### Features
+
+* **decimal_type:** zero?, positive?, negative? predicates directly on DecimalType ([bd69a76](https://github.com/boc-tothefuture/openhab-jruby/commit/bd69a763ec81e15bd4626264af4bc29a279d393c))
+
 ## [4.0.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.0.0...4.0.1) (2021-10-05)
 
 
