@@ -5,6 +5,23 @@ Feature:  contact_item
     Given Clean OpenHAB with latest Ruby Libraries
     And group "Contacts"
 
+  Scenario Outline: can directly compare states
+    Given items:
+      | type    | name       | label       | group    |
+      | Contact | ContactOne | Contact One | Contacts |
+    And update state for item "ContactOne" to "<update>"
+    And code in a rules file
+      """
+      # Log contact state
+      Contacts.select { |c| c == <check> }.each { |contact| logger.info("Contact #{contact.id} is #{contact.state}")}
+      """
+    When I deploy the rules file
+    Then It should log "<log_line>" within 5 seconds
+    Examples:
+      | update | check   | log_line              |
+      | OPEN   | OPEN    | Contact One is OPEN   |
+      | CLOSED | CLOSED  | Contact One is CLOSED |
+
   Scenario Outline: open?/closed? checks state of contact
     Given items:
       | type    | name       | label       | group    |

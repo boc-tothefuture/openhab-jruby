@@ -1,13 +1,13 @@
 ---
 layout: default
-title: DateTime
+title: DateTimeItem
 nav_order: 6
 has_children: false
 parent: Items
 grand_parent: Usage
 ---
 
-# DateTime Item
+# DateTimeItem
 
 DateTime items are extended with a lot of methods that make working with them easy. Most of the methods
 defined by the [ruby Time class](https://ruby-doc.org/core-2.5.8/Time.html) are available, and some of 
@@ -15,7 +15,7 @@ them are extended or adapted with OpenHAB specific functionality.
 
 ##### Examples
 
-DateTime Items can be updated and commanded with ruby Time objects
+DateTime items can be updated and commanded with ruby Time objects
 
 ```ruby
 Example_DateTimeItem << Time.now

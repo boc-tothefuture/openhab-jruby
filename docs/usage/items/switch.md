@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Switch
+title: SwitchItem
 nav_order: 1
 has_children: false
 parent: Items
@@ -8,8 +8,7 @@ grand_parent: Usage
 ---
 
 
-# Switch Item
-This class is aliased to **Switch** so you can compare item types using `item.is_a? Switch or grep(Switch)`
+# SwitchItem
 
 | Method  | Description                                  | Example                                         |
 | ------- | -------------------------------------------- | ----------------------------------------------- |
@@ -39,26 +38,26 @@ Switches.select(&:off?).each(&:on)
 Switches can be selected in an enumerable with grep.
 
 ```ruby
-items.grep(Switch)
+items.grep(SwitchItem)
      .each { |switch| logger.info("Switch #{switch.id} found") }
 ```
 
 Switch states also work in grep.
 ```ruby
 # Log all switch items set to ON
-items.grep(Switch)
+items.grep(SwitchItem)
      .grep(ON)
      .each { |switch| logger.info("#{switch.id} ON") }
 
 # Log all switch items set to OFF
-items.grep(Switch)
+items.grep(SwitchItem)
      .grep(OFF)
      .each { |switch| logger.info("#{switch.id} OFF") }
 ```
 
 Switch states also work in case statements.
 ```ruby
-items.grep(Switch)
+items.grep(SwitchItem)
      .each do |switch|
         case switch
         when ON
@@ -73,12 +72,12 @@ items.grep(Switch)
 Other examples
 ```ruby
 # Invert all switches
-items.grep(Switch)
+items.grep(SwitchItem)
      .each { |item| if item.off? then item.on else item.off end}
 
 # Or using not operator
 
-items.grep(Switch)
+items.grep(SwitchItem)
      .each { |item| item << !item } 
 
 ```

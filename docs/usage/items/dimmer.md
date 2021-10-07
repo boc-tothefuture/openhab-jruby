@@ -1,18 +1,13 @@
 ---
 layout: default
-title: Dimmer
+title: DimmerItem
 nav_order: 2
 has_children: false
 parent: Items
 grand_parent: Usage
 ---
 
-# Dimmer 
-
-DimmerItem  is aliased to **Dimmer** so you can compare item types using
-
-`item.is_a? Dimmer or grep(Dimmer)`
-
+# DimmerItem
 
 | Method   | Parameters                             | Description                                    | Example                                         |
 | -------- | -------------------------------------- | ---------------------------------------------- | ----------------------------------------------- |
@@ -53,7 +48,7 @@ Dimmers.each(&:off)
 ```ruby
 # Turn on switches that are off
 Dimmers.select(&:off?).each(&:on)
-	  
+
 # Turn off switches that are on
 Dimmers.select(&:on?).each(&:off)
 ```
@@ -76,7 +71,7 @@ Dimmers can be selected in an enumerable with grep.
 
 ```ruby
 # Get all dimmers
-items.grep(Dimmer)
+items.grep(DimmerItem)
      .each { |dimmer| logger.info("#{dimmer.id} is a Dimmer") }
 ```
 
@@ -84,7 +79,7 @@ Dimmers work with ranges and can be used in grep.
 
 ```ruby
 # Get dimmers with a state of less than 50
-items.grep(Dimmer)
+items.grep(DimmerItem)
      .grep(0...50)
      .each { |item| logger.info("#{item.id} is less than 50") }
 ```
@@ -92,7 +87,7 @@ items.grep(Dimmer)
 Dimmers can also be used in case statements with ranges.
 ```ruby
 #Log dimmer states partioning aat 50%
-items.grep(Dimmer)
+items.grep(DimmerItem)
      .each do |dimmer|
        case dimmer
        when (0..50)
@@ -130,7 +125,7 @@ end
 rule 'Turn off any dimmers curently on at midnight' do
    every :day
    run do
-     items.grep(Dimmer)
+     items.grep(DimmerItem)
           .select(&:on?)
           .each(&:off)
     end
@@ -141,10 +136,9 @@ end
 rule 'Turn off any dimmers set to less than 50 at midnight' do
    every :day
    run do
-     items.grep(Dimmer)
+     items.grep(DimmerItem)
           .grep(1...50)
           .each(&:off)
      end
 end
 ```
-

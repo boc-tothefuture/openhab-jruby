@@ -71,18 +71,3 @@ Feature:  triggered
     And if I wait 1 seconds
     Then "Switch1" should be in state "OFF" within 6 seconds
     And It should log 'Switch Number One turned off' within 5 seconds
-
-  Scenario: Verify decoration of triggered item
-    Given items:
-      | type   | name    | state |
-      | Number | Number1 | 1     |
-    And code in a rules file
-      """
-      rule 'Triggered Item' do
-        changed Number1
-        triggered { |item| logger.info("triggered item class is #{item.class}") }
-      end
-      """
-    When I deploy the rules file
-    And item "Number1" state is changed to "2"
-    Then It should log "triggered item class is OpenHAB::DSL::Items::NumberItem" within 5 seconds

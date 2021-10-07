@@ -10,7 +10,6 @@ end
 
 Object.send(:remove_const, :QuantityType)
 java_import org.openhab.core.library.types.QuantityType
-java_import org.openhab.core.types.util.UnitUtils
 
 module OpenHAB
   module DSL
@@ -18,6 +17,13 @@ module OpenHAB
     # Provides support for interacting with OpenHAB Units of Measurement
     #
     module Units
+      # @return The default unit for the current thread
+      def unit(unit = nil, &block)
+        return with_unit(unit, &block) if unit || block # back-compat
+
+        Thread.current[:unit]
+      end
+
       #
       # Sets a thread local variable to the supplied unit such that classes operating inside the block
       # can perform automatic conversions to the supplied unit for NumberItems
@@ -25,13 +31,12 @@ module OpenHAB
       # @param [Object] unit OpenHAB Unit or String representing unit
       # @yield [] Block executed in context of the supplied unit
       #
-      #
-      def unit(unit)
-        unit = UnitUtils.parse_unit(unit) if unit.is_a? String
-        Thread.current.thread_variable_set(:unit, unit)
+      def with_unit(unit)
+        unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit) if unit.is_a? String
+        Thread.current[:unit] = unit
         yield
       ensure
-        Thread.current.thread_variable_set(:unit, nil)
+        Thread.current[:unit] = nil
       end
     end
   end

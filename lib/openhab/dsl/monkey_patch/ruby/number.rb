@@ -16,7 +16,7 @@ module OpenHAB
           # @return [Java::JavaTime::Duration] Duration with number of units from self
           #
           %w[millis seconds minutes hours].each do |unit|
-            define_method(unit) { Java::JavaTime::Duration.public_send("of_#{unit}", self) }
+            define_method(unit) { java.time.Duration.public_send("of_#{unit}", self) }
           end
 
           alias second seconds
@@ -37,7 +37,7 @@ module OpenHAB
           # @return [Java::JavaTime::Duration] Duration truncated to an integral number of milliseconds from self
           #
           def millis
-            Java::JavaTime::Duration.of_millis(to_i)
+            java.time.Duration.of_millis(to_i)
           end
 
           #
@@ -74,6 +74,26 @@ module OpenHAB
           alias minute minutes
           alias hour hours
         end
+
+        #
+        # Extend numeric to create quantity object
+        #
+        module NumericExtensions
+          #
+          # Convert Numeric to a QuantityType
+          #
+          # @param [Object] other String or Unit representing an OpenHAB Unit
+          #
+          # @return [Types::QuantityType] +self+ as a {Types::QuantityType} of the supplied Unit
+          #
+          def |(other)
+            other = org.openhab.core.types.util.UnitUtils.parse_unit(other.to_str) if other.respond_to?(:to_str)
+
+            return super unless other.is_a?(javax.measure.Unit)
+
+            QuantityType.new(to_d.to_java, other)
+          end
+        end
       end
     end
   end
@@ -81,3 +101,6 @@ end
 
 Integer.prepend(OpenHAB::DSL::MonkeyPatch::Ruby::IntegerExtensions)
 Float.prepend(OpenHAB::DSL::MonkeyPatch::Ruby::FloatExtensions)
+Numeric.include(OpenHAB::DSL::MonkeyPatch::Ruby::NumericExtensions)
+# Integer already has #|, so we have to prepend it here
+Integer.prepend(OpenHAB::DSL::MonkeyPatch::Ruby::NumericExtensions)

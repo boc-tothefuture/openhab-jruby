@@ -72,53 +72,6 @@ Feature:  run
     Then It should log 'from OFF' within 5 seconds
     Then It should log 'to ON' within 5 seconds
 
-  Scenario Outline: Verify decoration of event.item
-    Given items:
-      | type   | name    | state |
-      | Number | Number1 | 1     |
-    And code in a rules file
-      """
-      rule 'Run and triggered event item' do
-        <trigger> Number1
-        run { |event| logger.info("run event.item class is #{event.item.class}") }
-        triggered { |item| logger.info("triggered item class is #{item.class}") }
-      end
-      """
-    When I deploy the rules file
-    And item "Number1" state is changed to "2"
-    Then It should log "run event.item class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
-    And It should log "triggered item class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
-    Examples: Test different triggers
-      | trigger          |
-      | updated          |
-      | changed          |
-      | received_command |
-
-  Scenario Outline: Verify decoration of event.item on a group
-    Given groups:
-      | type   | name     | function | params |
-      | Switch | Switches | OR       | ON,OFF |
-    And items:
-      | type   | name       | group    | state |
-      | Switch | Switch_One | Switches | OFF   |
-    And code in a rules file
-      """
-    rule 'Run and triggered event item on a group' do
-      <trigger> Switches
-      run { |event| logger.info("run event.item class is #{event.item.class}") }
-      triggered { |item| logger.info("triggered item class is #{item.class}") }
-    end
-      """
-    When I deploy the rules file
-    And item "Switches" state is changed to "ON"
-    Then It should log "run event.item class is OpenHAB::DSL::Items::GroupItem" within 5 seconds
-    And It should log "triggered item class is OpenHAB::DSL::Items::GroupItem" within 5 seconds
-    Examples: Test different triggers
-      | trigger          |
-      # | updated          | # Groups don't seem to receive Updated triggers
-      | changed          |
-      | received_command |
-
   Scenario Outline: Verify event state predicates on update
     And code in a rules file
       """

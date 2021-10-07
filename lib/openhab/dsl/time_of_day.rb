@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require 'java'
 require 'openhab/log/logger'
-require 'openhab/dsl/items/datetime_item'
-require 'openhab/dsl/types/datetime'
+require 'openhab/dsl/types/date_time_type'
 require 'time'
 
 module OpenHAB
@@ -173,7 +171,7 @@ module OpenHAB
           case object
           when TimeOfDay then adjust_second_of_day(object.local_time.to_second_of_day)
           when String then adjust_second_of_day(TimeOfDay.parse(object).local_time.to_second_of_day)
-          when Time, OpenHAB::DSL::Types::DateTime, OpenHAB::DSL::Items::DateTimeItem
+          when Time, OpenHAB::DSL::Types::DateTimeType, OpenHAB::DSL::Items::DateTimeItem
             adjust_second_of_day(TimeOfDay.new(h: object.hour, m: object.min, s: object.sec)
             .local_time.to_second_of_day)
           when TimeOfDayRangeElement then object.sod
@@ -218,7 +216,7 @@ module OpenHAB
       private_class_method def to_time_of_day(object)
         case object
         when String then TimeOfDay.parse(object)
-        when Time, OpenHAB::DSL::Types::DateTime, OpenHAB::DSL::Items::DateTimeItem
+        when Time, OpenHAB::DSL::Types::DateTimeType, OpenHAB::DSL::Items::DateTimeItem
           TimeOfDay.new(h: object.hour, m: object.min, s: object.sec)
         else object
         end

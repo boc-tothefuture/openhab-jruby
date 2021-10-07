@@ -1,16 +1,13 @@
 ---
 layout: default
-title: Contact
+title: ContactItem
 nav_order: 3
 has_children: false
 parent: Items
 grand_parent: Usage
 ---
 
-# Contact Item
-
-This class is aliased to **Contact** so you can compare item types using `item.is_a? Contact or grep(Contact)`
-
+# ContactItem
 
 | Method  | Description                          | Example                                   |
 | ------- | ------------------------------------ | ----------------------------------------- |
@@ -35,7 +32,7 @@ Contacts can be selected in an enumerable with grep.
 
 ```ruby
 # Get all Contacts
-items.grep(Contact)
+items.grep(ContactItem)
      .each { |contact| logger.info("#{contact.id} is a Contact") }
 ```
 
@@ -80,5 +77,4 @@ rule 'Log state of all doors on system startup' do
     end
   end
 end
-
 ```

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'java'
+require 'openhab/dsl/types/un_def_type'
 
 module OpenHAB
   module DSL
@@ -9,14 +9,13 @@ module OpenHAB
       # Patches OpenHAB events
       #
       module Events
-        java_import Java::OrgOpenhabCoreItemsEvents::ItemStateChangedEvent
-        java_import Java::OrgOpenhabCoreTypes::UnDefType
+        java_import org.openhab.core.items.events.ItemStateChangedEvent
 
         #
-        # MonkeyPatch with ruby style accessors
+        # Adds methods to core OpenHAB ItemStateChangedEvent to make it more natural in Ruby
         #
-        class ItemStateChangedEvent
-          include ItemStateUnDefTypeHelpers
+        class ItemStateChangedEvent < ItemEvent
+          include ItemState
 
           #
           # Check if state was == UNDEF
@@ -24,7 +23,7 @@ module OpenHAB
           # @return [Boolean] True if the state is UNDEF, false otherwise
           #
           def was_undef?
-            old_item_state == UnDefType::UNDEF
+            old_item_state == UNDEF
           end
 
           #
@@ -32,7 +31,7 @@ module OpenHAB
           #
           # @return [Boolean] True if the state is NULL, false otherwise
           def was_null?
-            old_item_state == UnDefType::NULL
+            old_item_state == NULL
           end
 
           #
@@ -41,18 +40,18 @@ module OpenHAB
           # @return [Boolean] True if state is not UNDEF or NULL
           #
           def was?
-            was_undef? == false && was_null? == false
+            !old_item_state.is_a?(Types::UnDefType)
           end
 
           #
           # Get the previous item state
           #
-          # @return [State] OpenHAB state if state was not UNDEF or NULL, nil otherwise
+          # @return [Types::Type] OpenHAB state if state was not UNDEF or NULL, nil otherwise
           #
           def was
             old_item_state if was?
           end
-
+          # @deprecated
           alias last was
         end
       end
