@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.1.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.0...4.1.1) (2021-10-07)
+
+
+### Bug Fixes
+
+* **dev:** update gemfile and binstubs for use with MRI ([7fe0027](https://github.com/boc-tothefuture/openhab-jruby/commit/7fe002715d3aa51378f3c72ddf4c63c3b4c20e1e))
+
 # [4.1.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.0.1...4.1.0) (2021-10-06)
 
 
