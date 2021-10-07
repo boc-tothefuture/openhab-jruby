@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Image
+title: ImageItem
 nav_order: 1
 has_children: false
 parent: Items
@@ -8,8 +8,7 @@ grand_parent: Usage
 ---
 
 
-# Image Item
-Player Items allow control of elements like audio players, televisions, etc. All methods of the underlying OpenHAB Player Item exist along with Ruby like method / extensions
+# ImageItem
 
 | Method            | Description                                                                                   | Options   | Example                                       |
 | ----------------- | --------------------------------------------------------------------------------------------- | --------- | --------------------------------------------- |

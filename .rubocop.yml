@@ -12,6 +12,10 @@ AllCops:
   Exclude:
     - bin/*
 
+# enforced by checking for 100% documented from `yard --stats`
+# RuboCop doesn't know if a module is documented in a different file
+Style/Documentation:
+  Enabled: false
 Style/HashSyntax:
   UseHashRocketsWithSymbolValues: true
 

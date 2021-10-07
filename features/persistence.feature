@@ -45,7 +45,7 @@ Feature: persistence
             Test_Group.persist
             logger.info("Last update: #{Number1.last_update}")
             logger.info("Last update: #{Test_Group.last_update}")
-            %w[
+            %i[
             average_since
             changed_since
             delta_since
@@ -58,10 +58,10 @@ Feature: persistence
             updated_since
             variance_since
             ].each do |method|
-              logger.info("#{method}: #{Number1.send(method, 1.minute)}")
-              logger.info("#{method}: #{Number1.send(method, ZonedDateTime.now.minusMinutes(1))}")
-              logger.info("#{method}: #{Test_Group.send(method, 1.minute)}")
-              logger.info("#{method}: #{Test_Group.send(method, ZonedDateTime.now.minusMinutes(1))}")
+              logger.info("#{method}: #{Number1.__send__(method, 1.minute)}")
+              logger.info("#{method}: #{Number1.__send__(method, ZonedDateTime.now.minusMinutes(1))}")
+              logger.info("#{method}: #{Test_Group.__send__(method, 1.minute)}")
+              logger.info("#{method}: #{Test_Group.__send__(method, ZonedDateTime.now.minusMinutes(1))}")
             end
             logger.info("Persistence checks done")
           end

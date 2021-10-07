@@ -175,18 +175,18 @@ Feature:  items
     And It should log 'SimmerTest include? false' within 5 seconds
     And It should log 'SimmerTest item nil? true' within 5 seconds
 
-  Scenario: Verify decoration of item
+  Scenario: Verify class of item
     Given items:
       | type   | name    | state |
       | Number | Number1 | 1     |
     And code in a rules file
       """
-      logger.info("Number1 class is #{Number1.class}")
-      logger.info("items['Number1'] class is #{items['Number1'].class}")
+      logger.info("Number1 class is a NumberItem? #{Number1.class == OpenHAB::DSL::Items::NumberItem}")
+      logger.info("items['Number1'] class is a NumberItem? #{items['Number1'].class == OpenHAB::DSL::Items::NumberItem}")
       """
     When I deploy the rules file
-    Then It should log "Number1 class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
-    And It should log "items['Number1'] class is OpenHAB::DSL::Items::NumberItem" within 5 seconds
+    Then It should log "Number1 class is a NumberItem? true" within 5 seconds
+    And It should log "items['Number1'] class is a NumberItem? true" within 5 seconds
 
   Scenario: Verify items can access groups
     Given groups:
@@ -203,41 +203,6 @@ Feature:  items
       """
     When I deploy the rules file
     Then It should log "Number3 is in groups Numbers, PrimeNumbers" within 5 seconds
-
-  Scenario: Verify that all item decorators provide oh_item to refer to the OpenHAB object
-    Given code in a rules file
-      """
-      decorators = OpenHAB::DSL::Items.constants
-        .select { |m| m.to_s.end_with?('Item') }
-        .reject { |m| m.to_s == 'GroupItem' }
-      decorators.each do |m|
-        item_name = "#{m}1"
-        oh_item = Kernel.const_get("Java::OrgOpenhabCoreLibraryItems::#{m}").new(item_name)
-        $ir.add(oh_item)
-        logger.info("OH Object: #{oh_item.class} name: #{oh_item.name}")
-        item = items[item_name]
-        logger.info("DSL Object: #{item.class}")
-        unless item&.respond_to?(:oh_item)
-          logger.error("missing oh_item for item type: #{m}. Make sure def_item_delegator is called")
-        end
-        $ir.remove(item_name)
-      end
-      """
-    When I deploy the rules file
-    Then It should not log "missing oh_item for item type" within 5 seconds
-
-  Scenario: Verify that GroupItem provide oh_item to refer to the OpenHAB object
-    Given group "GroupItem1"
-    And code in a rules file
-      """
-      item = groups["GroupItem1"]
-      logger.info("DSL Object: #{item.class}")
-      unless item&.respond_to?(:oh_item)
-        logger.error("missing oh_item for DSL GroupItem")
-      end
-      """
-    When I deploy the rules file
-    Then It should not log "missing oh_item for DSL GroupItem" within 5 seconds
 
   Scenario Outline: Items can be used as hash keys
     # Ref: https://github.com/boc-tothefuture/openhab-jruby/issues/252

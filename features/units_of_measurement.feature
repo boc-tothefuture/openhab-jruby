@@ -23,7 +23,7 @@ Feature:  units_of_measurement
       | NumberC \|ImperialUnits::FAHRENHEIT |
       | NumberC \|'°F'                      |
 
-  Scenario Outline: | Creates a Quantity from a Dimensionless NumberItem
+  Scenario Outline: | Creates a QuantityType from a Dimensionless NumberItem
     Given code in a rules file
       """
         result = <convert_line>
@@ -73,7 +73,7 @@ Feature:  units_of_measurement
     Given code in a rules file
       """
         result = <code_line>
-        logger.info("Result is #{result.is_a?(Quantity) ? result.format('%.1f %unit%') : result}")
+        logger.info("Result is #{result.is_a?(QuantityType) ? result.format('%.1f %unit%') : result}")
       """
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
@@ -81,16 +81,16 @@ Feature:  units_of_measurement
       | code_line                                                         | result  |
       | unit('°F') { NumberC - NumberF < 4 }                              | true    |
       | unit('°F') { NumberC - '24 °C' < 4 }                              | true    |
-      | unit('°F') { Quantity.new('24 °C') - NumberC < 4 }                | true    |
+      | unit('°F') { QuantityType.new('24 °C') - NumberC < 4 }            | true    |
       | unit('°C') { NumberF - '20 °C' < 2 }                              | true    |
-      | unit('°C') { NumberF - Dimensionless  }                           | 19.1 °C |
+      | unit('°C') { NumberF - Dimensionless }                            | 19.1 °C |
       | unit('°C') { NumberC + NumberF  }                                 | 44.1 °C |
       | unit('°C') { NumberF - Dimensionless < 20 }                       | true    |
       | unit('°C') { Dimensionless + NumberC == 25 }                      | true    |
       | unit('°C') { 2 + NumberC == 25 }                                  | true    |
       | unit('°C') { Dimensionless * NumberC == 46 }                      | true    |
       | unit('°C') { 2 * NumberC == 46 }                                  | true    |
-      | unit('°C') { ( (2 * (NumberF + NumberC) ) / Dimensionless ) < 45} | true    |
+      | unit('°C') { ( (2 * (NumberF + NumberC)) / Dimensionless ) < 45 } | true    |
       | unit('°C') { [NumberC, NumberF, Dimensionless].min }              | 2       |
 
 

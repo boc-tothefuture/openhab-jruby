@@ -1,19 +1,19 @@
 ---
 layout: default
-title: String
+title: StringItem
 nav_order: 5
 has_children: false
 parent: Items
 grand_parent: Usage
 ---
 
-# String Item
+# StringItem
 
 | Method          | Parameters | Description                                                                | Example                                          |
 | --------------- | ---------- | -------------------------------------------------------------------------- | ------------------------------------------------ |
 | truthy?         |            | Item state not UNDEF, not NULL and is not blank ('') when trimmed.         | `puts "#{item.name} is truthy" if item.truthy?`  |
 | String methods* |            | All methods for [Ruby String](https://ruby-doc.org/core-2.5.1/String.html) | `StringOne << StringOne + ' World!'`             |
-| blank?          |            | True if state is UNDEF, NULL, string is empty or contains only whitepspace | `StringOne << StringTwo unless StringTwo.blank?` |
+| blank?          |            | True if state is UNDEF, NULL, string is empty or contains only whitespace  | `StringOne << StringTwo unless StringTwo.blank?` |
 
 * All String methods returns a copy of the current state as a string.  Methods that modify a string in place, do not modify the underlying state string. 
  

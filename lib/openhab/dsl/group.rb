@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require 'java'
 require 'singleton'
 
-require 'openhab/core/entity_lookup'
-require 'openhab/dsl/items/group_item'
 require 'openhab/dsl/lazy_array'
 
 module OpenHAB
@@ -35,8 +32,7 @@ module OpenHAB
 
         # explicit conversion to array
         def to_a
-          items = $ir.items.grep(org.openhab.core.items.GroupItem) # rubocop:disable Style/GlobalVars
-          Core::EntityLookup.decorate_items(items)
+          $ir.items.grep(org.openhab.core.items.GroupItem) # rubocop:disable Style/GlobalVars
         end
       end
 
