@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require 'delegate'
 require 'java'
+require 'singleton'
+
 require 'openhab/log/logger'
 require 'openhab/dsl/actions'
-require 'delegate'
-require 'singleton'
+require 'openhab/dsl/lazy_array'
 
 module OpenHAB
   module DSL
@@ -78,44 +80,26 @@ module OpenHAB
       # Wraps all Things in a delegator to underlying set and provides lookup method
       #
       class Things
-        java_import org.openhab.core.thing.ThingUID
-
-        include Enumerable
+        include LazyArray
         include Singleton
 
         # Gets a specific thing by name in the format binding_id:type_id:thing_id
         # @return Thing specified by name or nil if name does not exist in thing registry
         def [](uid)
-          thing_uid = ThingUID.new(*uid.split(':'))
+          thing_uid = org.openhab.core.thing.ThingUID.new(*uid.split(':'))
           thing = $things.get(thing_uid) # rubocop: disable Style/GlobalVars
           return unless thing
 
           logger.trace("Retrieved Thing(#{thing}) from registry for uid: #{uid}")
           Thing.new(thing)
         end
-
         alias include? []
         alias key? []
 
-        # Calls the given block once for each Thing, passing that Thing as a
-        # parameter. Returns self.
-        #
-        # If no block is given, an Enumerator is returned.
-        def each(&block)
-          # ideally we would do this lazily, but until ruby 2.7
-          # there's no #eager method to convert back to a non-lazy
-          # enumerator
-          to_a.each(&block)
-          self
-        end
-
         # explicit conversion to array
-        # more efficient than letting Enumerable do it
         def to_a
           $things.getAll.map { |thing| Thing.new(thing) } # rubocop: disable Style/GlobalVars
         end
-        # implicitly convertible to array
-        alias to_ary to_a
       end
 
       #

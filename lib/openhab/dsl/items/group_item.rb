@@ -3,9 +3,11 @@
 require 'delegate'
 require 'forwardable'
 require 'java'
+
+require 'openhab/core/entity_lookup'
 require 'openhab/dsl/items/item_command'
 require 'openhab/dsl/items/item_delegate'
-require 'openhab/core/entity_lookup'
+require 'openhab/dsl/lazy_array'
 
 module OpenHAB
   module DSL
@@ -14,7 +16,7 @@ module OpenHAB
       # Class for indicating to triggers that a group trigger should be used
       #
       class GroupMembers
-        include Enumerable
+        include LazyArray
 
         attr_reader :group
 
@@ -27,22 +29,10 @@ module OpenHAB
           @group = group_item
         end
 
-        # Calls the given block once for each group member, passing that
-        # item as a parameter. Returns self.
-        #
-        # If no block is given, an Enumerator is returned.
-        def each(&block)
-          to_a.each(&block)
-          self
-        end
-
         # explicit conversion to array
-        # more efficient than letting Enumerable do it
         def to_a
           OpenHAB::Core::EntityLookup.decorate_items(group.members.to_a)
         end
-        # implicitly convertible to array
-        alias to_ary to_a
       end
 
       #
