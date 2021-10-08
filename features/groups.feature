@@ -222,3 +222,11 @@ Feature:  groups
       | name     | type    |
       | Switches | Contact |
     Then It should log "false" within 10 seconds
+  
+  Scenario: Can add lazy arrays together
+    Given code in a rules file
+      """
+      logger.info("Item+Group Count: #{(items + groups).count}")
+      """
+    When I deploy the rules file
+    Then It should log 'Item+Group Count: 8' within 5 seconds
