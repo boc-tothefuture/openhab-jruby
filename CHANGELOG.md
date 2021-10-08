@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.1.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.1...4.1.2) (2021-10-08)
+
+
+### Bug Fixes
+
+* **items:** restore ability to add items arrays together ([4b318c1](https://github.com/boc-tothefuture/openhab-jruby/commit/4b318c1d4e02fe2789a9f20fa198fb2f6ad629a2)), closes [#288](https://github.com/boc-tothefuture/openhab-jruby/issues/288)
+
 ## [4.1.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.0...4.1.1) (2021-10-07)
 
 
