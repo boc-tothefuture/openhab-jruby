@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'java'
-require 'openhab/core/entity_lookup'
 require 'singleton'
+
+require 'openhab/core/entity_lookup'
+require 'openhab/dsl/lazy_array'
 
 module OpenHAB
   module DSL
@@ -14,7 +16,7 @@ module OpenHAB
       # Delegates to underlying set of all OpenHAB Items, provides convenience methods
       #
       class Items
-        include Enumerable
+        include LazyArray
         include Singleton
 
         # Fetches the named item from the the ItemRegistry
@@ -32,27 +34,13 @@ module OpenHAB
         def include?(name)
           !$ir.getItems(name).empty? # rubocop: disable Style/GlobalVars
         end
-        alias key? include?
-
-        # Calls the given block once for each Item, passing that Item as a
-        # parameter. Returns self.
-        #
-        # If no block is given, an Enumerator is returned.
-        def each(&block)
-          # ideally we would do this lazily, but until ruby 2.7
-          # there's no #eager method to convert back to a non-lazy
-          # enumerator
-          to_a.each(&block)
-        end
+        alias key? []
 
         # explicit conversion to array
-        # more efficient than letting Enumerable do it
         def to_a
-          items = $ir.items.grep_v(Java::OrgOpenhabCoreItems::GroupItem) # rubocop:disable Style/GlobalVars
+          items = $ir.items.grep_v(org.openhab.core.items.GroupItem) # rubocop:disable Style/GlobalVars
           OpenHAB::Core::EntityLookup.decorate_items(items)
         end
-        # implicitly convertible to array
-        alias to_ary to_a
       end
 
       # Fetches all non-group items from the item registry
