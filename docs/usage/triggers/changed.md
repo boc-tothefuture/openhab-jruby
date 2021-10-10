@@ -11,13 +11,14 @@ grand_parent: Usage
 # Changed
 
 
-| Options | Description                                            | Example         |
-| ------- | ------------------------------------------------------ | --------------- |
-| from    | Only execute rule if previous state matches from state | from: OFF       |
-| to      | Only execute rule if new state matches from state      | to: ON          |
-| for     | Only execute rule if value stays changed for duration  | for: 10.seconds |
+| Options | Description                                               | Example         |
+| ------- | --------------------------------------------------------- | --------------- |
+| from    | Only execute rule if previous state matches from state(s) | from: OFF       |
+| to      | Only execute rule if new state matches to state(s)        | to: ON          |
+| for     | Only execute rule if value stays changed for duration     | for: 10.seconds |
 
 Changed accepts Items, Things or Groups. 
+To and from accept arrays to match multiple states
 
 The from and to values operate exactly as they do in the DSL and Python rules with the exception of operating on Things.  If changed element being used as a trigger is a thing than the to and from values will accept symbols and strings, where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html). 
 
@@ -34,7 +35,7 @@ end
 You can optionally provide from and to states to restrict the cases in which the rule executes:
 ```ruby
 rule 'Execute rule when item is changed to specific number, from specific number, for specified duration' do
-  changed Alarm_Mode, from: 8, to: 14, for: 12.seconds
+  changed Alarm_Mode, from: 8, to: [14,12], for: 12.seconds
   run { logger.info("Alarm Mode Updated")}
 end
 ```
