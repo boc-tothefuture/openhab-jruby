@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.1.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.2...4.1.3) (2021-10-10)
+
+
+### Bug Fixes
+
+* **docs:** update installation docs to reference version 4.x of the gem ([c486cad](https://github.com/boc-tothefuture/openhab-jruby/commit/c486cad67e70483b2d3398116d79ce0778aafeec))
+
 ## [4.1.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.1...4.1.2) (2021-10-08)
 
 
