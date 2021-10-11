@@ -319,7 +319,7 @@ namespace :openhab do
   task deploy: %i[download build] do |_task|
     mkdir_p gem_home
     gem_file = File.join(PACKAGE_DIR, "openhab-scripting-#{OpenHAB::VERSION}.gem")
-    fail_on_error("gem install #{gem_file} -i #{gem_home} ")
+    fail_on_error("gem install #{gem_file} -i #{gem_home} --no-document")
   end
 
   desc 'Deploy adhoc test Openhab'
