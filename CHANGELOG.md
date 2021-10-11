@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.1.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.3...4.1.4) (2021-10-11)
+
+
+### Bug Fixes
+
+* **dev:** add binstubs for yard ([e2f8053](https://github.com/boc-tothefuture/openhab-jruby/commit/e2f8053452872df7f7fb26da41af2905ebe32426))
+* **dev:** don't generate documentation when installing gem for tests ([995b8fc](https://github.com/boc-tothefuture/openhab-jruby/commit/995b8fcb8afad0f3546eb0500da40febcb47c956))
+
 ## [4.1.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.2...4.1.3) (2021-10-10)
 
 
