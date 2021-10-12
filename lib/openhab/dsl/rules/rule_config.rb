@@ -37,6 +37,9 @@ module OpenHAB
         # @return [Array] Of trigger delays
         attr_reader :trigger_delays
 
+        # @return [Hash] Hash of trigger UIDs to attachments
+        attr_reader :attachments
+
         # @return [Array] Of trigger guards
         attr_accessor :guard
 
@@ -82,6 +85,7 @@ module OpenHAB
         def initialize(rule_name, caller_binding)
           @triggers = []
           @trigger_delays = {}
+          @attachments = {}
           @caller = caller_binding.eval 'self'
           enabled(true)
           on_start(false)
@@ -96,8 +100,8 @@ module OpenHAB
         #
         # rubocop: disable Style/OptionalBooleanParameter
         # Disabled cop due to use in a DSL
-        def on_start(run_on_start = true)
-          @on_start = run_on_start
+        def on_start(run_on_start = true, attach: nil)
+          @on_start = Struct.new(:enabled, :attach).new(run_on_start, attach)
         end
         # rubocop: enable Style/OptionalBooleanParameter
 
@@ -107,7 +111,16 @@ module OpenHAB
         # @return [Boolean] True if rule should run on start, false otherwise.
         #
         def on_start?
-          @on_start
+          @on_start.enabled
+        end
+
+        #
+        # Get the optional start attachment
+        #
+        # @return [Object] optional user provided attachment to the on_start method
+        #
+        def start_attachment
+          @on_start.attach
         end
 
         #
@@ -144,7 +157,8 @@ module OpenHAB
             "Run blocks: (#{run}) " \
             "on_start: (#{on_start?}) " \
             "Trigger Waits: #{trigger_delays} " \
-            "Trigger UIDs: #{triggers.map(&:id).join(', ')}"
+            "Trigger UIDs: #{triggers.map(&:id).join(', ')}" \
+            "Attachments: #{attachments} "
         end
       end
     end

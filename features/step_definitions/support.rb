@@ -5,11 +5,11 @@
 require 'fileutils'
 require 'tmpdir'
 
-Then('If I wait {int} seconds') do |int|
+Then('If I wait {int} second(s)') do |int|
   sleep(int)
 end
 
-When('(if )I wait {int} seconds') do |int|
+When('(if )I wait {int} second(s)') do |int|
   sleep(int)
 end
 

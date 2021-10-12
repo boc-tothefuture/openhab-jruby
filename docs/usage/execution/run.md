@@ -25,39 +25,42 @@ The following properties exist when a run block is triggered from an [updated](#
 | was?       | Prior state of triggering item was not NULL or UNDEF   |
 | was_null?  | Prior state was NULL                                   |
 | was_undef? | Prior state was UNDEF                                  |
+| attachment | Optional user provided attachment to trigger           |
 
 For compatibility, `last` is also aliased to `was`.
 
 ## Command Event Properties
 The following properties exist when a run block is triggered from a [received_command](#received_command) trigger.
 
-| Property     | Description                   |
-| ------------ | ----------------------------- |
-| command      | Command sent to item          |
-| refresh?     | If the command is REFRESH     |
-| on?          | If the command is ON          |
-| off?         | If the command is OFF         |
-| increase?    | If the command is INCREASE    |
-| decrease?    | If the command is DECREASE    |
-| up?          | If the command is UP          |
-| down?        | If the command is DOWN        |
-| stop?        | If the command is STOP        |
-| move?        | If the command is MOVE        |
-| play?        | If the command is PLAY        |
-| pause?       | If the command is PAUSE       |
-| rewind?      | If the command is REWIND      |
-| fastforward? | If the command is FASTFORWARD |
-| next?        | If the command is NEXT        |
-| previous?    | If the command is PREVIOUS    |
+| Property     | Description                                  |
+|--------------|----------------------------------------------|
+| command      | Command sent to item                         |
+| refresh?     | If the command is REFRESH                    |
+| on?          | If the command is ON                         |
+| off?         | If the command is OFF                        |
+| increase?    | If the command is INCREASE                   |
+| decrease?    | If the command is DECREASE                   |
+| up?          | If the command is UP                         |
+| down?        | If the command is DOWN                       |
+| stop?        | If the command is STOP                       |
+| move?        | If the command is MOVE                       |
+| play?        | If the command is PLAY                       |
+| pause?       | If the command is PAUSE                      |
+| rewind?      | If the command is REWIND                     |
+| fastforward? | If the command is FASTFORWARD                |
+| next?        | If the command is NEXT                       |
+| previous?    | If the command is PREVIOUS                   |
+| attachment   | Optional user provided attachment to trigger |
 
 ## Thing Event Properties
 The following properties exist when a run block is triggered from an  [updated](#updated) or [changed](#changed) trigger on a Thing.
 
-| Property | Description                                                       |
-| -------- | ----------------------------------------------------------------- |
-| uid      | UID of the triggered Thing                                        |
-| last     | Status before Change for thing (only valid on Change, not update) |
-| status   | Current status of the triggered Thing                             |
+| Property   | Description                                                       |
+|------------|-------------------------------------------------------------------|
+| uid        | UID of the triggered Thing                                        |
+| last       | Status before Change for thing (only valid on Change, not update) |
+| status     | Current status of the triggered Thing                             |
+| attachment | Optional user provided attachment to trigger                      |
 
 
 
