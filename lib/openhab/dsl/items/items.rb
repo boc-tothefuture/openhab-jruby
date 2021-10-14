@@ -10,6 +10,7 @@ require_relative 'switch_item'
 require_relative 'date_time_item'
 require_relative 'dimmer_item'
 
+require_relative 'color_item'
 require_relative 'contact_item'
 require_relative 'group_item'
 require_relative 'image_item'
