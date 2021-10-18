@@ -3,6 +3,8 @@
 require 'openhab/dsl/items/metadata'
 require 'openhab/dsl/items/persistence'
 
+require_relative 'item_equality'
+
 module OpenHAB
   module DSL
     module Items
@@ -12,6 +14,8 @@ module OpenHAB
       # Ruby
       class GenericItem
         include Log
+        include ItemEquality
+
         prepend Metadata
         prepend Persistence
 
@@ -133,33 +137,6 @@ module OpenHAB
         #   state
         def eql?(other)
           other.instance_of?(self.class) && hash == other.hash
-        end
-
-        #
-        # Check equality, with type conversions
-        #
-        # @param [GenericItem, Types::Type, Object] other object to
-        #   compare to
-        #
-        #   If this item is +NULL+ or +UNDEF+, and +other+ is nil, they are
-        #   considered equal
-        #
-        #   If this item is +NULL+ or +UNDEF+, and other is a {GenericItem}, they
-        #   are only considered equal if the other item is in the exact same
-        #   state (i.e. +NULL+ != +UNDEF+)
-        #
-        #   Otherwise, the state of this item is compared with +other+
-        #
-        # @return [Boolean]
-        #
-        def ==(other)
-          logger.trace("(#{self.class}) #{self} == #{other} (#{other.class})")
-          return true if equal?(other) || eql?(other)
-          return true if !state? && other.nil?
-
-          return raw_state == other.raw_state if other.is_a?(GenericItem)
-
-          state == other
         end
 
         # @!method null?
