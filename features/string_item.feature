@@ -40,9 +40,23 @@ Feature:  string_item
     And It should log "String Two is a String Item" within 5 seconds
 
 
+  Scenario: StringItem can be used in a case with a regex
+    Given item "StringOne" state is changed to "Hello"
+    Given code in a rules file
+      """
+      case StringOne
+      when /Hello/ then logger.info("matched")
+      else
+        logger.info("did not match")
+      end
+      """
+    When I deploy the rules file
+    Then It should log "matched" within 5 seconds
+
   Scenario: StringItem should work with grep regex
     Given item "StringOne" state is changed to "Hello"
     And item "StringTwo" state is changed to " World!"
+    And item "StringThree" state is changed to "foobar"
     And code in a rules file
       """
       # Get all Strings that start with an H

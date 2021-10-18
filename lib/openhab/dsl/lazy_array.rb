@@ -2,7 +2,7 @@
 
 module OpenHAB
   module DSL
-    # common base class for array-like collections that have lookup
+    # Common base class for array-like collections that have lookup
     # methods to avoid instantiating the elements if you only use
     # the lookup method
     #
@@ -11,7 +11,7 @@ module OpenHAB
     module LazyArray
       include Enumerable
 
-      # Calls the given block once for each Thing, passing that Thing as a
+      # Calls the given block once for each object, passing that object as a
       # parameter. Returns self.
       #
       # If no block is given, an Enumerator is returned.
@@ -20,20 +20,22 @@ module OpenHAB
         self
       end
 
-      # implicitly convertible to array
+      # Implicitly convertible to array
+      #
+      # @return [Array]
+      #
       def to_ary
         to_a
       end
 
-      # delegate any other methods to the actual array
-      # exclude mutating methods though
+      # Delegate any other methods to the actual array, exclude mutating methods
       def method_missing(method, *args, &block)
         return to_a.send(method, *args, &block) if method[-1] != '!' && Array.instance_methods.include?(method)
 
         super
       end
 
-      # advertise that methods exist that would be delegated to Array
+      # @!visibility private
       def respond_to_missing?(method, include_private = false)
         return true if method[-1] != '!' && Array.instance_methods.include?(method.to_sym)
 

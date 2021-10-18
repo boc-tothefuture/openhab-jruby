@@ -4,7 +4,6 @@ require 'openhab/core/load_path'
 require 'openhab/core/openhab_setup'
 require 'openhab/log/logger'
 require 'openhab/dsl/dsl'
-
 require 'openhab/version'
 
 #

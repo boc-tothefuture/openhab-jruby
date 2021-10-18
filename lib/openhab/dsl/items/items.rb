@@ -1,52 +1,88 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'singleton'
+require 'openhab/dsl/monkey_patch/events/item_command'
 
-require 'openhab/core/entity_lookup'
-require 'openhab/dsl/lazy_array'
+require_relative 'item_registry'
+
+require_relative 'generic_item'
+
+require_relative 'switch_item'
+require_relative 'date_time_item'
+require_relative 'dimmer_item'
+
+require_relative 'contact_item'
+require_relative 'group_item'
+require_relative 'image_item'
+require_relative 'number_item'
+require_relative 'player_item'
+require_relative 'rollershutter_item'
+require_relative 'string_item'
 
 module OpenHAB
   module DSL
-    #
-    # Manages OpenHAB items
-    #
+    # Contains all OpenHAB *Item classes, as well as associated support
+    # modules
     module Items
-      #
-      # Delegates to underlying set of all OpenHAB Items, provides convenience methods
-      #
-      class Items
-        include LazyArray
-        include Singleton
+      class << self
+        private
 
-        # Fetches the named item from the the ItemRegistry
-        # @param [String] name
-        # @return Item from registry, nil if item missing or requested item is a Group Type
-        def [](name)
-          OpenHAB::Core::EntityLookup.lookup_item(name)
-        rescue Java::OrgOpenhabCoreItems::ItemNotFoundException
-          nil
+        # takes an array of Type java classes and returns
+        # all the Enum values, in a flat array
+        def values_for_enums(enums)
+          enums.map(&:ruby_class)
+               .select { |k| k < java.lang.Enum }
+               .flat_map(&:values)
         end
 
-        # Returns true if the given item name exists
-        # @param name [String] Item name to check
-        # @return [Boolean] true if the item exists, false otherwise
-        def include?(name)
-          !$ir.getItems(name).empty? # rubocop: disable Style/GlobalVars
-        end
-        alias key? []
+        # define predicates for checking if an item is in one of the Enum states
+        def def_predicate_methods(klass)
+          values_for_enums(klass.ACCEPTED_DATA_TYPES).each do |state|
+            _command_predicate, state_predicate = Types::PREDICATE_ALIASES[state.to_s]
+            next if klass.instance_methods.include?(state_predicate)
 
-        # explicit conversion to array
-        def to_a
-          items = $ir.items.grep_v(org.openhab.core.items.GroupItem) # rubocop:disable Style/GlobalVars
-          OpenHAB::Core::EntityLookup.decorate_items(items)
+            OpenHAB::Core.logger.trace("Defining #{klass}##{state_predicate} for #{state}")
+            klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+              def #{state_predicate}   # def on?
+                raw_state == #{state}  #   raw_state == ON
+              end                      # end
+            RUBY
+          end
+        end
+
+        # defined methods for commanding an item to one of the Enum states
+        # as well as predicates for if an ItemCommandEvent is one of those commands
+        def def_command_methods(klass) # rubocop:disable Metrics/MethodLength method has single purpose
+          values_for_enums(klass.ACCEPTED_COMMAND_TYPES).each do |value|
+            command = Types::COMMAND_ALIASES[value.to_s]
+            next if klass.instance_methods.include?(command)
+
+            OpenHAB::Core.logger.trace("Defining #{klass}##{command} for #{value}")
+            klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+              def #{command}       # def on
+                command(#{value})  #   command(ON)
+              end                  # end
+            RUBY
+
+            OpenHAB::Core.logger.trace("Defining ItemCommandEvent##{command}? for #{value}")
+            MonkeyPatch::Events::ItemCommandEvent.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+              def #{command}?        # def refresh?
+                command == #{value}  #   command == REFRESH
+              end                    # end
+            RUBY
+          end
         end
       end
 
-      # Fetches all non-group items from the item registry
-      # @return [OpenHAB::DSL::Items::Items]
-      def items
-        Items.instance
+      # sort classes by hierarchy so we define methods on parent classes first
+      constants.map { |c| const_get(c) }
+               .grep(Module)
+               .select { |k| k <= GenericItem && k != GroupItem && k != StringItem }
+               .sort { |a, b| a < b ? 1 : -1 }
+               .each do |klass|
+        klass.field_reader :ACCEPTED_COMMAND_TYPES, :ACCEPTED_DATA_TYPES unless klass == GenericItem
+
+        def_predicate_methods(klass)
+        def_command_methods(klass)
       end
     end
   end

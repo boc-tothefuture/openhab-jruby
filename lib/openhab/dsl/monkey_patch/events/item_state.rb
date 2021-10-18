@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'java'
+require 'openhab/dsl/types/un_def_type'
 
 module OpenHAB
   module DSL
@@ -9,18 +9,17 @@ module OpenHAB
       # Patches OpenHAB events
       #
       module Events
-        java_import Java::OrgOpenhabCoreItemsEvents::ItemStateEvent
-        java_import Java::OrgOpenhabCoreTypes::UnDefType
+        java_import org.openhab.core.items.events.ItemStateEvent
 
         # Helpers common to ItemStateEvent and ItemStateChangedEvent
-        module ItemStateUnDefTypeHelpers
+        module ItemState
           #
           # Check if the state == UNDEF
           #
           # @return [Boolean] True if the state is UNDEF, false otherwise
           #
           def undef?
-            item_state == UnDefType::UNDEF
+            item_state == UNDEF
           end
 
           #
@@ -28,7 +27,7 @@ module OpenHAB
           #
           # @return [Boolean] True if the state is NULL, false otherwise
           def null?
-            item_state == UnDefType::NULL
+            item_state == NULL
           end
 
           #
@@ -37,13 +36,13 @@ module OpenHAB
           # @return [Boolean] True if state is not UNDEF or NULL
           #
           def state?
-            undef? == false && null? == false
+            !item_state.is_a?(Types::UnDefType)
           end
 
           #
           # Get the item state
           #
-          # @return [State] OpenHAB state if state is not UNDEF or NULL, nil otherwise
+          # @return [Types::PrimitiveState] OpenHAB state if state is not UNDEF or NULL, nil otherwise
           #
           def state
             item_state if state?
@@ -51,10 +50,10 @@ module OpenHAB
         end
 
         #
-        # MonkeyPatch with ruby style accessors
+        # Adds methods to core OpenHAB ItemStateEvent to make it more natural in Ruby
         #
-        class ItemStateEvent
-          include ItemStateUnDefTypeHelpers
+        class ItemStateEvent < ItemEvent
+          include ItemState
         end
       end
     end

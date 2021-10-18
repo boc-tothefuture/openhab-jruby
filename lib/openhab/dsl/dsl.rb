@@ -1,29 +1,23 @@
 # frozen_string_literal: true
 
-require 'java'
 require 'openhab/log/logger'
-require 'openhab/dsl/monkey_patch/events/events'
+
+# the order of these is important
+require 'openhab/dsl/types/types'
+require 'openhab/dsl/items/items'
 require 'openhab/dsl/monkey_patch/ruby/ruby'
-require 'openhab/dsl/monkey_patch/items/items'
-require 'openhab/dsl/monkey_patch/types/types'
+
+require 'openhab/dsl/monkey_patch/events/events'
 require 'openhab/dsl/monkey_patch/actions/actions'
 require 'openhab/dsl/rules/rule'
 require 'openhab/dsl/actions'
 require 'openhab/dsl/timers'
 require 'openhab/dsl/group'
 require 'openhab/dsl/things'
-require 'openhab/dsl/items/items'
-require 'openhab/dsl/items/datetime_item'
-require 'openhab/dsl/items/image_item'
-require 'openhab/dsl/items/number_item'
-require 'openhab/dsl/items/player_item'
-require 'openhab/dsl/items/group_item'
 require 'openhab/dsl/time_of_day'
 require 'openhab/dsl/gems'
 require 'openhab/dsl/persistence'
 require 'openhab/dsl/units'
-require 'openhab/dsl/types/datetime'
-require 'openhab/dsl/types/quantity'
 require 'openhab/dsl/states'
 
 module OpenHAB

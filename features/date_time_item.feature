@@ -1,4 +1,4 @@
-Feature: datetime_item
+Feature: date_time_item
   Rule language supports DateTime Items
 
     Background:

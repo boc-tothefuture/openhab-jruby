@@ -45,7 +45,6 @@ Feature: player_item
       | play         | PLAY        |
       | pause        | PAUSE       |
       | rewind       | REWIND      |
-      | fastforward  | FASTFORWARD |
       | fast_forward | FASTFORWARD |
 
   Scenario: State check commands
@@ -64,7 +63,6 @@ Feature: player_item
       | playing?         | PLAY        |
       | paused?          | PAUSE       |
       | rewinding?       | REWIND      |
-      | fastforwarding?  | FASTFORWARD |
       | fast_forwarding? | FASTFORWARD |
 
   Scenario: Next/previous is sent to player items when invoked as a method

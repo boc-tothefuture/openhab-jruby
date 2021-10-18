@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Rollershutter
+title: RollershutterItem
 nav_order: 1
 has_children: false
 parent: Items
@@ -8,8 +8,9 @@ grand_parent: Usage
 ---
 
 
-# Rollershutter Item
-This class extends the Rollershutter Item type with additional methods
+# RollershutterItem
+
+This class extends the RollershutterItem type with additional methods
 
 | Method   | Description                                  | Example                                              |
 | -------- | -------------------------------------------- | ---------------------------------------------------- |
