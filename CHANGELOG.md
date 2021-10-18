@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.2.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.4...4.2.0) (2021-10-18)
+
+
+### Features
+
+* **types:** allow comparison and arithmetic directly against state types ([22e237f](https://github.com/boc-tothefuture/openhab-jruby/commit/22e237fa93ae373fd63f05b9eaa17c0a78905939))
+
 ## [4.1.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.3...4.1.4) (2021-10-11)
 
 
