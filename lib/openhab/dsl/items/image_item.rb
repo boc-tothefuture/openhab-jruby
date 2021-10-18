@@ -3,52 +3,16 @@
 require 'base64'
 require 'pathname'
 require 'net/http'
-require 'java'
 require 'marcel'
-require 'openhab/dsl/items/item_command'
-require 'openhab/dsl/items/item_delegate'
 
 module OpenHAB
   module DSL
     module Items
-      #
-      # Delegator to OpenHAB Player Item
-      #
-      class ImageItem
-        extend OpenHAB::DSL::Items::ItemCommand
-        extend OpenHAB::DSL::Items::ItemDelegate
+      java_import org.openhab.core.library.items.ImageItem
 
-        def_item_delegator :@image_item
-
-        item_type Java::OrgOpenhabCoreLibraryItems::ImageItem
-
-        #
-        # Creates a new ImageItem
-        #
-        # @param [Java::OrgOpenhabCoreLibraryItems::ImageItem] image_item
-        #   The OpenHAB ImageItem to delegate to
-        #
-        def initialize(image_item)
-          logger.trace("Wrapping #{image_item}")
-          @image_item = image_item
-
-          item_missing_delegate { @image_item }
-
-          super()
-        end
-
-        #
-        #
-        # Update image with base64 encoded OpenHAB compatable image
-        #
-        # @param [String] base_64 base_64 encoding of an image
-        #
-        #
-        def update(base_64_encoded_image)
-          logger.trace { "Updating #{self} with Base64 image #{base_64_encoded_image}" }
-          @image_item.update base_64_encoded_image
-        end
-
+      # Adds methods to core OpenHAB ImageItem type to make it more natural in
+      # Ruby
+      class ImageItem < GenericItem
         #
         # Update image from file
         #
@@ -87,7 +51,7 @@ module OpenHAB
         def update_from_bytes(bytes, mime_type: nil)
           mime_type ||= detect_mime_from_bytes(bytes: bytes)
           base_64_image = encode_image(mime_type: mime_type, bytes: bytes)
-          update base_64_image
+          update(base_64_image)
         end
 
         #

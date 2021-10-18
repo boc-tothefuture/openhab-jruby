@@ -128,10 +128,10 @@ Feature:  number_item
     When I deploy the rules file
     Then It should log "Number Two is positive? true" within 5 seconds
 
-  Scenario: NumberItem can be converted to Quantity
+  Scenario: NumberItem can be converted to QuantityType
     Given code in a rules file
       """
-      logger.info("NumberTwo to °C: #{NumberTwo|"°C"} equals quantity: #{NumberTwo|"°C" == Quantity.new('70°C')}")
+      logger.info("NumberTwo to °C: #{NumberTwo|"°C"} equals quantity: #{NumberTwo|"°C" == QuantityType.new('70°C')}")
       """
     When I deploy the rules file
     Then It should log "NumberTwo to °C: 70 °C equals quantity: true" within 5 seconds

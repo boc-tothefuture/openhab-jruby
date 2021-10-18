@@ -11,7 +11,7 @@ def openhab_dir
   File.realpath 'tmp/openhab'
 end
 
-class OpenHABClient # rubocop:disable Style/Documentation
+class OpenHABClient
   include Singleton
 
   def initialize

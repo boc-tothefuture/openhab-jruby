@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'java'
-
 module OpenHAB
   module DSL
     module MonkeyPatch
@@ -9,14 +7,16 @@ module OpenHAB
       # Patches OpenHAB events
       #
       module Events
-        java_import Java::OrgOpenhabCoreItemsEvents::ItemEvent
+        java_import org.openhab.core.items.events.ItemEvent
 
         #
-        # MonkeyPatch to add item
+        # Adds methods to core OpenHAB ItemEvent to make it more natural in Ruby
         #
         class ItemEvent
           #
-          # Return a decorated item
+          # The triggering item
+          #
+          # @return [GenericItem]
           #
           def item
             OpenHAB::Core::EntityLookup.lookup_item(item_name)

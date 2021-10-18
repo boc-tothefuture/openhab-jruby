@@ -1,48 +1,57 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'java'
-require 'openhab/dsl/items/item_command'
-require 'openhab/dsl/items/item_delegate'
-
 module OpenHAB
   module DSL
     module Items
-      #
-      # Delegator to OpenHAB Player Item
-      #
-      class PlayerItem
-        extend OpenHAB::DSL::Items::ItemCommand
-        extend OpenHAB::DSL::Items::ItemDelegate
-        extend Forwardable
+      java_import org.openhab.core.library.items.PlayerItem
 
-        def_item_delegator :@player_item
+      # Adds methods to core OpenHAB NumberItem type to make it more natural in
+      # Ruby
+      class PlayerItem < GenericItem
+        remove_method :==
 
-        item_type Java::OrgOpenhabCoreLibraryItems::PlayerItem, :play? => :playing?,
-                                                                :pause? => :paused?,
-                                                                :rewind? => :rewinding?,
-                                                                :fastforward? => :fastforwarding?
+        # @!method play?
+        #   Check if the item state == +PLAYING+
+        #   @return [Boolean]
 
-        # rubocop: disable Style/Alias
-        # Disabled because 'alias' does not work with the dynamically defined methods
-        alias_method :fast_forward, :fastforward
-        alias_method :fast_forwarding?, :fastforwarding?
-        # rubocop: enable Style/Alias
+        # @deprecated
+        # @!parse alias play? playing?
 
-        #
-        # Creates a new PlayerItem
-        #
-        # @param [Java::OrgOpenhabCoreLibraryItems::PlayerItem] player_item
-        #   The OpenHAB PlayerItem to delegate to
-        #
-        def initialize(player_item)
-          logger.trace("Wrapping #{player_item}")
-          @player_item = player_item
+        # @!method paused?
+        #   Check if the item state == +PAUSED+
+        #   @return [Boolean]
 
-          item_missing_delegate { @player_item }
+        # @!method rewinding?
+        #   Check if the item state == +REWIND+
+        #   @return [Boolean]
 
-          super()
-        end
+        # @!method fast_forwarding?
+        #   Check if the item state == +FASTFORWARD+
+        #   @return [Boolean]
+
+        # @!method play
+        #   Send the +PLAY+ command to the item
+        #   @return [PlayerItem] +self+
+
+        # @!method pause
+        #   Send the +PAUSE+ command to the item
+        #   @return [PlayerItem] +self+
+
+        # @!method rewind
+        #   Send the +REWIND+ command to the item
+        #   @return [PlayerItem] +self+
+
+        # @!method fast_forward
+        #   Send the +FASTFORWARD+ command to the item
+        #   @return [PlayerItem] +self+
+
+        # @!method next
+        #   Send the +NEXT+ command to the item
+        #   @return [PlayerItem] +self+
+
+        # @!method previous
+        #   Send the +PREVIOUS+ command to the item
+        #   @return [PlayerItem] +self+
       end
     end
   end

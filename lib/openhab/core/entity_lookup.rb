@@ -3,13 +3,6 @@
 require 'pp'
 require 'java'
 require 'set'
-require 'openhab/dsl/group'
-require 'openhab/log/logger'
-require 'openhab/dsl/items/number_item'
-require 'openhab/dsl/items/string_item'
-require 'openhab/dsl/items/datetime_item'
-require 'openhab/dsl/items/rollershutter_item'
-require 'openhab/dsl/items/group_item'
 
 # Automation lookup and injection of OpenHab entities
 
@@ -69,52 +62,6 @@ module OpenHAB
       end
 
       #
-      # Decorate items with Ruby wrappers
-      #
-      # @param [Array] items Array of items to decorate
-      #
-      # @return [Array] Array of decorated items
-      #
-      def self.decorate_items(*items)
-        items.flatten.map { |item| decorate_item(item) }
-      end
-
-      #
-      # Decorate item with Ruby wrappers
-      #
-      # @param [Object] item the item object to decorate
-      #
-      # @return [Object] the ruby wrapper for the item
-      #
-      # rubocop: disable Metrics/MethodLength
-      # rubocop: disable Metrics/CyclomaticComplexity
-      # Disabled line length and branch size - case dispatch pattern
-      def self.decorate_item(item)
-        logger.trace("Decorating #{item.class}")
-        case item
-        when Java::OrgOpenhabCoreItems::GroupItem
-          OpenHAB::DSL::Items::GroupItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::NumberItem
-          OpenHAB::DSL::Items::NumberItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::StringItem
-          OpenHAB::DSL::Items::StringItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::DateTimeItem
-          OpenHAB::DSL::Items::DateTimeItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::RollershutterItem
-          OpenHAB::DSL::Items::RollershutterItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::PlayerItem
-          OpenHAB::DSL::Items::PlayerItem.new(item)
-        when Java::OrgOpenhabCoreLibraryItems::ImageItem
-          OpenHAB::DSL::Items::ImageItem.new(item)
-        else
-          logger.trace("Returning undecorated item #{item.class}")
-          item
-        end
-      end
-      # rubocop: enable Metrics/MethodLength
-      # rubocop: enable Metrics/CyclomaticComplexity
-
-      #
       # Looks up a Thing in the OpenHAB registry replacing '_' with ':'
       #
       # @param [String] name of Thing to lookup in Thing registry
@@ -145,10 +92,7 @@ module OpenHAB
       def self.lookup_item(name)
         logger.trace("Looking up item(#{name})")
         name = name.to_s if name.is_a? Symbol
-        # rubocop: disable Style/GlobalVars
-        item = $ir.get(name)
-        # rubocop: enable Style/GlobalVars
-        decorate_item(item)
+        $ir.get(name) # rubocop: disable Style/GlobalVars
       end
     end
   end

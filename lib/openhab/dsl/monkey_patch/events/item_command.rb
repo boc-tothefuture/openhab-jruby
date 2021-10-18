@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'java'
+require_relative 'item_event'
 
 module OpenHAB
   module DSL
@@ -9,32 +9,75 @@ module OpenHAB
       # Patches OpenHAB events
       #
       module Events
-        java_import Java::OrgOpenhabCoreItemsEvents::ItemCommandEvent
+        java_import org.openhab.core.items.events.ItemCommandEvent
 
-        #
-        # Monkey patch with ruby style accesors
-        #
-        class ItemCommandEvent
-          include Log
-
+        # Adds methods to core OpenHAB ItemCommandEvent to make it more natural in Ruby
+        class ItemCommandEvent < ItemEvent
+          # @return [Type]
           alias command item_command
 
-          #
-          # For every value in the supplied enumeration create a corresponding method mapped to the lowercase
-          # string representation of the enum value For example, an enum with values of STOP and START
-          # would create methods stop? and start? that check if the command is corresponding STOP and START type
-          #
-          # @param [Java::JavaLang::Enum] command_enum Enumeration to create commands for
-          #
-          def self.def_enum_predicates(command_enum)
-            command_enum.values.each do |command| # rubocop:disable Style/HashEachMethods : Java enum does not have each_value
-              command_method = "#{command.to_s.downcase}?"
-              logger.trace("Creating predicate method (#{command_method}) for #{self}")
-              define_method(command_method) do
-                self.command == command
-              end
-            end
-          end
+          # @!method refresh?
+          #   Check if == +REFRESH+
+          #   @return [Boolean]
+
+          # @!method on?
+          #   Check if == +ON+
+          #   @return [Boolean]
+
+          # @!method off?
+          #   Check if == +OFF+
+          #   @return [Boolean]
+
+          # @!method up?
+          #   Check if == +UP+
+          #   @return [Boolean]
+
+          # @!method down?
+          #   Check if == +DOWN+
+          #   @return [Boolean]
+
+          # @!method stop?
+          #   Check if == +STOP+
+          #   @return [Boolean]
+
+          # @!method move?
+          #   Check if == +MOVE+
+          #   @return [Boolean]
+
+          # @!method increase?
+          #   Check if == +INCREASE+
+          #   @return [Boolean]
+
+          # @!method decrease?
+          #   Check if == +DECREASE+
+          #   @return [Boolean]
+
+          # @!method play?
+          #   Check if == +PLAY+
+          #   @return [Boolean]
+
+          # @!method pause?
+          #   Check if == +PAUSE+
+          #   @return [Boolean]
+
+          # @!method rewind?
+          #   Check if == +REWIND+
+          #   @return [Boolean]
+
+          # @!method fast_forward?
+          #   Check if == +FASTFORWARD+
+          #   @return [Boolean]
+
+          # @deprecated
+          # @!parse alias fastforward? fast_forward?
+
+          # @!method next?
+          #   Check if == +NEXT+
+          #   @return [Boolean]
+
+          # @!method previous?
+          #   Check if == +PREVIOUS+
+          #   @return [Boolean]
         end
       end
     end
