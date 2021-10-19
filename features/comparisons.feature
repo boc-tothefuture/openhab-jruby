@@ -18,6 +18,8 @@ Feature: comparisons
       | Number             | Number10        | Number Ten              |                       | 10                        |
       | Number             | Number10A       | Number Ten A            |                       | 10                        |
       | Number             | Number20        | Number Twenty           |                       | 20                        |
+      | Number             | NumberNull      | Number NULL             |                       | NULL                      |
+      | Number             | NumberNullA     | Number NULL A           |                       | NULL                      |
       | Number:Temperature | Number5C        | Number Five             | Temperatures          | 5°C                       |
       | Number:Temperature | Number10C       | Number Ten              | Temperatures          | 10°C                      |
       | Number:Temperature | Number10C2      | Number Ten              | Temperatures          | 10°C                      |
@@ -43,10 +45,11 @@ Feature: comparisons
       #comparison pairs
       tests = [
         # NumberItem vs NumberItem
-        [ Number10                    , 'eql?', Number10                   , true  ]  ,
-        [ Number10                    , 'eql?', Number10A                  , false  ]  ,
+        [ Number10                    , 'eql?', Number10                    , true  ]  ,
+        [ Number10                    , 'eql?', Number10A                   , false ]  ,
         [ Number10                    , '=='  , Number10A                   , true  ]  ,
         [ Number10                    , '=='  , Number5                     , false ]  ,
+        [ NumberNull                  , '=='  , NumberNullA                 , true  ]  ,
         [ Number10                    , '!='  , Number5                     , true  ]  ,
         [ Number10                    , '!='  , Number10A                   , false ]  ,
 
