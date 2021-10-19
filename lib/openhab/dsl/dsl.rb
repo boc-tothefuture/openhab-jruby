@@ -10,6 +10,7 @@ require 'openhab/dsl/monkey_patch/ruby/ruby'
 require 'openhab/dsl/monkey_patch/events/events'
 require 'openhab/dsl/monkey_patch/actions/actions'
 require 'openhab/dsl/rules/rule'
+require 'openhab/dsl/rules/terse'
 require 'openhab/dsl/actions'
 require 'openhab/dsl/timers'
 require 'openhab/dsl/group'
@@ -34,6 +35,7 @@ module OpenHAB
       base.send :include, OpenHAB::DSL::Items
       base.send :include, OpenHAB::DSL::Persistence
       base.send :include, OpenHAB::DSL::Rules
+      base.send :include, OpenHAB::DSL::Rules::Terse
       base.send :include, OpenHAB::DSL::States
       base.send :include, OpenHAB::DSL::Things
       base.send :include, OpenHAB::DSL::Timers

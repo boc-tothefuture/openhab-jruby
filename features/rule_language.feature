@@ -84,6 +84,20 @@ Feature: rule_language
       | false     | OFF     |
 
 
+  Scenario: Terse rules are supported
+    Given items:
+      | type   | name       | state |
+      | Switch | TestSwitch | OFF   |
+    And a rule
+      """
+      changed TestSwitch do
+        logger.trace("switch changed")
+      end
+      """
+    When I deploy the rule
+    And item "TestSwitch" state is changed to "ON"
+    Then It should log 'switch changed' within 5 seconds
+
   Scenario: Rule logs a warning and isn't created if it contains no execution blocks
     Given a rule
       """

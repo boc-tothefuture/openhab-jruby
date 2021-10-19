@@ -43,3 +43,21 @@ Last means that last value for the property is used <br>
 Multiple indicates that multiple entries of the same property can be used in aggregate 
 
 An optional variable can be provided to the block to access the rule configuration from within execution blocks and guards.
+
+## Terse Rules
+
+If you have a single trigger and execution block, you can use a terse rule:
+
+```ruby
+changed TestSwitch do |event|
+  logger.info("TestSwitch changed to #{event.state}")
+end
+```
+
+All parameters to the trigger are passed through, and an optional `name:` parameter is added:
+
+```ruby
+received_command TestSwitch, name: "My Test Switch Rule", command: ON do
+  loogger.info("TestSwitch received command ON")
+end
+```
