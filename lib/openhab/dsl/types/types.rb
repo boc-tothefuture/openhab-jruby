@@ -4,6 +4,7 @@ require_relative 'type'
 
 require_relative 'date_time_type'
 require_relative 'decimal_type'
+require_relative 'hsb_type'
 require_relative 'increase_decrease_type'
 require_relative 'next_previous_type'
 require_relative 'open_closed_type'

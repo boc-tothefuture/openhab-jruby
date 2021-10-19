@@ -34,6 +34,7 @@ Feature: comparisons
       | DateTime           | DateTwo         | Date Two                | Dates                 | 2021-02-01T12:00:00+00:00 |
       | Rollershutter      | ShutterOne      | Shutter One             | Shutters, ShuttersPos | 0                         |
       | Rollershutter      | ShutterTwo      | Shutter Two             | Shutters, ShuttersPos | 50                        |
+      | Color              | Color           | Color                   |                       | 0, 100, 100               |
 
   Scenario: Comparisons can be done against different types
     Given code in a rules file
@@ -413,6 +414,14 @@ Feature: comparisons
         [ Time.now                    , '>'   , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
         [ '2021-01-01T00:00:00+00:00' , '=='  , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
         [ '2021-01-01T00:00:00+01:00' , '!='  , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
+
+        # HSBType
+        [ HSBType.new(0, 100, 100)    , '=='  , Color                       , true  ]  ,
+        [ HSBType.new(0, 100, 100)    , '!='  , Color                       , false ]  ,
+        [ Color                       , '=='  , HSBType.new(0, 100, 100)    , true  ]  ,
+        [ Color                       , '!='  , HSBType.new(0, 100, 100)    , false ]  ,
+        [ Color                       , '=='  , 100                         , true  ]  ,
+        [ Color                       , '=='  , ON                          , true  ]  ,
 
         # Rollershutters
         [ ShutterTwo                  , '=='  , 50                          , true  ]  ,
