@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.5.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.4.0...4.5.0) (2021-10-19)
+
+
+### Features
+
+* **color:** support for color items and hsb type ([8f45492](https://github.com/boc-tothefuture/openhab-jruby/commit/8f454924247674e75eaaa8a93e90176fff1ead8e)), closes [#34](https://github.com/boc-tothefuture/openhab-jruby/issues/34)
+
 # [4.4.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.3.0...4.4.0) (2021-10-19)
 
 
