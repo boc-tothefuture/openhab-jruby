@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.3.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.2.0...4.3.0) (2021-10-19)
+
+
+### Bug Fixes
+
+* **null_comparison:** fix comparison between two number items in state NULL ([b3bf156](https://github.com/boc-tothefuture/openhab-jruby/commit/b3bf1563c0dddd2246b0060ded8a34df84794e4c)), closes [#298](https://github.com/boc-tothefuture/openhab-jruby/issues/298)
+
+
+### Features
+
+* **rules:** add terse rule syntax for simple rules ([1c4b774](https://github.com/boc-tothefuture/openhab-jruby/commit/1c4b7744553679f1296428e765d04dbc57cfe99c))
+
 # [4.2.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.1.4...4.2.0) (2021-10-18)
 
 
