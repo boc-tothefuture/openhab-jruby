@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.4.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.3.0...4.4.0) (2021-10-19)
+
+
+### Bug Fixes
+
+* **actions:** fix say and play_media actions for PercentType change ([53d7e06](https://github.com/boc-tothefuture/openhab-jruby/commit/53d7e062ec09130cefe089c00f42c302ce745f02)), closes [#298](https://github.com/boc-tothefuture/openhab-jruby/issues/298)
+* **docs:** added docs for ensure/ensure_state ([77904b1](https://github.com/boc-tothefuture/openhab-jruby/commit/77904b16288efc3b7b9d2eac470ffa128d109bb3))
+
+
+### Features
+
+* **ensure:** add ensure_states feature ([b06385b](https://github.com/boc-tothefuture/openhab-jruby/commit/b06385bb9be81ffdb42c86156e6f4b184a498710)), closes [#275](https://github.com/boc-tothefuture/openhab-jruby/issues/275)
+
 # [4.3.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.2.0...4.3.0) (2021-10-19)
 
 
