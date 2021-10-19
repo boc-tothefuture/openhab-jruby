@@ -9,7 +9,6 @@ module OpenHAB
     # Module to import and streamline access to OpenHAB actions
     #
     module Actions
-      java_import org.openhab.core.library.types.PercentType
       include OpenHAB::Log
 
       OpenHAB::Core::OSGI.services('org.openhab.core.model.script.engine.action.ActionService')&.each do |service|
@@ -83,7 +82,7 @@ module OpenHAB
       # @return [void]
       #
       def say(text, voice: nil, sink: nil, volume: nil)
-        volume = PercentType.new(volume&.to_i) unless volume.is_a?(PercentType) || volume.nil?
+        volume = Types::PercentType.new(volume) unless volume.is_a?(Types::PercentType) || volume.nil?
         Voice.say text, voice, sink, volume
       end
 
@@ -97,7 +96,7 @@ module OpenHAB
       # @return [void]
       #
       def play_sound(filename, sink: nil, volume: nil)
-        volume = PercentType.new(volume&.to_i) unless volume.is_a?(PercentType) || volume.nil?
+        volume = Types::PercentType.new(volume) unless volume.is_a?(Types::PercentType) || volume.nil?
         Audio.playSound sink, filename, volume
       end
     end
