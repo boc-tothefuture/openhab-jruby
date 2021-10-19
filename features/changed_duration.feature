@@ -178,3 +178,22 @@ Feature: changed_duration
     When I deploy the rule
     And item "String_One" state is changed to "TWO"
     Then It should log "Changed rule: String_One changed" within 5 seconds
+
+  Scenario: Timers in changed duration are cancelled if the script is removed
+    Given items:
+      | type   | name       | label      | state |
+      | String | String_One | String One | ONE   |
+    And a rule:
+      """
+      rule 'Changed String' do
+        changed String_One, to: 'TWO', for: 5.seconds
+        triggered do |item|
+          logger.info("Trigger Delay Fired")
+        end
+      end
+      """
+    When I deploy the rules file
+    And item "String_One" state is changed to "TWO"
+    When I wait 2 seconds
+    And I remove the rules file
+    Then It should not log 'Trigger Delay Fired' within 10 seconds

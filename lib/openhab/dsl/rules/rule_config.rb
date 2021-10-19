@@ -26,7 +26,7 @@ module OpenHAB
       class RuleConfig
         include OpenHAB::Log
         include OpenHAB::Core::EntityLookup
-        include OpenHAB::DSL::Rules::Triggers
+        prepend OpenHAB::DSL::Rules::Triggers
         include OpenHAB::DSL::Rules::Guard
         include OpenHAB::DSL::Rules::Property
         extend OpenHAB::DSL

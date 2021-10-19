@@ -13,6 +13,12 @@ module OpenHAB
     # Creates and manages OpenHAB Rules
     #
     module Rules
+      @script_rules = []
+
+      class << self
+        attr_reader :script_rules
+      end
+
       #
       # Create a new rule
       #
@@ -45,6 +51,13 @@ module OpenHAB
         end
       end
 
+      #
+      # Cleanup rules in this script file
+      #
+      def self.cleanup_rules
+        @script_rules.each(&:cleanup)
+      end
+
       private
 
       #
@@ -67,6 +80,7 @@ module OpenHAB
         return unless create_rule?(config)
 
         rule = AutomationRule.new(config: config)
+        Rules.script_rules << rule
         add_rule(rule)
         rule.execute if config.on_start?
       end

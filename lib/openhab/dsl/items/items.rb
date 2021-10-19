@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'openhab/dsl/monkey_patch/events/item_command'
+require 'openhab/dsl/types/types'
 
 require_relative 'item_registry'
 
@@ -27,6 +28,8 @@ module OpenHAB
     # Contains all OpenHAB *Item classes, as well as associated support
     # modules
     module Items
+      include OpenHAB::Log
+
       class << self
         private
 
@@ -44,7 +47,7 @@ module OpenHAB
             _command_predicate, state_predicate = Types::PREDICATE_ALIASES[state.to_s]
             next if klass.instance_methods.include?(state_predicate)
 
-            OpenHAB::Core.logger.trace("Defining #{klass}##{state_predicate} for #{state}")
+            logger.trace("Defining #{klass}##{state_predicate} for #{state}")
             klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{state_predicate}   # def on?
                 raw_state == #{state}  #   raw_state == ON
@@ -60,21 +63,21 @@ module OpenHAB
             command = Types::COMMAND_ALIASES[value.to_s]
             next if klass.instance_methods.include?(command)
 
-            OpenHAB::Core.logger.trace("Defining #{klass}##{command} for #{value}")
+            logger.trace("Defining #{klass}##{command} for #{value}")
             klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{command}       # def on
                 command(#{value})  #   command(ON)
               end                  # end
             RUBY
 
-            OpenHAB::Core.logger.trace("Defining GroupItem::GroupMembers##{command} for #{value}")
+            logger.trace("Defining GroupItem::GroupMembers##{command} for #{value}")
             GroupItem::GroupMembers.class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{command}        # def on
                 each(&:#{command})  #   each(&:on)
               end                   # end
             RUBY
 
-            OpenHAB::Core.logger.trace("Defining ItemCommandEvent##{command}? for #{value}")
+            logger.trace("Defining ItemCommandEvent##{command}? for #{value}")
             MonkeyPatch::Events::ItemCommandEvent.class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{command}?        # def refresh?
                 command == #{value}  #   command == REFRESH
