@@ -2,7 +2,8 @@
 
 require 'forwardable'
 
-require 'openhab/dsl/items/comparable_item'
+require_relative 'comparable_item'
+require_relative 'item_equality'
 
 module OpenHAB
   module DSL
@@ -15,6 +16,7 @@ module OpenHAB
 
         # apply meta-programming methods to including class
         def self.included(klass)
+          klass.prepend ItemEquality # make sure this is first
           klass.extend Forwardable
           klass.delegate %i[+ - * / % | positive? negative? to_d to_f to_i to_int zero?] => :state
           # remove the JRuby default == so that we can inherit the Ruby method
