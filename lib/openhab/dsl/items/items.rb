@@ -18,6 +18,8 @@ require_relative 'player_item'
 require_relative 'rollershutter_item'
 require_relative 'string_item'
 
+require_relative 'ensure'
+
 module OpenHAB
   module DSL
     # Contains all OpenHAB *Item classes, as well as associated support
@@ -51,7 +53,7 @@ module OpenHAB
 
         # defined methods for commanding an item to one of the Enum states
         # as well as predicates for if an ItemCommandEvent is one of those commands
-        def def_command_methods(klass) # rubocop:disable Metrics/MethodLength method has single purpose
+        def def_command_methods(klass) # rubocop:disable Metrics method has single purpose
           values_for_enums(klass.ACCEPTED_COMMAND_TYPES).each do |value|
             command = Types::COMMAND_ALIASES[value.to_s]
             next if klass.instance_methods.include?(command)
@@ -61,6 +63,13 @@ module OpenHAB
               def #{command}       # def on
                 command(#{value})  #   command(ON)
               end                  # end
+            RUBY
+
+            OpenHAB::Core.logger.trace("Defining GroupItem::GroupMembers##{command} for #{value}")
+            GroupItem::GroupMembers.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+              def #{command}        # def on
+                each(&:#{command})  #   each(&:on)
+              end                   # end
             RUBY
 
             OpenHAB::Core.logger.trace("Defining ItemCommandEvent##{command}? for #{value}")
