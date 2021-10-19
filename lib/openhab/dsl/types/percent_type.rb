@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'decimal_type'
+
 module OpenHAB
   module DSL
     module Types
