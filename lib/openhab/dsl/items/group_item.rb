@@ -31,6 +31,74 @@ module OpenHAB
           def to_a
             group.get_members.to_a
           end
+
+          # Send a command to each member of the group
+          #
+          # @return [GroupMembers] +self+
+          def command(command)
+            each { |item| item << command }
+          end
+          alias << command
+
+          # @!method refresh
+          #   Send the +REFRESH+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method on
+          #   Send the +ON+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method off
+          #   Send the +OFF+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method up
+          #   Send the +UP+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method down
+          #   Send the +DOWN+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method stop
+          #   Send the +STOP+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method move
+          #   Send the +MOVE+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method increase
+          #   Send the +INCREASE+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method desrease
+          #   Send the +DECREASE+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method play
+          #   Send the +PLAY+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method pause
+          #   Send the +PAUSE+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method rewind
+          #   Send the +REWIND+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method fast_forward
+          #   Send the +FASTFORWARD+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method next
+          #   Send the +NEXT+ command to each member of the group
+          #   @return [GroupMembers] +self+
+
+          # @!method previous
+          #   Send the +PREVIOUS+ command to each member of the group
+          #   @return [GroupMembers] +self+
         end
 
         include Enumerable
