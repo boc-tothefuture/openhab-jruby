@@ -121,3 +121,7 @@ end
 When('I deploy the rules file named {string}') do |file|
   deploy_rule(filename: file)
 end
+
+When('I remove the rules file') do
+  delete_rules
+end

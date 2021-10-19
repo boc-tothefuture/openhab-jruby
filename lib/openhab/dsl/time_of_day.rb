@@ -2,6 +2,7 @@
 
 require 'openhab/log/logger'
 require 'openhab/dsl/types/date_time_type'
+require 'openhab/dsl/items/items'
 require 'time'
 
 module OpenHAB

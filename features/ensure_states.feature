@@ -27,7 +27,7 @@ Feature:  ensure_states
       """
     When I deploy the rules file
     Then "DimmerOne" should be in state "<final_state>" within 5 seconds
-    And It should log "DimmerOne received command" within 1 seconds
+    And It should log "DimmerOne received command" within 5 seconds
     Examples:
       | initial_state | command | final_state |
       | 0             | on      | 100         |
@@ -58,7 +58,7 @@ Feature:  ensure_states
     When I deploy the rules file
     Then It should log "Command sent" within 5 seconds
     And "DimmerOne" should be in state "<final_state>" within 5 seconds
-    And It should not log "DimmerOne received command" within 1 seconds
+    And It should not log "DimmerOne received command" within 5 seconds
     Examples:
       | initial_state | command | final_state |
       | 0             | off     | 0           |
@@ -119,7 +119,7 @@ Feature:  ensure_states
     Then It should log "Command sent" within 5 seconds
     And "DimmerOne" should be in state "<final_state1>" within 5 seconds
     And "DimmerTwo" should be in state "<final_state2>" within 5 seconds
-    And It should not log "DimmerOne received command" within 1 seconds
+    And It should not log "DimmerOne received command" within 5 seconds
     Examples:
       | initial_state1 | initial_state2 | command | final_state1 | final_state2 |
       | 0              | 0              | off     | 0            | 0            |
@@ -171,4 +171,4 @@ Feature:  ensure_states
     When I deploy the rules file
     Then It should log "Command sent" within 5 seconds
     And "DimmerOne" should be in state "0" within 5 seconds
-    And It should not log "DimmerOne received command" within 1 seconds
+    And It should not log "DimmerOne received command" within 5 seconds

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require 'java'
+require 'set'
+require 'openhab/core/thread_local'
+require 'openhab/log/logger'
 
 module OpenHAB
   module DSL
@@ -16,6 +19,7 @@ module OpenHAB
       # way of breaking it up into multiple classes
       class AutomationRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
         include OpenHAB::Log
+        include OpenHAB::Core::ThreadLocal
         include OpenHAB::DSL::TimeOfDay
         java_import java.time.ZonedDateTime
 
@@ -24,6 +28,7 @@ module OpenHAB
         #
         # @param [Config] config Rule configuration
         #
+        # Constructor sets a number of variables, no further decomposition necessary
         def initialize(config:)
           super()
           set_name(config.name)
@@ -57,6 +62,14 @@ module OpenHAB
             queue = create_queue(inputs)
             process_queue(queue, mod, inputs)
           end
+        end
+
+        #
+        # Cleanup any resources associated with automation rule
+        #
+        def cleanup
+          logger.trace "Cancelling #{@trigger_delays.length} Trigger Delays(s) for rule '#{name}'"
+          @trigger_delays.each_value { |trigger_delay| trigger_delay.timer&.cancel }
         end
 
         private

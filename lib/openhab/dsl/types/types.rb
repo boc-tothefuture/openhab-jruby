@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'openhab/log/logger'
+
 require_relative 'type'
 
 require_relative 'date_time_type'
@@ -27,6 +29,8 @@ module OpenHAB
     # modules
     #
     module Types
+      include OpenHAB::Log
+
       # Hash taking a Enum value, and returning two symbols of
       # predicates to be defined for it. the first is the "command" form,
       # which should be defined on ItemCommandEvent, and on the Type itself.
@@ -65,7 +69,7 @@ module OpenHAB
           states = PREDICATE_ALIASES[value.to_s]
 
           ([command] | states).each do |method|
-            OpenHAB::Core.logger.trace("Defining #{klass}##{method} for #{value}")
+            logger.trace("Defining #{klass}##{method} for #{value}")
             klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{method}       # def on?
                 self == #{value}  #   self == ON
