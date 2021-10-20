@@ -17,6 +17,26 @@ Feature:  quantity_type
       | 50.0 \| '°F'     | 50.0 °F  |
       | 50.to_d \| '°F'  | 50.0 °F  |
 
+  Scenario Outline: QuantityType is constructuble with | from numeric from within rule
+    Given items:
+      | type   | name        | state |
+      | Number | NumberItem1 | 0     |
+    And code in a rules file
+      """
+        rule '| test' do
+          changed NumberItem1
+          run { logger.info("Result is #{(<quantity>).format('%.1f %unit%')}") }
+        end
+      """
+    When I deploy the rules file
+    And item "NumberItem1" state is changed to "1"
+    Then It should log 'Result is <result>' within 5 seconds
+    Examples:
+      | quantity       | result  |
+      | 50 \|'°F'      | 50.0 °F |
+      | 50.0 \|'°F'    | 50.0 °F |
+      | 50.to_d \|'°F' | 50.0 °F |
+
   Scenario Outline: QuantityType responds to math operations where operand is a quantity type
     Given code in a rules file
       """
