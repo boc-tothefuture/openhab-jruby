@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.6.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.5.0...4.6.0) (2021-10-20)
+
+
+### Bug Fixes
+
+* **quantity:** fix constructing quantity from numeric with | within rule ([42dbafb](https://github.com/boc-tothefuture/openhab-jruby/commit/42dbafb3e3cf634c1493ffd19b03fd0e03b07689)), closes [#319](https://github.com/boc-tothefuture/openhab-jruby/issues/319)
+* **tests:** fix ensure_states tests fragility ([7a36c43](https://github.com/boc-tothefuture/openhab-jruby/commit/7a36c43f583068a3e9489b0199ce0c02d0581c2c)), closes [#304](https://github.com/boc-tothefuture/openhab-jruby/issues/304)
+
+
+### Features
+
+* **location:** support location items ([ceb224a](https://github.com/boc-tothefuture/openhab-jruby/commit/ceb224aa0e8dfd0d82910ac3eb780d8f11e78c00)), closes [#37](https://github.com/boc-tothefuture/openhab-jruby/issues/37)
+
 # [4.5.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.4.0...4.5.0) (2021-10-19)
 
 
