@@ -91,7 +91,7 @@ module OpenHAB
 
             return super unless other.is_a?(javax.measure.Unit)
 
-            QuantityType.new(to_d.to_java, other)
+            Types::QuantityType.new(to_d.to_java, other)
           end
         end
       end
