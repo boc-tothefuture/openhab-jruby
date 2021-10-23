@@ -145,4 +145,13 @@ rule 'save event state' do
   changed StringItem1
   run { |event| Item1.meta['last_event'] = event.was }
 end
+
+# if the namespace already exists: Update the value of a namespace but preserve its config 
+# otherwise: create a new namespace with the given value and nil config
+Item1.meta['namespace'] = 'value', Item1.meta['namespace']
+
+# Copy another namespace
+# Item1's metadata before: { namespace2="value" [ config1="foo", config2="bar" ] }
+Item1.meta['namespace'] = Item1.meta['namespace2']
+# Item1's metadata after: { namespace2="value" [ config1="foo", config2="bar" ], namespace="value" [ config1="foo", config2="bar" ] }
 ```

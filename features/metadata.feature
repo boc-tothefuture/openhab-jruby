@@ -106,6 +106,25 @@ Feature:  metadata
     When I deploy the rules file
     Then It should log 'TestSwitch value for namespace test is: "" {"x"=>"y"}' within 5 seconds
 
+  Scenario: Using .config= to assign metadata configuration without overwriting the value
+    Given metadata added to "TestSwitch" in namespace "test":
+      """
+      {
+      "value": "foo",
+      "config": {
+      "bar": 'baz',
+      "qux": 'quux'
+      }
+      }
+      """
+    And code in a rules file:
+      """
+      TestSwitch.meta['test'].config = { 'x' => 'y' }
+      logger.info("TestSwitch value for namespace test is: \"#{TestSwitch.meta['test'].value}\" #{TestSwitch.meta['test']}")
+      """
+    When I deploy the rules file
+    Then It should log 'TestSwitch value for namespace test is: "foo" {"x"=>"y"}' within 5 seconds
+
   Scenario: User can modify item metadata value and configuration
     Given metadata added to "TestSwitch" in namespace "test":
       """
@@ -343,6 +362,75 @@ Feature:  metadata
     And It should log 'TestGroup value for config bar is: baz' within 5 seconds
     And It should log 'TestGroup value for config qux is: quux' within 5 seconds
 
+  Scenario: Set value and preserve existing config, or create a new namespace
+    Given metadata added to "TestSwitch" in namespace "test":
+      """
+      {
+        "value": "foo",
+        "config": {
+          'bar': 'baz'
+        }
+      }
+      """
+    And code in a rules file:
+      """
+      TestSwitch.meta['test'] = 'val', TestSwitch.meta['test']
+      logger.info("TestSwitch value for namespace test value=#{TestSwitch.meta['test'].value} config=#{TestSwitch.meta['test']}")
 
+      TestSwitch.meta['test2'] = 'val2', TestSwitch.meta['test2']
+      logger.info("TestSwitch value for namespace test2 value=#{TestSwitch.meta['test2'].value} config=#{TestSwitch.meta['test2']}")
+      """
+    When I deploy the rules file
+    Then It should log 'TestSwitch value for namespace test value=val config={"bar"=>"baz"}' within 5 seconds
+    And It should log 'TestSwitch value for namespace test2 value=val2 config={}' within 5 seconds
 
+  Scenario: User can assign the config of one namespace to another
+    Given metadata added to "TestSwitch" in namespace "test":
+      """
+      {
+      "value": "foo",
+      "config": { "bar": 'baz' }
+      }
+      """
+    And metadata added to "TestSwitch" in namespace "second":
+      """
+      {
+      "value": "boo",
+      "config": { "moo": 'goo' }
+      }
+      """
+    And code in a rules file:
+      """
+      TestSwitch.meta['test'].config = TestSwitch.meta['second']
+      logger.info("TestSwitch namespace test is: \"#{TestSwitch.meta['test']&.value}\" #{TestSwitch.meta['test']}")
+      """
+    When I deploy the rules file
+    Then It should log 'TestSwitch namespace test is: "foo" {"moo"=>"goo"}' within 5 seconds
 
+  Scenario: User can assign one namespace to another
+    Given metadata added to "TestSwitch" in namespace "test":
+      """
+      {
+      "value": "foo",
+      "config": { "bar": 'baz' }
+      }
+      """
+    And metadata added to "TestSwitch2" in namespace "second":
+      """
+      {
+      "value": "boo",
+      "config": { "moo": 'goo' }
+      }
+      """
+    And code in a rules file:
+      """
+      TestSwitch.meta['test'] = TestSwitch2.meta['second']
+      logger.info("TestSwitch namespace test is: \"#{TestSwitch.meta['test']&.value}\" #{TestSwitch.meta['test']}")
+      TestSwitch.meta['test'].value = 'baa' # make sure this doesn't alter TestSwitch2's metadata
+      logger.info("TestSwitch namespace test is: \"#{TestSwitch.meta['test']&.value}\" #{TestSwitch.meta['test']}")
+      logger.info("TestSwitch2 namespace second is: \"#{TestSwitch2.meta['second']&.value}\" #{TestSwitch2.meta['second']}")
+      """
+    When I deploy the rules file
+    Then It should log 'TestSwitch namespace test is: "boo" {"moo"=>"goo"}' within 5 seconds
+    And It should log 'TestSwitch namespace test is: "baa" {"moo"=>"goo"}' within 5 seconds
+    And It should log 'TestSwitch2 namespace second is: "boo" {"moo"=>"goo"}' within 5 seconds
