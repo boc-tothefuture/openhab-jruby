@@ -175,3 +175,30 @@ Feature:  dimmer_item
     And It should log "DimmerOne == 50? true" within 5 seconds
     And It should log "DimmerOne < 60? true" within 5 seconds
     And It should log "DimmerOne == DimmerTwo? true" within 5 seconds
+
+  Scenario Outline: Handle Numeric and OnOffType command in a case
+    Given code in a rules file
+      """
+      rule 'commanded' do
+        received_command DimmerOne
+        run do |event|
+          case event.command
+          when 0..49 then logger.info("up to 49%")
+          when 51..100 then logger.info("greater than 50%")
+          when 50 then logger.info("Exactly 50%")
+          when ON then logger.info("It is ON")
+          when OFF then logger.info("It is OFF")
+          end
+        end
+      end
+      DimmerOne << <state>
+      """
+    When I deploy the rules file
+    Then It should log "<log>" within 5 seconds
+    Examples:
+      | state | log              |
+      | ON    | It is ON         |
+      | OFF   | It is OFF        |
+      | "10"  | up to 49%        |
+      | "50"  | Exactly 50%      |
+      | "100" | greater than 50% |

@@ -40,8 +40,6 @@ module OpenHAB
           logger.trace("Coercing #{self} as a request from #{other.class}")
           return [other, nil] unless state?
           return [other, state] if other.is_a?(Types::DateTimeType) || other.respond_to?(:to_time)
-
-          raise TypeError, "can't convert #{other.class} into #{self.class}"
         end
 
         # any method that exists on DateTimeType, Java's ZonedDateTime, or

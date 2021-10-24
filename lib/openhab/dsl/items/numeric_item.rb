@@ -47,8 +47,6 @@ module OpenHAB
           logger.trace("Coercing #{self} as a request from #{other.class}")
           return [other, nil] unless state?
           return [other, state] if other.is_a?(Types::NumericType) || other.respond_to?(:to_d)
-
-          raise TypeError, "can't convert #{other.class} into #{self.class}"
         end
 
         # strip trailing zeros from commands

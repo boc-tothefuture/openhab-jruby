@@ -133,7 +133,7 @@ module OpenHAB
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(Items::NumericItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-            raise TypeError, "can't convert #{UnDefType} into #{self.class}" unless other.state?
+            return unless other.state?
 
             [other.state, self]
           elsif other.respond_to?(:to_str)

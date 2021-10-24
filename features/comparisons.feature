@@ -530,6 +530,10 @@ Feature: comparisons
         [ OFF                         , '!='  , OFF                         , false ]  ,
         [ OFF                         , '!='  , UP                          , true  ]  ,
         [ OFF                         , '!='  , REFRESH                     , true  ]  ,
+
+        [ (0..100)                    , '===' , ON                          , false ]  ,
+        [ 50                          , '=='  , ON                          , false ]  ,
+        [ ON                          , '===' , PercentType.new(50)         , true  ]  ,
       ]
 
       def test_to_s(test)
