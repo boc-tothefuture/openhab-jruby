@@ -5,9 +5,10 @@ Feature:  number_item
     Given Clean OpenHAB with latest Ruby Libraries
     And group "Numbers"
     And items:
-      | type   | name      | label      | group   | state |
-      | Number | NumberOne | Number One | Numbers | 0     |
-      | Number | NumberTwo | Number Two | Numbers | 70    |
+      | type   | name       | label      | group   | state |
+      | Number | NumberOne  | Number One | Numbers | 0     |
+      | Number | NumberTwo  | Number Two | Numbers | 70    |
+      | Number | NumberNull | Number     |         | NULL  |
 
   Scenario Outline: NumberItem supports math operations
     Given item "NumberOne" state is changed to "<initial>"
@@ -127,6 +128,14 @@ Feature:  number_item
       """
     When I deploy the rules file
     Then It should log "Number Two is positive? true" within 5 seconds
+
+  Scenario: Numeric predicates return false if state is nil
+    Given code in a rules file
+      """
+      logger.info("Number Null is positive? #{NumberNull.positive?}")
+      """
+    When I deploy the rules file
+    Then It should log "Number Null is positive? false" within 5 seconds
 
   Scenario: NumberItem can be converted to QuantityType
     Given code in a rules file
