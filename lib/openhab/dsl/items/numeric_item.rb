@@ -15,10 +15,11 @@ module OpenHAB
         include ComparableItem
 
         # apply meta-programming methods to including class
+        # @!visibility private
         def self.included(klass)
           klass.prepend ItemEquality # make sure this is first
           klass.extend Forwardable
-          klass.delegate %i[+ - * / % | positive? negative? to_d to_f to_i to_int zero?] => :state
+          klass.delegate %i[+ - * / % | to_d to_f to_i to_int] => :state
           # remove the JRuby default == so that we can inherit the Ruby method
           klass.remove_method :==
         end
@@ -61,6 +62,16 @@ module OpenHAB
           return command.to_java.strip_trailing_zeros.to_plain_string if command.is_a?(BigDecimal)
 
           super
+        end
+
+        %i[positive? negative? zero?].each do |predicate|
+          class_eval <<~RUBY, __FILE__, __LINE__ + 1
+            def #{predicate}              # def positive?
+              return false unless state?  #   return false unless state?
+                                          #
+              state.#{predicate}          #   state.positive?
+            end                           # end
+          RUBY
         end
       end
     end
