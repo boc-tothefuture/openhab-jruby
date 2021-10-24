@@ -28,8 +28,6 @@ module OpenHAB
         def coerce(other)
           logger.trace("Coercing #{self} (#{self.class}) as a request from #{other.class}")
           return [other.as(self.class), self] if other.is_a?(Type)
-
-          raise TypeError, "can't convert #{other.class} into #{self.class}"
         end
 
         #
