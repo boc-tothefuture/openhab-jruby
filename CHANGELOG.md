@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.6.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.6.1...4.6.2) (2021-10-24)
+
+
+### Bug Fixes
+
+* **number_item:** return false for number predicate methods when NULL ([f147277](https://github.com/boc-tothefuture/openhab-jruby/commit/f147277785f33fc7ab5d854a4fff0b9f786a2106))
+
 ## [4.6.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.6.0...4.6.1) (2021-10-24)
 
 
