@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.6.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.6.0...4.6.1) (2021-10-24)
+
+
+### Bug Fixes
+
+* **timer:** cancel timers in a rule when rule is unloaded ([901a63e](https://github.com/boc-tothefuture/openhab-jruby/commit/901a63e59f5086b559fd84b1fdb2b13b3d4a7800))
+
 # [4.6.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.5.0...4.6.0) (2021-10-20)
 
 
