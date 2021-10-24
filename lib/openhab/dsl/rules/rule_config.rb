@@ -127,7 +127,7 @@ module OpenHAB
         #
         def logger
           if name
-            Log.logger(name.chomp.gsub(/\s+/, '_'))
+            Log.logger_for(name.chomp.gsub(/\s+/, '_'))
           else
             super
           end
