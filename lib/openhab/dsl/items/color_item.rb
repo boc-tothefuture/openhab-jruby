@@ -39,8 +39,6 @@ module OpenHAB
           logger.trace("Coercing #{self} as a request from #{other.class}")
           return [other, nil] unless state?
           return [other, state] if other.is_a?(Types::HSBType) || other.respond_to?(:to_str)
-
-          raise TypeError, "can't convert #{other.class} into #{self.class}"
         end
 
         # any method that exists on {Types::HSBType} gets forwarded to +state+

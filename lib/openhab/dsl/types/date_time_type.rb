@@ -161,7 +161,8 @@ module OpenHAB
             time_string = "#{time_string}T00:00:00#{zone}" if DATE_ONLY_REGEX.match?(time_string)
             self <=> DateTimeType.parse(time_string)
           elsif other.respond_to?(:coerce)
-            lhs, rhs = other.coerce(self)
+            return nil unless (lhs, rhs = other.coerce(self))
+
             lhs <=> rhs
           end
         end
@@ -179,13 +180,11 @@ module OpenHAB
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(Items::DateTimeItem)
-            raise TypeError, "can't convert #{UnDefType} into #{self.class}" unless other.state?
+            return unless other.state?
 
             [other.state, self]
           elsif other.respond_to?(:to_time)
             [DateTimeType.new(other), self]
-          else
-            raise TypeError, "can't convert #{other.class} into #{self.class}"
           end
         end
 
@@ -286,8 +285,7 @@ module OpenHAB
             self + other
           elsif other.respond_to?(:to_d)
             DateTimeType.new(zoned_date_time.plusNanos((other.to_d * 1_000_000_000).to_i))
-          elsif other.respond_to?(:coerce)
-            lhs, rhs = other.coerce(to_d)
+          elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             lhs + rhs
           else
             raise TypeError, "\#{other.class} can't be coerced into \#{self.class}"
@@ -320,8 +318,7 @@ module OpenHAB
             self - other
           elsif other.respond_to?(:to_d)
             DateTimeType.new(zoned_date_time.minusNanos((other.to_d * 1_000_000_000).to_i))
-          elsif other.respond_to?(:coerce)
-            lhs, rhs = other.coerce(to_d)
+          elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             lhs - rhs
           else
             raise TypeError, "\#{other.class} can't be coerced into \#{self.class}"
