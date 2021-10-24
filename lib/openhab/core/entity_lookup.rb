@@ -4,6 +4,8 @@ require 'pp'
 require 'java'
 require 'set'
 
+require 'openhab/log/logger'
+
 # Automation lookup and injection of OpenHab entities
 
 module OpenHAB
@@ -24,9 +26,6 @@ module OpenHAB
       # @return [Object] Item or Thing if found in registry
       #
       def method_missing(method, *args, &block)
-        return if method.to_s == 'scriptLoaded'
-        return if method.to_s == 'scriptUnloaded'
-
         logger.trace("method missing, performing OpenHab Lookup for: #{method}")
         EntityLookup.lookup_entity(method) || super
       end
