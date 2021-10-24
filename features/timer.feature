@@ -110,8 +110,8 @@ Feature:  timer
     When I deploy the rules file
     Then It should not log 'Timer Fired' within 4 seconds
     But It should log 'Rescheduling' within 4 seconds
-    Then It should not log 'Timer Fired' within 4 seconds
-    And if I wait 2 seconds
+    Then It should not log 'Timer Fired' within 3 seconds
+    And if I wait 3 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
 
@@ -124,4 +124,38 @@ Feature:  timer
       """
     When I deploy the rules file
     Then It should log 'Timer is active? true' within 5 seconds
+
+  Scenario: Timers in rules are cancelled if the script is removed
+    Given a rule:
+      """
+      rule 'test timers' do
+        on_start
+        run do
+          logger.info("Rule Started")
+          after 5.seconds do
+            logger.info("Timer Fired")
+           end
+        end
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'Rule Started' within 5 seconds
+    When I wait 2 seconds
+    And I remove the rules file
+    Then It should not log 'Timer Fired' within 10 seconds
+
+  Scenario: Timers in script are cancelled if the script is removed
+    Given code in a rules file:
+      """
+      logger.info("Rule Started")
+      after 5.seconds do
+        logger.info("Timer Fired")
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'Rule Started' within 5 seconds
+    When I wait 2 seconds
+    And I remove the rules file
+    Then It should not log 'Timer Fired' within 10 seconds
+    
 
