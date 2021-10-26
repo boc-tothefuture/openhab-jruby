@@ -208,3 +208,22 @@ Feature:  changed
       | Switch3  | ON    |
       | Contact3 | OPEN  |
 
+  Scenario Outline: Item changed from one of many matching item states
+    Given items:
+      | type   | name       | state        |
+      | Number | Alarm_Mode | <from_state> |
+    And a rule
+      """
+      rule 'Execute rule when item is changed to specific number' do
+      changed Alarm_Mode, from: [10,14]
+      run { logger.info("Alarm Mode: Updated from <from_state> to <to_state>")}
+      end
+      """
+    When I deploy the rule
+    And item "Alarm_Mode" state is changed to "<to_state>"
+    Then It <should> log 'Alarm Mode: Updated from <from_state> to <to_state>' within 5 seconds
+    Examples:
+      | from_state | to_state | should     |
+      | 10         | 11       | should     |
+      | 11         | 12       | should not |
+      | 14         | 15       | should     |

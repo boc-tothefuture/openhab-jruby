@@ -39,7 +39,7 @@ module OpenHAB
             else
               # Place in array and flatten to support multiple to elements or single or nil
               [to].flatten.each do |to_state|
-                create_changed_trigger(item, from, to_state)
+                [from].flatten.each { |from_state| create_changed_trigger(item, from_state, to_state) }
               end
             end
           end
