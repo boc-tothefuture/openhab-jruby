@@ -25,6 +25,7 @@ module OpenHAB
           extend Forwardable
 
           def_delegator :@metadata, :value
+          def_delegator :__getobj__, :to_h, :to_hash
 
           def initialize(metadata: nil, key: nil, value: nil, config: nil)
             @metadata = metadata || Metadata.new(key || MetadataKey.new('', ''), value&.to_s, config)
@@ -68,6 +69,7 @@ module OpenHAB
           # @return [Java::Org::openhab::core::items::Metadata] the old metadata
           #
           def config=(config)
+            config = config.to_hash if config.respond_to?(:to_hash)
             raise ArgumentError, 'Configuration must be a hash' unless config.is_a? Hash
 
             metadata = Metadata.new(@metadata&.uID, @metadata&.value, config)
@@ -158,7 +160,7 @@ module OpenHAB
             meta_value, configuration = update_from_value(value)
 
             key = MetadataKey.new(namespace, @item_name)
-            metadata = Metadata.new(key, meta_value&.to_s, configuration)
+            metadata = Metadata.new(key, meta_value&.to_s, configuration.to_h)
             # registry.get can be omitted, but registry.update will log a warning for nonexistent metadata
             if NamespaceAccessor.registry.get(key)
               NamespaceAccessor.registry.update(metadata)
