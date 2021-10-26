@@ -45,7 +45,7 @@ module OpenHAB
       #
       def logger
         if @rule_name
-          Log.logger(@rule_name.chomp.gsub(/\s+/, '_'))
+          Log.logger_for(@rule_name.chomp.gsub(/\s+/, '_'))
         else
           super
         end

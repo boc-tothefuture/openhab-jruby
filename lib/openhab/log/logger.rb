@@ -137,31 +137,36 @@ module OpenHAB
     # @return [Logger] for the current class
     #
     def logger
-      Log.logger(self.class.name)
+      Log.logger(self.class)
     end
 
     class << self
       #
       # Injects a logger into the base class
       #
-      # @param [String] name of the logger
+      # @param [Class] class the logger is for
       #
       # @return [Logger] for the supplied name
       #
-      def logger(name)
-        name ||= self.class.name
+      def logger(klass)
+        if klass.respond_to?(:java_class) &&
+           klass.java_class &&
+           !klass.java_class.name.start_with?('org.jruby.Ruby')
+          klass = klass.java_class
+        end
+        name = klass.name
         @loggers[name] ||= Log.logger_for(name)
       end
 
       #
       # Configure a logger for the supplied class name
       #
-      # @param [String] classname to configure logger for
+      # @param [String] name to configure logger for
       #
       # @return [Logger] for the supplied classname
       #
-      def logger_for(classname)
-        configure_logger_for(classname)
+      def logger_for(name)
+        configure_logger_for(name)
       end
 
       private
@@ -173,10 +178,10 @@ module OpenHAB
       #
       # @return [Logger] Logger for the supplied classname
       #
-      def configure_logger_for(classname)
+      def configure_logger_for(name)
         log_prefix = Configuration.log_prefix
-        log_prefix += if classname
-                        ".#{classname}"
+        log_prefix += if name
+                        ".#{name}"
                       else
                         ".#{log_caller}"
                       end
@@ -207,7 +212,7 @@ module OpenHAB
     def self.included(base)
       class << base
         def logger
-          Log.logger(self.class.name)
+          Log.logger(self)
         end
       end
     end
