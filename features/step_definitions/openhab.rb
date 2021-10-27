@@ -141,6 +141,10 @@ When('item {string} state is changed to {string}') do |item, state|
   openhab_client("openhab:send #{item} #{state}")
 end
 
+Then('If I send command {string} to item {string}') do |state, item|
+  openhab_client("openhab:send #{item} #{state}")
+end
+
 When('update state for item {string} to {string}') do |item, state|
   openhab_client("openhab:update #{item} \"#{state}\"")
 end
@@ -162,6 +166,19 @@ Then('{string} should be in state {string} within {int} seconds') do |item, stat
 
   wait_until(seconds: seconds, msg: msg) do
     Rest.item_state(item) == state
+  end
+end
+
+Then('{string} should stay in state {string} for {int} seconds') do |item, state, seconds|
+  elapsed = 0
+  seconds.times do
+    unless Rest.item_state(item) == state
+      raise "'#{item}' did not stay in state (#{state}) for #{seconds} seconds, "\
+            "changed to (#{Rest.item_state(item)}) within #{elapsed} seconds"
+    end
+
+    sleep 1
+    elapsed += 1
   end
 end
 

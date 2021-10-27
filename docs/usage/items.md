@@ -54,18 +54,18 @@ end
 Item types have methods added to them to make it flow naturally within the a ruby context.  All methods of the OpenHAB item are available plus the additional methods described below.
 
 
-| Method  | Description                                                                          | Example                                                      |
-|---------|--------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| <<      | Sends command to item                                                                | `VirtualSwitch << ON`                                        |
-| command | alias for shovel operator (<<)                                                       | `VirtualSwitch.command(ON)`                                  |
-| ensure  | Only send following command/update if the item is not already in the requested state | `VirtualSwitch.ensure.on`                                    |
-| update  | Sends update to an item                                                              | `VirtualSwitch.update(ON)`                                   |
-| id      | Returns label or item name if no label                                               | `logger.info(#{item.id})`                                    |
-| undef?  | Returns true if the state of the item is UNDEF                                       | `logger.info("SwitchTest is UNDEF") if SwitchTest.undef?`    |
-| null?   | Returns true if the state of the item is NULL                                        | `logger.info("SwitchTest is NULL") if SwitchTest.null?`      |
-| state?  | Returns true if the state is not UNDEF or NULL                                       | `logger.info("SwitchTest has a state") if SwitchTest.state?` |
-| state   | Returns state of the item or nil if UNDEF or NULL                                    | `logger.info("SwitchTest state #{SwitchTest.state}")`        |
-| to_s    | Returns state in string format                                                       | `logger.info(#{item.id}: #{item})`                           |
+| Method  | Description                                                                                        | Example                                                      |
+|---------|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| <<      | Sends command to item                                                                              | `VirtualSwitch << ON`                                        |
+| command | alias for shovel operator (<<) - has optional arguments 'for:, on_expire:' see timed command below | `VirtualSwitch.command(ON)`                                  |
+| ensure  | Only send following command/update if the item is not already in the requested state               | `VirtualSwitch.ensure.on`                                    |
+| update  | Sends update to an item                                                                            | `VirtualSwitch.update(ON)`                                   |
+| id      | Returns label or item name if no label                                                             | `logger.info(#{item.id})`                                    |
+| undef?  | Returns true if the state of the item is UNDEF                                                     | `logger.info("SwitchTest is UNDEF") if SwitchTest.undef?`    |
+| null?   | Returns true if the state of the item is NULL                                                      | `logger.info("SwitchTest is NULL") if SwitchTest.null?`      |
+| state?  | Returns true if the state is not UNDEF or NULL                                                     | `logger.info("SwitchTest has a state") if SwitchTest.state?` |
+| state   | Returns state of the item or nil if UNDEF or NULL                                                  | `logger.info("SwitchTest state #{SwitchTest.state}")`        |
+| to_s    | Returns state in string format                                                                     | `logger.info(#{item.id}: #{item})`                           |
 
 State returns nil instead of UNDEF or NULL so that it can be used with with [Ruby safe navigation operator](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html) `&.`  Use `undef?` or `null?` to check for those states.
 
@@ -118,6 +118,43 @@ This will work
   end
 end
 ```
+
+### Timed commands
+All items have an implicit timer associated with them, enabling to easily set an item into a specific state for a specified duration and then at the expiration of that duration have the item automatically change to another state. These timed commands are reentrant, meaning if the same timed command is triggered while an outstanding time command exist, that timed command will be rescheduled rather than creating a distinct timed command. 
+
+Timed commands are initiated by using the 'for:' argument with the command.  This is available on both the 'command' method and any command methods, e.g. Switch.on.
+
+Any update to the timed command state will result in the timer be cancelled. For example, if you have a Switch on a timer and another rule sends OFF or ON to that item the timer will be automatically canceled.  Sending a different duration (for:) value for the timed command will reschedule the timed command for that new duration.
+
+
+Timed command arguments
+
+| Argument  | Description                                                  | Example                                                            |
+|-----------|--------------------------------------------------------------|--------------------------------------------------------------------|
+| for       | Duration for command to be active                            | `Switch.command(ON, for: 5.minutes)` or `Switch.on for: 5.minutes` |
+| on_expire | Optional value to send as command to item when timer expires | `Dimmer.on for: 5.minutes, on_expire: 50`                          |
+| block     | Optional block to invoke when timer expires                  | `Dimmer.on(for: 5.minutes) { |event| Dimmer.off if Light.on? }`    |
+
+If a block is provided, the on_expire argument is ignored and the block is expected to set the item into the desired state or carry out some action.
+
+
+| Attribute | Description                                     |
+|-----------|-------------------------------------------------|
+| item      | Item associated with timed command              |
+| command   | Time command e.g. ON, OFF, etc                  |
+| was       | The state of the item before the timed command  |
+| duration  | The length of the timed command                 |
+| on_expire | Value to set the item to when the timer expires |
+| timer     | The timed command timer                         |
+| expired?  | If the timer expired                            |
+| canceled? | If the timer was canceled                       |
+
+
+
+
+
+
+
 
 
 
