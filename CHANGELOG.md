@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.7.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.6.2...4.7.0) (2021-10-27)
+
+
+### Bug Fixes
+
+* **changed:** changed trigger now supports multiple from values ([20bb64e](https://github.com/boc-tothefuture/openhab-jruby/commit/20bb64e01be2e4effc1886c02f4137375cea5725))
+* **logging:** use the class name not "Class" for class-level loggers ([05b6217](https://github.com/boc-tothefuture/openhab-jruby/commit/05b62174729523e499f66c52d432fa4b913a59a5))
+
+
+### Features
+
+* **metadata:** allow assignment to existing metadata config ([02df58a](https://github.com/boc-tothefuture/openhab-jruby/commit/02df58aeea7bef3d75212476ddd615c30d2ac9d2))
+
 ## [4.6.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.6.1...4.6.2) (2021-10-24)
 
 
