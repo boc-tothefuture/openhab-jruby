@@ -68,8 +68,7 @@ module OpenHAB
         # Cleanup any resources associated with automation rule
         #
         def cleanup
-          logger.trace "Cancelling #{@trigger_delays.length} Trigger Delays(s) for rule '#{name}'"
-          @trigger_delays.each_value { |trigger_delay| trigger_delay.timer&.cancel }
+          # No cleanup is necessary right now, trigger delays are tracked and cancelled by timers library
         end
 
         private
@@ -230,9 +229,9 @@ module OpenHAB
             logger.trace("Item changed to #{state} for #{trigger_delay}, rescheduling timer.")
             trigger_delay.timer.reschedule(ZonedDateTime.now.plus(trigger_delay.duration))
           else
-            logger.trace("Item changed to #{state} for #{trigger_delay}, cancelling timer.")
+            logger.trace("Item changed to #{state} for #{trigger_delay}, canceling timer.")
             trigger_delay.timer.cancel
-            # Reprocess trigger delay after cancelling to track new state (if guards matched, etc)
+            # Reprocess trigger delay after canceling to track new state (if guards matched, etc)
             process_trigger_delay(trigger_delay, mod, inputs)
           end
         end

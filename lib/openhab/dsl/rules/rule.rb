@@ -15,8 +15,13 @@ module OpenHAB
     module Rules
       @script_rules = []
 
+      # rubocop: disable Style/GlobalVars
+      @automation_manager = $scriptExtension.get('automationManager')
+      @registry = $scriptExtension.get('ruleRegistry')
+      # rubocop: enable Style/GlobalVars
+
       class << self
-        attr_reader :script_rules
+        attr_reader :script_rules, :automation_manager, :registry
       end
 
       #
@@ -134,9 +139,7 @@ module OpenHAB
       #
       #
       def add_rule(rule)
-        # rubocop: disable Style/GlobalVars
-        $scriptExtension.get('automationManager').addRule(rule)
-        # rubocop: enable Style/GlobalVars
+        Rules.automation_manager.addRule(rule)
       end
     end
   end
