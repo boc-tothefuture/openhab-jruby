@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'java'
 require_relative 'percent_type'
 
 module OpenHAB
@@ -65,6 +66,10 @@ module OpenHAB
               end
             end
 
+            # Convert strings using java class
+            return value_of(args.first) if args.length == 1 && args.first.is_a?(String)
+
+            # use super constructor for empty args
             return super unless args.length == 3
 
             # convert from several numeric-like types to the exact types

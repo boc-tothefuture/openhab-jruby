@@ -4,8 +4,8 @@ Feature: color_item
    Background:
      Given Clean OpenHAB with latest Ruby Libraries
      And items:
-       | type  | name  |
-       | Color | Color |
+       | type  | name  | state |
+       | Color | Color | 0,0,0 |
 
    Scenario Outline:  Color items can be updated
      Given code in a rules file:
@@ -18,3 +18,5 @@ Feature: color_item
        | command                     | final     |
        | HSBType.new(0, 100, 100)    | 0,100,100 |
        | HSBType.from_rgb(255, 0, 0) | 0,100,100 |
+       | '0,100,100'                 | 0,100,100 |
+       | '#FF0000'                   | 0,100,100 |
