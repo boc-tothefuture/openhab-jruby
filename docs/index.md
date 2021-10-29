@@ -16,4 +16,4 @@ Please see [this thread](https://community.openhab.org/t/jruby-openhab-rules-sys
 
 
 ## State
-This is an alpha and syntax and all elements are subject to change as the library evolves.
+This is a beta and syntax and all elements are subject to change as the library evolves.
