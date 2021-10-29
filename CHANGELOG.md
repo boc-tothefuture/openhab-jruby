@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.8.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.7.1...4.8.0) (2021-10-29)
+
+
+### Features
+
+* **timer:** supports reentrant timers and timed commands for items ([08d8f16](https://github.com/boc-tothefuture/openhab-jruby/commit/08d8f16ab490a63e614415c1ecf057429acc4e45))
+
 ## [4.7.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.7.0...4.7.1) (2021-10-29)
 
 
