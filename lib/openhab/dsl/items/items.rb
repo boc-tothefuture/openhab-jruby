@@ -22,6 +22,7 @@ require_relative 'rollershutter_item'
 require_relative 'string_item'
 
 require_relative 'ensure'
+require_relative 'timed_command'
 
 module OpenHAB
   module DSL
@@ -65,9 +66,9 @@ module OpenHAB
 
             logger.trace("Defining #{klass}##{command} for #{value}")
             klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-              def #{command}       # def on
-                command(#{value})  #   command(ON)
-              end                  # end
+              def #{command}(for: nil, on_expire: nil, &block)                                          # def on(for: nil, on_expire: nil, &block )
+                command(#{value}, for: binding.local_variable_get(:for), on_expire: on_expire, &block)  #   command(ON, for: nil, expire: nil, &block)
+              end                                                                                       # end
             RUBY
 
             logger.trace("Defining GroupItem::GroupMembers##{command} for #{value}")

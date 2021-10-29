@@ -26,7 +26,7 @@ From add-ons, e.g.:
 For convenience, the following methods are implemented:
 
 | Method     | Parameters                                                    | Description                                                                                                                          |
-| ---------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+|------------|---------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | notify     | msg, email: (optional)                                        | When an email is specified, calls NotificationAction.sendNotification. Otherwise, calls NotificationAction.sendBroadcastNotification |
 | say        | text, volume: (optional), voice: (optional), sink: (optional) | Calls Voice.say()                                                                                                                    |
 | play_sound | filename, volume: (optional), sink: (optional)                | Calls Audio.playSound()                                                                                                              |

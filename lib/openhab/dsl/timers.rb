@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'delegate'
-require 'forwardable'
-require 'openhab/log/logger'
+require_relative 'timers/timer'
+require_relative 'timers/manager'
+require_relative 'timers/reentrant_timer'
 
 module OpenHAB
   module DSL
@@ -12,109 +11,58 @@ module OpenHAB
     #
     module Timers
       include OpenHAB::Log
-      java_import org.openhab.core.model.script.actions.ScriptExecution
-      java_import java.time.ZonedDateTime
 
-      # Tracks active timers
-      @timers = Set.new
+      # Manages timers
+      @timer_manager = TimerManager.new
+
       class << self
-        attr_accessor :timers
-      end
-
-      # Ruby wrapper for OpenHAB Timer
-      # This class implements delegator to delegate methods to the OpenHAB timer
-      #
-      # @author Brian O'Connell
-      # @since 2.0.0
-      class Timer < SimpleDelegator
-        include OpenHAB::Log
-        extend Forwardable
-
-        def_delegator :@timer, :is_active, :active?
-        def_delegator :@timer, :is_running, :running?
-        def_delegator :@timer, :has_terminated, :terminated?
-
-        #
-        # Create a new Timer Object
-        #
-        # @param [Duration] duration Duration until timer should fire
-        # @param [Block] block Block to execute when timer fires
-        #
-        def initialize(duration:, &block)
-          @duration = duration
-
-          # A semaphore is used to prevent a race condition in which calling the block from the timer thread
-          # occurs before the @timer variable can be set resulting in @timer being nil
-          semaphore = Mutex.new
-
-          semaphore.synchronize do
-            @timer = ScriptExecution.createTimer(
-              ZonedDateTime.now.plus(@duration), timer_block(semaphore, &block)
-            )
-            super(@timer)
-            Timers.timers << self
-          end
-        end
-
-        #
-        # Reschedule timer
-        #
-        # @param [Duration] duration
-        #
-        # @return [Timer] Rescheduled timer instances
-        #
-        def reschedule(duration = nil)
-          duration ||= @duration
-          Timers.timers << self
-          @timer.reschedule(ZonedDateTime.now.plus(duration))
-        end
-
-        # Cancel timer
-        #
-        # @return [Boolean] True if cancel was successful, false otherwise
-        #
-        def cancel
-          Timers.timers.delete(self)
-          @timer.cancel
-        end
-
-        private
-
-        #
-        # Constructs a block to execute timer within
-        #
-        # @param [Semaphore] Semaphore to obtain before executing
-        #
-        # @return [Proc] Block for timer to execute
-        #
-        def timer_block(semaphore)
-          proc {
-            semaphore.synchronize do
-              Timers.timers.delete(self)
-              yield(self)
-            end
-          }
-        end
+        attr_reader :timer_manager
       end
 
       #
       # Execute the supplied block after the specified duration
       #
       # @param [Duration] duration after which to execute the block
+      # @param [Object] id to associate with timer
       # @param [Block] block to execute, block is passed a Timer object
       #
       # @return [Timer] Timer object
       #
-      def after(duration, &block)
+      def after(duration, id: nil, &block)
+        return Timers.reentrant_timer(duration: duration, id: id, &block) if id
+
         Timer.new(duration: duration, &block)
+      end
+
+      #
+      # Provdes access to the hash for mapping timer ids to the set of active timers associated with that id
+      # @return [Hash] hash of user specified ids to sets of times
+      def timers
+        Timers.timer_manager.timer_ids
       end
 
       #
       # Cancels all active timers
       #
       def self.cancel_all
-        logger.trace("Cancelling #{@timers.length} timers")
-        @timers.each(&:cancel)
+        @timer_manager.cancel_all
+      end
+
+      # Create or reschedule a reentrant time
+      #
+      # @param [Duration] duration after which to execute the block
+      # @param [Object] id to associate with timer
+      # @param [Block] block to execute, block is passed a Timer object
+      # @return [ReentrantTimer] Timer object
+      def self.reentrant_timer(duration:, id:, &block)
+        timer = @timer_manager.reentrant_timer(id: id, &block)
+        if timer
+          logger.trace("Reentrant timer found - #{timer}")
+          timer.reschedule
+        else
+          logger.trace('No reentrant timer found, creating new timer')
+          ReentrantTimer.new(duration: duration, id: id, &block)
+        end
       end
     end
   end
