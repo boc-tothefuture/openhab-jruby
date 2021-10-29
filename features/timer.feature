@@ -158,4 +158,44 @@ Feature:  timer
     And I remove the rules file
     Then It should not log 'Timer Fired' within 10 seconds
     
+   Scenario: Timers with IDs specified are reeentrant
+    Given items:
+      | type   | name       | label      |
+      | Number | Alarm_Mode | Alarm Mode |
+    And a deployed rule:
+      """
+      rule "Execute rule when item is changed and is modified during specified duration" do
+        changed Alarm_Mode
+        triggered do |item|
+          logger.info("Alarm Mode Updated")
+          after 10.seconds, id: item do
+            logger.info("Timer Fired")
+          end
+        end
+      end
+      """
+    When item "Alarm_Mode" state is changed to "14"
+    Then It should log 'Alarm Mode Updated' within 2 seconds
+    And If I wait 5 seconds
+    And item "Alarm_Mode" state is changed to "10"
+    Then It should not log 'Timer Fired' within 9 seconds
+    But If I wait 3 seconds
+    Then It should log 'Timer Fired' within 5 seconds
+
+   
+  Scenario: Timers can be retrieved by id
+    Given code in a rules file:
+      """
+      after 3.seconds, :id => :foo do
+        logger.info "Timer Fired"
+      end
+
+      rule 'Cancel timer' do
+        run { timers[:foo]&.each(&:cancel) }
+        on_start true
+      end
+      """
+    When I deploy the rule
+    Then It should not log 'Timer Fired' within 5 seconds
+
 
