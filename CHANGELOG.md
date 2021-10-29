@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.7.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.7.0...4.7.1) (2021-10-29)
+
+
+### Bug Fixes
+
+* **hsb:** convert csv strings to hsb value ([5aad833](https://github.com/boc-tothefuture/openhab-jruby/commit/5aad83310993e8d95b8e372cd257d572e81beb60))
+
 # [4.7.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.6.2...4.7.0) (2021-10-27)
 
 
