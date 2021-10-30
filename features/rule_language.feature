@@ -123,7 +123,7 @@ Feature: rule_language
     Then It should log 'OpenHAB ready for rule processing' within 5 seconds
 
   @log_level_changed
-  Scenario: Errors in a run block is logged with stack trace and exits rule
+  Scenario Outline: Errors in blocks are logged with stack trace and exits rule
     Given log level INFO
     And code in a rules file
       """
@@ -137,7 +137,7 @@ Feature: rule_language
 
       rule 'test' do
         on_start
-        run { test }
+        <block> { test }
         delay 5.seconds
         run { logger.info('This one works!') }
       end
@@ -150,6 +150,11 @@ Feature: rule_language
     And It should log "in `block in <main>'" within 5 seconds
     And It should log "in `<main>'" within 5 seconds
     But It should not log 'This one works!' within 10 seconds
+    Examples: Checks different block types
+    | block   |
+    | run     |
+    | only_if | 
+    | not_if  |
 
   @log_level_changed
   Scenario: Native java exceptions are handled
