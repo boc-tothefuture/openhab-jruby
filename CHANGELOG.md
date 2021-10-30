@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.8.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.1...4.8.2) (2021-10-30)
+
+
+### Bug Fixes
+
+* **guards:** log exception and stack traces encountered when guard procs are executed ([68c5f4d](https://github.com/boc-tothefuture/openhab-jruby/commit/68c5f4dafb04779ac97e88c3612ab68443cf7377))
+
 ## [4.8.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.0...4.8.1) (2021-10-30)
 
 
