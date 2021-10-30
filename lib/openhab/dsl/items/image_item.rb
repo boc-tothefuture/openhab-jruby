@@ -21,7 +21,7 @@ module OpenHAB
         #
         #
         def update_from_file(file, mime_type: nil)
-          file_data = IO.binread(file)
+          file_data = File.binread(file)
           mime_type ||= Marcel::MimeType.for(Pathname.new(file)) || Marcel::MimeType.for(file_data)
           update_from_bytes(file_data, mime_type: mime_type)
         end
