@@ -201,7 +201,7 @@ Feature:  changed
       | type    | name     | group    |
       | Contact | Contact3 | Contacts |
     And item "<item>" state is changed to "<state>"
-    Then It should log "<item> triggered the rule" within 2 seconds
+    Then It should log "<item> triggered the rule" within 5 seconds
     Examples:
       | item     | state |
       | Switch1  | ON    |

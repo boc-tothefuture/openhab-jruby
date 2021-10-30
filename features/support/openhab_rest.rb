@@ -15,8 +15,32 @@ class Rest
   base_uri 'http://localhost:8080'
   basic_auth 'foo', 'foo'
 
+  # rubocop:disable Metrics
+  def self.openhab_retry(retries = 5)
+    tries = 0
+
+    while tries < retries
+      begin
+        response = yield
+        return response if response.success?
+
+        next unless tries < retries
+
+        puts "Error communicating with openhab - try: #{tries} - #{response.inspect}"
+        sleep 5
+        tries += 1
+      rescue StandardError => e
+        puts "Error communicating with openhab - try: #{tries} - #{e}"
+        sleep 5
+        tries += 1
+      end
+    end
+    raise "Unable to communicate wtih openhab #{response.inspect}"
+  end
+  # rubocop:enable Metrics
+
   def self.rules
-    get('/rest/rules')
+    openhab_retry { get('/rest/rules') }
   end
 
   def self.rule(rule:)
@@ -24,23 +48,23 @@ class Rest
   end
 
   def self.items
-    get('/rest/items')
+    openhab_retry { get('/rest/items') }
   end
 
   def self.set_item_state(name, state)
-    put "/rest/items/#{name}/state", headers: text, body: state
+    openhab_retry { put "/rest/items/#{name}/state", headers: text, body: state }
   end
 
   def self.item_state(name)
-    (get "/rest/items/#{name}/state", :headers => text, :format => :text).chomp
+    openhab_retry { get "/rest/items/#{name}/state", :headers => text, :format => :text }.chomp
   end
 
   def self.delete_item(name)
-    delete "/rest/items/#{name}"
+    openhab_retry { delete "/rest/items/#{name}" }
   end
 
   def self.add_metadata(item:, namespace:, config:)
-    put "/rest/items/#{item}/metadata/#{namespace}", headers: json, body: config
+    openhab_retry { put "/rest/items/#{item}/metadata/#{namespace}", headers: json, body: config }
   end
 
   def self.delete_rule(uid)
@@ -63,16 +87,15 @@ class Rest
     body[:channels] = []
     body[:label] = label
     body[:configuration] = config if config
-    post('/rest/things', headers: json, body: body.to_json)
+    openhab_retry { post('/rest/things', headers: json, body: body.to_json) }
   end
 
   def self.add_item(item:)
     body = item_body(item)
     item_function(body, item)
-    put("/rest/items/#{item.name}", headers: json, body: body.to_json)
+    openhab_retry { put("/rest/items/#{item.name}", headers: json, body: body.to_json) }
     item_pattern(item)
-    state = item.state || 'UNDEF'
-    set_item_state(item.name, state)
+    set_item_state(item.name, item.state) if item.state
   end
 
   def self.item_body(item)
@@ -90,7 +113,9 @@ class Rest
     pattern_body = {}
     pattern_body[:value] = ' '
     pattern_body[:config] = { pattern: item.pattern }
-    put("/rest/items/#{item.name}/metadata/stateDescription", headers: json, body: pattern_body.to_json)
+    openhab_retry do
+      put("/rest/items/#{item.name}/metadata/stateDescription", headers: json, body: pattern_body.to_json)
+    end
   end
 
   def self.item_function(body, item)

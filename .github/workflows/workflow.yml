@@ -13,7 +13,7 @@ env:
 jobs:
 
  rubocop:
-   runs-on: ubuntu-18.04
+   runs-on: ubuntu-latest
    if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
@@ -44,7 +44,7 @@ jobs:
       - uses: wagoid/commitlint-github-action@v2
 
  cucumber-lint:
-   runs-on: ubuntu-18.04
+   runs-on: ubuntu-latest
    if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
@@ -66,7 +66,7 @@ jobs:
        run: bundle exec cuke_linter -p features/
  
  yard-coverage:
-   runs-on: ubuntu-18.04
+   runs-on: ubuntu-latest
    if: "!contains(github.event.head_commit.message, 'ci skip')"
    steps:
      - uses: actions/checkout@v2
@@ -90,7 +90,7 @@ jobs:
             bundle exec yard stats --private | grep "100.00% documented"
 
  openhab-matrix:
-   runs-on: ubuntu-18.04
+   runs-on: ubuntu-latest
    if: "!contains(github.event.head_commit.message, 'ci skip')"
    outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -119,7 +119,7 @@ jobs:
 
  openhab-setup:
    needs: [openhab-matrix]
-   runs-on: ubuntu-18.04
+   runs-on: ubuntu-latest
    if: "!contains(github.event.head_commit.message, 'ci skip')"
    strategy:
     matrix:  ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
@@ -156,7 +156,7 @@ jobs:
        run: bundle exec rake openhab:setup
  
  cucumber-matrix:
-   runs-on: ubuntu-18.04
+   runs-on: ubuntu-latest
    if: "!contains(github.event.head_commit.message, 'ci skip')"
    outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -187,7 +187,7 @@ jobs:
 
  cucumber:
     needs: [cucumber-matrix, openhab-setup]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
       matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
@@ -251,7 +251,7 @@ jobs:
  docs:
    needs: [cucumber, pickles-docs]
    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
-   runs-on: ubuntu-18.04
+   runs-on: ubuntu-latest
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1
@@ -289,7 +289,7 @@ jobs:
  release:
    needs: cucumber 
    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
-   runs-on: ubuntu-18.04
+   runs-on: ubuntu-latest
    steps:
      - uses: actions/checkout@v2
      - uses: actions/setup-ruby@v1

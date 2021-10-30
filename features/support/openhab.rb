@@ -132,28 +132,19 @@ def delete_things
   openhab_client('openhab:things clear')
 end
 
-# rubocop:disable Metrics/MethodLength
 def delete_rules
   FileUtils.rm Dir.glob(File.join(rules_dir, '*.rb'))
-  deleted = false
-  retries = 0
-  begin
-    Rest.rules.each do |rule|
-      uid = rule['uid']
-      Rest.delete_rule(uid)
-      deleted = true
-    end
-  rescue StandardError
-    raise unless retries < 5
 
-    sleep 1
-    retry
+  deleted = false
+  Rest.rules.each do |rule|
+    uid = rule['uid']
+    Rest.delete_rule(uid)
+    deleted = true
   end
   return unless deleted
 
   wait_until(seconds: 30, msg: 'Rules not empty') { Rest.rules.length.zero? }
 end
-# rubocop:enable Metrics/MethodLength
 
 def delete_shared_libraries
   FileUtils.rm Dir.glob(File.join(ruby_lib_dir, '*.rb'))
@@ -163,7 +154,6 @@ def delete_items
   FileUtils.rm Dir.glob(File.join(items_dir, '*.items'))
   deleted = false
   Rest.items.each do |item|
-    Rest.set_item_state(item['name'], 'UNDEF')
     Rest.delete_item(item['name'])
     deleted = true
   end
