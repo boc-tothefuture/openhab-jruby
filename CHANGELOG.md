@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.8.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.0...4.8.1) (2021-10-30)
+
+
+### Bug Fixes
+
+* **hsb:** fully qualify units class ([25196d5](https://github.com/boc-tothefuture/openhab-jruby/commit/25196d559f876521dc027546d071defb7c3a5b01))
+
 # [4.8.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.7.1...4.8.0) (2021-10-29)
 
 
