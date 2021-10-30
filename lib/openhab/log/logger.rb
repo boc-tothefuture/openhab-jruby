@@ -73,7 +73,7 @@ module OpenHAB
         return error if debug_enabled?
 
         if error.respond_to? :backtrace_locations
-          backtrace = error.backtrace_locations.map(&:to_s).reject { |line| INTERNAL_CALL_REGEX.match? line }
+          backtrace = error.backtrace_locations.map(&:to_s).grep_v(INTERNAL_CALL_REGEX)
           error.set_backtrace(backtrace)
         elsif error.respond_to? :stack_trace
           backtrace = error.stack_trace.reject { |line| JAVA_INTERNAL_CALL_REGEX.match? line.to_s }
