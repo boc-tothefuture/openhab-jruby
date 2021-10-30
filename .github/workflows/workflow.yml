@@ -176,9 +176,12 @@ jobs:
        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
+     - name: Remove env.rb file
+       run: |
+          rm features/support/env.rb
      - id: set-matrix
        run: |
-         JSON=$(bundle exec rake github:matrix)
+         JSON=$(bundle exec rake github:matrix[20])
          echo $JSON
          echo "::set-output name=matrix::$( echo "$JSON" )"
 
@@ -214,7 +217,7 @@ jobs:
           path: tmp/
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: Cucumber
-        run: bundle exec rake features[${{ matrix.file }}]
+        run: bundle exec rake "features[${{ matrix.features }}]"
       - name: Generate OpenHAB Dump
         run: bundle exec rake openhab:dump
         if: failure()
