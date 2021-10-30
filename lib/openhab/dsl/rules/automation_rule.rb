@@ -77,7 +77,6 @@ module OpenHAB
         # Create the run queue based on guards
         #
         # @param [Map] inputs rule inputs
-        #
         # @return [Queue] <description>
         #
         def create_queue(inputs)
@@ -243,6 +242,8 @@ module OpenHAB
         #
         # @return [Boolean] True if guards says rule should execute, false otherwise
         #
+        # rubocop:disable Metrics/MethodLength
+        # Loggging inflates method length
         def check_guards(event:)
           if @guard.should_run? event
             now = TimeOfDay::TimeOfDay.now
@@ -254,7 +255,10 @@ module OpenHAB
             logger.trace("Skipped execution of rule '#{name}' because of guard #{@guard}")
           end
           false
+        rescue StandardError => e
+          print_backtrace(e)
         end
+        # rubocop:enable Metrics/MethodLength
 
         #
         # Process the run queue
