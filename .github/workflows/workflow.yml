@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v2
+      - uses: wagoid/commitlint-github-action@v4
 
  cucumber-lint:
    runs-on: ubuntu-18.04
