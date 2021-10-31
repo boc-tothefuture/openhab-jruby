@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.8.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.2...4.8.3) (2021-10-31)
+
+
+### Bug Fixes
+
+* **triggers:** trigger methods return the trigger objects ([463a928](https://github.com/boc-tothefuture/openhab-jruby/commit/463a9283e195bd591504047b15ba7abc7b5ff264))
+
 ## [4.8.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.1...4.8.2) (2021-10-30)
 
 
