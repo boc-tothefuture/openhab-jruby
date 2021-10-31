@@ -98,6 +98,26 @@ Feature: rule_language
     And item "TestSwitch" state is changed to "ON"
     Then It should log 'switch changed' within 5 seconds
 
+  Scenario Outline: Triggers return an OpenHAB TriggerImpl object
+    Given items:
+      | type   | name       |
+      | Number | Alarm_Mode |
+    And a rule
+      """
+      rule 'Check trigger return value' do
+        trigger = <trigger> Alarm_Mode
+        logger.info("<trigger> returns #{trigger&.first&.class}")
+        run { }
+      end
+      """
+    When I deploy the rules file
+    Then It should log '<trigger> returns Java::OrgOpenhabCoreAutomationInternal::TriggerImpl' within 5 seconds
+    Examples:
+      | trigger          |
+      | updated          |
+      | changed          |
+      | received_command |
+
   Scenario: Rule logs a warning and isn't created if it contains no execution blocks
     Given a rule
       """
@@ -151,10 +171,10 @@ Feature: rule_language
     And It should log "in `<main>'" within 5 seconds
     But It should not log 'This one works!' within 10 seconds
     Examples: Checks different block types
-    | block   |
-    | run     |
-    | only_if | 
-    | not_if  |
+      | block   |
+      | run     |
+      | only_if |
+      | not_if  |
 
   @log_level_changed
   Scenario: Native java exceptions are handled

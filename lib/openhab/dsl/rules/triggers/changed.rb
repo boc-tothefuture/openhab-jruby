@@ -31,18 +31,18 @@ module OpenHAB
         # @return [Trigger] OpenHAB trigger
         #
         def changed(*items, to: nil, from: nil, for: nil)
-          separate_groups(items).each do |item|
+          separate_groups(items).map do |item|
             logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
             # for is a reserved word in ruby, so use local_variable_get :for
             if (wait_duration = binding.local_variable_get(:for))
               changed_wait(item, to: to, from: from, duration: wait_duration)
             else
               # Place in array and flatten to support multiple to elements or single or nil
-              [to].flatten.each do |to_state|
-                [from].flatten.each { |from_state| create_changed_trigger(item, from_state, to_state) }
+              [to].flatten.map do |to_state|
+                [from].flatten.map { |from_state| create_changed_trigger(item, from_state, to_state) }
               end
             end
-          end
+          end.flatten
         end
 
         private
@@ -55,12 +55,13 @@ module OpenHAB
         # @param [Item State] to OpenHAB Item State item or group needs to change to
         # @param [Item State] from OpenHAB Item State item or group needs to be coming from
         #
-        # @return [Array] Array of current TriggerDelay objects
+        # @return [Trigger] OpenHAB trigger
         #
         def changed_wait(item, duration:, to: nil, from: nil)
           trigger = create_changed_trigger(item, nil, nil)
           logger.trace("Creating Changed Wait Change Trigger for #{item}")
           @trigger_delays[trigger.id] = TriggerDelay.new(to: to, from: from, duration: duration)
+          trigger
         end
 
         #
