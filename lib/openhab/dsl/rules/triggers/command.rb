@@ -22,14 +22,14 @@ module OpenHAB
         #
         #
         def received_command(*items, command: nil, commands: nil)
-          separate_groups(items).each do |item|
+          separate_groups(items).map do |item|
             logger.trace("Creating received command trigger for item(#{item})"\
                          "command(#{command}) commands(#{commands})")
 
             # Combine command and commands, doing union so only a single nil will be in the combined array.
             combined_commands = combine_commands(command, commands)
             create_received_trigger(combined_commands, item)
-          end
+          end.flatten
         end
 
         private
@@ -42,7 +42,7 @@ module OpenHAB
         #
         #
         def create_received_trigger(commands, item)
-          commands.each do |command|
+          commands.map do |command|
             if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers
               config, trigger = create_group_command_trigger(item)
             else
