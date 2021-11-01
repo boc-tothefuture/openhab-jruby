@@ -1,5 +1,7 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.8.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.3...4.8.4) (2021-11-01)
+
 ## [4.8.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.2...4.8.3) (2021-10-31)
 
 
