@@ -21,14 +21,14 @@ module OpenHAB
         # @param [Array] commands commands to match for trigger
         #
         #
-        def received_command(*items, command: nil, commands: nil)
+        def received_command(*items, command: nil, commands: nil, attach: nil)
           separate_groups(items).map do |item|
             logger.trace("Creating received command trigger for item(#{item})"\
                          "command(#{command}) commands(#{commands})")
 
             # Combine command and commands, doing union so only a single nil will be in the combined array.
             combined_commands = combine_commands(command, commands)
-            create_received_trigger(combined_commands, item)
+            create_received_trigger(combined_commands, item, attach)
           end.flatten
         end
 
@@ -41,7 +41,7 @@ module OpenHAB
         # @param [Object] item to create trigger for
         #
         #
-        def create_received_trigger(commands, item)
+        def create_received_trigger(commands, item, attach)
           commands.map do |command|
             if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers
               config, trigger = create_group_command_trigger(item)
@@ -49,7 +49,7 @@ module OpenHAB
               config, trigger = create_item_command_trigger(item)
             end
             config['command'] = command.to_s unless command.nil?
-            append_trigger(trigger, config)
+            append_trigger(trigger, config, attach: attach)
           end
         end
 

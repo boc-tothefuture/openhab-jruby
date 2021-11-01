@@ -5,6 +5,8 @@ require 'set'
 require 'openhab/core/thread_local'
 require 'openhab/log/logger'
 
+require_relative 'item_event'
+
 module OpenHAB
   module DSL
     #
@@ -29,6 +31,8 @@ module OpenHAB
         # @param [Config] config Rule configuration
         #
         # Constructor sets a number of variables, no further decomposition necessary
+        # rubocop:disable Metrics/MethodLength
+        # Metrics disabled because only setters are called or defaults set.
         def initialize(config:)
           super()
           set_name(config.name)
@@ -41,7 +45,9 @@ module OpenHAB
           @between = between || OpenHAB::DSL::TimeOfDay::ALL_DAY
           # Convert between to correct range or nil if not set
           @trigger_delays = config.trigger_delays
+          @attachments = config.attachments
         end
+        # rubocop:enable Metrics/MethodLength
 
         #
         # Execute the rule
@@ -51,7 +57,7 @@ module OpenHAB
         #
         #
         def execute(mod = nil, inputs = nil)
-          logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect}" }
+          logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect})" }
           logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
           if trigger_delay inputs
             trigger_delay = trigger_delay(inputs)
@@ -89,6 +95,15 @@ module OpenHAB
         end
 
         #
+        # Get the trigger_id for the trigger that caused the rule creation
+        #
+        # @return [Hash] Input hash potentially containing trigger id
+        #
+        def trigger_id(inputs)
+          inputs&.keys&.grep(/\.event$/)&.first&.chomp('.event')
+        end
+
+        #
         # Returns trigger delay from inputs if it exists
         #
         # @param [Map] inputs map from OpenHAB containing UID
@@ -100,7 +115,24 @@ module OpenHAB
           # ["72698819-83cb-498a-8e61-5aab8b812623.event", "oldState", "module", \
           #  "72698819-83cb-498a-8e61-5aab8b812623.oldState", "event", "newState",\
           #  "72698819-83cb-498a-8e61-5aab8b812623.newState"]
-          @trigger_delays[inputs&.keys&.grep(/\.event$/)&.first&.chomp('.event')]
+          @trigger_delays[trigger_id(inputs)]
+        end
+
+        # If an attachment exists for the trigger for this event add it to the event object
+        # @param [Object] Event
+        # @param [Hash] Inputs into event
+        # @return [Object] Event with attachment added
+        #
+        def add_attachment(event, inputs)
+          attachment = @attachments[trigger_id(inputs)]
+          return event unless attachment
+
+          # Some events, like those from cron triggers don't have an event
+          # so an event is created
+          event ||= Struct.new(:event).new
+
+          event.attachment = attachment
+          event
         end
 
         #
@@ -268,8 +300,11 @@ module OpenHAB
         # @param [Map] inputs OpenHAB map object describing rule trigge
         #
         #
+        # rubocop:disable Metrics/MethodLength
+        # No logical way to break this method up
         def process_queue(run_queue, mod, inputs)
           event = inputs&.dig('event')
+          event = add_attachment(event, inputs)
 
           while (task = run_queue.shift)
             if task.is_a? RuleConfig::Delay
@@ -281,6 +316,7 @@ module OpenHAB
         rescue StandardError => e
           print_backtrace(e)
         end
+        # rubocop:enable Metrics/MethodLength
 
         #
         # Dispatch execution block tasks to different methods
