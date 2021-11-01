@@ -83,6 +83,7 @@ module OpenHAB
         def state?
           !raw_state.is_a?(Types::UnDefType)
         end
+        alias truthy? state?
 
         #
         # Get the item state
