@@ -72,6 +72,33 @@ Feature:  guards
       | ON                 | CLOSED     | 50           |
       | OFF                | CLOSED     | 0            |
 
+  Scenario Outline: only_if/not_if support arrays of items
+    Given a deployed rule:
+      """
+      rule 'Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is also ON and Door is closed' do
+        updated LightSwitch
+        run { OutsideDimmer << 50 }
+        <guard> [OtherSwitch, LightSwitch]
+      end
+      """
+    When item "OtherSwitch" state is changed to "<other_switch_state>"
+    And item "LightSwitch" state is changed to "<light_switch_state>"
+    And if I wait 2 seconds
+    Then "OutsideDimmer" should be in state "<dimmer_state>" within 5 seconds
+    Examples:
+      | other_switch_state | light_switch_state | dimmer_state | guard   |
+      | ON                 | OFF                | 0            | only_if |
+      | OFF                | OFF                | 0            | only_if |
+      | ON                 | ON                 | 50           | only_if |
+      | OFF                | ON                 | 0            | only_if |
+      | OFF                | OFF                | 50           | not_if  |
+      | ON                 | ON                 | 0            | not_if  |
+      | OFF                | ON                 | 0            | not_if  |
+      | ON                 | OFF                | 0            | not_if  |
+
+
+
+
 
   Scenario Outline: only_if and not_if raise an error if supplied objects that don't respond to 'truthy'?
     And a rule

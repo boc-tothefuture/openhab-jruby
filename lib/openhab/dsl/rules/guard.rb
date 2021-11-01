@@ -13,13 +13,13 @@ module OpenHAB
         include OpenHAB::DSL::Rules::Property
 
         prop_array(:only_if) do |item|
-          unless item.is_a?(Proc) || item.respond_to?(:truthy?)
+          unless item.is_a?(Proc) || [item].flatten.all? { |it| it.respond_to?(:truthy?) }
             raise ArgumentError, "Object passed to only_if must respond_to 'truthy?'"
           end
         end
 
         prop_array(:not_if) do |item|
-          unless item.is_a?(Proc) || item.respond_to?(:truthy?)
+          unless item.is_a?(Proc) || [item].flatten.all? { |it| it.respond_to?(:truthy?) }
             raise ArgumentError, "Object passed to not_if must respond_to 'truthy?'"
           end
         end
@@ -113,7 +113,7 @@ module OpenHAB
           # @return [Boolean] True if criteria are satisfied, false otherwise
           #
           def process_not_if(event, items, procs)
-            items.none?(&:truthy?) && procs.none? { |proc| proc.call(event) }
+            items.flatten.none?(&:truthy?) && procs.none? { |proc| proc.call(event) }
           end
 
           #
@@ -126,7 +126,7 @@ module OpenHAB
           # @return [Boolean] True if criteria are satisfied, false otherwise
           #
           def process_only_if(event, items, procs)
-            items.all?(&:truthy?) && procs.all? { |proc| proc.call(event) }
+            items.flatten.all?(&:truthy?) && procs.all? { |proc| proc.call(event) }
           end
         end
       end
