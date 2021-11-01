@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.9.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.5...4.9.0) (2021-11-01)
+
+
+### Features
+
+* **guards:** guards only_if/not_if support arrays of items ([66cda53](https://github.com/boc-tothefuture/openhab-jruby/commit/66cda53ffec10a14b4c14931838c24e96bc655b1))
+
 ## [4.8.5](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.4...4.8.5) (2021-11-01)
 
 
