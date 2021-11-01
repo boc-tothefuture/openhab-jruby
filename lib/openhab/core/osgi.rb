@@ -11,7 +11,6 @@ module OpenHAB
     class OSGI
       include OpenHAB::Log
 
-      java_import org.openhab.core.model.script.actions.ScriptExecution
       java_import org.osgi.framework.FrameworkUtil
 
       #
