@@ -10,17 +10,15 @@ parent: Usage
 
 Guards exist to only permit rules to run if certain conditions are satisfied. Think of these as declarative if statements that keep the run block free of conditional logic, although you can of course still use conditional logic in run blocks if you prefer. 
 
-only_if and not_if guards that are provided objects rather than blocks automatically check for the 'truthyness' of the supplied object.  
+only_if and not_if guards that are provided items or arrays of items rather than blocks automatically check for the 'truthyness' of the supplied object.  Any item that is defined and not NULL is truthy.  Certain other types have additional restrictions on truthyness to make them easier to use in rules.
 
 Truthyness for Item types:
 
-| Item    | Truthy when |
-| ------- | ----------- |
-| Switch  | state == ON |
-| Dimmer  | state != 0  |
-| Contact | Not Defined |
-| String  | Not Blank   |
-| Number  | state != 0  |
+| Item       | Truthy when        |
+|------------|--------------------|
+| Switch     | state == ON        |
+| Dimmer     | state != 0         |
+| String     | Not Blank          |
 
 
 
