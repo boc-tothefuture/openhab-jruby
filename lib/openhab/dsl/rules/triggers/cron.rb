@@ -10,9 +10,6 @@ module OpenHAB
       # Cron type rules
       #
       module Triggers
-        java_import org.openhab.core.automation.util.TriggerBuilder
-        java_import org.openhab.core.config.core.Configuration
-
         #
         # Returns a default map for cron expressions that fires every second
         # This map is usually updated via merge by other methods to refine cron type triggers.
