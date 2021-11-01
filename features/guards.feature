@@ -76,6 +76,7 @@ Feature:  guards
   Scenario Outline: only_if and not_if raise an error if supplied objects that don't respond to 'truthy'?
     And a rule
       """
+      Foo = Object.new
       begin
         rule 'turn  on light switch at start' do
           on_start
@@ -90,8 +91,8 @@ Feature:  guards
     Then It should log "<log_line>" within 20 seconds
     Examples:
       | guard        | log_line                                           |
-      | only_if Door | Object passed to only_if must respond_to 'truthy?' |
-      | not_if Door  | Object passed to not_if must respond_to 'truthy?'  |
+      | only_if Foo  | Object passed to only_if must respond_to 'truthy?' |
+      | not_if  Foo  | Object passed to not_if must respond_to 'truthy?'  |
 
 
   Scenario: not_if allows prevents execution of rules when result is false and prevents when true
@@ -210,3 +211,46 @@ Feature:  guards
       | between                                                                                           | should     |
       | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | should     |
       | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | should not |
+
+  Scenario Outline: All item types should work in only_if/not_if guards
+   Given items:
+      | type    | name   | 
+      | <type>  | Foo    | 
+    Given a deployed rule:
+      """
+      Foo << <value> if <set_value>
+      rule 'guard check' do
+        run { logger.info "Guard: Allowed" }
+        on_start
+        <guard> Foo
+        otherwise { logger.info "Guard: Denied" }
+      end
+      """
+    When I deploy the rule
+    Then It should log "Guard: <result>" within 5 seconds
+    Examples:
+      | type          | value                       | guard   | set_value | result   |
+      | Switch        | X                           | only_if | false     | Denied   |
+      | Switch        | X                           | not_if  | false     | Allowed  |
+      | Switch        | ON                          | only_if | true      | Allowed  |
+      | Switch        | OFF                         | only_if | true      | Denied   |
+      | Number        | X                           | only_if | false     | Denied   |
+      | Number        | 0                           | only_if | true      | Denied   |
+      | Number        | 10                          | only_if | true      | Allowed  |
+      | DateTime      | X                           | only_if | false     | Denied   |
+      | DateTime      | "1970-01-01T00:00:00+00:00" | only_if | true      | Allowed  |
+      | String        | OFF                         | only_if | false     | Denied   |
+      | String        | ''                          | only_if | true      | Denied   |
+      | String        | 'foo'                       | only_if | true      | Allowed  |
+      | Color         | 'foo'                       | only_if | false     | Denied   |
+      | Color         | '12,14,5'                   | only_if | true      | Allowed  |
+      | Color         | '12,14,5'                   | only_if | true      | Allowed  |
+      | Location      | '12,14'                     | only_if | false     | Denied   |
+      | Location      | '12,14'                     | only_if | true      | Allowed  |
+      | Player        | X                           | only_if | false     | Denied   |
+      | Rollershutter | X                           | only_if | false     | Denied   |
+      | Rollershutter | 40                          | only_if | true      | Allowed  |
+      | Dimmer        | X                           | only_if | false     | Denied   |
+      | Dimmer        | 0                           | only_if | true      | Denied   |
+      | Dimmer        | 10                          | only_if | true      | Allowed  |
+ 
