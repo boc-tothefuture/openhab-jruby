@@ -87,7 +87,7 @@ module OpenHAB
         rule = AutomationRule.new(config: config)
         Rules.script_rules << rule
         add_rule(rule)
-        rule.execute if config.on_start?
+        rule.execute(nil, { 'event' => Struct.new(:attachment).new(config.start_attachment) }) if config.on_start?
       end
 
       #

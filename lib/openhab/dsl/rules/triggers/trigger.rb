@@ -46,9 +46,10 @@ module OpenHAB
         #
         # @return [Trigger] OpenHAB trigger
         #
-        def append_trigger(type, config)
+        def append_trigger(type, config, attach: nil)
           logger.trace("Creating trigger of type #{type} for #{config}")
           trigger = Trigger.trigger(type: type, config: config)
+          @attachments[trigger.id] = attach if attach
           @triggers << trigger
           trigger
         end

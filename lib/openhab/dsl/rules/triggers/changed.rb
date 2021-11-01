@@ -30,16 +30,16 @@ module OpenHAB
         #
         # @return [Trigger] OpenHAB trigger
         #
-        def changed(*items, to: nil, from: nil, for: nil)
+        def changed(*items, to: nil, from: nil, for: nil, attach: nil)
           separate_groups(items).map do |item|
             logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
             # for is a reserved word in ruby, so use local_variable_get :for
             if (wait_duration = binding.local_variable_get(:for))
-              changed_wait(item, to: to, from: from, duration: wait_duration)
+              changed_wait(item, to: to, from: from, duration: wait_duration, attach: attach)
             else
               # Place in array and flatten to support multiple to elements or single or nil
               [to].flatten.map do |to_state|
-                [from].flatten.map { |from_state| create_changed_trigger(item, from_state, to_state) }
+                [from].flatten.map { |from_state| create_changed_trigger(item, from_state, to_state, attach) }
               end
             end
           end.flatten
@@ -57,8 +57,8 @@ module OpenHAB
         #
         # @return [Trigger] OpenHAB trigger
         #
-        def changed_wait(item, duration:, to: nil, from: nil)
-          trigger = create_changed_trigger(item, nil, nil)
+        def changed_wait(item, duration:, to: nil, from: nil, attach: nil)
+          trigger = create_changed_trigger(item, nil, nil, attach)
           logger.trace("Creating Changed Wait Change Trigger for #{item}")
           @trigger_delays[trigger.id] = TriggerDelay.new(to: to, from: from, duration: duration)
           trigger
@@ -72,14 +72,14 @@ module OpenHAB
         # @param [String] to state restrict trigger to
         #
         #
-        def create_changed_trigger(item, from, to)
+        def create_changed_trigger(item, from, to, attach)
           trigger, config = case item
                             when OpenHAB::DSL::Items::GroupItem::GroupMembers
                               create_group_changed_trigger(item, from, to)
                             when Thing then create_thing_changed_trigger(item, from, to)
                             else create_item_changed_trigger(item, from, to)
                             end
-          append_trigger(trigger, config)
+          append_trigger(trigger, config, attach: attach)
         end
 
         #

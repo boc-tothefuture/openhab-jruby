@@ -21,12 +21,12 @@ module OpenHAB
         # @param [String] triggered specific triggering condition to match for trigger
         #
         #
-        def channel(*channels, thing: nil, triggered: nil)
+        def channel(*channels, thing: nil, triggered: nil, attach: nil)
           channels.flatten.each do |channel|
             channel = [thing, channel].join(':') if thing
             logger.trace("Creating channel trigger for channel(#{channel}), thing(#{thing}), trigger(#{triggered})")
             [triggered].flatten.each do |trigger|
-              create_channel_trigger(channel, trigger)
+              create_channel_trigger(channel, trigger, attach)
             end
           end
         end
@@ -40,12 +40,12 @@ module OpenHAB
         # @param [Trigger] trigger specific channel trigger to match
         #
         #
-        def create_channel_trigger(channel, trigger)
+        def create_channel_trigger(channel, trigger, attach)
           config = { 'channelUID' => channel }
           config['event'] = trigger.to_s unless trigger.nil?
           config['channelUID'] = channel
           logger.trace("Creating Change Trigger for #{config}")
-          @triggers << Trigger.trigger(type: Trigger::CHANNEL_EVENT, config: config)
+          append_trigger(Trigger::CHANNEL_EVENT, config, attach: attach)
         end
       end
     end
