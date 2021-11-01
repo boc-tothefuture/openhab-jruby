@@ -47,7 +47,7 @@ module OpenHAB
 
         private
 
-        java_import 'org.openhab.core.automation.annotation.RuleAction'
+        java_import org.openhab.core.automation.annotation.RuleAction
 
         #
         # Define methods from actions mapped to this thing
