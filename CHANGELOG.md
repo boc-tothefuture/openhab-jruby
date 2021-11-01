@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.8.5](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.4...4.8.5) (2021-11-01)
+
+
+### Bug Fixes
+
+* **guard:** only_if/not_if should work on all item types ([1c717a8](https://github.com/boc-tothefuture/openhab-jruby/commit/1c717a81d18030ae60d935f4625fd3557e139754))
+
 ## [4.8.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.3...4.8.4) (2021-11-01)
 
 ## [4.8.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.2...4.8.3) (2021-10-31)
