@@ -39,8 +39,6 @@ module OpenHAB
           logger.trace("Coercing #{self} as a request from #{other.class}")
           return [other, nil] unless state?
           return [other, state] if other.is_a?(Types::PointType) || other.respond_to?(:to_str)
-
-          raise TypeError, "can't convert #{other.class} into #{self.class}"
         end
 
         # OpenHAB has this method, but it _only_ accepts PointType, so remove it and delegate

@@ -64,7 +64,8 @@ module OpenHAB
           elsif other.respond_to?(:to_str)
             self == PointType.new(other)
           elsif other.respond_to?(:coerce)
-            lhs, rhs = other.coerce(self)
+            return false unless (lhs, rhs = other.coerce(self))
+
             lhs == rhs
           end
         end
@@ -80,7 +81,10 @@ module OpenHAB
         # @return [[PointType, PointType]]
         #
         def coerce(other)
-          [coerce_single(other), self]
+          lhs = coerce_single(other)
+          return unless lhs
+
+          [lhs, self]
         end
 
         # rename raw methods so we can overwrite them
@@ -123,7 +127,10 @@ module OpenHAB
         # @return [QuantityType]
         def distance_from(other)
           logger.trace("(#{self}).distance_from(#{other} (#{other.class})")
-          QuantityType.new(raw_distance_from(coerce_single(other)), SIUnits::METRE)
+          other = coerce_single(other)
+          raise TypeError, "#{other.class} can't be coerced into #{self.class}" unless other
+
+          QuantityType.new(raw_distance_from(other), SIUnits::METRE)
         end
         alias - distance_from
 
@@ -131,18 +138,16 @@ module OpenHAB
 
         # coerce an object to a PointType
         # @return [PointType]
-        def coerce_single(other) # rubocop:disable Metrics/MethodLength
+        def coerce_single(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(PointType)
             other
           elsif other.is_a?(Items::LocationItem)
-            raise TypeError, "can't convert #{other.raw_state} into #{self.class}" unless other.state?
+            return unless other.state?
 
             other.state
           elsif other.respond_to?(:to_str)
             PointType.new(other.to_str)
-          else
-            raise TypeError, "can't convert #{other.class} into #{self.class}"
           end
         end
       end
