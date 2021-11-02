@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.10.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.9.0...4.10.0) (2021-11-02)
+
+
+### Features
+
+* **attachments:** adds attachments to triggers ([88d35c5](https://github.com/boc-tothefuture/openhab-jruby/commit/88d35c534d28b302e33c8e830b4bbe6763f57abe))
+
 # [4.9.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.8.5...4.9.0) (2021-11-01)
 
 
