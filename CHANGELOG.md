@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.10.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.10.0...4.10.1) (2021-11-02)
+
+
+### Bug Fixes
+
+* **type:** allow comparison against incompatible types ([4ef6b2d](https://github.com/boc-tothefuture/openhab-jruby/commit/4ef6b2d0017c82c74f4d0ce82a7fb7e91681770c)), closes [#328](https://github.com/boc-tothefuture/openhab-jruby/issues/328) [/github.com/jruby/jruby/blob/9.2.19.0/core/src/main/java/org/jruby/RubyRange.java#L755](https://github.com//github.com/jruby/jruby/blob/9.2.19.0/core/src/main/java/org/jruby/RubyRange.java/issues/L755) [/github.com/jruby/jruby/blob/a309a88614916621de4cc5dc3693f279dae58d0c/core/src/main/java/org/jruby/RubyNumeric.java#L640](https://github.com//github.com/jruby/jruby/blob/a309a88614916621de4cc5dc3693f279dae58d0c/core/src/main/java/org/jruby/RubyNumeric.java/issues/L640) [/github.com/ruby/ruby/blob/4fb71575e270092770951e6a69bf006c71fadb55/numeric.c#L477](https://github.com//github.com/ruby/ruby/blob/4fb71575e270092770951e6a69bf006c71fadb55/numeric.c/issues/L477)
+
 # [4.10.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.9.0...4.10.0) (2021-11-02)
 
 
