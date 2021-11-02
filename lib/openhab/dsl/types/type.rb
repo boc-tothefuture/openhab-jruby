@@ -28,8 +28,6 @@ module OpenHAB
         def coerce(other)
           logger.trace("Coercing #{self} (#{self.class}) as a request from #{other.class}")
           return [other.as(self.class), self] if other.is_a?(Type)
-
-          raise TypeError, "can't convert #{other.class} into #{self.class}"
         end
 
         #
@@ -49,7 +47,8 @@ module OpenHAB
         # @return [Boolean] if the same value is represented, including
         #   type conversions
         #
-        def ==(other)
+        def ==(other) # rubocop:disable Metrics
+          logger.trace("(#{self.class}) #{self} == #{other} (#{other.class})")
           return true if equal?(other)
 
           # i.e. ON == OFF, REFRESH == ON, ON == REFRESH
@@ -60,7 +59,17 @@ module OpenHAB
           return self == other.raw_state if other.is_a?(Items::GenericItem)
 
           if other.respond_to?(:coerce)
-            lhs, rhs = other.coerce(self)
+            begin
+              return false unless (lhs, rhs = other.coerce(self))
+            rescue TypeError
+              # this one is a bit odd. 50 (Integer) == ON is internally
+              # flipping the argument and calling this method. but it responds
+              # to coerce, and then raises a TypeError (from Float???) that
+              # it couldn't convert to OnOffType. it probably should have
+              # returned nil. catch it and return false instead
+              return false
+            end
+
             return lhs == rhs
           end
 

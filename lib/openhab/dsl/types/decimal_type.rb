@@ -87,7 +87,8 @@ module OpenHAB
           elsif other.respond_to?(:to_d)
             to_d <=> other.to_d
           elsif other.respond_to?(:coerce)
-            lhs, rhs = other.coerce(self)
+            return nil unless (lhs, rhs = other.coerce(self))
+
             lhs <=> rhs
           end
         end
@@ -109,15 +110,13 @@ module OpenHAB
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(Items::NumericItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-            raise TypeError, "can't convert #{UnDefType} into #{self.class}" unless other.state?
+            return unless other.state?
 
             [other.state, self]
           elsif other.is_a?(Type)
             [other, as(other.class)]
           elsif other.respond_to?(:to_d)
             [self.class.new(other.to_d), self]
-          else
-            raise TypeError, "can't convert #{other.class} into #{self.class}"
           end
         end
 
@@ -150,8 +149,7 @@ module OpenHAB
             #     # result could already be a QuantityType
             #     result = self.class.new(result) unless result.is_a?(NumericType)
             #     result
-            #   elsif other.respond_to?(:coerce)
-            #     lhs, rhs = other.coerce(to_d)
+            #   elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             #     lhs + rhs
             #   else
             #     raise TypeError, "#{other.class} can't be coerced into #{self.class}"
@@ -168,8 +166,7 @@ module OpenHAB
                   # result could already be a QuantityType
                   result = self.class.new(result) unless result.is_a?(NumericType)
                   result
-                elsif other.respond_to?(:coerce)
-                  lhs, rhs = other.coerce(to_d)
+                elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
                   lhs #{ruby_op} rhs
                 else
                   raise TypeError, "\#{other.class} can't be coerced into \#{self.class}"

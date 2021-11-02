@@ -52,7 +52,8 @@ module OpenHAB
           elsif other.respond_to?(:to_str)
             to_str <=> other.to_str
           elsif other.respond_to?(:coerce)
-            lhs, rhs = other.coerce(self)
+            return nil unless (lhs, rhs = other.coerce(self))
+
             lhs <=> rhs
           end
         end
@@ -70,13 +71,11 @@ module OpenHAB
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(Items::StringItem)
-            raise TypeError, "can't convert #{other.raw_state} into #{self.class}" unless other.state?
+            return unless other.state?
 
             [other.state, self]
           elsif other.respond_to?(:to_str)
             [String.new(other.to_str), self]
-          else
-            raise TypeError, "can't convert #{other.class} into #{self.class}"
           end
         end
 
