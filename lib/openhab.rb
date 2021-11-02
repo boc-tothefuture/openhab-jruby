@@ -23,6 +23,7 @@ module OpenHAB
   def self.extended(base)
     OpenHAB::Core.wait_till_openhab_ready
     base.extend Log
+    base.extend OpenHAB::Core::ScriptHandlingCallbacks
     base.extend OpenHAB::Core::EntityLookup
     base.extend OpenHAB::DSL
     base.extend OpenHAB::DSL::Between
@@ -40,4 +41,5 @@ end
 
 # rubocop: disable Style/MixinUsage
 extend OpenHAB
+include OpenHAB::Core::ScriptHandling
 # rubocop: enable Style/MixinUsage

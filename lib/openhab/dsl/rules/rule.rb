@@ -62,6 +62,7 @@ module OpenHAB
       def self.cleanup_rules
         @script_rules.each(&:cleanup)
       end
+      Core::ScriptHandling.script_unloaded { cleanup_rules }
 
       private
 

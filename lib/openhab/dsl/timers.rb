@@ -47,6 +47,7 @@ module OpenHAB
       def self.cancel_all
         @timer_manager.cancel_all
       end
+      Core::ScriptHandling.script_unloaded { cancel_all }
 
       # Create or reschedule a reentrant time
       #
