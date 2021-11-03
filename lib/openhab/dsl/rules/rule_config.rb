@@ -10,7 +10,7 @@ require 'openhab/dsl/rules/triggers/command'
 require 'openhab/dsl/rules/triggers/updated'
 require 'openhab/dsl/rules/guard'
 require 'openhab/core/entity_lookup'
-require 'openhab/dsl/time_of_day'
+require 'openhab/dsl/between'
 require 'openhab/dsl/dsl'
 require 'openhab/dsl/timers'
 

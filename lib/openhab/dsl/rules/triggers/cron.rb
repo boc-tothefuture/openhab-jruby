@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'java'
-require 'openhab/dsl/time_of_day'
 
 module OpenHAB
   module DSL

@@ -15,7 +15,7 @@ require 'openhab/dsl/actions'
 require 'openhab/dsl/timers'
 require 'openhab/dsl/group'
 require 'openhab/dsl/things'
-require 'openhab/dsl/time_of_day'
+require 'openhab/dsl/between'
 require 'openhab/dsl/gems'
 require 'openhab/dsl/persistence'
 require 'openhab/dsl/units'
@@ -31,6 +31,7 @@ module OpenHAB
     # rubocop:disable Metrics/MethodLength
     def self.extended(base)
       base.send :include, OpenHAB::DSL::Actions
+      base.send :include, OpenHAB::DSL::Between
       base.send :include, OpenHAB::DSL::Groups
       base.send :include, OpenHAB::DSL::Items
       base.send :include, OpenHAB::DSL::Persistence
@@ -39,7 +40,7 @@ module OpenHAB
       base.send :include, OpenHAB::DSL::States
       base.send :include, OpenHAB::DSL::Things
       base.send :include, OpenHAB::DSL::Timers
-      base.send :include, OpenHAB::DSL::TimeOfDay
+      base.send :include, OpenHAB::DSL::Between
       base.send :include, OpenHAB::DSL::Types
       base.send :include, OpenHAB::DSL::Units
     end

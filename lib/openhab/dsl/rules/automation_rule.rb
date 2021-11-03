@@ -4,6 +4,7 @@ require 'java'
 require 'set'
 require 'openhab/core/thread_local'
 require 'openhab/log/logger'
+require 'openhab/dsl/between'
 
 require_relative 'item_event'
 
@@ -22,7 +23,7 @@ module OpenHAB
       class AutomationRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
         include OpenHAB::Log
         include OpenHAB::Core::ThreadLocal
-        include OpenHAB::DSL::TimeOfDay
+        include OpenHAB::DSL::Between
         java_import java.time.ZonedDateTime
 
         #
@@ -42,7 +43,7 @@ module OpenHAB
           @run_queue = config.run
           @guard = config.guard
           between = config.between&.yield_self { between(config.between) }
-          @between = between || OpenHAB::DSL::TimeOfDay::ALL_DAY
+          @between = between || OpenHAB::DSL::Between::ALL_DAY
           # Convert between to correct range or nil if not set
           @trigger_delays = config.trigger_delays
           @attachments = config.attachments
