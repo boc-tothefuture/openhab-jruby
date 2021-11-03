@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.10.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.10.1...4.10.2) (2021-11-03)
+
+
+### Bug Fixes
+
+* **test:** added test coverage for mixed type between guards ([9030b3f](https://github.com/boc-tothefuture/openhab-jruby/commit/9030b3f9ca57b66d5f6865b6cbf8f3b501432587))
+
 ## [4.10.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.10.0...4.10.1) (2021-11-02)
 
 
