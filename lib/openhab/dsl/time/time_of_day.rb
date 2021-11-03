@@ -10,7 +10,7 @@ module OpenHAB
     # Times without specific dates e.g. 6:00:00
     # @author Brian O'Connell
     # @since 0.0.1
-    module TimeOfDay
+    module Between
       java_import java.time.LocalTime
       java_import java.time.format.DateTimeFormatterBuilder
       java_import java.util.Locale
@@ -123,6 +123,41 @@ module OpenHAB
             -(other <=> self)
           end
         end
+
+        # Creates a range that can be compared against time of day objects or strings
+        # to see if they are within the range
+        # @since 2.4.0
+        # @return Range object representing a TimeOfDay Range
+        def self.between(range)
+          raise ArgumentError, 'Supplied object must be a range' unless range.is_a? Range
+
+          start = to_time_of_day(range.begin)
+          ending = to_time_of_day(range.end)
+
+          start_sod = start.local_time.to_second_of_day
+          ending_sod = ending.local_time.to_second_of_day
+          ending_sod += TimeOfDayRangeElement::NUM_SECONDS_IN_DAY if ending_sod < start_sod
+
+          start_range = TimeOfDayRangeElement.new(sod: start_sod, range_begin: start_sod)
+          ending_range = TimeOfDayRangeElement.new(sod: ending_sod, range_begin: start_sod)
+          range.exclude_end? ? (start_range...ending_range) : (start_range..ending_range)
+        end
+
+        #
+        # Convert object to TimeOfDay object
+        #
+        # @param [Object] object TimeOfDay or String to be converted
+        #
+        # @return [TimeOfDay] TimeOfDay created from supplied object
+        #
+        def self.to_time_of_day(object)
+          case object
+          when String then TimeOfDay.parse(object)
+          when Time, OpenHAB::DSL::Types::DateTimeType, OpenHAB::DSL::Items::DateTimeItem
+            TimeOfDay.new(h: object.hour, m: object.min, s: object.sec)
+          else object
+          end
+        end
       end
 
       # Modules that refines the Ruby Range object cover? and include? methods to support TimeOfDay ranges
@@ -168,17 +203,20 @@ module OpenHAB
         #
         # @return [Integer] seconds of day represented by supplied object
         #
+        # rubocop:disable Metrics/AbcSize
+        # case statement needs to compare against multiple types
         def to_second_of_day(object)
           case object
           when TimeOfDay then adjust_second_of_day(object.local_time.to_second_of_day)
           when String then adjust_second_of_day(TimeOfDay.parse(object).local_time.to_second_of_day)
-          when Time, OpenHAB::DSL::Types::DateTimeType, OpenHAB::DSL::Items::DateTimeItem
+          when ::Time, OpenHAB::DSL::Types::DateTimeType, OpenHAB::DSL::Items::DateTimeItem
             adjust_second_of_day(TimeOfDay.new(h: object.hour, m: object.min, s: object.sec)
             .local_time.to_second_of_day)
           when TimeOfDayRangeElement then object.sod
-          else raise ArgumentError, 'Supplied argument cannot be converted into Time Of Day Object'
+          else raise ArgumentError, "Supplied argument #{object.class} cannot be converted into Time Of Day Object"
           end
         end
+        # rubocop:enable Metrics/AbcSize
 
         def adjust_second_of_day(second_of_day)
           second_of_day += NUM_SECONDS_IN_DAY if second_of_day < @range_begin
@@ -186,46 +224,9 @@ module OpenHAB
         end
       end
 
-      # Creates a range that can be compared against time of day objects or strings
-      # to see if they are within the range
-      # @since 2.4.0
-      # @return Range object representing a TimeOfDay Range
-      module_function
-
-      def between(range)
-        raise ArgumentError, 'Supplied object must be a range' unless range.is_a? Range
-
-        start = to_time_of_day(range.begin)
-        ending = to_time_of_day(range.end)
-
-        start_sod = start.local_time.to_second_of_day
-        ending_sod = ending.local_time.to_second_of_day
-        ending_sod += TimeOfDayRangeElement::NUM_SECONDS_IN_DAY if ending_sod < start_sod
-
-        start_range = TimeOfDayRangeElement.new(sod: start_sod, range_begin: start_sod)
-        ending_range = TimeOfDayRangeElement.new(sod: ending_sod, range_begin: start_sod)
-        range.exclude_end? ? (start_range...ending_range) : (start_range..ending_range)
-      end
-
-      #
-      # Convert object to TimeOfDay object
-      #
-      # @param [Object] object TimeOfDay or String to be converted
-      #
-      # @return [TimeOfDay] TimeOfDay created from supplied object
-      #
-      private_class_method def to_time_of_day(object)
-        case object
-        when String then TimeOfDay.parse(object)
-        when Time, OpenHAB::DSL::Types::DateTimeType, OpenHAB::DSL::Items::DateTimeItem
-          TimeOfDay.new(h: object.hour, m: object.min, s: object.sec)
-        else object
-        end
-      end
-
       MIDNIGHT = TimeOfDay.midnight
       NOON = TimeOfDay.noon
-      ALL_DAY = between(TimeOfDay.new(h: 0, m: 0, s: 0)..TimeOfDay.new(h: 23, m: 59, s: 59))
+      ALL_DAY = TimeOfDay.between(TimeOfDay.new(h: 0, m: 0, s: 0)..TimeOfDay.new(h: 23, m: 59, s: 59))
     end
   end
 end

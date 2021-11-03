@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/time_of_day'
-
 require_relative 'numeric_item'
 
 module OpenHAB
