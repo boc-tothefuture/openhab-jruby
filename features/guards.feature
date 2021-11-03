@@ -223,7 +223,7 @@ Feature:  guards
       | OutsideSwitch | ON           | 50           |
 
 
-  Scenario Outline: Between guards accept strings to guard rule execution based on time of day
+  Scenario Outline: Between guards accept a mix of string and time of day objects to guard rule execution based on time of day
     Given a rule template:
       """
       rule 'Log an entry if started between 3:30:04 and midnight using strings' do
@@ -235,9 +235,11 @@ Feature:  guards
     When I deploy the rule
     Then It <should> log "Between met expectation" within 15 seconds
     Examples:
-      | between                                                                                           | should     |
-      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | should     |
-      | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | should not |
+      | between                                                                                                | should     |
+      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'       | should     |
+      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..TimeOfDay.new(h: Time.now.hour, m: Time.now.min + 5)  | should     |
+      | TimeOfDay.new(h: Time.now.hour, m: Time.now.min - 5)..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | should     |
+      | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>'      | should not |
 
   Scenario Outline: All item types should work in only_if/not_if guards
    Given items:
