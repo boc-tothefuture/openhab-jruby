@@ -59,6 +59,10 @@ module OpenHAB
         # @return [Timer] Rescheduled timer instances
         #
         def reschedule(duration = nil)
+          unless duration.nil? || duration.is_a?(Java::JavaTimeTemporal::TemporalAmount)
+            raise ArgumentError, 'Supplied argument must be a duration'
+          end
+
           duration ||= @duration
           Timers.timer_manager.add(self)
           @timer.reschedule(ZonedDateTime.now.plus(duration))
