@@ -27,6 +27,8 @@ module OpenHAB
       #
       def method_missing(method, *args, &block)
         logger.trace("method missing, performing OpenHab Lookup for: #{method}")
+        return OpenHAB::Core::ScriptHandling.scriptUnloaded if method == 'scriptUnloaded'
+
         EntityLookup.lookup_entity(method) || super
       end
 
@@ -42,8 +44,7 @@ module OpenHAB
         logger.trace("Checking if OpenHAB entites exist for #{method_name}")
         method_name = method_name.to_s if method_name.is_a? Symbol
 
-        method_name == 'scriptLoaded' ||
-          method_name == 'scriptUnloaded' ||
+        method_name == 'scriptUnloaded' ||
           EntityLookup.lookup_entity(method_name) ||
           super
       end
