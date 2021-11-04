@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.10.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.10.2...4.10.3) (2021-11-04)
+
+
+### Bug Fixes
+
+* **timer:** check the argument to reschedule ([d1e895f](https://github.com/boc-tothefuture/openhab-jruby/commit/d1e895ff243f7160bd2f54cfce5925ba07fabfff))
+
 ## [4.10.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.10.1...4.10.2) (2021-11-03)
 
 
