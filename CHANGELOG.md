@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.11.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.10.3...4.11.0) (2021-11-05)
+
+
+### Features
+
+* **between:** support for month-day ranges ([f059c59](https://github.com/boc-tothefuture/openhab-jruby/commit/f059c59a173d322270e1c3053c94dba531e3beaa))
+
 ## [4.10.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.10.2...4.10.3) (2021-11-04)
 
 

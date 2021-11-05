@@ -5,5 +5,5 @@
 #
 module OpenHAB
   # @return [String] Version of OpenHAB helper libraries
-  VERSION = '4.10.3'
+  VERSION = '4.11.0'
 end
