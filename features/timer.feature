@@ -157,8 +157,8 @@ Feature:  timer
     When I wait 2 seconds
     And I remove the rules file
     Then It should not log 'Timer Fired' within 10 seconds
-    
-   Scenario: Timers with IDs specified are reeentrant
+
+  Scenario: Timers with IDs specified are reeentrant
     Given items:
       | type   | name       | label      |
       | Number | Alarm_Mode | Alarm Mode |
@@ -182,7 +182,7 @@ Feature:  timer
     But If I wait 3 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
-   
+
   Scenario: Timers can be retrieved by id
     Given code in a rules file:
       """
@@ -198,4 +198,17 @@ Feature:  timer
     When I deploy the rule
     Then It should not log 'Timer Fired' within 5 seconds
 
+  Scenario: Reentrant timer will change its duration to the latest call
+    Given code in a rules file
+      """
+      [10, 5, 1].each do |duration|
+        after duration.seconds, id: :test do
+          logger.info("Timer Fired after #{duration} seconds")
+        end
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'Timer Fired after 1 seconds' within 2 seconds
+    And It should not log 'Timer Fired after 5 seconds' within 7 seconds
+    And It should not log 'Timer Fired after 10 seconds' within 12 seconds
 
