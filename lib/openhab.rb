@@ -19,7 +19,6 @@ module OpenHAB
   # @param [Object] base Object to decorate with DSL and helper methods
   #
   #
-  # rubocop:disable  Metrics/MethodLength
   # Number of extensions and includes requires more lines
   def self.extended(base)
     OpenHAB::Core.wait_till_openhab_ready
@@ -27,16 +26,14 @@ module OpenHAB
     base.extend OpenHAB::Core::ScriptHandling
     base.extend OpenHAB::Core::EntityLookup
     base.extend OpenHAB::DSL
-    base.extend OpenHAB::DSL::TimeOfDay
+    base.extend OpenHAB::DSL::Between
 
-    base.send :include, OpenHAB::DSL::TimeOfDay
     base.send :include, OpenHAB::DSL::Items
     base.send :include, OpenHAB::DSL::Types
     logger.info "OpenHAB JRuby Scripting Library Version #{OpenHAB::VERSION} Loaded"
 
     OpenHAB::Core.add_rubylib_to_load_path
   end
-  # rubocop:enable  Metrics/MethodLength
 end
 
 # Extend caller with OpenHAB methods

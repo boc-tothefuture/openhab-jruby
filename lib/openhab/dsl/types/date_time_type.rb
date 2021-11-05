@@ -59,7 +59,7 @@ module OpenHAB
           rescue java.lang.StringIndexOutOfBoundsException, java.lang.IllegalArgumentException
             # Try ruby's Time.parse if OpenHAB's DateTimeType parser fails
             begin
-              DateTimeType.new(Time.parse(time_string))
+              DateTimeType.new(::Time.parse(time_string))
             rescue ArgumentError
               raise ArgumentError, "Unable to parse #{time_string} into a DateTimeType"
             end
@@ -194,7 +194,7 @@ module OpenHAB
         # @return [Time] A Time object representing the same instant and timezone
         #
         def to_time
-          Time.at(to_i, nsec, :nsec).localtime(utc_offset)
+          ::Time.at(to_i, nsec, :nsec).localtime(utc_offset)
         end
 
         #
@@ -256,7 +256,7 @@ module OpenHAB
         # @!visibility private
         def respond_to_missing?(method, _include_private = false)
           return true if zoned_date_time.respond_to?(method)
-          return true if Time.instance_methods.include?(method.to_sym)
+          return true if ::Time.instance_methods.include?(method.to_sym)
 
           super
         end
@@ -267,7 +267,7 @@ module OpenHAB
         #
         def method_missing(method, *args, &block)
           return zoned_date_time.send(method, *args, &block) if zoned_date_time.respond_to?(method)
-          return to_time.send(method, *args, &block) if Time.instance_methods.include?(method.to_sym)
+          return to_time.send(method, *args, &block) if ::Time.instance_methods.include?(method.to_sym)
 
           super
         end
