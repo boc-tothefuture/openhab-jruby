@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.13.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.12.1...4.13.0) (2021-11-06)
+
+
+### Bug Fixes
+
+* **test:** test against jruby plugin that fixes 3.2M2 reload bug ([bb98cb0](https://github.com/boc-tothefuture/openhab-jruby/commit/bb98cb091a8fb79578fcd834922eebc33aac394e))
+
+
+### Features
+
+* **percenttype:** add PercentType#scale and PercentType#to_byte ([54d2ec3](https://github.com/boc-tothefuture/openhab-jruby/commit/54d2ec3cb7a84eac5bb0341911f9fe16da81d105)), closes [#350](https://github.com/boc-tothefuture/openhab-jruby/issues/350)
+
 ## [4.12.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.12.0...4.12.1) (2021-11-06)
 
 
