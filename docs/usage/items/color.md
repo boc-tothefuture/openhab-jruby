@@ -39,6 +39,8 @@ HueBulb.to_rgb # => [100%, 0%, 0%]
 HueBulb.rgb # => 16711680
 HueBulb.to_hex # => "0xff0000"
 HueBulb.on? # => true
+HueBulb.red.to_byte # => 255
+HubBulb.blue.to_byte # => 0
 
 HueBulb.on
 HueBulb.dim

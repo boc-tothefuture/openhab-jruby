@@ -64,6 +64,32 @@ module OpenHAB
         def to_s
           "#{to_string}%"
         end
+
+        #
+        # Scale the value to a particular range
+        #
+        # @param range [Range] the range as a numeric
+        # @return [Numeric] the value as a percentage of the range
+        #
+        def scale(range) # rubocop:disable Metrics/AbcSize
+          unless range.is_a?(Range) && range.min.is_a?(Numeric) && range.max.is_a?(Numeric)
+            raise ArgumentError, 'range must be a Range of Numerics'
+          end
+
+          result = (to_d * (range.max - range.min) / 100) + range.min
+          case range.max
+          when Integer then result.round
+          when Float then result.to_f
+          else result
+          end
+        end
+
+        # scale the value to fit in a single byte
+        #
+        # @return [Integer] an integer in the range 0-255
+        def to_byte
+          scale(0..255)
+        end
       end
     end
   end
