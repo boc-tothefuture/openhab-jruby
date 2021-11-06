@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.12.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.12.0...4.12.1) (2021-11-06)
+
+
+### Bug Fixes
+
+* **dev:** target ruby 2.6 ([cdd3ea1](https://github.com/boc-tothefuture/openhab-jruby/commit/cdd3ea1c75c950b807a56f68cbd78ad68c59939d))
+* **quantity:** fix comparison between integer on left and quantity on right ([b7f7531](https://github.com/boc-tothefuture/openhab-jruby/commit/b7f753110332b71f8b665e22562e2a02d3c86614)), closes [#352](https://github.com/boc-tothefuture/openhab-jruby/issues/352)
+
 # [4.12.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.11.2...4.12.0) (2021-11-06)
 
 
