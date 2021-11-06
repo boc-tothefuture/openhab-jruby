@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'JRuby Helper Libraries for OpenHAB Scripting'
   spec.description   = 'JRuby Helper Libraries for OpenHAB Scripting'
   spec.homepage      = 'https://boc-tothefuture.github.io/openhab-jruby/'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.6.0')
 
   #  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 

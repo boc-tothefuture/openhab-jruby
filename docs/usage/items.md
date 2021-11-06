@@ -16,7 +16,7 @@ All items can be accessed as an enumerable the `items` method.
 |--------------------|--------------------------------------------------------------------------------|
 | []                 | Get a specific item by name, this syntax can be used to dynamically load items |
 | include?           | Check to see if an item with the given name exists                             |
-| enumerable methods | All methods [here](https://ruby-doc.org/core-2.5.0/Enumerable.html)            |
+| enumerable methods | All methods [here](https://ruby-doc.org/core-2.6.8/Enumerable.html)            |
 
 ## Examples
 
@@ -69,7 +69,7 @@ Item types have methods added to them to make it flow naturally within the a rub
 
 State returns nil instead of UNDEF or NULL so that it can be used with with [Ruby safe navigation operator](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html) `&.`  Use `undef?` or `null?` to check for those states.
 
-To operate across an arbitrary collection of items you can place them in an [array](https://ruby-doc.org/core-2.5.0/Array.html) and execute methods against the array.
+To operate across an arbitrary collection of items you can place them in an [array](https://ruby-doc.org/core-2.6.8/Array.html) and execute methods against the array.
 
 ```ruby
 number_items = [Livingroom_Temp, Bedroom_Temp]
