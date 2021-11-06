@@ -58,11 +58,11 @@ module OpenHAB
         timer = @timer_manager.reentrant_timer(id: id, &block)
         if timer
           logger.trace("Reentrant timer found - #{timer}")
-          timer.reschedule
+          timer.cancel
         else
           logger.trace('No reentrant timer found, creating new timer')
-          ReentrantTimer.new(duration: duration, id: id, &block)
         end
+        ReentrantTimer.new(duration: duration, id: id, &block)
       end
     end
   end
