@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.12.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.11.2...4.12.0) (2021-11-06)
+
+
+### Features
+
+* **build:** test against jruby 9.3 ([690699d](https://github.com/boc-tothefuture/openhab-jruby/commit/690699d61911cc4e67a4bad0b37d7f43328cf73e))
+
 ## [4.11.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.11.1...4.11.2) (2021-11-06)
 
 
