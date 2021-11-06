@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.11.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.11.1...4.11.2) (2021-11-06)
+
+
+### Bug Fixes
+
+* **metadata:** return ruby hash inside metadata enumerator ([4347aa9](https://github.com/boc-tothefuture/openhab-jruby/commit/4347aa98966561c12c32a6695d6acadd6cedb2bf))
+
 ## [4.11.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.11.0...4.11.1) (2021-11-06)
 
 
