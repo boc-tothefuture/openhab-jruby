@@ -33,9 +33,11 @@ additional useful methods.
 
 `PercentType` is the data type used by `DimmerItem` and `RollershutterItem`
 
-| Method | Description                                                 |
-| ------ | ----------------------------------------------------------- |
-| up?    | The value is first coerced to UpDownType, then if it's UP   |
-| down?  | The value is first coerced to UpDownType, then if it's DOWN |
-| on?    | The value is first coerced to OnOffType, then if it's ON    |
-| off?   | The value is first coerced to OnOffType, then if it's OFF   |
+| Method       | Description                                                                        |
+| ------------ | ---------------------------------------------------------------------------------- |
+| up?          | The value is first coerced to UpDownType, then if it's UP                          |
+| down?        | The value is first coerced to UpDownType, then if it's DOWN                        |
+| on?          | The value is first coerced to OnOffType, then if it's ON                           |
+| off?         | The value is first coerced to OnOffType, then if it's OFF                          |
+| scale(range) | Scale the value to the given range. I.e. PercentType.new(50).scale(-50..10) => -20 |
+| to_byte      | Scale the value to a byte (i.e. 0-255)                                             |
