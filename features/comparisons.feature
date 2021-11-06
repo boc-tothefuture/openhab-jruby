@@ -24,6 +24,7 @@ Feature: comparisons
       | Number:Temperature | Number10C       | Number Ten              | Temperatures          | 10°C                      |
       | Number:Temperature | Number10C2      | Number Ten              | Temperatures          | 10°C                      |
       | Number:Temperature | Number20C       | Number Twenty           | Temperatures          | 20°C                      |
+      | Number:Illuminance | NumberLux       | Number Lux              |                       | 465.3 lx                  |
       | Dimmer             | Dimmer5         | Dimmer Five             |                       | 5                         |
       | Dimmer             | Dimmer10        | Dimmer Ten              |                       | 10                        |
       | Switch             | SwitchOne       | Switch One              | Switches              | ON                        |
@@ -178,6 +179,13 @@ Feature: comparisons
         [ Number10C                   , 'eql?', '10 °C'                     , false ]  ,
         [ Number10C                   , '>'   , '4 °F'                      , true  ]  ,
         [ Number10C                   , '=='  , '10 °C'                     , true  ]  ,
+
+        # NumberItem with UoM vs Integer
+        [ Number10C                   , 'eql?', 10                          , false ]  ,
+        [ Number10C                   , '>'   , 3                           , true  ]  ,
+        [ Number10C                   , '=='  , 10                          , true  ]  ,
+        [ NumberLux                   , '<'   , 100                         , false ]  ,
+        [ 100                         , '>'   , NumberLux                   , false ]  ,
 
         # NumberItem with UoM vs QuantityType
         [ Number10C                   , 'eql?', QuantityType.new('10°C')    , false ]  ,
