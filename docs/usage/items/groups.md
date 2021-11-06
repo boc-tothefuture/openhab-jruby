@@ -10,7 +10,7 @@ grand_parent: Usage
 # Groups
 
 A group can be accessed directly by name, to access all groups use the `groups` method. A Group behaves like a regular Item, but also lets you iterate through it's members and use all the available methods of 
-[Enumerable](https://ruby-doc.org/core-2.5.0/Enumerable.html). If the group have a type all methods of that type is directly available.
+[Enumerable](https://ruby-doc.org/core-2.6.8/Enumerable.html). If the group have a type all methods of that type is directly available.
 
 
 ## Group Methods
@@ -20,7 +20,7 @@ A group can be accessed directly by name, to access all groups use the `groups` 
 | members            | Used to inform a rule that you want it to operate on the items in the group (see example below) |
 | all_members        | Gets all descendants of the group recursively excluding groups. Pass :all as argument to include groups as well, or :groups to only get the sub groups. It's also possible to pass a block to make more advanced filters |
 | each               | Iterates through the members of the group and execute the code in the provided block for each member |
-| enumerable methods | All methods [here](https://ruby-doc.org/core-2.5.0/Enumerable.html)                             |
+| enumerable methods | All methods [here](https://ruby-doc.org/core-2.6.8/Enumerable.html)                             |
 
 ## Use in triggers
 
@@ -94,7 +94,7 @@ rule 'Turn off any switch that changes' do
 end
 ```
 
-Built in [enumerable](https://ruby-doc.org/core-2.5.1/Enumerable.html)/[set](https://ruby-doc.org/stdlib-2.5.1/libdoc/set/rdoc/Set.html) functions can be applied to groups.  
+Built in [enumerable](https://ruby-doc.org/core-2.6.8/Enumerable.html)/[set](https://ruby-doc.org/stdlib-2.6.8/libdoc/set/rdoc/Set.html) functions can be applied to groups.  
 ```ruby
 logger.info("Max is #{Temperatures.max}")
 logger.info("Min is #{Temperatures.min}")

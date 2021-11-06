@@ -15,7 +15,7 @@ Things can be access using the `things` method and subsequent operations on that
 | ------------------ | ------------------------------------------------------------------- |
 | things             | Return all things as a Ruby Set                                     |
 | []                 | Get a specific thing by name                                        |
-| enumerable methods | All methods [here](https://ruby-doc.org/core-2.5.0/Enumerable.html) |
+| enumerable methods | All methods [here](https://ruby-doc.org/core-2.6.8/Enumerable.html) |
 
 ```ruby
 things.each { |thing| logger.info("Thing: #{thing.uid}")}
