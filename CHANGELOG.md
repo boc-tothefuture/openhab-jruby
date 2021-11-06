@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.11.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.11.0...4.11.1) (2021-11-06)
+
+
+### Bug Fixes
+
+* **reentrant_timer:** reset the timer duration to the latest call ([e8e8b66](https://github.com/boc-tothefuture/openhab-jruby/commit/e8e8b666080a6cf0b47a08e13b9d4dcc8f9a9cbc))
+
 # [4.11.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.10.3...4.11.0) (2021-11-05)
 
 
