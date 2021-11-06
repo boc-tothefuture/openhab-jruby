@@ -21,7 +21,7 @@ JRuby Scripting OpenHAB is GitHub repo is [here](https://github.com/boc-tothefut
 # Development Environment Setup
 The development process has been tested on MacOS, others operating systems may work. 
 
-1. Install Ruby 2.5.8 - Recommended method is using [rbenv](https://github.com/rbenv/rbenv#installation)
+1. Install Ruby 2.6.8 - Recommended method is using [rbenv](https://github.com/rbenv/rbenv#installation)
 2. Fork [the repo](https://github.com/boc-tothefuture/openhab-jruby) and clone it
 3. Install [bundler](https://bundler.io/)
 4. Run `bundler install` from inside of the repo directory

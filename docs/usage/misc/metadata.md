@@ -9,7 +9,7 @@ grand_parent: Usage
 
 # Item Metadata
 
-Item metadata can be accessed through `Item.meta` using the hash syntax. The `Item.meta` variable is also an [Enumerable](https://ruby-doc.org/core-2.5.8/Enumerable.html).
+Item metadata can be accessed through `Item.meta` using the hash syntax. The `Item.meta` variable is also an [Enumerable](https://ruby-doc.org/core-2.6.8/Enumerable.html).
 
 In addition to the Enumerable methods, the following methods are available for `Item.meta`:
 
