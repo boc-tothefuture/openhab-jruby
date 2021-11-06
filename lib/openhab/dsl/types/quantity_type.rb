@@ -50,6 +50,9 @@ module OpenHAB
         def <=>(other) # rubocop:disable Metrics
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(self.class)
+            return unitize(other.unit).compare_to(other) if unit == ONE
+            return compare_to(other.unitize(unit)) if other.unit == ONE
+
             compare_to(other)
           elsif other.is_a?(Items::NumericItem) ||
                 (other.is_a?(Items::GroupItem) && other.base_item.is_a?(NumericItem))
