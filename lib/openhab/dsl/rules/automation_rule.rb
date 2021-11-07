@@ -279,7 +279,7 @@ module OpenHAB
         # Loggging inflates method length
         def check_guards(event:)
           if @guard.should_run? event
-            now = TimeOfDay::TimeOfDay.now
+            now = Time.now
             return true if @between.cover? now
 
             logger.trace("Skipped execution of rule '#{name}' because the current time #{now} "\
