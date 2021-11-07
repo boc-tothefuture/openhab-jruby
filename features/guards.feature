@@ -223,23 +223,25 @@ Feature:  guards
       | OutsideSwitch | ON           | 50           |
 
 
-  Scenario Outline: Between guards accept a mix of string and time of day objects to guard rule execution based on time of day
+  Scenario Outline: Between guards accept a mix of string and time of day objects to guard rule execution based on time of day or day of month
     Given a rule template:
       """
-      rule 'Log an entry if started between 3:30:04 and midnight using strings' do
+      rule 'Log result of between guard' do
         on_start
-        run { logger.info ("Between met expectation")}
+        run { logger.info ("Between guard: true")}
         between <between>
+        otherwise { logger.info ("Between guard: false")}
       end
       """
     When I deploy the rule
-    Then It <should> log "Between met expectation" within 15 seconds
+    Then It should log "Between guard: <result>" within 5 seconds
     Examples:
-      | between                                                                                                | should     |
-      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'       | should     |
-      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..TimeOfDay.new(h: Time.now.hour, m: Time.now.min + 5)  | should     |
-      | TimeOfDay.new(h: Time.now.hour, m: Time.now.min - 5)..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | should     |
-      | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>'      | should not |
+      | between                                                                                                | result   |
+      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'       | true     |
+      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..TimeOfDay.new(h: Time.now.hour, m: Time.now.min + 5)  | true     |
+      | TimeOfDay.new(h: Time.now.hour, m: Time.now.min - 5)..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | true     |
+      | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>'      | false    | 
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'             | true     |
 
   Scenario Outline: All item types should work in only_if/not_if guards
    Given items:
