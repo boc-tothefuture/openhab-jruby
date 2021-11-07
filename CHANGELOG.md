@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.13.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.0...4.13.1) (2021-11-07)
+
+
+### Bug Fixes
+
+* **month_day:** test between guards with Time instead of TimeOfDay ([65bf3b1](https://github.com/boc-tothefuture/openhab-jruby/commit/65bf3b159255b56a2446059aeda535002d51639f))
+
 # [4.13.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.12.1...4.13.0) (2021-11-06)
 
 
