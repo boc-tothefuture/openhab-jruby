@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.13.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.2...4.13.3) (2021-11-08)
+
+
+### Bug Fixes
+
+* **binding:** move gem home default and mkdirs ([a9ccf3f](https://github.com/boc-tothefuture/openhab-jruby/commit/a9ccf3f1db4d2335c1509ffe56c83242926e097c))
+
 ## [4.13.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.1...4.13.2) (2021-11-08)
 
 
