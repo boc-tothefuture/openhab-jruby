@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.13.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.1...4.13.2) (2021-11-08)
+
+
+### Bug Fixes
+
+* **binding:** fix binding support for gem ugprades ([07a1668](https://github.com/boc-tothefuture/openhab-jruby/commit/07a16681864f49e9613673988bbad0e09fd3fcba))
+
 ## [4.13.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.0...4.13.1) (2021-11-07)
 
 
