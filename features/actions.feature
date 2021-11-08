@@ -60,8 +60,8 @@ Feature:  actions
 
   Scenario: Use say action wrapper from a rule
     Given items:
-      | type   | name        | label  | state  |
-      | Switch | LightSwitch | Switch | OFF    |
+      | type   | name        | label  | state |
+      | Switch | LightSwitch | Switch | OFF   |
     And a rule
       """
       rule 'Use say' do
@@ -75,3 +75,15 @@ Feature:  actions
     When I deploy the rule
     And item "LightSwitch" state is changed to "ON"
     Then It should log "Switch changed" within 5 seconds
+
+  Scenario: Say action can say the value of an item
+    Given items:
+      | type   | name        | state       |
+      | String | Action_Text | Hello World |
+    And a rule
+      """
+        say Action_Text
+        logger.info("We said: Hello World")
+      """
+    When I deploy the rule
+    Then It should log "We said: Hello World" within 5 seconds
