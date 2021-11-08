@@ -10,6 +10,10 @@ Feature:  attachments
   Scenario Outline: Triggers works with attachments
     Given a deployed rule:
       """
+       def five_seconds_from_now
+         cron = (Time.now + 5).strftime('%S %M %H ? * ?').tap { |cron| logger.info(cron)}
+       end
+
       rule 'Access attachment' do
         <trigger>, attach: '<attachment>'
         run { |event| logger.info("attachment - #{event.attachment}")}
@@ -25,10 +29,17 @@ Feature:  attachments
       | trigger 'core.ItemStateUpdateTrigger', itemName: 'Switch1' | moo        | item "Switch1" state is changed to "ON"           |
       | channel 'astro:sun:home:rise#event'                        | quz        | channel "astro:sun:home:rise#event " is triggered |
       | on_start true                                              | qaz        | I wait 2 seconds                                  |
+      | every :second                                              | qux        | I wait 2 seconds                                  |
+      | cron five_seconds_from_now                                 | qab        | I wait 5 seconds                                  |
+
 
   Scenario Outline: Guards have access to attachments
     Given a deployed rule:
       """
+       def five_seconds_from_now
+         cron = (Time.now + 5).strftime('%S %M %H ? * ?').tap { |cron| logger.info(cron)}
+       end
+
       rule 'Access attachment' do
         <trigger>, attach: '<attachment>'
         only_if { |event| logger.info("attachment - #{event.attachment}") }
@@ -46,3 +57,5 @@ Feature:  attachments
       | trigger 'core.ItemStateUpdateTrigger', itemName: 'Switch1' | moo        | item "Switch1" state is changed to "ON"           |
       | channel 'astro:sun:home:rise#event'                        | quz        | channel "astro:sun:home:rise#event " is triggered |
       | on_start true                                              | qaz        | I wait 2 seconds                                  |
+      | every :second                                              | qux        | I wait 2 seconds                                  |
+      | cron five_seconds_from_now                                 | qab        | I wait 5 seconds                                  |
