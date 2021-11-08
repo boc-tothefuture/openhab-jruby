@@ -65,9 +65,9 @@ module OpenHAB
         end
 
         if email
-          NotificationAction.sendNotification email, msg
+          NotificationAction.sendNotification email.to_s, msg.to_s
         else
-          NotificationAction.sendBroadcastNotification msg
+          NotificationAction.sendBroadcastNotification msg.to_s
         end
       end
 
@@ -83,7 +83,7 @@ module OpenHAB
       #
       def say(text, voice: nil, sink: nil, volume: nil)
         volume = Types::PercentType.new(volume) unless volume.is_a?(Types::PercentType) || volume.nil?
-        Voice.say text, voice, sink, volume
+        Voice.say text.to_s, voice&.to_s, sink&.to_s, volume
       end
 
       #
@@ -97,7 +97,7 @@ module OpenHAB
       #
       def play_sound(filename, sink: nil, volume: nil)
         volume = Types::PercentType.new(volume) unless volume.is_a?(Types::PercentType) || volume.nil?
-        Audio.playSound sink, filename, volume
+        Audio.playSound sink&.to_s, filename.to_s, volume
       end
     end
   end
