@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.13.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.3...4.13.4) (2021-11-10)
+
+
+### Bug Fixes
+
+* **actions:** call to_s to accept item as an argument ([9f770b3](https://github.com/boc-tothefuture/openhab-jruby/commit/9f770b3cb9c0a8610b5e7154efab04406a0e35a8))
+* **dev:** add mac M1 platform to Gemfile.lock ([76fdbfd](https://github.com/boc-tothefuture/openhab-jruby/commit/76fdbfd6ca8dc6d0d1eafaa086611d85ea0ecd95))
+
 ## [4.13.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.2...4.13.3) (2021-11-08)
 
 
