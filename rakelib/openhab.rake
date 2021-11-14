@@ -150,6 +150,7 @@ namespace :openhab do
       mkdir_p gem_home
       mkdir_p ruby_lib_dir
       services_config = ERB.new <<~SERVICES
+        org.openhab.automation.jrubyscripting:local_context=threadsafe
         org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
         org.openhab.automation.jrubyscripting:rubylib=<%= ruby_lib_dir %>
       SERVICES
