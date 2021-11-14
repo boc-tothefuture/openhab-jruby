@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.13.5](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.4...4.13.5) (2021-11-14)
+
+
+### Bug Fixes
+
+* **script_handling:** scriptLoaded and scriptUnloaded not executed ([4082280](https://github.com/boc-tothefuture/openhab-jruby/commit/4082280eef5519cc0efac0a3e53c366f327fc1a0))
+
 ## [4.13.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.3...4.13.4) (2021-11-10)
 
 
