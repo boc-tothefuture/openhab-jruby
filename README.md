@@ -1,6 +1,5 @@
 # JRuby OpenHAB Scripting Library
 
-
 <p align="center">
   <a href="https://github.com/boc-tothefuture/openhab-jruby/releases">
     <img alt="GitHub release (latest SemVer including pre-releases)" src="https://img.shields.io/github/v/release/boc-tothefuture/openhab-jruby?include_prereleases"/>
@@ -22,15 +21,18 @@
   </a>
  </p>
 
-
 ## Usage
+
 Usage documentation is located [here](https://boc-tothefuture.github.io/openhab-jruby/).
 
 ## Contribution
+
 Contribution process is described [here](https://boc-tothefuture.github.io/openhab-jruby/contributing/).
 
 ## Discussion
-Please see [this thread](https://community.openhab.org/t/jruby-openhab-rules-system/110598) on the OpenHAB forum for further discussion.  Ideas and suggestions are welcome.
+
+Please see [this thread](https://community.openhab.org/t/jruby-openhab-rules-system/110598) on the OpenHAB forum for further discussion. Ideas and suggestions are welcome.
 
 ## Library Status
-This is an alpha and syntax and all elements are subject to change as the library evolves.
+
+This is a beta and syntax and all elements are subject to change as the library evolves.
