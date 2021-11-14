@@ -5,6 +5,9 @@ require 'openhab/log/logger'
 # OpenHAB main module
 module OpenHAB
   module Core
+    #
+    # Provide callback mechanisms for script handling
+    #
     module ScriptHandling
       module_function
 
@@ -26,11 +29,17 @@ module OpenHAB
       include OpenHAB::Log
 
       class << self
+        #
+        # Return script_loaded_hooks
+        #
         # @!visibility private
         def script_loaded_hooks
           @script_loaded_hooks ||= []
         end
 
+        #
+        # Return script_unloaded_hooks
+        #
         # @!visibility private
         def script_unloaded_hooks
           @script_unloaded_hooks ||= []

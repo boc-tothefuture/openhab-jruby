@@ -20,26 +20,27 @@ module OpenHAB
   #
   #
   # Number of extensions and includes requires more lines
+  # rubocop: disable Metrics/MethodLength
   def self.extended(base)
     OpenHAB::Core.wait_till_openhab_ready
     base.extend Log
-    base.extend OpenHAB::Core::ScriptHandlingCallbacks
+    base.extend OpenHAB::Core::ScriptHandling
     base.extend OpenHAB::Core::EntityLookup
     base.extend OpenHAB::DSL
     base.extend OpenHAB::DSL::Between
 
+    base.send :include, OpenHAB::Core::ScriptHandlingCallbacks
     base.send :include, OpenHAB::DSL::Items
     base.send :include, OpenHAB::DSL::Types
-    base.send :include, OpenHAB::Core::ScriptHandling
     logger.info "OpenHAB JRuby Scripting Library Version #{OpenHAB::VERSION} Loaded"
 
     OpenHAB::Core.add_rubylib_to_load_path
   end
+  # rubocop: enable Metrics/MethodLength
 end
 
 # Extend caller with OpenHAB methods
 
 # rubocop: disable Style/MixinUsage
 extend OpenHAB
-include OpenHAB::Core::ScriptHandling
 # rubocop: enable Style/MixinUsage
