@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.14.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.5...4.14.0) (2021-11-14)
+
+
+### Bug Fixes
+
+* **script_handling:** add tests ([70008fc](https://github.com/boc-tothefuture/openhab-jruby/commit/70008fcb83eb7be86273df1f4093ebc014cbc529))
+
+
+### Features
+
+* **script_callbacks:** make script_loaded/unloaded accessible ([4a5e33d](https://github.com/boc-tothefuture/openhab-jruby/commit/4a5e33d85c051e8b4418b02a005a494406118fd8)), closes [#316](https://github.com/boc-tothefuture/openhab-jruby/issues/316)
+
 ## [4.13.5](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.4...4.13.5) (2021-11-14)
 
 
