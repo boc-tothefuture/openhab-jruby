@@ -55,6 +55,19 @@ items.grep(SwitchItem)
      .each { |switch| logger.info("#{switch.id} OFF") }
 ```
 
+Switches accept boolean commands (true/false)
+
+```ruby
+# Turn on switch
+SwitchItem << true
+
+# Turn off switch
+SwitchItem << false
+
+# Turn off switch if any in another group is on
+SwitchItem << Switches.any?(&:on?)
+```
+
 Switch states also work in case statements.
 ```ruby
 items.grep(SwitchItem)

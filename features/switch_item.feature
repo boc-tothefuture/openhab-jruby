@@ -10,7 +10,7 @@ Feature:  switch_item
       | Switch | TestSwitch | Test Switch | <initial_state> |
     And code in a rules file
       """
-      # Invert all switches
+     # Invert all switches
       items.select { |item| item.is_a? Switch }
            .each   { |switch| if switch.off? then switch.on else switch.off end}
       """
@@ -20,6 +20,21 @@ Feature:  switch_item
       | initial_state | final_state |
       | ON            | OFF         |
       | OFF           | ON          |
+
+    Scenario Outline: Switches accept boolean values
+    Given items:
+      | type   | name       | label       | state           |
+      | Switch | TestSwitch | Test Switch | <initial_state> |
+    And code in a rules file
+      """
+      TestSwitch << <bool>
+      """
+    When I deploy the rules file
+    Then "TestSwitch" should be in state "<final_state>" within 5 seconds
+    Examples:
+      | initial_state | bool   | final_state |
+      | OFF           | true   | ON          |
+      | ON            | false  | OFF         |
 
   Scenario Outline: Switches respond to toggle
     Given items:
