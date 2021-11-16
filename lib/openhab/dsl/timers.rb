@@ -29,9 +29,12 @@ module OpenHAB
       # @return [Timer] Timer object
       #
       def after(duration, id: nil, &block)
-        return Timers.reentrant_timer(duration: duration, id: id, &block) if id
+        # Carry rule name to timer thread
+        thread_locals = { RULE_NAME: Thread.current[:RULE_NAME] } if Thread.current[:RULE_NAME]
+        thread_locals ||= {}
+        return Timers.reentrant_timer(duration: duration, thread_locals: thread_locals, id: id, &block) if id
 
-        Timer.new(duration: duration, &block)
+        Timer.new(duration: duration, thread_locals: thread_locals, &block)
       end
 
       #
@@ -55,7 +58,7 @@ module OpenHAB
       # @param [Object] id to associate with timer
       # @param [Block] block to execute, block is passed a Timer object
       # @return [ReentrantTimer] Timer object
-      def self.reentrant_timer(duration:, id:, &block)
+      def self.reentrant_timer(duration:, id:, thread_locals: nil, &block)
         timer = @timer_manager.reentrant_timer(id: id, &block)
         if timer
           logger.trace("Reentrant timer found - #{timer}")
@@ -63,7 +66,7 @@ module OpenHAB
         else
           logger.trace('No reentrant timer found, creating new timer')
         end
-        ReentrantTimer.new(duration: duration, id: id, &block)
+        ReentrantTimer.new(duration: duration, id: id, thread_locals: thread_locals, &block)
       end
     end
   end

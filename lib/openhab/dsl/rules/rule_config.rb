@@ -88,9 +88,9 @@ module OpenHAB
           @trigger_delays = {}
           @attachments = {}
           @caller = caller_binding.eval 'self'
+          name(rule_name)
           enabled(true)
           on_start(false)
-          name(rule_name)
         end
 
         #
@@ -132,19 +132,6 @@ module OpenHAB
         #
         def my(&block)
           @caller.instance_eval(&block)
-        end
-
-        #
-        # Create a logger where name includes rule name if name is set
-        #
-        # @return [Log::Logger] Logger with name that appended with rule name if rule name is set
-        #
-        def logger
-          if name
-            Log.logger_for(name.chomp.gsub(/\s+/, '_'))
-          else
-            super
-          end
         end
 
         #

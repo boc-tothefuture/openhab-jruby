@@ -28,7 +28,7 @@ module OpenHAB
     base.extend OpenHAB::DSL
 
     base.send :include, OpenHAB::Core::ScriptHandlingCallbacks
-    logger.info "OpenHAB JRuby Scripting Library Version #{OpenHAB::VERSION} Loaded"
+    logger.debug "OpenHAB JRuby Scripting Library Version #{OpenHAB::VERSION} Loaded"
 
     OpenHAB::Core.add_rubylib_to_load_path
   end

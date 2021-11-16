@@ -4,6 +4,7 @@ require 'java'
 require 'delegate'
 require 'forwardable'
 require 'openhab/log/logger'
+require 'openhab/core/thread_local'
 
 module OpenHAB
   module DSL
@@ -22,6 +23,7 @@ module OpenHAB
       # @since 2.0.0
       class Timer < SimpleDelegator
         include OpenHAB::Log
+        include OpenHAB::Core::ThreadLocal
         extend Forwardable
 
         def_delegator :@timer, :has_terminated, :terminated?
@@ -32,8 +34,10 @@ module OpenHAB
         # @param [Duration] duration Duration until timer should fire
         # @param [Block] block Block to execute when timer fires
         #
-        def initialize(duration:, &block)
+        # rubocop: disable Metrics/MethodLength
+        def initialize(duration:, thread_locals: {}, &block)
           @duration = duration
+          @thread_locals = thread_locals
 
           # A semaphore is used to prevent a race condition in which calling the block from the timer thread
           # occurs before the @timer variable can be set resulting in @timer being nil
@@ -48,6 +52,7 @@ module OpenHAB
             Timers.timer_manager.add(self)
           end
         end
+        # rubocop: enable Metrics/MethodLength
 
         #
         # Reschedule timer
@@ -86,7 +91,9 @@ module OpenHAB
           proc {
             semaphore.synchronize do
               Timers.timer_manager.delete(self)
-              yield(self)
+              thread_local(@thread_locals) do
+                yield(self)
+              end
             end
           }
         end

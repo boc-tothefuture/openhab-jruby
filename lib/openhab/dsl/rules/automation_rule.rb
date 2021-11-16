@@ -57,17 +57,19 @@ module OpenHAB
         # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
         #
         #
-        def execute(mod = nil, inputs = nil)
-          logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect})" }
-          logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
-          if trigger_delay inputs
-            trigger_delay = trigger_delay(inputs)
-            process_trigger_delay(trigger_delay, mod, inputs)
-          else
-            # If guards are satisfied execute the run type blocks
-            # If they are not satisfied, execute the Othewise blocks
-            queue = create_queue(inputs)
-            process_queue(queue, mod, inputs)
+        def execute(mod = nil, inputs = nil) # rubocop:disable Metrics/MethodLength
+          thread_local(RULE_NAME: name) do
+            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect})" }
+            logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
+            if trigger_delay inputs
+              trigger_delay = trigger_delay(inputs)
+              process_trigger_delay(trigger_delay, mod, inputs)
+            else
+              # If guards are satisfied execute the run type blocks
+              # If they are not satisfied, execute the Othewise blocks
+              queue = create_queue(inputs)
+              process_queue(queue, mod, inputs)
+            end
           end
         end
 
@@ -336,10 +338,12 @@ module OpenHAB
         # @param [Task] task task containing otherwise block to execute
         #
         def process_task(event, task)
-          case task
-          when RuleConfig::Run then process_run_task(event, task)
-          when RuleConfig::Trigger then process_trigger_task(event, task)
-          when RuleConfig::Otherwise then process_otherwise_task(event, task)
+          thread_local(RULE_NAME: name) do
+            case task
+            when RuleConfig::Run then process_run_task(event, task)
+            when RuleConfig::Trigger then process_trigger_task(event, task)
+            when RuleConfig::Otherwise then process_otherwise_task(event, task)
+            end
           end
         end
 
