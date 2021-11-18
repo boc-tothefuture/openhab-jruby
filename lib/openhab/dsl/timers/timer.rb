@@ -24,8 +24,6 @@ module OpenHAB
         include OpenHAB::Log
         extend Forwardable
 
-        def_delegator :@timer, :is_active, :active?
-        def_delegator :@timer, :is_running, :running?
         def_delegator :@timer, :has_terminated, :terminated?
 
         #
