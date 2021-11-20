@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.14.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.14.0...4.14.1) (2021-11-20)
+
+
+### Bug Fixes
+
+* **timer:** remove redundant delegators ([932e82b](https://github.com/boc-tothefuture/openhab-jruby/commit/932e82b561c6a246a178160bb3dfa1b8a83dd594))
+
 # [4.14.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.13.5...4.14.0) (2021-11-14)
 
 
