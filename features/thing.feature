@@ -24,6 +24,22 @@ Feature:  thing
     When I deploy the rules file
     Then It should log 'Thing: astro:sun:home' within 5 seconds
 
+  Scenario: Things support by_channel lookup with string
+    Given code in a rules file
+      """
+      logger.info("Thing: #{things.by_channel('astro:sun:home:rise#start').uid}")
+      """
+    When I deploy the rules file
+    Then It should log 'Thing: astro:sun:home' within 5 seconds
+
+  Scenario: Things support by_channel lookup with a ChannelUID
+    Given code in a rules file
+      """
+      logger.info("Thing: #{things.by_channel(org.openhab.core.thing.ChannelUID.new('astro:sun:home:rise#start')).uid}")
+      """
+    When I deploy the rules file
+    Then It should log 'Thing: astro:sun:home' within 5 seconds
+
   Scenario Outline: Rule supports thing status changes for changed and updated
     Given a deployed rule:
       """

@@ -107,4 +107,12 @@ class Rest
     body[:groupNames] = groups unless groups.empty?
     body[:groupType] = item.group_type unless item.group_type.to_s.empty?
   end
+
+  def self.link_item(item_name:, channel_uid:)
+    body = { itemName: item_name, channelUID: channel_uid }
+    escaped_channel_uid = URI.encode_www_form_component(channel_uid)
+    put("/rest/links/#{item_name}/#{escaped_channel_uid}", headers: json, body: body.to_json)
+    # For some reason linking via the api doesn't create the metadata, this ensures it exists
+    put("/rest/items/#{item_name}/metadata/channel", headers: json, body: {value: channel_uid}.to_json)
+  end
 end

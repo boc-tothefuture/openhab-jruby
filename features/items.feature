@@ -225,3 +225,32 @@ Feature:  items
       | Number | Number1 |
       | String | String1 |
       | Player | Player1 |
+
+  Scenario: Item returns nil for thing for item without a channel
+    Given items:
+      | type | name |
+      | Number | Number1 |
+    And code in a rules file
+      """
+      logger.info("Thing: #{Number1.thing}")
+      """
+    When I deploy the rules file
+    Then It should log "Thing: " within 5 seconds
+
+  Scenario: Item returns its associated thing for item with a channel
+    Given feature 'openhab-binding-astro' installed
+    And items:
+      | type | name |
+      | String | PhaseName |
+    And things:
+      | id   | thing_uid | label          | config                | status |
+      | home | astro:sun | Astro Sun Data | {"geolocation":"0,0"} | enable |
+    And linked:
+      | item | channel |
+      | PhaseName | astro:sun:home:phase#name |
+    And code in a rules file
+      """
+      logger.info("Thing: #{PhaseName.thing.uid}")
+      """
+    When I deploy the rules file
+    Then It should log "Thing: astro:sun:home" within 5 seconds

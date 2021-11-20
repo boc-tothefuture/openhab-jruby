@@ -96,6 +96,18 @@ module OpenHAB
         alias include? []
         alias key? []
 
+        # Gets a specific thing related to a channel in the format binding_id:type_id:thing_id:channel_id
+        # or by the ChannelUID object
+        # @return Thing specified by channel or nil if the thing does not exist in the thing registry
+        def by_channel(channel_uid)
+          channel_uid = org.openhab.core.thing.ChannelUID.new(channel_uid) if channel_uid.is_a?(String)
+          thing = $things.get(channel_uid.thing_uid) # rubocop: disable Style/GlobalVars
+          return unless thing
+
+          logger.trace("Retrieved Thing(#{thing}) from registry for channel uid: #{channel_uid}")
+          Thing.new(thing)
+        end
+
         # explicit conversion to array
         def to_a
           $things.getAll.map { |thing| Thing.new(thing) } # rubocop: disable Style/GlobalVars

@@ -131,6 +131,16 @@ module OpenHAB
           group_names.map { |name| Groups.groups[name] }
         end
 
+        # Return the item's thing if this item is associated with a thing
+        #
+        # @return [Thing] The thing associated with this item or nil
+        def thing
+          channel = meta['channel']&.value
+          return unless channel
+
+          things.by_channel(channel)
+        end
+
         #
         # Check equality without type conversion
         #
