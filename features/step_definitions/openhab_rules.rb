@@ -56,7 +56,7 @@ def wait_for_rule(log_line)
     # it can take up to 20s to notice the new rule file when Java's
     # WatchService doesn't support actively watching, and only polls (i.e. on
     # MacOS)
-    openhab_client("bundle:restart `bundle:id 'openHAB Core :: Bundles :: Automation Script RuleSupport'`")
+    openhab_client('bundle:restart org.openhab.core.automation.module.script.rulesupport')
   end
   wait_until(seconds: 60, msg: 'Rule not added') { check_log(log_line) }
 end
