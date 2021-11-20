@@ -106,13 +106,17 @@ def ensure_openhab_running
 end
 
 def check_log(entry)
+  check_log_regexp(/#{Regexp.escape(entry)}/)
+end
+
+def check_log_regexp(regexp)
   lines = File.foreach(openhab_log).select { |line| line.include?('Error during evaluation of script') }
   if lines.any?
     log(lines)
     raise 'Error in script'
   end
 
-  File.foreach(openhab_log).grep(/#{Regexp.escape(entry)}/).any?
+  File.foreach(openhab_log).grep(regexp).any?
 end
 
 def add_group(name:, group_type: nil, groups: nil, function: nil, params: nil)
