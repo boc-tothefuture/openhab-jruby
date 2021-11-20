@@ -24,6 +24,14 @@ Feature:  thing
     When I deploy the rules file
     Then It should log 'Thing: astro:sun:home' within 5 seconds
 
+  Scenario: Things support [] lookup using a ThingUID
+    Given code in a rules file
+      """
+      logger.info("Thing: #{things[org.openhab.core.thing.ThingUID.new('astro:sun:home')].uid}")
+      """
+    When I deploy the rules file
+    Then It should log 'Thing: astro:sun:home' within 5 seconds
+
   Scenario Outline: Rule supports thing status changes for changed and updated
     Given a deployed rule:
       """
