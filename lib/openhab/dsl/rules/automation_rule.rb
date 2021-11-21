@@ -87,7 +87,7 @@ module OpenHAB
         # @return [Queue] <description>
         #
         def create_queue(inputs)
-          case check_guards(event: inputs&.dig('event'))
+          case check_guards(event: extract_event(inputs))
           when true
             @run_queue.dup.grep_v(RuleConfig::Otherwise)
           when false
