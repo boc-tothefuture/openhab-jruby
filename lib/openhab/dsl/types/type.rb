@@ -27,7 +27,7 @@ module OpenHAB
         #
         def coerce(other)
           logger.trace("Coercing #{self} (#{self.class}) as a request from #{other.class}")
-          return [other.as(self.class), self] if other.is_a?(Type)
+          return [other.as(self.class), self] if other.is_a?(Type) && other.respond_to?(:as)
         end
 
         #
