@@ -2,7 +2,7 @@
 
 require 'json'
 
-OPENHAB_VERSIONS = ['3.1.0'].freeze
+OPENHAB_VERSIONS = ['3.1.0', '3.2.0.M1'].freeze
 
 # rubocop: disable Metrics/BlockLength
 # Disabled due to part of buid / potentially refactor into classes
