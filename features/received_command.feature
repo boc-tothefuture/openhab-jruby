@@ -20,22 +20,49 @@ Feature:  received_command
     When item "Alarm_Mode" state is changed to "7"
     Then It should log 'Item received command: 7' within 5 seconds
 
-  Scenario: Rule supports helper predicates for named commands
-    Given a deployed rule:
+  Scenario Outline: Rule supports helper predicates for named commands
+    Given items:
+      | type        | name     |
+      | <item_type> | TestItem |
+    And a deployed rule:
       """
       rule 'Execute rule when item received command' do
-        received_command Alarm_Mode
+        received_command TestItem
         run do |event|
-          %i[refresh? on? off? increase? decrease? up? down? stop? move? play? pause? rewind? fastforward? next? previous?].each do |pred|
-            logger.info("Item received #{pred[0..-2]}: #{event.send(pred)}")
-          end
+          predicates = %i[refresh? on? off? increase? decrease? up? down? stop? move? play? pause? rewind? fast_forward? next? previous?]
+
+          predicate_to_command_map = predicates.map {|pred| [pred, pred[0..-2].upcase] }.to_h.merge(fast_forward?: 'FASTFORWARD')
+
+          command = "<command>"
+          predicate = predicate_to_command_map.key(command)
+
+          logger.info("Item received <command>: #{event.send(predicate)}")
+
+          other_results = predicates.grep_v(predicate).select { |other_pred| event.send(other_pred) }
+          logger.info("Other predicates matched: #{other_results.any?} #{other_results}")
         end
       end
       """
-    When item "Alarm_Mode" state is changed to "REFRESH"
-    Then It should log 'Item received up: false' within 5 seconds
-    And It should log 'Item received play: false' within 5 seconds
-    And It should log 'Item received refresh: true' within 5 seconds
+    When item "TestItem" state is changed to "<command>"
+    Then It should log 'Item received <command>: true' within 5 seconds
+    And It should log 'Other predicates matched: false' within 5 seconds
+    Examples:
+      | item_type     | command     |
+      | Switch        | REFRESH     |
+      | Switch        | ON          |
+      | Switch        | OFF         |
+      | Dimmer        | INCREASE    |
+      | Dimmer        | DECREASE    |
+      | Rollershutter | UP          |
+      | Rollershutter | DOWN        |
+      | Rollershutter | STOP        |
+      | Rollershutter | MOVE        |
+      | Player        | PLAY        |
+      | Player        | PAUSE       |
+      | Player        | REWIND      |
+      | Player        | FASTFORWARD |
+      | Player        | NEXT        |
+      | Player        | PREVIOUS    |
 
   Scenario Outline: Rule supports received_command with specific values
     Given a deployed rule:
