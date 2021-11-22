@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.14.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.14.1...4.14.2) (2021-11-22)
+
+
+### Bug Fixes
+
+* **comparisons:** fix comparison errors between two types ([d694bc8](https://github.com/boc-tothefuture/openhab-jruby/commit/d694bc8760f7bb5f63a48848cff5165779646e47))
+
 ## [4.14.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.14.0...4.14.1) (2021-11-20)
 
 
