@@ -131,6 +131,23 @@ module OpenHAB
           group_names.map { |name| Groups.groups[name] }
         end
 
+        # Return the item's thing if this item is linked with a thing. If an item is linked to more than one thing,
+        # this method only returns the first thing.
+        #
+        # @return [Thing] The thing associated with this item or nil
+        def linked_thing
+          all_linked_things.first
+        end
+
+        # Returns all of the item's linked things.
+        #
+        # @return [Array] An array of things or an empty array
+        def all_linked_things
+          registry = OpenHAB::Core::OSGI.service('org.openhab.core.thing.link.ItemChannelLinkRegistry')
+          channels = registry.get_bound_channels(name).to_a
+          channels.map(&:thing_uid).uniq.map { |tuid| things[tuid] }
+        end
+
         #
         # Check equality without type conversion
         #
