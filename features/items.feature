@@ -225,3 +225,53 @@ Feature:  items
       | Number | Number1 |
       | String | String1 |
       | Player | Player1 |
+
+  Scenario: Item returns nil for an unlinked item
+    Given items:
+      | type | name |
+      | Number | Number1 |
+    And code in a rules file
+      """
+      logger.info("No thing: #{Number1.linked_thing.nil?}")
+      """
+    When I deploy the rules file
+    Then It should log "No thing: true" within 5 seconds
+
+  Scenario: Item returns its linked thing
+    Given feature 'openhab-binding-astro' installed
+    And items:
+      | type | name |
+      | String | PhaseName |
+    And things:
+      | id   | thing_uid | label          | config                | status |
+      | home | astro:sun | Astro Sun Data | {"geolocation":"0,0"} | enable |
+    And linked:
+      | item | channel |
+      | PhaseName | astro:sun:home:phase#name |
+    And code in a rules file
+      """
+      logger.info("Thing: #{PhaseName.linked_thing.uid}")
+      """
+    When I deploy the rules file
+    Then It should log "Thing: astro:sun:home" within 5 seconds
+
+  Scenario: Item returns all its linked things
+    Given feature 'openhab-binding-astro' installed
+    And feature 'openhab-binding-systeminfo' installed
+    And items:
+      | type | name |
+      | String | TooManyThings |
+    And things:
+      | id   | thing_uid | label          | config                | status |
+      | home | astro:sun | Astro Sun Data | {"geolocation":"0,0"} | enable |
+      | systeminfo | systeminfo:computer | System Info | { } | enable |
+    And linked:
+      | item | channel |
+      | TooManyThings | astro:sun:home:phase#name |
+      | TooManyThings | systeminfo:computer:systeminfo:network#ip |
+    And code in a rules file
+      """
+      logger.info("Thing: #{TooManyThings.all_linked_things.map(&:uid).map(&:to_s).sort.join(',')}")
+      """
+    When I deploy the rules file
+    Then It should log "Thing: astro:sun:home,systeminfo:computer:systeminfo" within 5 seconds
