@@ -60,7 +60,7 @@ module OpenHAB
         #
         # rubocop: disable Metrics/MethodLength
         def execute(mod = nil, inputs = nil)
-          thread_local(logger_name: logger_name) do
+          thread_local(logger_name: name) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect})" }
             logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
             if trigger_delay inputs
@@ -394,15 +394,6 @@ module OpenHAB
         def process_run_task(event, task)
           logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
           @run_context.instance_exec(event, &task.block)
-        end
-
-        #
-        # Return a formatted logger name based on the rule name
-        #
-        # @return [String] logger name to use for this rule
-        #
-        def logger_name
-          name.chomp.gsub(/\s+/, '_')
         end
 
         #

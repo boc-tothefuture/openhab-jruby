@@ -139,7 +139,7 @@ module OpenHAB
     #
     def logger(name = nil)
       name ||= Thread.current[:logger_name]
-      return Log.logger_for(name) if name
+      return Log.logger_for(name.to_s.strip) if name
 
       Log.logger_for_class(self.class)
     end
@@ -158,8 +158,9 @@ module OpenHAB
            !klass.java_class.name.start_with?('org.jruby.Ruby')
           klass = klass.java_class
         end
-        name = klass.name
-        @loggers[name] ||= Log.logger_for(name)
+
+        name = klass.name.gsub('::', '.') unless klass.name == 'Object'
+        Log.logger_for(name)
       end
 
       #
@@ -170,30 +171,26 @@ module OpenHAB
       # @return [Logger] Logger for the supplied name
       #
       def logger_for(name)
-        log_prefix = Configuration.log_prefix
-        log_prefix += if name
-                        ".#{name}"
-                      else
-                        ".#{log_caller}"
-                      end
-        Logger.new(log_prefix)
+        log_prefix = [Configuration.log_prefix, rules_file, name].compact
+                                                                 .join('.')
+                                                                 .gsub(/\s+/, '_')
+        @loggers[log_prefix] ||= Logger.new(log_prefix)
       end
 
       private
 
       #
-      # Figure out the log prefix
+      # Figure out the rules file name
       #
       # @return [String] Prefix for log messages
       #
-      def log_caller
-        logger.error('LOGGING: log_caller called')
+      def rules_file
         caller_locations.map(&:path)
                         .grep_v(%r{openhab/core/})
                         .grep_v(/rubygems/)
                         .grep_v(%r{lib/ruby})
-                        .first
-                        .yield_self { |caller| File.basename(caller, '.*') }
+                        .last
+                        &.then { |caller| File.basename(caller, '.*') }
       end
     end
 
@@ -206,7 +203,7 @@ module OpenHAB
     def self.included(base)
       class << base
         def logger
-          Log.logger_for_class(self)
+          Log.logger_for_class(self.class)
         end
       end
     end
