@@ -12,10 +12,10 @@ Feature:  quantity_type
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
     Examples:
-      | quantity         | result   |
-      | 50 \| '°F'       | 50.0 °F  |
-      | 50.0 \| '°F'     | 50.0 °F  |
-      | 50.to_d \| '°F'  | 50.0 °F  |
+      | quantity       | result  |
+      | 50 \|'°F'      | 50.0 °F |
+      | 50.0 \|'°F'    | 50.0 °F |
+      | 50.to_d \|'°F' | 50.0 °F |
 
   Scenario Outline: QuantityType is constructuble with | from numeric from within rule
     Given items:
@@ -63,9 +63,9 @@ Feature:  quantity_type
     When I deploy the rules file
     Then It should log 'Result is <result>' within 5 seconds
     Examples:
-      | quantity                   | operator | operand | result   |
-      | QuantityType.new('50 °F')  | +        | '50 °F' | 100.0 °F |
-      | QuantityType.new('50 °F')  | -        | '25 °F' | 25.0 °F  |
+      | quantity                  | operator | operand | result   |
+      | QuantityType.new('50 °F') | +        | '50 °F' | 100.0 °F |
+      | QuantityType.new('50 °F') | -        | '25 °F' | 25.0 °F  |
 
 
   Scenario Outline: QuantityType responds to math operations where operand is Numeric
@@ -177,3 +177,17 @@ Feature:  quantity_type
       | PowerNeg                  | negative? | true   |
       | PowerZero                 | zero?     | true   |
       | Number1                   | positive? | true   |
+
+  Scenario Outline: QuantityType can be converted to another unit with |
+    Given code in a rules file
+      """
+      quantity = <source>|'<unit1>'
+      quantity = quantity|'<unit2>'
+      logger.info("quantity in the target unit is #{quantity.to_i}")
+      """
+    When I deploy the rules file
+    Then It should log "quantity in the target unit is <target>" within 5 seconds
+    Examples:
+      | source | unit1 | unit2 | target |
+      | 0      | °C    | °F    | 32     |
+      | 1      | h     | s     | 3600   |

@@ -30,11 +30,7 @@ module OpenHAB
         #
         # @return [QuantityType] This quantity converted to another unit
         #
-        def |(other)
-          other = org.openhab.core.types.util.UnitUtils.parse_unit(other) if other.is_a?(String)
-
-          to_unit(other)
-        end
+        alias | to_unit
 
         #
         # Comparison
