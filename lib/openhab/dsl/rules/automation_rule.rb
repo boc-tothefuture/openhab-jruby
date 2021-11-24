@@ -87,7 +87,7 @@ module OpenHAB
         # @return [Queue] <description>
         #
         def create_queue(inputs)
-          case check_guards(event: inputs&.dig('event'))
+          case check_guards(event: extract_event(inputs))
           when true
             @run_queue.dup.grep_v(RuleConfig::Otherwise)
           when false
@@ -96,12 +96,29 @@ module OpenHAB
         end
 
         #
+        # Extract the event object from inputs
+        # and merge other inputs keys/values into the event
+        #
+        # @param [Map] inputs rule inputs
+        #
+        # @return [Object] event object
+        #
+        def extract_event(inputs)
+          event = inputs&.dig('event')
+          unless event
+            event = Struct.new(:event, :attachment, :command).new
+            event.command = inputs&.dig('command')
+          end
+          add_attachment(event, inputs)
+        end
+
+        #
         # Get the trigger_id for the trigger that caused the rule creation
         #
         # @return [Hash] Input hash potentially containing trigger id
         #
         def trigger_id(inputs)
-          inputs&.keys&.grep(/\.event$/)&.first&.chomp('.event')
+          inputs&.dig('module')
         end
 
         #
@@ -127,10 +144,6 @@ module OpenHAB
         def add_attachment(event, inputs)
           attachment = @attachments[trigger_id(inputs)]
           return event unless attachment
-
-          # Some events, like those from cron triggers don't have an event
-          # so an event is created
-          event ||= Struct.new(:event).new
 
           event.attachment = attachment
           event
@@ -301,11 +314,9 @@ module OpenHAB
         # @param [Map] inputs OpenHAB map object describing rule trigge
         #
         #
-        # rubocop:disable Metrics/MethodLength
         # No logical way to break this method up
         def process_queue(run_queue, mod, inputs)
-          event = inputs&.dig('event')
-          event = add_attachment(event, inputs)
+          event = extract_event(inputs)
 
           while (task = run_queue.shift)
             if task.is_a? RuleConfig::Delay
@@ -317,7 +328,6 @@ module OpenHAB
         rescue StandardError => e
           print_backtrace(e)
         end
-        # rubocop:enable Metrics/MethodLength
 
         #
         # Dispatch execution block tasks to different methods
