@@ -8,19 +8,18 @@ grand_parent: Usage
 ---
 
 # Timers
-Timers are created using the `after` method. 
+
+Timers are created using the `after` method.
 
 After method parameters
 
 | Parameter | Description                                                        |
-|-----------|--------------------------------------------------------------------|
+| --------- | ------------------------------------------------------------------ |
 | duration  | Duration for timer                                                 |
 | id        | Optional object that is used to identify the timer                 |
 | block     | Block to execute after duration, block will be passed timer object |
 
-
 Timers with an id are reentrant, by id and block. Reentrant means that when the same id and block are encountered the timer is resheduled rather than creating a second new timer.
-
 
 Timer Object
 The timer object has all of the methods of the [OpenHAB Timer](https://www.openhab.org/docs/configuration/actions.html#timers) with a change to the reschedule method to enable it to operate Ruby context. The following methods are available to a Timer object:
@@ -31,13 +30,12 @@ The timer object has all of the methods of the [OpenHAB Timer](https://www.openh
 | `execution_time` |           | An alias for `Timer::getExecutionTime()`. Available in OpenHAB 3.1+                                |
 | `reschedule`     | duration  | Optional [duration](#Duration) if unspecified original duration supplied to `after` method is used |
 | `active?`        |           | An alias for `Timer::isActive()`                                                                   |
+| `cancelled?`     |           | An alias for `Timer::isCancelled()`. Available in OpenHAB 3.2+                                     |
 | `running?`       |           | An alias for `Timer::isRunning()`                                                                  |
 | `terminated?`    |           | An alias for `Timer::hasTerminated()`                                                              |
 
-
 Timers
-Timers with an id can be accessed via the timers[id] method.  This method returns a set of timers associated with that id.
-
+Timers with an id can be accessed via the timers[id] method. This method returns a set of timers associated with that id.
 
 ```ruby
 after 5.seconds do
@@ -105,4 +103,3 @@ rule 'Cancel timer' do
   on_start true
 end
 ```
-
