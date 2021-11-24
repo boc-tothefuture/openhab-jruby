@@ -25,6 +25,13 @@ Then(/^It should log '([^']*)' within (\d+) seconds$/) do |string, seconds|
   end
 end
 
+Then(%r{^It should log /(.*)/ within (\d+) seconds$}) do |regex, seconds|
+  wait_until(seconds: seconds.to_i,
+             msg: "/#{regex}/ not found in log file (#{openhab_log}) within #{seconds} seconds") do
+    check_log_regexp(/#{regex}/)
+  end
+end
+
 # Then('It should log {string} within {int} seconds') do |string, seconds|
 #  wait_until(seconds: seconds, msg: "'#{string}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
 #    check_log(string)
