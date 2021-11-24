@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.15.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.14.2...4.15.0) (2021-11-24)
+
+
+### Bug Fixes
+
+* **guard:** include attachment in guards' event ([61f387c](https://github.com/boc-tothefuture/openhab-jruby/commit/61f387c077e3d2c085cb639aa87dd51e32475d48))
+
+
+### Features
+
+* **trigger:** support creating triggers for any trigger type ([6a90d43](https://github.com/boc-tothefuture/openhab-jruby/commit/6a90d43dc19d372cea56f6874ac46404f86f3058))
+
 ## [4.14.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.14.1...4.14.2) (2021-11-22)
 
 
