@@ -196,7 +196,7 @@ end
 
 Given('(set )log level (to ){word}') do |level|
   set_log_level('jsr223.jruby', level)
-  set_log_level('org.openhab.binding.jrubyscripting', level)
+  set_log_level('org.openhab.automation.jrubyscripting', level)
   set_log_level('org.openhab.core.automation', level)
 end
 
