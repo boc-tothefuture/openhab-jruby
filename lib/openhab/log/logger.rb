@@ -137,11 +137,11 @@ module OpenHAB
     #
     # @return [Logger] for the current class
     #
-    def logger
-      name = Thread.current[:logger_name]
+    def logger(name = nil)
+      name ||= Thread.current[:logger_name]
       return Log.logger_for(name) if name
 
-      Log.logger(self.class)
+      Log.logger_for_class(self.class)
     end
 
     class << self
@@ -152,7 +152,7 @@ module OpenHAB
       #
       # @return [Logger] for the supplied name
       #
-      def logger(klass)
+      def logger_for_class(klass)
         if klass.respond_to?(:java_class) &&
            klass.java_class &&
            !klass.java_class.name.start_with?('org.jruby.Ruby')
@@ -163,26 +163,13 @@ module OpenHAB
       end
 
       #
-      # Configure a logger for the supplied class name
-      #
-      # @param [String] name to configure logger for
-      #
-      # @return [Logger] for the supplied classname
-      #
-      def logger_for(name)
-        configure_logger_for(name)
-      end
-
-      private
-
-      #
-      # Configure a logger for the supplied classname
+      # Configure a logger for the supplied name
       #
       # @param [String] classname to create logger for
       #
-      # @return [Logger] Logger for the supplied classname
+      # @return [Logger] Logger for the supplied name
       #
-      def configure_logger_for(name)
+      def logger_for(name)
         log_prefix = Configuration.log_prefix
         log_prefix += if name
                         ".#{name}"
@@ -192,12 +179,15 @@ module OpenHAB
         Logger.new(log_prefix)
       end
 
+      private
+
       #
       # Figure out the log prefix
       #
       # @return [String] Prefix for log messages
       #
       def log_caller
+        logger.error('LOGGING: log_caller called')
         caller_locations.map(&:path)
                         .grep_v(%r{openhab/core/})
                         .grep_v(/rubygems/)
@@ -216,7 +206,7 @@ module OpenHAB
     def self.included(base)
       class << base
         def logger
-          Log.logger(self)
+          Log.logger_for_class(self)
         end
       end
     end
