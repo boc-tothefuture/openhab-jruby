@@ -11,7 +11,7 @@ Feature:  gem_install
     And a services template filed named "jruby.cfg"
       """
       org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
-      org.openhab.automation.jrubyscripting:gems=openhab-scripting=~>3.0
+      org.openhab.automation.jrubyscripting:gems=openhab-scripting=~>4.0
       org.openhab.automation.jrubyscripting:rubylib=<%= ruby_lib_dir %>
       """
     And code in a rules file:
@@ -19,7 +19,7 @@ Feature:  gem_install
       logger.info("OpenHAB helper library is at #{OpenHAB::VERSION}")
       """
     When I start OpenHAB
-    Then It should log 'Installing Gem: openhab-scripting' within 120 seconds
+    Then It should log 'Installing Gem: openhab-scripting' within 180 seconds
     And I deploy the rules file
-    Then It should log 'OpenHAB helper library is at' within 160 seconds
+    Then It should log 'OpenHAB helper library is at' within 200 seconds
 

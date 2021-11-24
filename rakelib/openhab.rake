@@ -11,7 +11,7 @@ require 'digest/md5'
 # rubocop: disable Rake/MethodDefinitionInTask Legacy code
 namespace :openhab do
   @openhab_version = ENV['OPENHAB_VERSION'] || '3.1.0'
-  @jruby_bundle = 'https://github.com/boc-tothefuture/openhab2-addons/releases/download/3.2.0/org.openhab.automation.jrubyscripting-3.2.0-SNAPSHOT.jar'
+  @jruby_bundle = 'https://ci.openhab.org/job/openHAB-Addons/lastStableBuild/artifact/bundles/org.openhab.automation.jrubyscripting/target/org.openhab.automation.jrubyscripting-3.2.0-SNAPSHOT.jar'
   karaf_client_path = File.join(OPENHAB_DIR, 'runtime/bin/client')
   karaf_client_args = [karaf_client_path, '-p', 'habopen'].freeze
   @karaf_client = karaf_client_args.join(' ')
@@ -89,7 +89,7 @@ namespace :openhab do
 
   def gem_home
     full_path = File.realpath OPENHAB_DIR
-    File.join(full_path, '/conf/automation/lib/ruby/gem_home')
+    File.join(full_path, '/conf/scripts/lib/ruby/gem_home')
   end
 
   def ruby_lib_dir
@@ -150,7 +150,6 @@ namespace :openhab do
       mkdir_p gem_home
       mkdir_p ruby_lib_dir
       services_config = ERB.new <<~SERVICES
-        org.openhab.automation.jrubyscripting:local_context=threadsafe
         org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
         org.openhab.automation.jrubyscripting:rubylib=<%= ruby_lib_dir %>
       SERVICES
@@ -181,7 +180,8 @@ namespace :openhab do
   task :upgrade, [:file] do |_, args|
     start
     if karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').include?('Active')
-      karaf("bundle:update #{bundle_id} file://#{args[:file]}")
+      source = args[:file] ? "file://#{args[:file]}" : @jruby_bundle
+      karaf("bundle:update #{bundle_id} #{source}")
     else
       abort "Bundle not installed, can't upgrade"
     end

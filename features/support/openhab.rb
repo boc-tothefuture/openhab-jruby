@@ -75,7 +75,7 @@ def ruby_lib_dir
 end
 
 def gem_home
-  File.join(openhab_dir, 'conf/automation/lib/ruby/gem_home')
+  File.join(openhab_dir, 'conf/scripts/lib/ruby/gem_home')
 end
 
 def services_dir
