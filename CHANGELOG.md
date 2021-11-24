@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.15.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.15.0...4.15.1) (2021-11-24)
+
+
+### Bug Fixes
+
+* **rule:** rule method should return the rule object ([239403f](https://github.com/boc-tothefuture/openhab-jruby/commit/239403f31ac0385ceb90613e1c96a6ed759e7b40))
+
 # [4.15.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.14.2...4.15.0) (2021-11-24)
 
 
