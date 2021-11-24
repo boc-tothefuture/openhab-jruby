@@ -46,15 +46,56 @@ Feature:  logging
     When I deploy the rules file named "log_test.rb"
     Then It should log 'jsr223.jruby.log_test' within 5 seconds
 
-  Scenario: Logging should include rule name inside a rule
-    Given a rule:
+  Scenario Outline: Logging should include rule name inside a rule
+    Given items:
+      | type   | name    |
+      | Switch | Switch1 |
+    And a rule:
       """
-      rule 'log test' do
-        on_start
-        run { logger.info('Log Test') }
+      rule 'rule 1' do
+        <trigger1>
+        run { logger.info('1 <trigger1>') }
       end
-
+      rule 'rule 2' do
+        <trigger1>
+        run { logger.info('2 <trigger1>') }
+      end
+      rule 'rule 3' do
+        <trigger2>
+        run { logger.info('3 <trigger2>') }
+      end
+      rule 'rule 4' do
+        <trigger2>
+        run { logger.info('4 <trigger2>') }
+      end
       """
     When I deploy the rule
-    Then It should log 'jsr223.jruby.log_test' within 5 seconds
+    And item "Switch1" state is changed to "ON"
+    Then It should log "[jsr223.jruby.rule_1                 ] - 1 <trigger1>" within 5 seconds
+    And It should log "[jsr223.jruby.rule_2                 ] - 2 <trigger1>" within 5 seconds
+    And It should log "[jsr223.jruby.rule_3                 ] - 3 <trigger2>" within 5 seconds
+    And It should log "[jsr223.jruby.rule_4                 ] - 4 <trigger2>" within 5 seconds
+    Examples:
+      | trigger1                 | trigger2                 |
+      | on_start                 | received_command Switch1 |
+      | received_command Switch1 | on_start                 |
 
+  Scenario Outline: Logging should include rule name inside a timer
+    Given items:
+      | type   | name    |
+      | Switch | Switch1 |
+    And a rule:
+      """
+      rule 'on start' do
+        on_start
+        run { after(1.second) { logger.info('inside a timer') } }
+      end
+      rule 'trigger' do
+        received_command Switch1
+        run { after(1.second) { logger.info('inside a timer') } }
+      end
+      """
+    When I deploy the rule
+    And item "Switch1" state is changed to "ON"
+    Then It should log "[jsr223.jruby.trigger                ] - inside a trigger" within 5 seconds
+    And  It should log "[jsr223.jruby.on_start               ] - inside a timer" within 5 seconds

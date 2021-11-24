@@ -24,6 +24,7 @@ module OpenHAB
         include OpenHAB::Log
         include OpenHAB::Core::ThreadLocal
         include OpenHAB::DSL::Between
+        include OpenHAB::Core::ThreadLocal
         java_import java.time.ZonedDateTime
 
         #
@@ -57,19 +58,23 @@ module OpenHAB
         # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
         #
         #
+        # rubocop: disable Metrics/MethodLength
         def execute(mod = nil, inputs = nil)
-          logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect})" }
-          logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
-          if trigger_delay inputs
-            trigger_delay = trigger_delay(inputs)
-            process_trigger_delay(trigger_delay, mod, inputs)
-          else
-            # If guards are satisfied execute the run type blocks
-            # If they are not satisfied, execute the Othewise blocks
-            queue = create_queue(inputs)
-            process_queue(queue, mod, inputs)
+          thread_local(logger_name: logger_name) do
+            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect})" }
+            logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
+            if trigger_delay inputs
+              trigger_delay = trigger_delay(inputs)
+              process_trigger_delay(trigger_delay, mod, inputs)
+            else
+              # If guards are satisfied execute the run type blocks
+              # If they are not satisfied, execute the Othewise blocks
+              queue = create_queue(inputs)
+              process_queue(queue, mod, inputs)
+            end
           end
         end
+        # rubocop: enable Metrics/MethodLength
 
         #
         # Cleanup any resources associated with automation rule
@@ -129,10 +134,6 @@ module OpenHAB
         # @return [Array] Array of trigger delays that match rule UID
         #
         def trigger_delay(inputs)
-          # Parse this to get the trigger UID:
-          # ["72698819-83cb-498a-8e61-5aab8b812623.event", "oldState", "module", \
-          #  "72698819-83cb-498a-8e61-5aab8b812623.oldState", "event", "newState",\
-          #  "72698819-83cb-498a-8e61-5aab8b812623.newState"]
           @trigger_delays[trigger_id(inputs)]
         end
 
@@ -393,6 +394,15 @@ module OpenHAB
         def process_run_task(event, task)
           logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
           @run_context.instance_exec(event, &task.block)
+        end
+
+        #
+        # Return a formatted logger name based on the rule name
+        #
+        # @return [String] logger name to use for this rule
+        #
+        def logger_name
+          name.chomp.gsub(/\s+/, '_')
         end
 
         #

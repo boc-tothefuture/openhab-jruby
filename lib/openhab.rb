@@ -20,10 +20,8 @@ module OpenHAB
   #
   #
   # Number of extensions and includes requires more lines
-  # rubocop: disable Metrics/MethodLength
   def self.extended(base)
     OpenHAB::Core.wait_till_openhab_ready
-    base.extend Log
     base.extend OpenHAB::Core::ScriptHandling
     base.extend OpenHAB::Core::EntityLookup
     base.extend OpenHAB::DSL
@@ -36,7 +34,6 @@ module OpenHAB
 
     OpenHAB::Core.add_rubylib_to_load_path
   end
-  # rubocop: enable Metrics/MethodLength
 end
 
 # Extend caller with OpenHAB methods

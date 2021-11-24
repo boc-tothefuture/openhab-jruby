@@ -43,19 +43,6 @@ module OpenHAB
       end
 
       #
-      # Create a logger where name includes rule name if name is set
-      #
-      # @return [Log::Logger] Logger with name that appended with rule name if rule name is set
-      #
-      def logger
-        if @rule_name
-          Log.logger_for(@rule_name.chomp.gsub(/\s+/, '_'))
-        else
-          super
-        end
-      end
-
-      #
       # Cleanup rules in this script file
       #
       def self.cleanup_rules

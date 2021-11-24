@@ -4,7 +4,7 @@
 module OpenHAB
   module Core
     #
-    # Manages thread local varaibles for access inside of blocks
+    # Manages thread local variables for access inside of blocks
     #
     module ThreadLocal
       #

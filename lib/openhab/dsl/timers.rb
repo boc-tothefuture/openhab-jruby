@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'timers/timer_impl'
 require_relative 'timers/timer'
 require_relative 'timers/manager'
 require_relative 'timers/reentrant_timer'

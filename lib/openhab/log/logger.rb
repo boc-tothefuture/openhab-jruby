@@ -133,10 +133,14 @@ module OpenHAB
 
     #
     # Create a logger for the current class
+    # Use Thread local variable logger_name if available
     #
     # @return [Logger] for the current class
     #
     def logger
+      name = Thread.current[:logger_name]
+      return Log.logger_for(name) if name
+
       Log.logger(self.class)
     end
 

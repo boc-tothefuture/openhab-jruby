@@ -4,6 +4,7 @@ require 'java'
 require 'delegate'
 require 'forwardable'
 require 'openhab/log/logger'
+require 'openhab/core/thread_local'
 
 module OpenHAB
   module DSL
@@ -22,6 +23,7 @@ module OpenHAB
       # @since 2.0.0
       class Timer < SimpleDelegator
         include OpenHAB::Log
+        include OpenHAB::Core::ThreadLocal
         extend Forwardable
 
         def_delegator :@timer, :has_terminated, :terminated?
@@ -88,7 +90,10 @@ module OpenHAB
           proc {
             semaphore.synchronize do
               Timers.timer_manager.delete(self)
-              yield(self)
+              rule_name = "_timer_#{caller_locations(2)&.first&.path}_#{caller_locations(2)&.first&.lineno}"
+              thread_local(rule_name: rule_name) do
+                yield(self)
+              end
             end
           }
         end
