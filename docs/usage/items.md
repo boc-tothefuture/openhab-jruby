@@ -54,18 +54,20 @@ end
 Item types have methods added to them to make it flow naturally within the a ruby context.  All methods of the OpenHAB item are available plus the additional methods described below.
 
 
-| Method  | Description                                                                                        | Example                                                      |
-|---------|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| <<      | Sends command to item                                                                              | `VirtualSwitch << ON`                                        |
-| command | alias for shovel operator (<<) - has optional arguments 'for:, on_expire:' see timed command below | `VirtualSwitch.command(ON)`                                  |
-| ensure  | Only send following command/update if the item is not already in the requested state               | `VirtualSwitch.ensure.on`                                    |
-| update  | Sends update to an item                                                                            | `VirtualSwitch.update(ON)`                                   |
-| id      | Returns label or item name if no label                                                             | `logger.info(#{item.id})`                                    |
-| undef?  | Returns true if the state of the item is UNDEF                                                     | `logger.info("SwitchTest is UNDEF") if SwitchTest.undef?`    |
-| null?   | Returns true if the state of the item is NULL                                                      | `logger.info("SwitchTest is NULL") if SwitchTest.null?`      |
-| state?  | Returns true if the state is not UNDEF or NULL                                                     | `logger.info("SwitchTest has a state") if SwitchTest.state?` |
-| state   | Returns state of the item or nil if UNDEF or NULL                                                  | `logger.info("SwitchTest state #{SwitchTest.state}")`        |
-| to_s    | Returns state in string format                                                                     | `logger.info(#{item.id}: #{item})`                           |
+| Method            | Description                                                                                        | Example                                                      |
+|-------------------|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| <<                | Sends command to item                                                                              | `VirtualSwitch << ON`                                        |
+| command           | alias for shovel operator (<<) - has optional arguments 'for:, on_expire:' see timed command below | `VirtualSwitch.command(ON)`                                  |
+| ensure            | Only send following command/update if the item is not already in the requested state               | `VirtualSwitch.ensure.on`                                    |
+| update            | Sends update to an item                                                                            | `VirtualSwitch.update(ON)`                                   |
+| id                | Returns label or item name if no label                                                             | `logger.info(#{item.id})`                                    |
+| linked_thing      | Returns the item's thing. If multiple, returns first. If non, returns nil.                         | `logger.info(#{item.linked_thing.uid})`                      |
+| all_linked_things | Returns an array of all things item is linked with                                                 | `logger.info(#{item.all_linked_things.map(&:uid)})`          |
+| undef?            | Returns true if the state of the item is UNDEF                                                     | `logger.info("SwitchTest is UNDEF") if SwitchTest.undef?`    |
+| null?             | Returns true if the state of the item is NULL                                                      | `logger.info("SwitchTest is NULL") if SwitchTest.null?`      |
+| state?            | Returns true if the state is not UNDEF or NULL                                                     | `logger.info("SwitchTest has a state") if SwitchTest.state?` |
+| state             | Returns state of the item or nil if UNDEF or NULL                                                  | `logger.info("SwitchTest state #{SwitchTest.state}")`        |
+| to_s              | Returns state in string format                                                                     | `logger.info(#{item.id}: #{item})`                           |
 
 State returns nil instead of UNDEF or NULL so that it can be used with with [Ruby safe navigation operator](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html) `&.`  Use `undef?` or `null?` to check for those states.
 

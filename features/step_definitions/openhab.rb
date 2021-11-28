@@ -99,6 +99,12 @@ Given(/(?: I add)?items:/) do |table|
   end
 end
 
+Given('linked:') do |table|
+  table.hashes.each do |row|
+    link_item(item_name: row['item'], channel_uid: row['channel'])
+  end
+end
+
 Given('things:') do |table|
   table.hashes.each do |row|
     id = row['id']

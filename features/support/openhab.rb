@@ -128,6 +128,10 @@ def add_item(item:)
   Rest.add_item(item: item)
 end
 
+def link_item(item_name:, channel_uid:)
+  Rest.link_item(item_name: item_name, channel_uid: channel_uid)
+end
+
 def truncate_log
   File.open(openhab_log, File::TRUNC)
 end
