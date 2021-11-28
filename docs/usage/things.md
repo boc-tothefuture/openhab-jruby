@@ -9,12 +9,12 @@ has_toc: false
 
 # Things
 
-Things can be access using the `things` method and subsequent operations on that methods. 
+Things can be access using the `things` method and subsequent operations on that methods.
 
 | Method             | Description                                                         |
 | ------------------ | ------------------------------------------------------------------- |
 | things             | Return all things as a Ruby Set                                     |
-| []                 | Get a specific thing by name                                        |
+| []                 | Get a specific thing by name or ThingUID object                     |
 | enumerable methods | All methods [here](https://ruby-doc.org/core-2.6.8/Enumerable.html) |
 
 ```ruby
