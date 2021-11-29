@@ -94,3 +94,21 @@ rule 'Multiple Run Blocks' do
 end
 
 ```
+
+## Channel Event Properties
+The following property exists when a run block is triggered from a `channel` trigger on a Thing.
+It can be used to get to the Thing.
+
+| Property   | Description                                                       |
+|------------|-------------------------------------------------------------------|
+| channel    | UID of the triggered channel                                      |
+
+```ruby
+rule "Keypad Code Received test" do
+  channel "mqtt:homie300:mosquitto:backgate:keypad#code"
+
+  run do |event|
+    logger.info("Received keycode from #{event.channel.thing.uid.id}")
+  end
+end
+```

@@ -33,17 +33,22 @@ Actions are available via thing objects. For more details see [Actions](../misc/
 
 Thing status is available through `status` method, which returns one of the values from [ThingStatus](https://www.openhab.org/docs/concepts/things.html#thing-status). Boolean methods are available based on this. 
 
-| Method          | Description                                   |
-| --------------- | --------------------------------------------- |
-| `unitialized?`  | Returns true if the status is `UNINITIALIZED` |
-| `initializing?` | Returns true if the status is `INITIALIZING`  |
-| `unknown?`      | Returns true if the status is `UNKNOWN`       |
-| `online?`       | Returns true if the status is `ONLINE`        |
-| `offline?`      | Returns true if the status is `OFFLINE`       |
-| `removing?`     | Returns true if the status is `REMOVING`      |
-| `removed?`      | Returns true if the status is `REMOVED`       |
+| Method          | Description                                                               |
+| --------------- | ------------------------------------------------------------------------- |
+| `channels`      | Returns an array of channels, but also supports indexing by channel name. |
+| `unitialized?`  | Returns true if the status is `UNINITIALIZED`                             |
+| `initializing?` | Returns true if the status is `INITIALIZING`                              |
+| `unknown?`      | Returns true if the status is `UNKNOWN`                                   |
+| `online?`       | Returns true if the status is `ONLINE`                                    |
+| `offline?`      | Returns true if the status is `OFFLINE`                                   |
+| `removing?`     | Returns true if the status is `REMOVING`                                  |
+| `removed?`      | Returns true if the status is `REMOVED`                                   |
 
 ```ruby
-logger.info("Audiogroup Status: #{things['chromecast:audiogroup:dd9f8622-eee-4eaf-b33f-cdcdcdeee001121']&.status}")
-logger.info("Audiogroup Online? #{things['chromecast:audiogroup:dd9f8622-eee-4eaf-b33f-cdcdcdeee001121']&.online?}")
+thing = things['chromecast:audiogroup:dd9f8622-eee-4eaf-b33f-cdcdcdeee001121']
+logger.info("Audiogroup Status: #{thing&.status}")
+logger.info("Audiogroup Online? #{thing&.online?}")
+logger.info("Channel ids: #{thing.channels.map(&:uid)}")
+logger.info("Items linked to volume channel: #{thing.channels['volume']&.items&.map(&:name)&.join(', ')}")
+logger.info("Item linked to volume channel: #{thing.channels['volume']&.item&.name}")
 ```
