@@ -61,8 +61,8 @@ Item types have methods added to them to make it flow naturally within the a rub
 | ensure            | Only send following command/update if the item is not already in the requested state               | `VirtualSwitch.ensure.on`                                    |
 | update            | Sends update to an item                                                                            | `VirtualSwitch.update(ON)`                                   |
 | id                | Returns label or item name if no label                                                             | `logger.info(#{item.id})`                                    |
-| linked_thing      | Returns the item's thing. If multiple, returns first. If non, returns nil.                         | `logger.info(#{item.linked_thing.uid})`                      |
-| all_linked_things | Returns an array of all things item is linked with                                                 | `logger.info(#{item.all_linked_things.map(&:uid)})`          |
+| thing             | Returns the item's thing. If multiple, returns first. If non, returns nil.                         | `logger.info(#{item.thing.uid})`                             |
+| things            | Returns an array of all things item is linked with                                                 | `logger.info(#{item.things.map(&:uid)})`                     |
 | undef?            | Returns true if the state of the item is UNDEF                                                     | `logger.info("SwitchTest is UNDEF") if SwitchTest.undef?`    |
 | null?             | Returns true if the state of the item is NULL                                                      | `logger.info("SwitchTest is NULL") if SwitchTest.null?`      |
 | state?            | Returns true if the state is not UNDEF or NULL                                                     | `logger.info("SwitchTest has a state") if SwitchTest.state?` |
