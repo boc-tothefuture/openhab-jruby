@@ -232,7 +232,7 @@ Feature:  items
       | Number | Number1 |
     And code in a rules file
       """
-      logger.info("No thing: #{Number1.linked_thing.nil?}")
+      logger.info("No thing: #{Number1.thing.nil?}")
       """
     When I deploy the rules file
     Then It should log "No thing: true" within 5 seconds
@@ -250,7 +250,7 @@ Feature:  items
       | PhaseName | astro:sun:home:phase#name |
     And code in a rules file
       """
-      logger.info("Thing: #{PhaseName.linked_thing.uid}")
+      logger.info("Thing: #{PhaseName.thing.uid}")
       """
     When I deploy the rules file
     Then It should log "Thing: astro:sun:home" within 5 seconds
@@ -271,7 +271,7 @@ Feature:  items
       | TooManyThings | systeminfo:computer:systeminfo:network#ip |
     And code in a rules file
       """
-      logger.info("Thing: #{TooManyThings.all_linked_things.map(&:uid).map(&:to_s).sort.join(',')}")
+      logger.info("Thing: #{TooManyThings.things.map(&:uid).map(&:to_s).sort.join(',')}")
       """
     When I deploy the rules file
     Then It should log "Thing: astro:sun:home,systeminfo:computer:systeminfo" within 5 seconds
