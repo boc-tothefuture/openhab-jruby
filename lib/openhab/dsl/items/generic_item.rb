@@ -135,18 +135,20 @@ module OpenHAB
         # this method only returns the first thing.
         #
         # @return [Thing] The thing associated with this item or nil
-        def linked_thing
+        def thing
           all_linked_things.first
         end
+        alias linked_thing thing
 
         # Returns all of the item's linked things.
         #
         # @return [Array] An array of things or an empty array
-        def all_linked_things
+        def things
           registry = OpenHAB::Core::OSGI.service('org.openhab.core.thing.link.ItemChannelLinkRegistry')
           channels = registry.get_bound_channels(name).to_a
-          channels.map(&:thing_uid).uniq.map { |tuid| things[tuid] }
+          channels.map(&:thing_uid).uniq.map { |tuid| Object.things[tuid] }
         end
+        alias all_linked_things things
 
         #
         # Check equality without type conversion
