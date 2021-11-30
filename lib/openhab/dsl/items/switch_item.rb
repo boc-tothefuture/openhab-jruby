@@ -20,6 +20,14 @@ module OpenHAB
           on?
         end
 
+        # Convert boolean commands to ON/OFF
+        # @!visibility private
+        def format_type(command)
+          return Types::OnOffType.from(command) if [true, false].include?(command)
+
+          super
+        end
+
         #
         # Send a command to invert the state of the switch
         #
