@@ -95,8 +95,8 @@ Feature: rollershutter_item
     And code in a rules file
       """
       case RollerOne
-      when UP then logger.info('RollerOne is UP')
-      when DOWN then logger.info('RollerOne is DOWN')
+      when 0 then logger.info('RollerOne is UP')
+      when 100 then logger.info('RollerOne is DOWN')
       when (51...100) then logger.info('RollerOne is in range 51...100')
       when (1..50) then logger.info('RollerOne is in range 1..50')
       else

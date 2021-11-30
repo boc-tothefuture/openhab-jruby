@@ -13,29 +13,29 @@ Feature: comparisons
       | ShuttersPos  | Rollershutter      | MAX      |              |
 
     And items:
-      | type               | name            | label                   | groups                | state                     |
-      | Number             | Number5         | Number Five             |                       | 5                         |
-      | Number             | Number10        | Number Ten              |                       | 10                        |
-      | Number             | Number10A       | Number Ten A            |                       | 10                        |
-      | Number             | Number20        | Number Twenty           |                       | 20                        |
-      | Number             | NumberNull      | Number NULL             |                       | NULL                      |
-      | Number             | NumberNullA     | Number NULL A           |                       | NULL                      |
-      | Number:Temperature | Number5C        | Number Five             | Temperatures          | 5°C                       |
-      | Number:Temperature | Number10C       | Number Ten              | Temperatures          | 10°C                      |
-      | Number:Temperature | Number10C2      | Number Ten              | Temperatures          | 10°C                      |
-      | Number:Temperature | Number20C       | Number Twenty           | Temperatures          | 20°C                      |
-      | Number:Illuminance | NumberLux       | Number Lux              |                       | 465.3 lx                  |
-      | Dimmer             | Dimmer5         | Dimmer Five             |                       | 5                         |
-      | Dimmer             | Dimmer10        | Dimmer Ten              |                       | 10                        |
-      | Switch             | SwitchOne       | Switch One              | Switches              | ON                        |
-      | Switch             | SwitchTwo       | Switch Two              | Switches              | OFF                       |
-      | Contact            | ContactOne      | Contact One             | Contacts              | OPEN                      |
-      | Contact            | ContactTwo      | Contact Two             | Contacts              | CLOSED                    |
-      | DateTime           | DateOne         | Date One                | Dates                 | 2021-01-01T00:00:00+00:00 |
-      | DateTime           | DateTwo         | Date Two                | Dates                 | 2021-02-01T12:00:00+00:00 |
-      | Rollershutter      | ShutterOne      | Shutter One             | Shutters, ShuttersPos | 0                         |
-      | Rollershutter      | ShutterTwo      | Shutter Two             | Shutters, ShuttersPos | 50                        |
-      | Color              | Color           | Color                   |                       | 0, 100, 100               |
+      | type               | name        | label         | groups                | state                     |
+      | Number             | Number5     | Number Five   |                       | 5                         |
+      | Number             | Number10    | Number Ten    |                       | 10                        |
+      | Number             | Number10A   | Number Ten A  |                       | 10                        |
+      | Number             | Number20    | Number Twenty |                       | 20                        |
+      | Number             | NumberNull  | Number NULL   |                       | NULL                      |
+      | Number             | NumberNullA | Number NULL A |                       | NULL                      |
+      | Number:Temperature | Number5C    | Number Five   | Temperatures          | 5°C                       |
+      | Number:Temperature | Number10C   | Number Ten    | Temperatures          | 10°C                      |
+      | Number:Temperature | Number10C2  | Number Ten    | Temperatures          | 10°C                      |
+      | Number:Temperature | Number20C   | Number Twenty | Temperatures          | 20°C                      |
+      | Number:Illuminance | NumberLux   | Number Lux    |                       | 465.3 lx                  |
+      | Dimmer             | Dimmer5     | Dimmer Five   |                       | 5                         |
+      | Dimmer             | Dimmer10    | Dimmer Ten    |                       | 10                        |
+      | Switch             | SwitchOne   | Switch One    | Switches              | ON                        |
+      | Switch             | SwitchTwo   | Switch Two    | Switches              | OFF                       |
+      | Contact            | ContactOne  | Contact One   | Contacts              | OPEN                      |
+      | Contact            | ContactTwo  | Contact Two   | Contacts              | CLOSED                    |
+      | DateTime           | DateOne     | Date One      | Dates                 | 2021-01-01T00:00:00+00:00 |
+      | DateTime           | DateTwo     | Date Two      | Dates                 | 2021-02-01T12:00:00+00:00 |
+      | Rollershutter      | ShutterOne  | Shutter One   | Shutters, ShuttersPos | 0                         |
+      | Rollershutter      | ShutterTwo  | Shutter Two   | Shutters, ShuttersPos | 50                        |
+      | Color              | Color       | Color         |                       | 0, 100, 100               |
 
   Scenario: Comparisons can be done against different types
     Given code in a rules file
@@ -70,7 +70,7 @@ Feature: comparisons
         [ Number10                    , '<'   , DecimalType.new(20)         , true  ]  ,
         [ Number10                    , '<'   , DecimalType.new(5)          , false ]  ,
         [ Number10                    , '>'   , DecimalType.new(5)          , true  ]  ,
-        [ Number10                    , '>'   , DecimalType.new(20)         , false ]  ,        
+        [ Number10                    , '>'   , DecimalType.new(20)         , false ]  ,
 
         # NumberItem vs Ruby Numeric
         [ Number10                    , 'eql?', 10                          , false ]  ,
@@ -541,7 +541,6 @@ Feature: comparisons
 
         [ (0..100)                    , '===' , ON                          , false ]  ,
         [ 50                          , '=='  , ON                          , false ]  ,
-        [ ON                          , '===' , PercentType.new(50)         , true  ]  ,
       ]
 
       def test_to_s(test)
