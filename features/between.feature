@@ -81,60 +81,61 @@ Feature: between
       | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>' | Time.now | should not |
 
 
-    Scenario Outline: Between supports Day of Month 
+  Scenario Outline: Between supports Day of Month
     Given a rule template:
       """
       require 'date'
       range = between <between>
-      in_range = range.include?(<compare>) 
+      in_range = range.include?(<compare>)
       logger.info("in range: #{in_range}")
       """
     When I deploy the rule
     Then It should log "in range: <result>" within 5 seconds
     Examples: Checks in range, before range and after range
-      | between                                                                                           | compare                                | result   |
-      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'        | Date.today                             | true     |
-      | '<%=(Date.today + 10 ).strftime('%m-%d')%>'..'<%=(Date.today + 20).strftime('%m-%d')%>'           | Date.today                             | false    |
-      | '<%=(Date.today - 20 ).strftime('%m-%d')%>'..'<%=(Date.today - 10).strftime('%m-%d')%>'           | Date.today                             | false    |
+      | between                                                                                    | compare    | result |
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>' | Date.today | true   |
+      | '<%=(Date.today + 10 ).strftime('%m-%d')%>'..'<%=(Date.today + 20).strftime('%m-%d')%>'    | Date.today | false  |
+      | '<%=(Date.today - 20 ).strftime('%m-%d')%>'..'<%=(Date.today - 10).strftime('%m-%d')%>'    | Date.today | false  |
 
 
-    Scenario Outline: Day of Month between ranges support multiple compare types
+  Scenario Outline: Day of Month between ranges support multiple compare types
     Given a rule template:
       """
       require 'date'
       range = between <between>
-      in_range = range.include?(<compare>) 
+      in_range = range.include?(<compare>)
       logger.info("in range: #{in_range}")
       """
     When I deploy the rule
     Then It should log "in range: <result>" within 5 seconds
     Examples: Checks Date, Time, and DateTime
-      | between                                                                                           | compare       | result   |
-      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'        | Date.today    | true     |
-      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'        | Time.now      | true     |
-      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'        | DateTime.now  | true     |
-      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'        | MonthDay.now  | true     |
+      | between                                                                                    | compare      | result |
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>' | Date.today   | true   |
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>' | Time.now     | true   |
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>' | DateTime.now | true   |
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>' | MonthDay.now | true   |
 
-    Scenario Outline: Between supports strings and MonthDay objects for ranges
+  Scenario Outline: Between supports strings and MonthDay objects for ranges
     Given a rule template:
       """
       require 'date'
       require 'java'
       java_import java.time.LocalDate
       today = LocalDate.now
-      dom = today.get_day_of_month
-      yesterday = MonthDay.of(today.get_month_value, dom -1)
-      tomorrow = MonthDay.of(today.get_month_value, dom +1)
+      date_yesterday = today.minus_days(1)
+      date_tomorrow = today.plus_days(1)
+      yesterday = MonthDay.of(date_yesterday.month_value, date_yesterday.day_of_month)
+      tomorrow = MonthDay.of(date_tomorrow.month_value, date_tomorrow.day_of_month)
       range = between <between>
-      in_range = range.include?(<compare>) 
+      in_range = range.include?(<compare>)
       logger.info("in range: #{in_range}")
       """
     When I deploy the rule
     Then It should log "in range: <result>" within 5 seconds
     Examples: Checks in range, before range and after range
-      | between                                                                                           | compare      | result   |
-      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'        | Date.today   | true     |
-      | yesterday..tomorrow                                                                               | Date.today   | true     |
-      | yesterday..'<%=Date.today.next_day.strftime('%m-%d')%>'                                           | Date.today   | true     |
-      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..tomorrow                                            | Date.today   | true     |
+      | between                                                                                    | compare    | result |
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>' | Date.today | true   |
+      | yesterday..tomorrow                                                                        | Date.today | true   |
+      | yesterday..'<%=Date.today.next_day.strftime('%m-%d')%>'                                    | Date.today | true   |
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..tomorrow                                     | Date.today | true   |
 
