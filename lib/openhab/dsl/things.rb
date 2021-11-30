@@ -14,7 +14,7 @@ module OpenHAB
     # Support for OpenHAB Things
     #
     module Things
-      java_import Java::OrgOpenhabCoreThing::ThingStatus
+      java_import org.openhab.core.thing.ThingStatus
       include OpenHAB::Log
 
       #
