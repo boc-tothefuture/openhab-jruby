@@ -44,6 +44,15 @@ end
 ```
 
 ```ruby
+# An item can be the duration for a timer, the value will be interpreted as seconds
+MyNumericItem << 3
+
+after MyNumericItem do
+  logger.info("Timer Fired after 3 seconds")
+end
+```
+
+```ruby
 # Timers delegate methods to OpenHAB timer objects
 after 1.second do |timer|
   logger.info("Timer is active? #{timer.is_active}")
@@ -63,6 +72,20 @@ end
 after 3.seconds do |timer|
   logger.info("Timer Fired")
   timer.reschedule 5.seconds
+end
+```
+
+```ruby
+# If the duration is an item, it will be reevaluated on reschedule
+MyNumericItem << 3
+
+after MyNumericItem do |timer|
+  logger.info("Timer Fired after 3 seconds")
+
+  MyNumericItem << 6 # could be changed anywhere, not only in timer's block
+
+  # rescheduled timer will fire after 6 seconds
+  timer.reschedule
 end
 ```
 

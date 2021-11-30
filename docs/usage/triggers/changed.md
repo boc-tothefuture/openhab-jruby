@@ -32,6 +32,16 @@ rule "Execute rule when item is changed for specified duration" do
 end
 ```
 
+For parameter can be an item, too:
+```ruby
+Alarm_Delay << 20
+
+rule "Execute rule when item is changed for specified duration" do
+  changed Alarm_Mode, for: Alarm_Delay
+  run { logger.info("Alarm Mode Updated")}
+end
+```
+
 You can optionally provide from and to states to restrict the cases in which the rule executes:
 ```ruby
 rule 'Execute rule when item is changed to specific number, from specific number, for specified duration' do
