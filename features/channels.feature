@@ -3,6 +3,10 @@ Feature:  channels
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
+    And feature 'openhab-binding-astro' installed
+    And things:
+      | id   | thing_uid | label          | config                | status |
+      | home | astro:sun | Astro Sun Data | {"geolocation":"0,0"} | enable |
 
   Scenario Outline: Rule supports channel triggers
     Given a deployed rule:
@@ -15,9 +19,17 @@ Feature:  channels
     When channel "<channel>" is triggered
     Then It should log 'Channel triggered' within 5 seconds
     Examples: Checks support for string based and thing based channels
-      | trigger                                       | channel                   |
-      | channel 'astro:sun:home:rise#event'           | astro:sun:home:rise#event |
-      | channel 'rise#event', thing: 'astro:sun:home' | astro:sun:home:rise#event |
+      | trigger                                                       | channel                   |
+      | channel 'astro:sun:home:rise#event'                           | astro:sun:home:rise#event |
+      | channel 'rise#event', thing: 'astro:sun:home'                 | astro:sun:home:rise#event |
+      | channel 'rise#event', thing: things['astro:sun:home']         | astro:sun:home:rise#event |
+      | channel 'rise#event', thing: things['astro:sun:home'].uid     | astro:sun:home:rise#event |
+      | channel 'rise#event', thing: [things['astro:sun:home']]       | astro:sun:home:rise#event |
+      | channel 'rise#event', thing: [things['astro:sun:home'].uid]   | astro:sun:home:rise#event |
+      | channel things['astro:sun:home'].channels['rise#event']       | astro:sun:home:rise#event |
+      | channel things['astro:sun:home'].channels['rise#event'].uid   | astro:sun:home:rise#event |
+      | channel [things['astro:sun:home'].channels['rise#event']]     | astro:sun:home:rise#event |
+      | channel [things['astro:sun:home'].channels['rise#event'].uid] | astro:sun:home:rise#event |
 
 
   Scenario: Rule provides access channel trigger events in run block
