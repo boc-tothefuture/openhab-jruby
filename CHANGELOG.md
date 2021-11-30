@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.17.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.16.0...4.17.0) (2021-11-30)
+
+
+### Bug Fixes
+
+* **trigger:** create multiple delayed triggers for array from/to states ([70d3b4a](https://github.com/boc-tothefuture/openhab-jruby/commit/70d3b4ac3f25e974e4a8bfc7a994316dea09bd65))
+
+
+### Features
+
+* **things:** easy access to channels from things, and items from channels ([813bc5d](https://github.com/boc-tothefuture/openhab-jruby/commit/813bc5d9574b49ea45720def1c98354c28dc8686))
+
 # [4.16.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.15.1...4.16.0) (2021-11-30)
 
 
