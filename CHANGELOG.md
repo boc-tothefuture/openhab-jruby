@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.18.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.17.0...4.18.0) (2021-11-30)
+
+
+### Features
+
+* **switch:** accept boolean values ([605949c](https://github.com/boc-tothefuture/openhab-jruby/commit/605949cea2f6ca2f6e1ec15177c3038d8da26174))
+
 # [4.17.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.16.0...4.17.0) (2021-11-30)
 
 
