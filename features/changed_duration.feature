@@ -22,12 +22,17 @@ Feature: changed_duration
     Then It <should> log 'Alarm Mode Updated' within 5 seconds
 
     Examples: Checks multiple from and to states
-      | from | to | rule                                                  | should     |
-      | 8    | 14 | changed Alarm_Mode, for: 10.seconds                   | should     |
-      | 8    | 14 | changed Alarm_Mode, to: 14, for: 10.seconds           | should     |
-      | 8    | 10 | changed Alarm_Mode, to: 14, for: 10.seconds           | should not |
-      | 8    | 14 | changed Alarm_Mode, from: 8, to: 14, for: 10.seconds  | should     |
-      | 8    | 10 | changed Alarm_Mode, from: 10, to: 14, for: 10.seconds | should not |
+      | from | to | rule                                                             | should     |
+      | 8    | 14 | changed Alarm_Mode, for: 10.seconds                              | should     |
+      | 8    | 14 | changed Alarm_Mode, to: 14, for: 10.seconds                      | should     |
+      | 8    | 10 | changed Alarm_Mode, to: 14, for: 10.seconds                      | should not |
+      | 8    | 14 | changed Alarm_Mode, from: 8, to: 14, for: 10.seconds             | should     |
+      | 8    | 10 | changed Alarm_Mode, from: 10, to: 14, for: 10.seconds            | should not |
+      | 8    | 14 | changed Alarm_Mode, to: [10, 14], for: 10.seconds                | should     |
+      | 8    | 14 | changed Alarm_Mode, from: [8, 10], to: 14, for: 10.seconds       | should     |
+      | 8    | 14 | changed Alarm_Mode, from: [8, 10], to: [11, 14], for: 10.seconds | should     |
+      | 8    | 12 | changed Alarm_Mode, from: [8, 10], to: [11, 14], for: 10.seconds | should not |
+      | 8    | 14 | changed Alarm_Mode, from: [9, 10], to: [11, 14], for: 10.seconds | should not |
 
 
   Scenario: Changed item has duration specified and is modified during that duration

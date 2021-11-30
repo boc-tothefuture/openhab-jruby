@@ -33,19 +33,55 @@ module OpenHAB
         def changed(*items, to: nil, from: nil, for: nil, attach: nil)
           separate_groups(items).map do |item|
             logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
+
             # for is a reserved word in ruby, so use local_variable_get :for
-            if (wait_duration = binding.local_variable_get(:for))
-              changed_wait(item, to: to, from: from, duration: wait_duration, attach: attach)
-            else
-              # Place in array and flatten to support multiple to elements or single or nil
-              [to].flatten.map do |to_state|
-                [from].flatten.map { |from_state| create_changed_trigger(item, from_state, to_state, attach) }
-              end
+            wait_duration = binding.local_variable_get(:for)
+
+            each_state(from, to) do |from_state, to_state|
+              changed_or_wait(item, from_state, to_state, wait_duration, attach)
             end
           end.flatten
         end
 
         private
+
+        #
+        # Run block for each state combination
+        #
+        # @param [Item State, Array<Item State>] from state to restrict trigger to
+        # @param [Item State, Array<Item State>] to state to restrict trigger to
+        #
+        # @yieldparam [Item State] from_state from state
+        # @yieldparam [Item State] to_state to state
+        #
+        # @return [Array] array of block return values
+        #
+        def each_state(from, to)
+          [to].flatten.each_with_object([]) do |to_state, agg|
+            [from].flatten.each do |from_state|
+              agg.push(yield(from_state, to_state))
+            end
+          end
+        end
+
+        #
+        # Create regular or delayed trigger based on duration
+        #
+        # @param [Object] item item to create trigger for
+        # @param [Item State] from state to restrict trigger to
+        # @param [Item State] to state to restrict trigger to
+        # @param [OpenHAB::Core::Duration, nil] duration ruration to delay trigger until to state is met
+        # @param attach attachment
+        #
+        # @return [Trigger] OpenHAB triggers
+        #
+        def changed_or_wait(item, from, to, duration, attach)
+          if duration
+            changed_wait(item, from: from, to: to, duration: duration, attach: attach)
+          else
+            create_changed_trigger(item, from, to, attach)
+          end
+        end
 
         #
         # Create a TriggerDelay for for an item or group that is changed for a specific duration
