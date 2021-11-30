@@ -32,6 +32,38 @@ Feature:  thing
     When I deploy the rules file
     Then It should log 'Thing: astro:sun:home' within 5 seconds
 
+  Scenario: ThingUID#inspect logs the full UID as string
+    Given code in a rules file
+      """
+      logger.info("Thing: #{org.openhab.core.thing.ThingUID.new('astro:sun:home').inspect}")
+      """
+    When I deploy the rules file
+    Then It should log 'Thing: astro:sun:home' within 5 seconds
+
+  Scenario: ThingUID#== works against a regular string
+    Given code in a rules file
+      """
+      logger.info("Is equal: #{org.openhab.core.thing.ThingUID.new('astro:sun:home') == 'astro:sun:home'}")
+      """
+    When I deploy the rules file
+    Then It should log 'Is equal: true' within 5 seconds
+
+  Scenario: String#== works against a ThingUID (using ThingUID#to_str)
+    Given code in a rules file
+      """
+      logger.info("Is equal: #{'astro:sun:home' == org.openhab.core.thing.ThingUID.new('astro:sun:home')}")
+      """
+    When I deploy the rules file
+    Then It should log 'Is equal: true' within 5 seconds
+
+  Scenario: ThingUID#binding_id returns the correct value
+    Given code in a rules file
+      """
+      logger.info("Binding: #{org.openhab.core.thing.ThingUID.new('astro:sun:home').binding_id}$")
+      """
+    When I deploy the rules file
+    Then It should log 'Binding: astro$' within 5 seconds
+
   Scenario Outline: Rule supports thing status changes for changed and updated
     Given a deployed rule:
       """

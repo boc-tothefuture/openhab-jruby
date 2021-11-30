@@ -19,6 +19,7 @@ require 'openhab/dsl/things'
 require 'openhab/dsl/between'
 require 'openhab/dsl/gems'
 require 'openhab/dsl/persistence'
+require 'openhab/dsl/uid'
 require 'openhab/dsl/units'
 require 'openhab/dsl/states'
 
