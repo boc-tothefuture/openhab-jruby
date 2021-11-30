@@ -21,6 +21,21 @@ module OpenHAB
       # Ruby Delegator for Thing
       #
       class Thing < SimpleDelegator
+        # Array wrapper class to allow searching a list of channels
+        # by channel id
+        class ChannelsArray < Array
+          # Allows indexing by both integer as an array or channel id acting like a hash.
+          # @param [Integer, String] index Numeric index or string channel id to search for.
+          def [](index)
+            if index.respond_to?(:to_str)
+              key = index.to_str
+              return find { |channel| channel.uid.id == key }
+            end
+
+            super
+          end
+        end
+
         include OpenHAB::DSL::Actions
         include OpenHAB::Log
 
@@ -43,6 +58,12 @@ module OpenHAB
         #
         ThingStatus.constants.each do |thingstatus|
           define_method("#{thingstatus.to_s.downcase}?") { status == ThingStatus.value_of(thingstatus) }
+        end
+
+        # Returns the list of channels associated with this Thing
+        # @return [Array] channels
+        def channels
+          ChannelsArray.new(super.to_a)
         end
 
         private

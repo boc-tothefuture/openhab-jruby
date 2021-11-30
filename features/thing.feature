@@ -135,3 +135,33 @@ Feature:  thing
       | online?        | disabled | false  |
       | uninitialized? | disabled | true   |
       | uninitialized? | enabled  | false  |
+
+  Scenario: Channel returns its linked item
+    Given feature 'openhab-binding-astro' installed
+    And items:
+      | type | name |
+      | String | PhaseName |
+    And things:
+      | id   | thing_uid | label          | config                | status |
+      | home | astro:sun | Astro Sun Data | {"geolocation":"0,0"} | enable |
+    And linked:
+      | item | channel |
+      | PhaseName | astro:sun:home:phase#name |
+    And code in a rules file
+      """
+      logger.info("Item: #{things['astro:sun:home'].channels['phase#name'].item.name}")
+      """
+    When I deploy the rules file
+    Then It should log "Item: PhaseName" within 5 seconds
+
+  Scenario: Channel returns its thing
+    Given feature 'openhab-binding-astro' installed
+    And things:
+      | id   | thing_uid | label          | config                | status |
+      | home | astro:sun | Astro Sun Data | {"geolocation":"0,0"} | enable |
+    And code in a rules file
+      """
+      logger.info("Thing: #{things['astro:sun:home'].channels['phase#name'].thing.uid}")
+      """
+    When I deploy the rules file
+    Then It should log "Thing: astro:sun:home" within 5 seconds
