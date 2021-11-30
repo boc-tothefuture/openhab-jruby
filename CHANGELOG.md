@@ -1,5 +1,14 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.16.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.15.1...4.16.0) (2021-11-30)
+
+
+### Features
+
+* **item:** add linked_thing and all_linked_things to items ([5a640c6](https://github.com/boc-tothefuture/openhab-jruby/commit/5a640c686914478166d3c853b653387bd341a40e))
+* **linked_thing:** alias thing/things to linked_thing/all_linked_things ([9898b8a](https://github.com/boc-tothefuture/openhab-jruby/commit/9898b8aa2bb3bedf1fee6a64114446b4667c10d4)), closes [#427](https://github.com/boc-tothefuture/openhab-jruby/issues/427)
+* **things:** add ability to lookup thing using ThingUID to things[] ([9650698](https://github.com/boc-tothefuture/openhab-jruby/commit/9650698bb6c80950cc22f9be4a59444773da2ff9))
+
 ## [4.15.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.15.0...4.15.1) (2021-11-24)
 
 
