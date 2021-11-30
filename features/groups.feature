@@ -125,10 +125,10 @@ Feature:  groups
 
   Scenario: Groups work in case statements
     Given groups:
-      | name         | type          | function | params       |
-      | Switches     | Switch        | AND      | ON, OFF      |
-      | Contacts     | Contact       | OR       | OPEN, CLOSED |
-      | Shutters     | Rollershutter | AND      | UP, DOWN     |
+      | name     | type          | function | params       |
+      | Switches | Switch        | AND      | ON, OFF      |
+      | Contacts | Contact       | OR       | OPEN, CLOSED |
+      | Shutters | Rollershutter | AND      | UP, DOWN     |
 
     And items:
       | type          | name       | label       | state  | groups   |
@@ -152,8 +152,8 @@ Feature:  groups
       end
 
       case Shutters
-      when UP then logger.info('All shutters are UP')
-      when DOWN then logger.info('At least one shutter is not UP')
+      when 0 then logger.info('All shutters are UP')
+      when 100 then logger.info('At least one shutter is not UP')
       end
       """
     When I deploy the rules file
@@ -222,7 +222,7 @@ Feature:  groups
       | name     | type    |
       | Switches | Contact |
     Then It should log "false" within 10 seconds
-  
+
   Scenario: Can add lazy arrays together
     Given code in a rules file
       """

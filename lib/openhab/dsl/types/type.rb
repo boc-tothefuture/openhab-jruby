@@ -42,6 +42,20 @@ module OpenHAB
         end
 
         #
+        # Case equality
+        #
+        # @return [Boolean] if the values are of the same Type
+        #                   or item state of the same type
+        #
+        def ===(other)
+          logger.trace("(#{self.class}) #{self} === #{other} (#{other.class})")
+          other = other.state if other.respond_to?(:state)
+          return false unless instance_of?(other.class)
+
+          eql?(other)
+        end
+
+        #
         # Check equality, including type conversion
         #
         # @return [Boolean] if the same value is represented, including

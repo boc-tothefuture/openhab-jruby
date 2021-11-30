@@ -134,3 +134,106 @@ Feature:  received_command
       | 10    | should not |
 
 
+  Scenario Outline: event.command for Color item can be compared to accepted command types
+    Given items:
+      | type  | name  |
+      | Color | Item1 |
+    And a rule
+      """
+      hsb000 = HSBType.new(0,0,0) # Doing this because https://github.com/boc-tothefuture/openhab-jruby/issues/348
+      rule 'handle command' do
+        received_command Item1
+        run do |event|
+          logger.info("We sent a command <command>")
+          logger.info("event.command.class: #{event.command.class}")
+          log = case event.command
+                when <cond1> then 'cond1'
+                when <cond2> then 'cond2'
+                when <cond3> then 'cond3'
+                else 'cond-else'
+                end
+          logger.info("case match: #{log}")
+        end
+      end
+
+      Item1 << <command>
+      """
+    When I deploy the rule
+    Then It should log 'case match: <log>' within 5 seconds
+    Examples:
+      | command  | cond1       | cond2                    | cond3    | log   |
+      | ON       | ON          | 1..100                   | INCREASE | cond1 |
+      | ON       | 0..99,100   | OFF                      | ON       | cond3 |
+      | OFF      | OFF         | INCREASE,DECREASE        | 0        | cond1 |
+      | OFF      | 1..100      | 0                        | OFF      | cond3 |
+      | INCREASE | ON,DECREASE | 0..100                   | INCREASE | cond3 |
+      | DECREASE | OFF         | 0,INCREASE               | DECREASE | cond3 |
+      | 0        | OFF         | DECREASE                 | 0        | cond3 |
+      | 0        | ON          | DECREASE                 | 0..50    | cond3 |
+      | 50       | ON          | INCREASE                 | 50       | cond3 |
+      | 100      | ON          | 0..99                    | 100      | cond3 |
+      | '0,0,0'  | '1,2,3'     | ON,OFF,DECREASE,INCREASE | hsb000   | cond3 |
+
+  Scenario Outline: event.command for Player item can be compared to accepted command types
+    Given items:
+      | type   | name  |
+      | Player | Item1 |
+    And a rule
+      """
+      rule 'handle command' do
+        received_command Item1
+        run do |event|
+          logger.info('We sent a command <command>')
+          logger.info("event.command.class: #{event.command.class}")
+          log = case event.command
+                when <cond1> then 'cond1'
+                when <cond2> then 'cond2'
+                when <cond3> then 'cond3'
+                else 'cond-else'
+                end
+          logger.info("case match: #{log}")
+        end
+      end
+      """
+    When I deploy the rule
+    And item "Item1" state is changed to "<command>"
+    Then It should log 'case match: <log>' within 5 seconds
+    Examples:
+      | command | cond1 | cond2                            | cond3 | log   |
+      | PLAY    | PLAY  | 1..100                           | ON    | cond1 |
+      | PLAY    | PAUSE | NEXT,PREVIOUS,REWIND,FASTFORWARD | PLAY  | cond3 |
+
+  Scenario Outline: event.command for Rollershutter item can be compared to accepted command types
+    Given items:
+      | type          | name  |
+      | Rollershutter | Item1 |
+    And a rule
+      """
+      rule 'handle command' do
+        received_command Item1
+        run do |event|
+          logger.info('We sent a command <command>')
+          logger.info("event.command.class: #{event.command.class}")
+          log = case event.command
+                when <cond1> then 'cond1'
+                when <cond2> then 'cond2'
+                when <cond3> then 'cond3'
+                else 'cond-else'
+                end
+          logger.info("case match: #{log}")
+        end
+      end
+      """
+    When I deploy the rule
+    And item "Item1" state is changed to "<command>"
+    Then It should log 'case match: <log>' within 5 seconds
+    Examples:
+      | command | cond1     | cond2                        | cond3   | log       |
+      | UP      | 0         | 1..100                       | DOWN,UP | cond3     |
+      | UP      | 100       | STOP,MOVE,'UP'               | UP      | cond3     |
+      | DOWN    | UP        | 0..100                       | DOWN    | cond3     |
+      | DOWN    | 0..100    | INCREASE,DECREASE,PLAY,PAUSE | UP      | cond-else |
+      | STOP    | STOP      | MOVE                         | 0       | cond1     |
+      | MOVE    | STOP      | UP,DOWN                      | MOVE    | cond3     |
+      | 0       | STOP,MOVE | UP,DOWN                      | 0       | cond3     |
+      | 100     | STOP,MOVE | 100                          | UP      | cond2     |
