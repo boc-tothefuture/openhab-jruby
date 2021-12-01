@@ -68,13 +68,13 @@ module OpenHAB
         # @param [Object] at TimeOfDay or String representing TimeOfDay in which to execute rule
         #
         #
-        def every(value, at: nil)
+        def every(value, at: nil, attach: nil)
           cron_expression = case value
                             when Symbol then cron_from_symbol(value, at)
                             when Java::JavaTime::Duration then cron_from_duration(value, at)
                             else raise ArgumentExpression, 'Unknown interval'
                             end
-          cron(cron_expression)
+          cron(cron_expression, attach: attach)
         end
 
         #
@@ -82,8 +82,8 @@ module OpenHAB
         #
         # @param [String] expression OpenHAB style cron expression
         #
-        def cron(expression)
-          @triggers << Trigger.trigger(type: Trigger::CRON, config: { 'cronExpression' => expression })
+        def cron(expression, attach: nil)
+          append_trigger(Trigger::CRON, { 'cronExpression' => expression }, attach: attach)
         end
 
         private

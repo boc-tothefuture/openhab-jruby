@@ -33,7 +33,7 @@ module OpenHAB
         extend OpenHAB::DSL
 
         # @return [Array] Of triggers
-        attr_reader :triggers
+        attr_accessor :triggers
 
         # @return [Array] Of trigger delays
         attr_reader :trigger_delays

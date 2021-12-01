@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/rules/rule_config'
-require 'openhab/dsl/rules/automation_rule'
-require 'openhab/dsl/rules/guard'
+require_relative 'rule_config'
+require_relative 'automation_rule'
+require_relative 'cron_trigger_rule'
+require_relative 'guard'
 
 module OpenHAB
   #
@@ -85,11 +86,42 @@ module OpenHAB
       def process_rule_config(config)
         return unless create_rule?(config)
 
+        cron_attach_triggers, other_triggers = partition_triggers(config)
+        logger.trace("Cron triggers: #{cron_attach_triggers} -  Other triggers: #{other_triggers}")
+        config.triggers = other_triggers
+
         rule = AutomationRule.new(config: config)
         Rules.script_rules << rule
         add_rule(rule)
+
+        process_cron_attach(cron_attach_triggers, config, rule)
+
         rule.execute(nil, { 'event' => Struct.new(:attachment).new(config.start_attachment) }) if config.on_start?
         rule
+      end
+
+      #
+      # Add cron triggers with attachments to rules
+      # @param [Array] cron_attach_triggers cron type triggers with attachments
+      #
+      def process_cron_attach(cron_attach_triggers, config, rule)
+        cron_attach_triggers&.map { |trigger| CronTriggerRule.new(rule_config: config, rule: rule, trigger: trigger) }
+                            &.each { |trigger| add_rule(trigger) }
+      end
+
+      #
+      # Partitions triggers in a config, removing cron triggers with a corresponding attachment
+      # so they can be used with CronTriggerRules to support attachments
+      # @return [Array] Two element array the first element is cron triggers with attachments,
+      #   second element is other triggers
+      #
+      def partition_triggers(config)
+        config
+          .triggers
+          .partition do |trigger|
+          trigger.typeUID == OpenHAB::DSL::Rules::Triggers::Trigger::CRON &&
+            config.attachments.key?(trigger.id)
+        end
       end
 
       #
@@ -141,6 +173,7 @@ module OpenHAB
       #
       #
       def add_rule(rule)
+        logger.trace("Adding rule: #{rule.inspect}")
         Rules.automation_manager.addRule(rule)
       end
     end

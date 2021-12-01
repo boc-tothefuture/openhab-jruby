@@ -8,7 +8,7 @@ parent: Usage
 
 # Trigger Attachments
 
-All triggers except cron based triggers (every, cron) support event attachments that enable the association of an object to a trigger.
+All triggers support event attachments that enable the association of an object to a trigger.
 
 | Method | Description                   | example                       |
 |--------|-------------------------------|-------------------------------|
