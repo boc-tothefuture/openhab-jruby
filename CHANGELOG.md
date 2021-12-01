@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.19.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.18.0...4.19.0) (2021-12-01)
+
+
+### Bug Fixes
+
+* **comparisons:** === should perform an exact type match for case statements ([3311e26](https://github.com/boc-tothefuture/openhab-jruby/commit/3311e268262cd15388f6422c18aa82b5dfc63c24))
+
+
+### Features
+
+* **channel_trigger:** allow setting channel triggers directly from thing/channel objects ([9d99ee6](https://github.com/boc-tothefuture/openhab-jruby/commit/9d99ee62c7f57f8050ce57b996efcf1387e7e52a))
+* **uid:** make working with UIDs easier (string comparisons) ([5a89ac8](https://github.com/boc-tothefuture/openhab-jruby/commit/5a89ac8b6e2510519bce73075044d6422513fdde))
+
 # [4.18.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.17.0...4.18.0) (2021-11-30)
 
 
