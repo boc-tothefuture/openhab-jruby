@@ -41,7 +41,7 @@ module OpenHAB
 
           semaphore.synchronize do
             @timer = ScriptExecution.createTimer(
-              ZonedDateTime.now.plus(@duration), timer_block(semaphore, &block)
+              ZonedDateTime.now.plus(to_duration(@duration)), timer_block(semaphore, &block)
             )
             @rule_timers = Thread.current[:rule_timers]
             super(@timer)
@@ -57,15 +57,13 @@ module OpenHAB
         # @return [Timer] Rescheduled timer instances
         #
         def reschedule(duration = nil)
-          unless duration.nil? || duration.is_a?(Java::JavaTimeTemporal::TemporalAmount)
-            raise ArgumentError, 'Supplied argument must be a duration'
-          end
-
           duration ||= @duration
+
           Timers.timer_manager.add(self)
-          @timer.reschedule(ZonedDateTime.now.plus(duration))
+          @timer.reschedule(ZonedDateTime.now.plus(to_duration(duration)))
         end
 
+        #
         # Cancel timer
         #
         # @return [Boolean] True if cancel was successful, false otherwise
@@ -91,6 +89,27 @@ module OpenHAB
               yield(self)
             end
           }
+        end
+
+        #
+        # Convert argument to a duration
+        #
+        # @params [Java::JavaTimeTemporal::TemporalAmount, #to_f, #to_i, nil] duration Duration
+        #
+        # @raise if duration cannot be used for a timer
+        #
+        # @return Argument converted to seconds if it responds to #to_f or #to_i, otherwise duration unchanged
+        #
+        def to_duration(duration)
+          if duration.nil? || duration.is_a?(Java::JavaTimeTemporal::TemporalAmount)
+            duration
+          elsif duration.respond_to?(:to_f)
+            duration.to_f.seconds
+          elsif duration.respond_to?(:to_i)
+            duration.to_i.seconds
+          else
+            raise ArgumentError, "Supplied argument '#{duration}' cannot be converted to a duration"
+          end
         end
       end
     end

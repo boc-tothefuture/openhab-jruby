@@ -28,6 +28,47 @@ Feature:  timer
     But if I wait 3 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
+  Scenario: Timers support number items
+    Given items:
+      | type   | name       | label      | state   |
+      | Number | Alarm_Time | Alarm Mode | <state> |
+    And code in a rules file
+      """
+      after Alarm_Time do
+        logger.info("Timer Fired")
+      end
+      """
+    When I deploy the rules file
+    Then It should not log 'Timer Fired' within 4 seconds
+    Then It should log 'Timer Fired' within 3 seconds
+
+    Examples: Works with different numbers
+      | state |
+      | 5     |
+      | 5.5   |
+
+  Scenario: Timers support custom user provided objects
+    Given code in a rules file
+      """
+      value = Module.new do
+        def self.<method>
+          5
+        end
+      end
+
+      after value do
+        logger.info("Timer Fired")
+      end
+      """
+    When I deploy the rules file
+    Then It should not log 'Timer Fired' within 4 seconds
+    Then It should log 'Timer Fired' within 3 seconds
+
+    Examples: Works with different accessors
+      | method |
+      | to_f   |
+      | to_i   |
+
   Scenario: Timers support 'active?', 'running?' and 'terminated?'
     Given code in a rules file
       """
