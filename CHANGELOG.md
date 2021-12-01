@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.20.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.19.1...4.20.0) (2021-12-01)
+
+
+### Bug Fixes
+
+* **rule:** rule return value caused namespace errors ([22fea0b](https://github.com/boc-tothefuture/openhab-jruby/commit/22fea0b1d98987f86ddfa4c1f34add397815e361))
+
+
+### Features
+
+* **timers:** support passing custom objects as timer duration ([0fb0bcf](https://github.com/boc-tothefuture/openhab-jruby/commit/0fb0bcf0c7821f54685763b67b0f35c55de0f6f8))
+
 ## [4.19.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.19.0...4.19.1) (2021-12-01)
 
 
