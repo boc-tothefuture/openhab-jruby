@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.19.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.19.0...4.19.1) (2021-12-01)
+
+
+### Bug Fixes
+
+* **includes:** remove redundant includes ([23376c4](https://github.com/boc-tothefuture/openhab-jruby/commit/23376c4e6b224c4a17418e2dbaab18556435388f))
+
 # [4.19.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.18.0...4.19.0) (2021-12-01)
 
 
