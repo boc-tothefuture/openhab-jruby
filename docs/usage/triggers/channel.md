@@ -23,13 +23,37 @@ rule 'Execute rule when channel is triggered' do
   run { logger.info("Channel triggered") }
 end
 
-# The above is the same as the below
+# The above is the same as each of the below
 
 rule 'Execute rule when channel is triggered' do
   channel 'rise#event', thing: 'astro:sun:home'   
   run { logger.info("Channel triggered") }
 end
 
+rule 'Execute rule when channel is triggered' do
+  channel 'rise#event', thing: things['astro:sun:home']
+  run { logger.info("Channel triggered") }
+end
+
+rule 'Execute rule when channel is triggered' do
+  channel 'rise#event', thing: things['astro:sun:home'].uid
+  run { logger.info("Channel triggered") }
+end
+
+rule 'Execute rule when channel is triggered' do
+  channel 'rise#event', thing: ['astro:sun:home']
+  run { logger.info("Channel triggered") }
+end
+
+rule 'Execute rule when channel is triggered' do
+  channel things['astro:sun:home'].channels['rise#event']
+  run { logger.info("Channel triggered") }
+end
+
+rule 'Execute rule when channel is triggered' do
+  channel things['astro:sun:home'].channels['rise#event'].uid
+  run { logger.info("Channel triggered") }
+end
 ```
 
 ```ruby
@@ -49,6 +73,13 @@ end
 ```ruby
 rule 'Rules support multiple channels and triggers' do
   channel ['rise#event','set#event'], thing: 'astro:sun:home', triggered: ['START', 'STOP'] 
+  run { logger.info("Channel triggered") }
+end
+```
+
+```ruby
+rule 'Rules support multiple things' do
+  channel 'keypad#code', thing: ['mqtt:homie300:keypad1', 'mqtt:homie300:keypad1']
   run { logger.info("Channel triggered") }
 end
 ```

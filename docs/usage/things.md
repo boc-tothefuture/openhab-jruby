@@ -19,10 +19,12 @@ Things can be access using the `things` method and subsequent operations on that
 
 ```ruby
 things.each { |thing| logger.info("Thing: #{thing.uid}")}
-```
-
-```ruby
 logger.info("Thing: #{things['astro:sun:home'].uid}")
+homie_things = things.select { |t| t.thing_type_uid == "mqtt:homie300" }
+zwave_things = things.select { |t| t.binding_id == "zwave" }
+homeseer_dimmers = zwave_things.select { |t| t.thing_type_uid.id == "homeseer_hswd200_00_000" }
+things['zwave:device:512:node90'].uid.bridge_ids => ["512"]
+things['mqtt:topic:4'].uid.bridge_ids => []
 ```
 
 ## Thing objects
