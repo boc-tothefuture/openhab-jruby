@@ -38,6 +38,7 @@ module OpenHAB
         config.guard = Guard::Guard.new(only_if: config.only_if, not_if: config.not_if)
         logger.trace { config.inspect }
         process_rule_config(config)
+        nil # Must return something other than the rule object. See https://github.com/boc-tothefuture/openhab-jruby/issues/438
       rescue StandardError => e
         re_raise_with_backtrace(e)
       end
