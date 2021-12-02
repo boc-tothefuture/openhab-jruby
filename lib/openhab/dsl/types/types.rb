@@ -78,6 +78,29 @@ module OpenHAB
           end
         end
       end
+
+      #
+      # Remove the Java types from Object's scope
+      #
+      def self.remove_java_types
+        java_types.each { |type| Object.send(:remove_const, type) if Object.constants.include?(type) }
+      end
+
+      #
+      # Return a list of Java classes that match the same Type classes defined in
+      # OpenHAB::DSL::Types module
+      #
+      # @return [Array] an array of Java class symbols
+      #
+      def self.java_types
+        constants(false).select do |sym|
+          sym.to_s.end_with?('Type') &&
+            const_get(sym).then do |const|
+              const.instance_of?(Class) && const.name.match?(/Java::OrgOpenhabCore(Library)?Types::/)
+            end
+        end
+      end
+      Core::ScriptHandling.script_loaded { OpenHAB::DSL::Types.remove_java_types }
     end
   end
 end
