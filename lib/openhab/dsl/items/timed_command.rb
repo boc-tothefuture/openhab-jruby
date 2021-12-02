@@ -152,7 +152,7 @@ module OpenHAB
               @thread_locals = Thread.current[:RULE_NAME] ? { RULE_NAME: Thread.current[:RULE_NAME] } : {}
               set_name("Cancels implicit timer for #{timed_command_details.item.id}")
               set_triggers([OpenHAB::DSL::Rules::Triggers::Trigger.trigger(
-                type: OpenHAB::DSL::Rules::Triggers::Trigger::ITEM_STATE_UPDATE,
+                type: OpenHAB::DSL::Rules::Triggers::Trigger::ITEM_STATE_CHANGE,
                 config: { 'itemName' => timed_command_details.item.name }
               )])
             end
