@@ -127,6 +127,7 @@ module OpenHAB
       end
     end
 
+    # Logger caches
     @loggers = {}
 
     # Return a logger with the configured log prefix plus the calling scripts name
@@ -137,7 +138,7 @@ module OpenHAB
     # @return [Logger] for the current class
     #
     def logger
-      Log.logger(self.class)
+      Log.logger(self)
     end
 
     class << self
@@ -148,28 +149,50 @@ module OpenHAB
       #
       # @return [Logger] for the supplied name
       #
-      def logger(klass)
+      def logger(object)
+        # Cache logger instances for each object since construction
+        # of logger name requires lots of operations and logger
+        # names for some objects are specific to the class
+        logger_name = logger_name(object)
+        @loggers[logger_name] ||= Logger.new(logger_name)
+      end
+
+      private
+
+      # Construct the logger name from the supplied object
+      # @param [Object] object to construct logger name from
+      # @return name for logger based on object
+      def logger_name(object)
+        name = Configuration.log_prefix
+        name += rules_file || ''
+        name += rule_name  || ''
+        name += klass_name(object) || ''
+        name.tr_s(' ', '_').gsub('::', '.')
+      end
+
+      # Get the class name for the supplied object
+      # @param [Object] object to derive class name for
+      # @return [String] name of class for logging
+      def klass_name(object)
+        object.then(&:class)
+              .then { |klass| java_klass(klass) }
+              .then(&:name)
+              .then { |name| filter_base_classes(name) }
+              .then { |name| name&.prepend('.') }
+      end
+
+      # Get the appropriate java class for the supplied klass if the supplied
+      # class is a java class
+      # @param [Class] klass to inspect
+      # @return Class or Java class of supplied class
+      def java_klass(klass)
         if klass.respond_to?(:java_class) &&
            klass.java_class &&
            !klass.java_class.name.start_with?('org.jruby.Ruby')
           klass = klass.java_class
         end
-        name = klass.name
-        @loggers[name] ||= Log.logger_for(name)
+        klass
       end
-
-      #
-      # Configure a logger for the supplied class name
-      #
-      # @param [String] name to configure logger for
-      #
-      # @return [Logger] for the supplied classname
-      #
-      def logger_for(name)
-        configure_logger_for(name)
-      end
-
-      private
 
       #
       # Configure a logger for the supplied classname
@@ -178,15 +201,32 @@ module OpenHAB
       #
       # @return [Logger] Logger for the supplied classname
       #
-      def configure_logger_for(name)
-        log_prefix = Configuration.log_prefix
-        log_prefix += if name
-                        ".#{name}"
-                      else
-                        ".#{log_caller}"
-                      end
-        Logger.new(log_prefix)
+      def rules_file
+        # Each rules file gets its own context
+        # Set it once as a class value so that threads not
+        # tied to a rules file pick up the rules file they
+        # were spawned from
+        @rules_file ||= log_caller&.downcase&.prepend('.')
       end
+
+      # Get the name of the rule from the thread context
+      def rule_name
+        Thread.current[:RULE_NAME]&.downcase&.prepend('.')
+      end
+
+      # Filter out the base classes of Object and Module from the log name
+      def filter_base_classes(klass_name)
+        return nil if %w[Object Module].include?(klass_name)
+
+        klass_name
+      end
+
+      #  "#{rule_name.downcase}.#{klass_name}"
+      #  if klass_name == 'Object'
+      #  "rules.#{rules_file_name.downcase}"
+      #  else
+      #  "rules.#{rules_file_name.downcase}.#{klass_name}"
+      #  end
 
       #
       # Figure out the log prefix
@@ -199,7 +239,7 @@ module OpenHAB
                         .grep_v(/rubygems/)
                         .grep_v(%r{lib/ruby})
                         .first
-                        .yield_self { |caller| File.basename(caller, '.*') }
+                        .then { |caller| File.basename(caller, '.*') if caller }
       end
     end
 

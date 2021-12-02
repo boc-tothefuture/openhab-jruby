@@ -33,7 +33,7 @@ module OpenHAB
         #
         #
         def update_from_url(uri)
-          logger.debug("Downloading image from #{uri}")
+          logger.trace("Downloading image from #{uri}")
           response = Net::HTTP.get_response(URI(uri))
           mime_type = response['content-type']
           bytes = response.body
