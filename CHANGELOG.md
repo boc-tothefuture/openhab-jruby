@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.21.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.20.0...4.21.0) (2021-12-02)
+
+
+### Bug Fixes
+
+* **logging:** log rule name or file name with log entries ([a003904](https://github.com/boc-tothefuture/openhab-jruby/commit/a00390483775484b3513c433c9257c784311a7ea))
+
+
+### Features
+
+* **attach:** support attachments on cron triggers ([70ef1dc](https://github.com/boc-tothefuture/openhab-jruby/commit/70ef1dca219551627781bd5b66af9a8d5c3ddf13))
+
 # [4.20.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.19.1...4.20.0) (2021-12-01)
 
 
