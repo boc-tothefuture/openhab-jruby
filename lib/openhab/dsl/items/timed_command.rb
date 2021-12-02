@@ -2,6 +2,7 @@
 
 require 'openhab/dsl/timers'
 require 'openhab/dsl/rules/triggers/trigger'
+require 'openhab/log/logger'
 require 'java'
 
 require_relative 'generic_item'
@@ -140,11 +141,15 @@ module OpenHAB
           #
           class TimedCommandCancelRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
             include OpenHAB::Log
+            include OpenHAB::Core::ThreadLocal
+
             def initialize(timed_command_details, semaphore, &block)
               super()
               @semaphore = semaphore
               @timed_command_details = timed_command_details
               @block = block
+              # Capture rule name if known
+              @thread_locals = Thread.current[:RULE_NAME] ? { RULE_NAME: Thread.current[:RULE_NAME] } : {}
               set_name("Cancels implicit timer for #{timed_command_details.item.id}")
               set_triggers([OpenHAB::DSL::Rules::Triggers::Trigger.trigger(
                 type: OpenHAB::DSL::Rules::Triggers::Trigger::ITEM_STATE_UPDATE,
@@ -164,17 +169,19 @@ module OpenHAB
             # There is no feasible way to break this method into smaller components
             def execute(_mod = nil, inputs = nil)
               @semaphore.synchronize do
-                logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\
-                             "#{@timed_command_details.item.id}  because received event #{inputs}"
-                @timed_command_details.timer.cancel
-                # rubocop: disable Style/GlobalVars
-                # Disabled due to OpenHAB design
-                $scriptExtension.get('ruleRegistry').remove(@timed_command_details.rule_uid)
-                # rubocop: enable Style/GlobalVars
-                TimedCommand.timed_commands.delete(@timed_command_details.item)
-                if @block
-                  logger.trace 'Executing user supplied block on timed command cancelation'
-                  @block&.call(@timed_command_details)
+                thread_local(@thread_locals) do
+                  logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\
+                               "#{@timed_command_details.item.id}  because received event #{inputs}"
+                  @timed_command_details.timer.cancel
+                  # rubocop: disable Style/GlobalVars
+                  # Disabled due to OpenHAB design
+                  $scriptExtension.get('ruleRegistry').remove(@timed_command_details.rule_uid)
+                  # rubocop: enable Style/GlobalVars
+                  TimedCommand.timed_commands.delete(@timed_command_details.item)
+                  if @block
+                    logger.trace 'Executing user supplied block on timed command cancelation'
+                    @block&.call(@timed_command_details)
+                  end
                 end
               end
             end

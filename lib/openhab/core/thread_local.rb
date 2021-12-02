@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'openhab/log/logger'
+
 # OpenHAB main module
 module OpenHAB
   module Core
@@ -7,15 +9,18 @@ module OpenHAB
     # Manages thread local varaibles for access inside of blocks
     #
     module ThreadLocal
+      include OpenHAB::Log
+
       #
       # Execute the supplied block with the supplied values set for the currently running thread
       # The previous values for each key are restored after the block is executed
       #
-      # @param [Hash] Keys and values to set for running thread
+      # @param [Hash] Keys and values to set for running thread, if hash is nil no values are set
       #
       def thread_local(**values)
         old_values = values.map { |key, _value| [key, Thread.current[key]] }.to_h
         values.each { |key, value| Thread.current[key] = value }
+        logger.trace "Executing block with thread local context: #{values} - old context: #{old_values}"
         yield
       ensure
         old_values.each { |key, value| Thread.current[key] = value }

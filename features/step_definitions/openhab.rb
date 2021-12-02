@@ -32,11 +32,26 @@ Then(%r{^It should log /(.*)/ within (\d+) seconds$}) do |regex, seconds|
   end
 end
 
-# Then('It should log {string} within {int} seconds') do |string, seconds|
-#  wait_until(seconds: seconds, msg: "'#{string}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
-#    check_log(string)
-#  end
-# end
+Then('It should log a line matching regex {string} within {int} seconds') do |regex, seconds|
+  wait_until(seconds: seconds.to_i,
+             msg: "'#{regex}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
+    check_log_regexp(regex)
+  end
+end
+
+# rubocop:disable Metrics/LineLength
+Then('It should log only {string} at level {string} from {string} within {int} seconds') do |entry, level, logger, seconds|
+  # 2021-11-15 19:24:34.574 [INFO ] [jsr223.jruby.rules.log_test         ] - Log Test
+  # Trim level to the right most 36 chars (per logging config)
+  logger_length = 36
+  logger = logger[-logger_length, logger_length] if logger.length > logger_length
+  regex = /^.*\[#{Regexp.quote(level.upcase)}\s*\]\s+\[#{Regexp.quote(logger)}\s*\]\s-\s#{Regexp.quote(entry)}\s*$/
+  wait_until(seconds: seconds.to_i,
+             msg: "'#{entry}' at level '#{level}' from logger '#{logger}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
+    check_log_regexp(regex)
+  end
+end
+# rubocop:enable Metrics/LineLength
 
 Then('It should not log {string} within {int} seconds') do |string, seconds|
   not_for(seconds: seconds, msg: "'#{string}'' found in log file (#{openhab_log}) within #{seconds} seconds") do

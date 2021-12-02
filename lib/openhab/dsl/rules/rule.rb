@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'openhab/core/thread_local'
+require 'openhab/log/logger'
 require_relative 'rule_config'
 require_relative 'automation_rule'
 require_relative 'cron_trigger_rule'
@@ -14,6 +16,9 @@ module OpenHAB
     # Creates and manages OpenHAB Rules
     #
     module Rules
+      include OpenHAB::Core::ThreadLocal
+      include OpenHAB::Log
+
       @script_rules = []
 
       # rubocop: disable Style/GlobalVars
@@ -32,30 +37,22 @@ module OpenHAB
       # @yield [] Block executed in context of a RuleConfig
       #
       #
+      # rubocop: disable Metrics/MethodLength
       def rule(rule_name, &block)
-        @rule_name = rule_name
-        config = RuleConfig.new(rule_name, block.binding)
-        config.instance_exec(config, &block)
-        config.guard = Guard::Guard.new(only_if: config.only_if, not_if: config.not_if)
-        logger.trace { config.inspect }
-        process_rule_config(config)
-        nil # Must return something other than the rule object. See https://github.com/boc-tothefuture/openhab-jruby/issues/438
+        thread_local(RULE_NAME: rule_name) do
+          @rule_name = rule_name
+          config = RuleConfig.new(rule_name, block.binding)
+          config.instance_exec(config, &block)
+          config.guard = Guard::Guard.new(only_if: config.only_if, not_if: config.not_if)
+          logger.trace { config.inspect }
+          process_rule_config(config)
+          nil # Must return something other than the rule object. See https://github.com/boc-tothefuture/openhab-jruby/issues/438
+        end
       rescue StandardError => e
+        puts "#{e.class}: #{e.message}"
         re_raise_with_backtrace(e)
       end
-
-      #
-      # Create a logger where name includes rule name if name is set
-      #
-      # @return [Log::Logger] Logger with name that appended with rule name if rule name is set
-      #
-      def logger
-        if @rule_name
-          Log.logger_for(@rule_name.chomp.gsub(/\s+/, '_'))
-        else
-          super
-        end
-      end
+      # rubocop: enable Metrics/MethodLength
 
       #
       # Cleanup rules in this script file
@@ -137,7 +134,7 @@ module OpenHAB
         elsif !execution_blocks?(config)
           logger.warn "Rule '#{config.name}' has no execution blocks, not creating rule"
         elsif !config.enabled
-          logger.debug "Rule '#{config.name}' marked as disabled, not creating rule."
+          logger.trace "Rule '#{config.name}' marked as disabled, not creating rule."
         else
           return true
         end
