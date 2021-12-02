@@ -39,73 +39,7 @@ module OpenHAB
             group.name
           end
 
-          # Send a command to each member of the group
-          #
-          # @return [GroupMembers] +self+
-          def command(command)
-            each { |item| item << command }
-          end
           alias << command
-
-          # @!method refresh
-          #   Send the +REFRESH+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method on
-          #   Send the +ON+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method off
-          #   Send the +OFF+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method up
-          #   Send the +UP+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method down
-          #   Send the +DOWN+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method stop
-          #   Send the +STOP+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method move
-          #   Send the +MOVE+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method increase
-          #   Send the +INCREASE+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method desrease
-          #   Send the +DECREASE+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method play
-          #   Send the +PLAY+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method pause
-          #   Send the +PAUSE+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method rewind
-          #   Send the +REWIND+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method fast_forward
-          #   Send the +FASTFORWARD+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method next
-          #   Send the +NEXT+ command to each member of the group
-          #   @return [GroupMembers] +self+
-
-          # @!method previous
-          #   Send the +PREVIOUS+ command to each member of the group
-          #   @return [GroupMembers] +self+
         end
 
         include Enumerable
@@ -152,6 +86,10 @@ module OpenHAB
             get_all_members.to_a
           end
         end
+
+        # don't want to inherit these from Enumerable, because we want to send them to the base item
+        remove_method %i[ensure refresh on off up down stop move increase decrease play pause rewind fast_forward next
+                         previous]
 
         # Delegate missing methods to +base_item+ if possible
         def method_missing(method, *args, &block)

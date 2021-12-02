@@ -2,6 +2,7 @@
 
 require 'openhab/dsl/items/metadata'
 require 'openhab/dsl/items/persistence'
+require 'openhab/dsl/items/semantics'
 
 require_relative 'item_equality'
 
@@ -10,14 +11,17 @@ module OpenHAB
     module Items
       java_import org.openhab.core.items.GenericItem
 
-      # Adds methods to core OpenHAB DimmerItem type to make it more natural in
+      # Adds methods to core OpenHAB GenericItem type to make it more natural in
       # Ruby
+      #
+      # @see https://www.openhab.org/javadoc/latest/org/openhab/core/items/genericitem
       class GenericItem
         include Log
         include ItemEquality
 
         prepend Metadata
         prepend Persistence
+        include Semantics
 
         # rubocop:disable Naming/MethodName these mimic Java fields, which are
         # actually methods

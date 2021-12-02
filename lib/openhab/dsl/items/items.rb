@@ -69,8 +69,8 @@ module OpenHAB
               end                                                                                       # end
             RUBY
 
-            logger.trace("Defining GroupItem::GroupMembers##{command} for #{value}")
-            GroupItem::GroupMembers.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+            logger.trace("Defining Enumerable##{command} for #{value}")
+            Enumerable.class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{command}        # def on
                 each(&:#{command})  #   each(&:on)
               end                   # end
