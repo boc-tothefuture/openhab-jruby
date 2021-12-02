@@ -111,12 +111,12 @@ Feature:  item_timers
     | Switch | Switch1 | OFF      |
    And code in a rules file
     """
-    Switch1.on for: 5.seconds, on_expire: OFF
+    Switch1.on for: 5.seconds, on_expire: ON
     """
    When I deploy the rule
    Then "Switch1" should be in state "ON" within 3 seconds
-   But If I send command "ON" to item "Switch1"
-   Then "Switch1" should stay in state "ON" for 8 seconds
+   But If I send command "OFF" to item "Switch1"
+   Then "Switch1" should stay in state "OFF" for 8 seconds
 
 
    Scenario: Supplied blocks are called when timers are cancelled
