@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.22.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.21.0...4.22.0) (2021-12-03)
+
+
+### Features
+
+* **datetime:** support ZonedDateTime objects as commands for DateTime items ([72287c1](https://github.com/boc-tothefuture/openhab-jruby/commit/72287c1bd9f4b9f7cc0b5ead296fa98e661f04a5))
+
 # [4.21.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.20.0...4.21.0) (2021-12-02)
 
 
