@@ -15,10 +15,11 @@ them are extended or adapted with OpenHAB specific functionality.
 
 ##### Examples
 
-DateTime items can be updated and commanded with ruby Time objects
+DateTime items can be updated and commanded with ruby Time objects or Java ZonedDateTime objects
 
 ```ruby
 Example_DateTimeItem << Time.now
+Example_DateTimeItem << ZonedDateTime.now
 ```
 
 Math operations (+ and -) are available to make calculations with time in a few different ways

@@ -99,3 +99,15 @@ Feature: date_time_item
         """
       When I deploy the rules file
       Then It should log "05:00 is between DateOne..DateTwo" within 5 seconds
+
+    Scenario: DateTime items accept ZonedDateTime
+      Given code in a rules file
+        """
+        require 'java'
+        java_import java.time.ZoneId
+        DateOne << ZonedDateTime.of(1999,12,31,0,0,0,0,ZoneId.of("UTC"))
+        """
+      When I deploy the rules file
+      Then "DateOne" should be in state "1999-12-31T00:00:00.000+0000" within 5 seconds
+
+
