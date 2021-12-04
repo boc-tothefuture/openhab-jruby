@@ -25,7 +25,14 @@ module OpenHAB
           super
         end
 
-        #
+        # Support conversion to location items from a hash
+        # @!visibility private
+        def format_type(command)
+          return PointType.new(command.to_hash) if command.respond_to?(:to_hash)
+
+          super
+        end
+
         # Type Coercion
         #
         # Coerce object to a PointType
