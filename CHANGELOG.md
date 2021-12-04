@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.22.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.22.0...4.22.1) (2021-12-04)
+
+
+### Bug Fixes
+
+* **hsb:** fix type in from_hsb ([9ebe0f2](https://github.com/boc-tothefuture/openhab-jruby/commit/9ebe0f2754424a2c31b2cb0083c9db8793f48360))
+
 # [4.22.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.21.0...4.22.0) (2021-12-03)
 
 
