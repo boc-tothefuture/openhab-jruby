@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.22.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.22.1...4.22.2) (2021-12-04)
+
+
+### Bug Fixes
+
+* **timed_command:** fix race condition for timed commands ([6f3edd3](https://github.com/boc-tothefuture/openhab-jruby/commit/6f3edd35c7edbe85369e39ec102648e839dee043))
+
 ## [4.22.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.22.0...4.22.1) (2021-12-04)
 
 
