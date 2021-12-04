@@ -47,7 +47,7 @@ module OpenHAB
           # @param saturation [PercentType, Numeric] Saturation component (0-100%)
           # @param brightness [PercentType, Numeric] Brightness component (0-100%)
           # @return [HSBType]
-          def from_hsv(hue, saturation, brightness)
+          def from_hsb(hue, saturation, brightness)
             new(hue, saturation, brightness)
           end
 
