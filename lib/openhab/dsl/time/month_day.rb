@@ -107,10 +107,13 @@ module OpenHAB
       # Extend MonthDay java object with some helper methods
       class MonthDay
         include OpenHAB::Log
+        java_import java.time.format.DateTimeFormatter
         # Parse MonthDay string as defined with by Monthday class without leading double dash "--"
         def self.parse(string)
-          ##          string = "--#{string}" unless string.to_s.start_with? '--'
-          java_send :parse, [java.lang.CharSequence], "--#{string}"
+          logger.trace("#{self.class}.parse #{string} (#{string.class})")
+          java_send :parse, [java.lang.CharSequence, java.time.format.DateTimeFormatter],
+                    string.to_s,
+                    DateTimeFormatter.ofPattern('[--]M-d')
         end
 
         # Can the supplied object be parsed into a MonthDay
@@ -122,6 +125,9 @@ module OpenHAB
         def to_s
           to_string.delete_prefix('--')
         end
+
+        # remove the inherited #== method to use our <=> below
+        remove_method :==
 
         # Extends MonthDay comparison to support Strings
         # Necessary to support mixed ranges of Strings and MonthDay types
