@@ -17,6 +17,7 @@ module OpenHAB
         # @param longitude [DecimalType, QuantityType, StringType, Numeric]
         # @param altitude [DecimalType, QuantityType, StringType, Numeric]
         def initialize(*args) # rubocop:disable Metrics
+          args = from_hash(args.first.to_hash) if args.first.respond_to? :to_hash
           if (2..3).cover?(args.length)
             args = args.each_with_index.map do |value, index|
               if value.is_a?(DecimalType) || value.is_a?(StringType)
@@ -119,6 +120,13 @@ module OpenHAB
         end
 
         #
+        # Convert the PointType to a hash
+        # @return [Hash] with keys latitude/longitude/altitude
+        def to_h
+          { latitude: latitude, longitude: longitude, altitude: altitude }
+        end
+
+        #
         # Calculate the distance in meters from other, ignoring altitude.
         #
         # This algorithm also ignores the oblate spheroid shape of Earth and
@@ -138,7 +146,7 @@ module OpenHAB
 
         # coerce an object to a PointType
         # @return [PointType]
-        def coerce_single(other)
+        def coerce_single(other) # rubocop:disable Metrics
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(PointType)
             other
@@ -148,7 +156,22 @@ module OpenHAB
             other.state
           elsif other.respond_to?(:to_str)
             PointType.new(other.to_str)
+          elsif other.respond_to?(:to_hash)
+            PointType.new(other.to_hash)
           end
+        end
+
+        #
+        # Convert hash into ordered arguments for constructor
+        #
+        def from_hash(hash)
+          keys = [%i[lat long alt], %i[latitude longitude altitude]]
+          keys.each do |key_set|
+            values = hash.transform_keys(&:to_sym).values_at(*key_set)
+
+            return *values.compact if values[0..1].all?
+          end
+          raise ArgumentError, "Supplied arguments (#{hash}) must contain one of the following sets #{keys}"
         end
       end
     end
