@@ -423,6 +423,13 @@ Feature: comparisons
         [ '2021-01-01T00:00:00+00:00' , '=='  , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
         [ '2021-01-01T00:00:00+01:00' , '!='  , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
 
+        # MonthDay
+        [ MonthDay.of(2, 3)           , '=='  , '02-03'     , true],
+        [ MonthDay.of(2, 3)           , '=='  , '02-3'      , true],
+        [ MonthDay.of(2, 3)           , '=='  , '2-03'      , true],
+        [ MonthDay.of(2, 3)           , '=='  , '2-3'       , true],
+        [ MonthDay.of(2, 3)           , '=='  , '--2-3'     , true],
+
         # HSBType
         [ HSBType.new(0, 100, 100)    , '=='  , Color                       , true  ]  ,
         [ HSBType.new(0, 100, 100)    , '!='  , Color                       , false ]  ,
