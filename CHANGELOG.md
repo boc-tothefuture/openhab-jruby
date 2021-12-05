@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.24.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.23.0...4.24.0) (2021-12-05)
+
+
+### Features
+
+* **location:** support hashes for locations ([ae8ff6a](https://github.com/boc-tothefuture/openhab-jruby/commit/ae8ff6ac8fc4d2a3bb20875962776ba977ea7546))
+
 # [4.23.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.22.2...4.23.0) (2021-12-05)
 
 
