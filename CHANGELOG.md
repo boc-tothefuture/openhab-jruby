@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.23.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.22.2...4.23.0) (2021-12-05)
+
+
+### Bug Fixes
+
+* **monthday:** fix equality comparison against string and allow parsing single digit month-days ([a9d8b47](https://github.com/boc-tothefuture/openhab-jruby/commit/a9d8b471aa0de60c40cc534e31ebcd4f0e6b8b2a))
+
+
+### Features
+
+* **hsb:** add from/to hash support ([91876d0](https://github.com/boc-tothefuture/openhab-jruby/commit/91876d01aa8577480ef88b014530064ba0d3a6ca))
+
 ## [4.22.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.22.1...4.22.2) (2021-12-04)
 
 
