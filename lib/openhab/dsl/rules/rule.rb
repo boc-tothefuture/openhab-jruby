@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'openhab/core/thread_local'
+require 'openhab/core/services'
 require 'openhab/log/logger'
 require_relative 'rule_config'
 require_relative 'automation_rule'
@@ -21,14 +22,11 @@ module OpenHAB
 
       @script_rules = []
 
-      # rubocop: disable Style/GlobalVars
-      @automation_manager = $scriptExtension.get('automationManager')
-      @registry = $scriptExtension.get('ruleRegistry')
-      # rubocop: enable Style/GlobalVars
-
+      @automation_manager = OpenHAB::Core.automation_manager
+      @registry = OpenHAB::Core.rule_registry
       class << self
         attr_reader :script_rules, :automation_manager, :registry
-      end
+end
 
       #
       # Create a new rule

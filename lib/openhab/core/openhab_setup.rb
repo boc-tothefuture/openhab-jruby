@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'openhab/log/logger'
+require 'openhab/core/services'
 
 module OpenHAB
   #
@@ -19,12 +20,10 @@ module OpenHAB
     #
     def self.wait_till_openhab_ready
       logger.trace('Checking readyness of OpenHAB')
-      # rubocop: disable Style/GlobalVars
-      until $scriptExtension.get('automationManager')
+      until OpenHAB::Core.automation_manager
         logger.trace("Automation manager not loaded, checking again in #{CHECK_DELAY} seconds.")
         sleep CHECK_DELAY
       end
-      # rubocop: enable Style/GlobalVars
       logger.trace 'Automation manager instantiated, OpenHAB ready for rule processing.'
     end
   end
