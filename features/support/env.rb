@@ -27,4 +27,8 @@ After('@log_level_changed') do
   set_log_level('org.openhab.core.automation', 'TRACE')
 end
 
+After('@conf_files') do
+  delete_temp_conf_files
+end
+
 prepare_openhab

@@ -8,6 +8,7 @@ Given('Clean OpenHAB with latest Ruby Libraries') do
   delete_shared_libraries
   delete_items
   delete_things
+  delete_conf_foo
   truncate_log
 end
 

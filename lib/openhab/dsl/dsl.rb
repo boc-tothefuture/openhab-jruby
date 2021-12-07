@@ -11,17 +11,18 @@ require 'openhab/dsl/monkey_patch/events/events'
 require 'openhab/dsl/monkey_patch/actions/actions'
 require 'openhab/dsl/rules/rule'
 require 'openhab/dsl/rules/terse'
-require 'openhab/dsl/actions'
-require 'openhab/dsl/channel'
-require 'openhab/dsl/timers'
-require 'openhab/dsl/group'
-require 'openhab/dsl/things'
-require 'openhab/dsl/between'
-require 'openhab/dsl/gems'
-require 'openhab/dsl/persistence'
-require 'openhab/dsl/uid'
-require 'openhab/dsl/units'
-require 'openhab/dsl/states'
+require_relative 'actions'
+require_relative 'channel'
+require_relative 'timers'
+require_relative 'group'
+require_relative 'things'
+require_relative 'between'
+require_relative 'gems'
+require_relative 'persistence'
+require_relative 'uid'
+require_relative 'units'
+require_relative 'states'
+require_relative 'openhab'
 
 module OpenHAB
   #
@@ -34,6 +35,7 @@ module OpenHAB
     def self.extended(base)
       base.send :include, OpenHAB::DSL::Actions
       base.send :include, OpenHAB::DSL::Between
+      base.send :include, OpenHAB::DSL::Core
       base.send :include, OpenHAB::DSL::Groups
       base.send :include, OpenHAB::DSL::Items
       base.send :include, OpenHAB::DSL::Persistence
