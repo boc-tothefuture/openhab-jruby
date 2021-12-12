@@ -19,7 +19,7 @@ module OpenHAB
 
         def initialize
           # Track timer IDs
-          @timer_ids = Hash.new { |hash, key| hash[key] = Set.new }
+          @timer_ids = {}
 
           # Reentrant timer lookups
           @reentrant_timers = {}
@@ -39,6 +39,7 @@ module OpenHAB
 
           if timer.respond_to? :id
             logger.trace("Adding #{timer} with id #{timer.id.inspect} timer ids")
+            @timer_ids[timer.id] = Set.new unless @timer_ids[timer.id]
             @timer_ids[timer.id] << timer
           end
 
@@ -68,7 +69,10 @@ module OpenHAB
         def delete(timer)
           logger.trace("Removing #{timer} from timers")
           @timers.delete(timer)
-          @timer_ids[timer.id].delete(timer) if (timer.respond_to? :id) && (@timer_ids.key? timer.id)
+          if timer.respond_to? :id
+            @timer_ids[timer.id]&.delete(timer)
+            @timer_ids.delete(timer.id) unless @timer_ids[timer.id].any?
+          end
           @reentrant_timers.delete(timer.reentrant_id) if timer.respond_to? :reentrant_id
         end
 
