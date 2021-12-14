@@ -253,3 +253,23 @@ Feature:  timer
     And It should not log 'Timer Fired after 5 seconds' within 7 seconds
     And It should not log 'Timer Fired after 10 seconds' within 12 seconds
 
+  Scenario: Timer is removed from timers[] when cancelled
+    Given code in a rules file:
+      """
+      after 3.seconds, :id => :foo do
+        logger.info "Timer Fired"
+      end
+
+      rule 'Cancel timer' do
+        on_start true
+        run do
+          logger.info("timers[:foo] is nil before cancel: #{timers[:foo].nil?}")
+          timers[:foo]&.each(&:cancel)
+          logger.info("timers[:foo] is nil after cancel: #{timers[:foo].nil?}")
+        end
+      end
+      """
+    When I deploy the rule
+    Then It should log 'timers[:foo] is nil before cancel: false' within 5 seconds
+    And It should log 'timers[:foo] is nil after cancel: true' within 5 seconds
+
