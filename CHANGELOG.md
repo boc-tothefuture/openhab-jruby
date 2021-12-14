@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.24.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.24.0...4.24.1) (2021-12-14)
+
+
+### Bug Fixes
+
+* **timer_manager:** timers[nonexistent_id] should return nil ([550d9e0](https://github.com/boc-tothefuture/openhab-jruby/commit/550d9e09ce04e1050bcb0623bb2d5339359bb477))
+
 # [4.24.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.23.0...4.24.0) (2021-12-05)
 
 
