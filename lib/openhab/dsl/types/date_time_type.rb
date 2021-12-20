@@ -2,11 +2,13 @@
 
 require 'forwardable'
 require 'time'
+require 'java'
 
 module OpenHAB
   module DSL
     module Types
       java_import org.openhab.core.library.types.DateTimeType
+      java_import java.time.ZonedDateTime
 
       # global alias
       ::DateTimeType = DateTimeType

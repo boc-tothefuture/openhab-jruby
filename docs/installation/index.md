@@ -13,23 +13,26 @@ has_children: false
 
 ## Installation
 
-1. Create directory for Ruby Gems `<OPENHAB_CONF>/automation/lib/ruby/gem_home`
-2. Configure JRuby OpenHAB services
+### From the user interface
+1. Go to Settings -> Add-ons -> Automation and install the jrubyscripting automation addon following the [OpenHAB instructions](https://www.openhab.org/docs/
+configuration/addons.html) 
+2. Specify this library (openhab-scripting=~>4.0) as a ruby gem to be installed
+
+### Using files
+
+1. Configure JRuby OpenHAB services
    
    Create a file called `jruby.cfg` in `<OPENHAB_CONF>/services/` with the following content:
-
    ```
-   org.openhab.automation.jrubyscripting:gem_home=<OPENHAB_CONF>/automation/lib/ruby/gem_home
    org.openhab.automation.jrubyscripting:gems=openhab-scripting=~>4.0
-   org.openhab.automation.jrubyscripting:rubylib=<OPENHAB_CONF>/automation/lib/ruby/personal
    ```
 
-   Replace <openhab_base_dir> with your base dir. This configuration with the openhab-scripting gem specified with [pessimistic versioning](https://thoughtbot.com/blog/rubys-pessimistic-operator) will install any version of openhab-scripting greater than or equal to 4.0 but less than 5.0. On system restart if any (non-breaking) new versions of the library are available they will automatically be installed.
-3. Install the latest JRuby Scripting Language Addon from [here](https://github.com/boc-tothefuture/openhab2-addons/releases) to the folder `<OPENHAB_HOME>/addons/`
+   This configuration with the openhab-scripting gem specified with [pessimistic versioning](https://thoughtbot.com/blog/rubys-pessimistic-operator) will install any version of openhab-scripting greater than or equal to 4.0 but less than 5.0. On system restart if any (non-breaking) new versions of the library are available they will automatically be installed.
+2. Edit `<OPENHAB_CONF>/services/addons.cfg` and ensure that `jrubyscripting` is included in an uncommented `automation=` list of automations to install.  
 
 ## Upgrading
 
-Depending on the versioning selected in the `jruby.cfg` file upgrading will either be automatic after a OpenHAB restart or manual.  For manual upgrades select the version of the gem exactly, for example:
+Depending on the versioning selected in the `jruby.cfg` or the gems list in the user interface, file upgrading will either be automatic after a OpenHAB restart or manual.  For manual upgrades select the version of the gem exactly, for example:
 `org.openhab.automation.jrubyscripting:gems=openhab-scripting=4.0.0`
 
 Will install and stay at version 4.0.0, to upgrade to version 4.0.1, change the configuration:

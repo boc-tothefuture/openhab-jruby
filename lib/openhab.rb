@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'java'
 require 'openhab/core/load_path'
 require 'openhab/core/entity_lookup'
 require 'openhab/core/script_handling'

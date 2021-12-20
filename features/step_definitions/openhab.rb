@@ -183,6 +183,7 @@ end
 
 Given('feature {string} installed') do |feature|
   openhab_client("feature:install #{feature}")
+  sleep 10 # Version 3.2 of openhab seems to take a while to install features TODO, this should be a wait_until
 end
 
 When('channel {string} is triggered with {string}') do |channel, event|
