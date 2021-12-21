@@ -108,6 +108,21 @@ module OpenHAB
       class MonthDay
         include OpenHAB::Log
         java_import java.time.format.DateTimeFormatter
+
+        #
+        # Constructor
+        #
+        # @param [Integer] m month
+        # @param [Integer] d day of month
+        #
+        # @return [Object] MonthDay object
+        #
+        # rubocop: disable Naming/MethodParameterName
+        def self.new(m:, d:)
+          MonthDay.of(m, d)
+        end
+        # rubocop: enable Naming/MethodParameterName
+
         # Parse MonthDay string as defined with by Monthday class without leading double dash "--"
         def self.parse(string)
           logger.trace("#{self.class}.parse #{string} (#{string.class})")
