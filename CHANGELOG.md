@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.25.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.24.1...4.25.0) (2021-12-21)
+
+
+### Features
+
+* **month_day:** support keyword arguments to create monthday ([50f0f05](https://github.com/boc-tothefuture/openhab-jruby/commit/50f0f0532e349f7bb74b42c1badc388401ef241c))
+
 ## [4.24.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.24.0...4.24.1) (2021-12-14)
 
 
