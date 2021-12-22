@@ -105,6 +105,7 @@ Feature: date_time_item
         """
         require 'java'
         java_import java.time.ZoneId
+        java_import java.time.ZonedDateTime
         DateOne << ZonedDateTime.of(1999,12,31,0,0,0,0,ZoneId.of("UTC"))
         """
       When I deploy the rules file
