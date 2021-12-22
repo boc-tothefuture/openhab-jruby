@@ -59,7 +59,10 @@ class OpenHABClient
 end
 
 def openhab_client(command)
-  OpenHABClient.instance.command(command)
+  # OpenHABClient.instance.command(command)
+  # Optimized client is currently failing on feature installs
+  cmd = TTY::Command.new(:printer => :null)
+  cmd.run(File.join(openhab_dir, "runtime/bin/client -p habopen  '#{command}'"), only_output_on_error: true)
 end
 
 def items_dir
