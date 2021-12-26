@@ -37,13 +37,13 @@ module OpenHAB
       # @yield [] Block executed in context of a RuleConfig
       #
       #
-      # rubocop: disable Metrics/MethodLength
+      # rubocop: disable Metrics
       def rule(rule_name, &block)
         thread_local(RULE_NAME: rule_name) do
           @rule_name = rule_name
           config = RuleConfig.new(rule_name, block.binding)
           config.instance_exec(config, &block)
-          config.guard = Guard::Guard.new(only_if: config.only_if, not_if: config.not_if)
+          config.guard = Guard::Guard.new(run_context: config.caller, only_if: config.only_if, not_if: config.not_if)
           logger.trace { config.inspect }
           process_rule_config(config)
           nil # Must return something other than the rule object. See https://github.com/boc-tothefuture/openhab-jruby/issues/438
@@ -52,7 +52,7 @@ module OpenHAB
         puts "#{e.class}: #{e.message}"
         re_raise_with_backtrace(e)
       end
-      # rubocop: enable Metrics/MethodLength
+      # rubocop: enable Metrics
 
       #
       # Cleanup rules in this script file

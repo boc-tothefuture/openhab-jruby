@@ -96,10 +96,6 @@ Feature:  guards
       | OFF                | ON                 | 0            | not_if  |
       | ON                 | OFF                | 0            | not_if  |
 
-
-
-
-
   Scenario Outline: only_if and not_if raise an error if supplied objects that don't respond to 'truthy'?
     And a rule
       """
@@ -205,7 +201,6 @@ Feature:  guards
       | OFF                | CLOSED     | 50           |
 
 
-  @not_implemented
   Scenario Outline: Guards have access to event information
     Given a deployed rule:
       """
@@ -221,6 +216,32 @@ Feature:  guards
       | switch        | switch_state | dimmer_state |
       | LightSwitch   | ON           | 0            |
       | OutsideSwitch | ON           | 50           |
+
+
+  Scenario Outline: Guards have access to the main object's context
+    Given a deployed rule:
+      """
+      def meth
+        logger.info("Guard Context: #{self}") 
+      end
+
+      def meth2
+        logger.info("Run Context: #{self}") 
+      end
+
+      rule 'Check guard context' do
+        changed OutsideDimmer
+        run { meth2 }
+        <guard>
+      end
+      """
+    When item "OutsideDimmer" state is changed to "50"
+    Then It should log "Guard Context: main" within 5 seconds
+    Examples:
+    | guard                                     |
+    | only_if { meth; false }                   |
+    | not_if { meth; true }                     |
+
 
 
   Scenario Outline: Between guards accept a mix of string and time of day objects to guard rule execution based on time of day or day of month
