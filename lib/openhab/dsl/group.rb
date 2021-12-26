@@ -3,6 +3,7 @@
 require 'singleton'
 
 require 'openhab/dsl/lazy_array'
+require 'openhab/core/entity_lookup'
 
 module OpenHAB
   module DSL
@@ -24,7 +25,7 @@ module OpenHAB
         # @return [Set] of OpenHAB Groups
         #
         def [](name)
-          group = Core::EntityLookup.lookup_item(name)
+          group = OpenHAB::Core::EntityLookup.lookup_item(name)
           group.is_a?(Items::GroupItem) ? group : nil
         end
         alias include? []

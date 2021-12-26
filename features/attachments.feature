@@ -7,6 +7,7 @@ Feature:  attachments
       | type   | name    | label             | state |
       | Switch | Switch1 | Switch Number One | OFF   |
 
+  @conf_files
   Scenario Outline: Triggers works with attachments
     Given a deployed rule:
       """
@@ -31,6 +32,7 @@ Feature:  attachments
       | on_start true                                              | qaz        | I wait 2 seconds                                  |
       | every :second                                              | qux        | I wait 2 seconds                                  |
       | cron five_seconds_from_now                                 | qab        | I wait 5 seconds                                  |
+      | watch __conf__+'foo'                                       | qac        | I create a file in subdirectory 'foo' of conf named 'bar' |
 
 
   Scenario Outline: Guards have access to attachments
