@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.26.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.25.0...4.26.0) (2021-12-26)
+
+
+### Bug Fixes
+
+* **guard:** execute guard in main context ([b1f1fe0](https://github.com/boc-tothefuture/openhab-jruby/commit/b1f1fe08d37674c7ea7d0db91bf1780b46f20ff7))
+
+
+### Features
+
+* **watch:** add trigger for file/directory watching ([ed6352a](https://github.com/boc-tothefuture/openhab-jruby/commit/ed6352aaeceaf99a585db7e5012d96ee853f6974))
+
 # [4.25.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.24.1...4.25.0) (2021-12-21)
 
 
