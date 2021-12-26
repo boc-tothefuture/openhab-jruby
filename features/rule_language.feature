@@ -195,3 +195,13 @@ Feature: rule_language
     And It should log 'In rule: test' within 5 seconds
     And It should log "RUBY.test" within 5 seconds
     And It should log "RUBY.<main>" within 5 seconds
+
+
+  Scenario: OpenHAB config directory is available
+    Given code in a rules file:
+      """
+        logger.info("Conf #{__conf__}")
+        logger.info("Conf directory is #{__conf__.each_filename.to_a.last(2).join('/')}")
+      """
+    When I deploy the rules file
+    Then It should log 'Conf directory is openhab/conf' within 5 seconds
