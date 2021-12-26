@@ -36,7 +36,8 @@ module OpenHAB
           # @param [Object] only_if Item or Proc to use as guard
           # @param [Object] not_if Item or Proc to use as guard
           #
-          def initialize(only_if: nil, not_if: nil)
+          def initialize(run_context:, only_if: nil, not_if: nil)
+            @run_context = run_context
             @only_if = only_if
             @not_if = not_if
           end
@@ -106,27 +107,27 @@ module OpenHAB
           #
           # Check not_if guard
           #
-          # @param [OpenHAB Event] event event to check if meets guard
+          # @param [OpenHAB Event] event to check if meets guard
           # @param [Array<Item>] items to check if satisfy criteria
           # @param [Array] procs to check if satisfy criteria
           #
           # @return [Boolean] True if criteria are satisfied, false otherwise
           #
           def process_not_if(event, items, procs)
-            items.flatten.none?(&:truthy?) && procs.none? { |proc| proc.call(event) }
+            items.flatten.none?(&:truthy?) && procs.none? { |proc| @run_context.instance_exec(event, &proc) }
           end
 
           #
           # Check only_if guard
           #
-          # @param [OpenHAB Event] event event to check if meets guard
+          # @param [OpenHAB Event] event to check if meets guard
           # @param [Array<Item>] items to check if satisfy criteria
           # @param [Array] procs to check if satisfy criteria
           #
           # @return [Boolean] True if criteria are satisfied, false otherwise
           #
           def process_only_if(event, items, procs)
-            items.flatten.all?(&:truthy?) && procs.all? { |proc| proc.call(event) }
+            items.flatten.all?(&:truthy?) && procs.all? { |proc| @run_context.instance_exec(event, &proc) }
           end
         end
       end
