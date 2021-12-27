@@ -135,7 +135,7 @@ module OpenHAB
         # @return [Array<Group>] All groups that this item is part of
         #
         def groups
-          group_names.map { |name| Groups.groups[name] }
+          group_names.map { |name| Groups.groups[name] }.compact
         end
 
         # Return the item's thing if this item is linked with a thing. If an item is linked to more than one thing,
