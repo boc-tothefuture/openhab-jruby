@@ -69,7 +69,7 @@ Feature: persistence
       end
       """
     When I deploy the rule
-    Then It should log 'Persistence checks done' within 5 seconds
+    Then It should log 'Persistence checks done' within 10 seconds
 
   Scenario: Persistence data with Units of Measurement
     Given groups:

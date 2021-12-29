@@ -275,3 +275,26 @@ Feature:  items
       """
     When I deploy the rules file
     Then It should log "Thing: astro:sun:home,systeminfo:computer:systeminfo" within 5 seconds
+
+  Scenario: Referenced items always access latest item instance
+    Given items:
+      | type   | name          | label      |
+      | String | FooString     | foo        |
+      | Switch | MySwitch      | switch     |
+    And a rule:
+      """
+      h = { foo: FooString }
+      rule 'check reference' do
+        on_start
+        changed MySwitch
+        run { logger.info("Label: #{h[:foo].label}") }
+      end
+      """
+    When I deploy the rule
+    Then It should log "Label: foo" within 5 seconds
+    But If items:
+      | type   | name          | label      |
+      | String | FooString     | bar        |
+    And item 'MySwitch' state is changed to 'ON'
+    Then It should log "Label: bar" within 5 seconds
+
