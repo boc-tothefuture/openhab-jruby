@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.26.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.0...4.26.1) (2021-12-29)
+
+
+### Bug Fixes
+
+* **docs:** fix link to Yard docs ([7ca4bce](https://github.com/boc-tothefuture/openhab-jruby/commit/7ca4bce1e098a41cbb773a4ccf485092b5a5ed31))
+
 # [4.26.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.25.0...4.26.0) (2021-12-26)
 
 
