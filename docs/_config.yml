@@ -27,11 +27,10 @@ exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "pac
 
 # Build settings
 markdown: kramdown
-theme: just-the-docs
+remote_theme: pmarsceill/just-the-docs
 plugins:
   - jekyll-feed
 
-remote_theme: pmarsceill/just-the-docs
 
 
 # Regression tests
