@@ -20,8 +20,8 @@ module OpenHAB
         # Invert the type
         # @return [OpenClosedType] +OPEN+ if +CLOSED+, +CLOSED+ if +OPEN+
         def !
-          return OPEN if open?
-          return CLOSED if closed?
+          return CLOSED if open?
+          return OPEN if closed?
         end
       end
     end
