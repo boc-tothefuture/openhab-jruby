@@ -100,7 +100,16 @@ def nil_if_blank(str)
   str
 end
 
+def check_items(added:)
+  wait_until(seconds: 10, msg: "Not all #{added} items were added") do
+    (added.map(&:name) - (Rest.items.map { |item| item['name'] })).empty?
+  rescue StandardError
+    false
+  end
+end
+
 Given(/(?: I add)?items:/) do |table|
+  items = []
   table.hashes.each do |row|
     type = row['type']
     name = row['name']
@@ -112,7 +121,9 @@ Given(/(?: I add)?items:/) do |table|
     pattern = nil_if_blank(row['pattern'])
     item = Item.new(type: type, name: name, state: state, label: label, groups: groups, pattern: pattern)
     add_item(item: item)
+    items << item
   end
+  check_items(added: items)
 end
 
 Given('linked:') do |table|
@@ -184,7 +195,11 @@ end
 
 Given('feature {string} installed') do |feature|
   openhab_client("feature:install #{feature}")
-  sleep 10 # Version 3.2 of openhab seems to take a while to install features TODO, this should be a wait_until
+  wait_until(seconds: 10, msg: "Feature #{feature} not started") do
+    openhab_client('feature:list').stdout.lines.grep(/#{feature}/).any? { |line| line.include? 'Started' }
+  end
+  sleep 60 # System seems unsettled after adding a feature.. proper way to do this would be set
+  # logging for feature to debug and move on after we see that log line in the wait_until
 end
 
 When('channel {string} is triggered with {string}') do |channel, event|
