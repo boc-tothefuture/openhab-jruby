@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.26.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.1...4.26.2) (2021-12-31)
+
+
+### Bug Fixes
+
+* **open_closed_type:** state not inverted with ! operator ([498b515](https://github.com/boc-tothefuture/openhab-jruby/commit/498b5155caf203f8103e171914ba67149f4bb76a))
+
 ## [4.26.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.0...4.26.1) (2021-12-29)
 
 
