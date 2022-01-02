@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.26.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.2...4.26.3) (2022-01-02)
+
+
+### Bug Fixes
+
+* **test:** instead of sleep, wait for for persistence feature to be installed ([a926d73](https://github.com/boc-tothefuture/openhab-jruby/commit/a926d73b0c21866713096300dd3c33c316271cf4))
+
 ## [4.26.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.1...4.26.2) (2021-12-31)
 
 
