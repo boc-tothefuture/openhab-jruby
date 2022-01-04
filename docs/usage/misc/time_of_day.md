@@ -23,15 +23,14 @@ TimeOfDay class can be used in rules for time related logic. Methods:
 | second      |                | Returns the second part of the object                                                                                                                   | TimeOfDay.now.second                                                                                                                                         |
 | between?    | TimeOfDayRange | Returns true if it falls within the given time range                                                                                                    | TimeOfDay.now.between? '3pm'..'7pm'                                                                                                                          |
 
-
 A TimeOfDay object can be compared against another TimeOfDay object or a parseable string representation of time.
 
 Note: the following global constants are available:
+
 | Name     | Description |
 | -------- | ----------- |
 | MIDNIGHT | 00:00       |
 | NOON     | 12:00       |
-
 
 ## Examples
 
@@ -48,13 +47,14 @@ four_pm = TimeOfDay.parse '16:00'
 ```
 
 ## between
- 
- `between` creates a TimeOfDay range that can be used to check if another Time, TimeOfDay, or [TimeOfDay parsable string](#TimeOfDay) is within that range. 
- 
- ```ruby
- logger.info("Within time range") if between('10:00'..'14:00').cover? Time.now
- logger.info("Within time range") if between('10:00'..'14:00').include? TimeOfDay.now
- 
+
+`between` creates a TimeOfDay range that can be used to check if another Time, TimeOfDay, or [TimeOfDay parsable string](#TimeOfDay) is within that range.
+
+```ruby
+logger.info("Within time range") if between('10:00'..'14:00').cover? Time.now
+logger.info("Within time range") if between('10:00'..'14:00').include? TimeOfDay.now
+logger.info("Within time range") if TimeOfDay.now.between?('10:00'..'14:00')
+
 case Time.now
 
 when between('6:00'...'12:00')
@@ -63,7 +63,5 @@ when between('12:00'..'15:00')
   logger.info("Afternoon")
 else
   logger.info("Not in time range")
-end  
- ```
- 
- 
+end
+```

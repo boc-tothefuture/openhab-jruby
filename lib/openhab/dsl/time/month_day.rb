@@ -24,6 +24,7 @@ module OpenHAB
         # or anything responding to 'to_date' to see if they are within the range
         # @return Range object representing a MonthDay Range
         # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Metrics/MethodLength
         # Range method cannot be broken up cleaner
         def self.range(range)
           logger.trace "Creating MonthDay range from #{range}"
@@ -37,10 +38,13 @@ module OpenHAB
           # Wrap to next year if ending day of month is before starting day of month
           ending_year = ending < start ? next_year : current_year
 
-          start_range = MonthDayRangeElement.new(month_day: start, year: current_year)
-          ending_range = MonthDayRangeElement.new(month_day: ending, year: ending_year)
+          start_range = MonthDayRangeElement.new(month_day: start, year: current_year,
+                                                 range_begin: start, year_begin: current_year)
+          ending_range = MonthDayRangeElement.new(month_day: ending, year: ending_year,
+                                                  range_begin: start, year_begin: current_year)
           range.exclude_end? ? (start_range...ending_range) : (start_range..ending_range)
         end
+        # rubocop:enable Metrics/MethodLength
         # rubocop:enable Metrics/AbcSize
 
         # Checks if supplied range can be converted to a month day range
@@ -65,9 +69,11 @@ module OpenHAB
           # @param [MonthDay] MonthDay element
           # @param [Lambda] year lambda to calculate year to convert MonthDay to LocalDate
           #
-          def initialize(month_day:, year:)
+          def initialize(month_day:, year:, range_begin:, year_begin:)
             @month_day = month_day
             @year = year
+            @range_begin = range_begin
+            @year_begin = year_begin
           end
 
           # Convert into a LocalDate using year lambda supplied in initializer
@@ -81,15 +87,17 @@ module OpenHAB
             next_date = to_local_date.plus_days(1)
             # Handle rollover to next year
             year = -> { Year.from(next_date) }
-            MonthDayRangeElement.new(month_day: MonthDay.from(next_date), year: year)
+            MonthDayRangeElement.new(month_day: MonthDay.from(next_date), year: year,
+                                     range_begin: @range_begin, year_begin: @year_begin)
           end
 
           # Compare MonthDayRangeElement to other objects as required by Range class
           # rubocop:disable Metrics/AbcSize
           # Case statement needs to work against multiple types
           def <=>(other)
+            logger.trace("Comparing (#{self.class}) #{to_local_date} <=> #{other} (#{other.class})")
             case other
-            when LocalDate then to_local_date.compare_to(other)
+            when LocalDate then to_local_date.compare_to(adjust_year(other))
             when Date then self.<=>(LocalDate.of(other.year, other.month, other.day))
             when MonthDay then self.<=>(MonthDayRange.current_year.call.at_month_day(other))
             else
@@ -100,6 +108,15 @@ module OpenHAB
             end
           end
           # rubocop:enable Metrics/AbcSize
+
+          private
+
+          # adjust to next year if the date is less than the beginning of the range
+          def adjust_year(local_date)
+            return local_date unless local_date < @year_begin.call.at_month_day(@range_begin)
+
+            local_date.plus_years(1)
+          end
         end
       end
 
@@ -136,6 +153,11 @@ module OpenHAB
           /^-*[01][0-9]-[0-3]\d$/.match? obj.to_s
         end
 
+        # Returns true if the MonthDay falls within a range
+        def between?(range)
+          MonthDayRange.range(range).cover? self
+        end
+
         # Remove -- from MonthDay string representation
         def to_s
           to_string.delete_prefix('--')
@@ -149,10 +171,9 @@ module OpenHAB
         # @return [Number, nil] -1,0,1 if other MonthDay is less than, equal to, or greater than this MonthDay
         def <=>(other)
           case other
-          when String
-            self.<=>(MonthDay.parse(other))
-          else
-            super
+          when String then self.<=>(MonthDay.parse(other))
+          when MonthDay then super
+          else -(other <=> self)
           end
         end
       end

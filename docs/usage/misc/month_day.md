@@ -11,15 +11,16 @@ grand_parent: Usage
 
 MonthDay class from [java.time.MonthDay](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/MonthDay.html) can be used in rules for month-date related logic. Notable Methods:
 
-| Method       | Parameter  | Description                                                                                                                                                                  |
-| ------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| constructor  | m, d       | Creates a MonthDay object with the given m and d keywords                                                                                                              |
-| parse        | String     | Creates a MonthDay object with a given time string. The format is `[--]M-d`. Both the month and the date can be a one or two digit number, and optionally prefixed with `--` |
-| now          |            | Creates a MonthDay object that represents the current month-day                                                                                                              |
-| of           | month, day | Creates a MonthDay with the given month and day                                                                                                                              |
-| month_value  |            | Returns the month part of the object as a number between 1 and 12                                                                                                            |
-| month        |            | Returns the month part of the object as java.time.Month enum                                                                                                                 |
-| day_of_month |            | Returns the second part of the object                                                                                                                                        |
+| Method       | Parameter     | Description                                                                                                                                                                  |
+| ------------ | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| constructor  | m, d          | Creates a MonthDay object with the given m and d keywords                                                                                                                    |
+| parse        | String        | Creates a MonthDay object with a given time string. The format is `[--]M-d`. Both the month and the date can be a one or two digit number, and optionally prefixed with `--` |
+| now          |               | Creates a MonthDay object that represents the current month-day                                                                                                              |
+| of           | month, day    | Creates a MonthDay with the given month and day                                                                                                                              |
+| month_value  |               | Returns the month part of the object as a number between 1 and 12                                                                                                            |
+| month        |               | Returns the month part of the object as java.time.Month enum                                                                                                                 |
+| day_of_month |               | Returns the second part of the object                                                                                                                                        |
+| between?     | MonthDayRange | Returns true if it falls within the given MonthDay                                                                                                                           |
 
 For a full list of methods supported by MonthDay, please see the link above.
 
@@ -51,6 +52,7 @@ end
 
 ```ruby
 logger.info("Within month-day range") if between('02-20'..'06-01').cover? MonthDay.now
+logger.info("Within month-day range") if MonthDay.now.between?('02-20'..'06-01')
 
 case MonthDay.now
 

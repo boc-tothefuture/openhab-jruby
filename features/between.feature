@@ -139,3 +139,22 @@ Feature: between
       | yesterday..'<%=Date.today.next_day.strftime('%m-%d')%>'                                    | Date.today | true   |
       | '<%=Date.today.prev_day.strftime('%m-%d')%>'..tomorrow                                     | Date.today | true   |
 
+  Scenario Outline: Between supports range rollover
+    Given a rule template:
+      """
+      result = <type>.parse('<value>').between?(<range>)
+      logger.info("between? #{result}")
+      """
+    When I deploy the rule
+    Then It should log "between? <result>" within 5 seconds
+    Examples: Checks range
+      | type     | value | range            | result |
+      # | TimeOfDay | 23:00 | '20:00'..'02:00' | true   |
+      # | TimeOfDay | 19:00 | '20:00'..'02:00' | false  |
+      # | TimeOfDay | 1:00  | '20:00'..'02:00' | true   |
+      # | TimeOfDay | 3:00  | '20:00'..'02:00' | false  |
+      | MonthDay | 12-25 | '12-01'..'01-05' | true   |
+      | MonthDay | 11-25 | '12-01'..'01-05' | false  |
+      | MonthDay | 01-01 | '12-01'..'01-05' | true   |
+      | MonthDay | 01-20 | '12-01'..'01-05' | false  |
+
