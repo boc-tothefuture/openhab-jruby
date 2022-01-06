@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.26.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.3...4.26.4) (2022-01-06)
+
+
+### Bug Fixes
+
+* **monthday:** fix monthday error when rolling over to another year ([2bf6aa9](https://github.com/boc-tothefuture/openhab-jruby/commit/2bf6aa95b8483fde3c5fafeb1cde243b959f2602))
+
 ## [4.26.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.2...4.26.3) (2022-01-02)
 
 
