@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.27.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.4...4.27.0) (2022-01-06)
+
+
+### Features
+
+* **item:** support reloading of references items ([64059cc](https://github.com/boc-tothefuture/openhab-jruby/commit/64059cca79d5dcd775ab8a8fe4154123a80f7cd3))
+
 ## [4.26.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.3...4.26.4) (2022-01-06)
 
 
