@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'java'
+
 module OpenHAB
   module DSL
     # Support for time related functions
@@ -8,40 +10,21 @@ module OpenHAB
       module MonthDayRange
         include OpenHAB::Log
 
-        java_import java.time.Year
-
-        # Lambdas are used to calculate the year for the month day
-        # which must happen during evaluation time to support that rules
-        # creation and evaluation for execution are done in distinct phases
-        @current_year = -> { return Year.now }
-        @next_year = -> { return Year.now.plus_years(1) }
-
-        class << self
-          attr_reader :current_year, :next_year
-        end
-
         # Creates a range that can be compared against MonthDay objects, strings
         # or anything responding to 'to_date' to see if they are within the range
         # @return Range object representing a MonthDay Range
-        # rubocop:disable Metrics/AbcSize
-        # Range method cannot be broken up cleaner
         def self.range(range)
-          logger.trace "Creating MonthDay range from #{range}"
           raise ArgumentError, 'Supplied object must be a range' unless range.is_a? Range
 
           start = MonthDay.parse(range.begin)
           ending = MonthDay.parse(range.end)
 
-          logger.trace "Month Day Range Start(#{start}) - End (#{ending})"
+          start_range = DayOfYear.new(month_day: start, range: start..ending)
+          ending_range = DayOfYear.new(month_day: ending, range: start..ending)
+          logger.trace "Month Day Range Start(#{start}) - End (#{ending}) - Created from (#{range})"
 
-          # Wrap to next year if ending day of month is before starting day of month
-          ending_year = ending < start ? next_year : current_year
-
-          start_range = MonthDayRangeElement.new(month_day: start, year: current_year)
-          ending_range = MonthDayRangeElement.new(month_day: ending, year: ending_year)
           range.exclude_end? ? (start_range...ending_range) : (start_range..ending_range)
         end
-        # rubocop:enable Metrics/AbcSize
 
         # Checks if supplied range can be converted to a month day range
         # @param [Range] range to check begin and end values of
@@ -52,54 +35,80 @@ module OpenHAB
           MonthDay.day_of_month?(range.begin) && MonthDay.day_of_month?(range.end)
         end
 
-        # Represents a range element for a MonthDay object
-        # The LocalDate (MonthDay + Year) is dynamically calculated to allow for
-        # being used as a guard during rule evaluation
-        class MonthDayRangeElement
+        # Converts a MonthDay to a day of year
+        # which is represented as a number from 1 to 732 to support comparisions when the range overlaps a year boundary
+        class DayOfYear
           include Comparable
           include OpenHAB::Log
           java_import java.time.LocalDate
-          java_import java.time.Year
+
+          attr_accessor :month_day
+
+          # Number of days in a leap year
+          DAYS_IN_YEAR = 366
 
           # Create a new MonthDayRange element
           # @param [MonthDay] MonthDay element
-          # @param [Lambda] year lambda to calculate year to convert MonthDay to LocalDate
+          # @param [Range] Underlying MonthDay range
           #
-          def initialize(month_day:, year:)
+          def initialize(month_day:, range:)
             @month_day = month_day
-            @year = year
-          end
-
-          # Convert into a LocalDate using year lambda supplied in initializer
-          def to_local_date
-            @year.call.at_month_day(@month_day)
+            @range = range
           end
 
           # Returns the MonthDay advanced by 1 day
           # Required by Range class
           def succ
-            next_date = to_local_date.plus_days(1)
-            # Handle rollover to next year
-            year = -> { Year.from(next_date) }
-            MonthDayRangeElement.new(month_day: MonthDay.from(next_date), year: year)
+            next_day_of_month = @month_day.day_of_month + 1
+            next_month = @month_day.month_value
+
+            if next_day_of_month > @month_day.month.max_length
+              next_day_of_month = 1
+              next_month = @month_day.month.plus(1).value
+            end
+
+            DayOfYear.new(month_day: MonthDay.of(next_month, next_day_of_month), range: @range)
+          end
+
+          #
+          # Offset by 1 year if the range begin is greater than the range end
+          # and if the month day is less than the begining of the range
+          # @return [Number] 366 if the month_day should be offset by a year
+          def offset
+            @range.begin > @range.end && month_day < @range.begin ? DAYS_IN_YEAR : 0
+          end
+
+          #
+          # Calculate the day within the range for the underlying month day
+          # @return [Number] Representation of the MonthDay as a number from 1 to 732
+          def day_in_range
+            @day_in_range ||= month_day.max_day_of_year + offset
           end
 
           # Compare MonthDayRangeElement to other objects as required by Range class
-          # rubocop:disable Metrics/AbcSize
-          # Case statement needs to work against multiple types
-          def <=>(other)
+          def <=>(other) # rubocop:disable Metrics/AbcSize
             case other
-            when LocalDate then to_local_date.compare_to(other)
-            when Date then self.<=>(LocalDate.of(other.year, other.month, other.day))
-            when MonthDay then self.<=>(MonthDayRange.current_year.call.at_month_day(other))
+            when DayOfYear then day_in_range.<=>(other.day_in_range)
+            when MonthDay then self.<=>(DayOfYear.new(month_day: other, range: @range))
+            when LocalDate then self.<=>(MonthDay.of(other.month_value, other.day_of_month))
+            when Date then self.<=>(MonthDay.of(other.month, other.day))
             else
-              return self.<=>(other.to_local_date) if other.respond_to? :to_local_date
-              return self.<=>(other.to_date) if other.respond_to? :to_date
+              return self.<=>(other.to_local_date) if other.respond_to?(:to_local_date)
+              return self.<=>(other.to_date) if other.respond_to?(:to_date)
 
               raise "Unable to convert #{other.class} to compare to MonthDay"
             end
           end
-          # rubocop:enable Metrics/AbcSize
+        end
+      end
+
+      java_import java.time.Month
+      # Extend Month with helper method
+      class Month
+        # Calcalute and memoize the maximum number of days in a year before this month
+        # @return [Number] maximum nummber of days in a year before this month
+        def max_days_before
+          @max_days_before ||= Month.values.select { |month| month < self }.sum(&:max_length)
         end
       end
 
@@ -108,6 +117,7 @@ module OpenHAB
       class MonthDay
         include OpenHAB::Log
         java_import java.time.format.DateTimeFormatter
+        java_import java.time.Month
 
         #
         # Constructor
@@ -117,11 +127,9 @@ module OpenHAB
         #
         # @return [Object] MonthDay object
         #
-        # rubocop: disable Naming/MethodParameterName
-        def self.new(m:, d:)
+        def self.new(m:, d:) # rubocop:disable Naming/MethodParameterName
           MonthDay.of(m, d)
         end
-        # rubocop: enable Naming/MethodParameterName
 
         # Parse MonthDay string as defined with by Monthday class without leading double dash "--"
         def self.parse(string)
@@ -136,9 +144,21 @@ module OpenHAB
           /^-*[01][0-9]-[0-3]\d$/.match? obj.to_s
         end
 
+        # Get the maximum (supports leap years) day of the year this month day could be
+        def max_day_of_year
+          day_of_month + month.max_days_before
+        end
+
         # Remove -- from MonthDay string representation
         def to_s
           to_string.delete_prefix('--')
+        end
+
+        # Checks if MonthDay is between the dates of the supplied range
+        # @param [Range] range to check against MonthDay
+        # @return [true,false] true if the MonthDay falls within supplied range, false otherwise
+        def between?(range)
+          MonthDayRange.range(range).cover? self
         end
 
         # remove the inherited #== method to use our <=> below
@@ -151,6 +171,9 @@ module OpenHAB
           case other
           when String
             self.<=>(MonthDay.parse(other))
+          when OpenHAB::DSL::Between::MonthDayRange::DayOfYear
+            # Compare with DayOfYear and invert result
+            -other.<=>(self)
           else
             super
           end
