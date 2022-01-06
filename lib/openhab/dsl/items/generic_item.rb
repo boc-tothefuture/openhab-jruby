@@ -33,6 +33,13 @@ module OpenHAB
           def ACCEPTED_DATA_TYPES
             [org.openhab.core.types.UnDefType.java_class].freeze
           end
+
+          #
+          # Override to support ItemProxy
+          #
+          def ===(other)
+            other.instance_of?(self)
+          end
         end
         # rubocop:enable Naming/MethodName
 

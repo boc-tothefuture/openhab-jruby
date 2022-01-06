@@ -5,6 +5,7 @@ require 'java'
 require 'set'
 
 require 'openhab/log/logger'
+require_relative 'item_proxy'
 
 # Automation lookup and injection of OpenHab entities
 
@@ -91,7 +92,8 @@ module OpenHAB
       def self.lookup_item(name)
         logger.trace("Looking up item(#{name})")
         name = name.to_s if name.is_a? Symbol
-        $ir.get(name) # rubocop: disable Style/GlobalVars
+        item = $ir.get(name) # rubocop: disable Style/GlobalVars
+        ItemProxy.new(item) unless item.nil?
       end
     end
   end

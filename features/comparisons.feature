@@ -583,5 +583,4 @@ Feature: comparisons
       logger.info("Total tests: #{tests.count}, passed: #{ok_count}, failed: #{tests.count - ok_count}")
       """
     When I deploy the rules file
-    Then It should log "All tests passed" within 2 seconds
-    And It should not log "Test ERROR" within 2 seconds
+    Then It should log "All tests passed" within 10 seconds
