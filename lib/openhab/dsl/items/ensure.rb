@@ -53,7 +53,11 @@ module OpenHAB
           # sending the command
           def command(command)
             return super unless Thread.current[:ensure_states]
-            return if command == state
+
+            logger.trace do
+              "#{name} ensure #{command}, format_type_pre: #{format_type_pre(command)}, current state: #{state}"
+            end
+            return if state == format_type_pre(command)
 
             super
           end
