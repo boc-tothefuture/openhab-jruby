@@ -172,3 +172,27 @@ Feature:  ensure_states
     Then It should log "Command sent" within 5 seconds
     And "DimmerOne" should be in state "0" within 5 seconds
     And It should not log "DimmerOne received command" within 5 seconds
+
+  Scenario Outline: ensure works with boolean commands for SwitchItem
+    Given items:
+      | type   | name    | state           |
+      | Switch | Switch1 | <initial_state> |
+    And code in a rules file
+      """
+        rule "command received" do
+          received_command Switch1
+          run do |event|
+            logger.trace("Switch1 received command")
+          end
+        end
+        Switch1.ensure.command <command>
+        logger.trace("Command sent")
+      """
+    When I deploy the rules file
+    Then It should log "Command sent" within 5 seconds
+    And "Switch1" should be in state "<initial_state>" within 5 seconds
+    And It should not log "Switch1 received command" within 5 seconds
+    Examples:
+      | initial_state | command |
+      | OFF           | false   |
+      | ON            | true    |
