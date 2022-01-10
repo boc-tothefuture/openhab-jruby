@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.27.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.27.0...4.27.1) (2022-01-10)
+
+
+### Bug Fixes
+
+* **ensure:** faulty ensure on boolean commands ([623a08e](https://github.com/boc-tothefuture/openhab-jruby/commit/623a08ec69f56040502a86ab72b129985f9f8e1f))
+* **item_groups:** fix Item#groups returning nil sometimes ([20ae855](https://github.com/boc-tothefuture/openhab-jruby/commit/20ae8558e7a443eae2be412f69fdc25de8d4431b))
+
 # [4.27.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.26.4...4.27.0) (2022-01-06)
 
 
