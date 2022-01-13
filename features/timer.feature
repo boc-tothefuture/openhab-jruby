@@ -232,7 +232,7 @@ Feature:  timer
       end
 
       rule 'Cancel timer' do
-        run { timers[:foo]&.each(&:cancel) }
+        run { timers[:foo]&.cancel_all }
         on_start true
       end
       """
@@ -264,7 +264,7 @@ Feature:  timer
         on_start true
         run do
           logger.info("timers[:foo] is nil before cancel: #{timers[:foo].nil?}")
-          timers[:foo]&.each(&:cancel)
+          timers[:foo]&.cancel_all
           logger.info("timers[:foo] is nil after cancel: #{timers[:foo].nil?}")
         end
       end

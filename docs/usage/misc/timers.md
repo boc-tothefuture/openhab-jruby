@@ -21,7 +21,8 @@ After method parameters
 
 Timers with an id are reentrant, by id and block. Reentrant means that when the same id and block are encountered the timer is resheduled rather than creating a second new timer.
 
-Timer Object
+## Timer Object
+
 The timer object has all of the methods of the [OpenHAB Timer](https://www.openhab.org/docs/configuration/actions.html#timers) with a change to the reschedule method to enable it to operate Ruby context. The following methods are available to a Timer object:
 
 | Method           | Parameter | Description                                                                                        |
@@ -34,8 +35,7 @@ The timer object has all of the methods of the [OpenHAB Timer](https://www.openh
 | `running?`       |           | An alias for `Timer::isRunning()`                                                                  |
 | `terminated?`    |           | An alias for `Timer::hasTerminated()`                                                              |
 
-Timers
-Timers with an id can be accessed via the timers[id] method. This method returns a set of timers associated with that id.
+### Examples
 
 ```ruby
 after 5.seconds do
@@ -98,6 +98,10 @@ end
 mytimer.cancel
 ```
 
+## Reentrant Timers
+
+Timers with an `id` can be accessed via the `timers[id]` method. This method returns a set of timers associated with that id. Cancelling the timer(s) with the given `id` can be done by calling `timers[id]&.each(&:cancel)` or by using the shorthand `timers[id]&.cancel_all`.
+
 ```ruby
 # Reentrant timers will automatically reschedule if same block is encountered again with same reentrant object
 rule 'Turn on light for 10 minutes when a closet door is open' do
@@ -122,7 +126,7 @@ after 3.seconds, :id => :foo do
 end
 
 rule 'Cancel timer' do
-  run { timers[:foo]&.each(&:cancel) }
+  run { timers[:foo]&.cancel_all }
   on_start true
 end
 ```
