@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.28.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.27.1...4.28.0) (2022-01-14)
+
+
+### Features
+
+* **timer:** add timers[id].cancel_all shorthand for timers[id].each(&:cancel) ([d820471](https://github.com/boc-tothefuture/openhab-jruby/commit/d820471d60b1c0bd4b766a4b8990b0f1980aa1d6))
+
 ## [4.27.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.27.0...4.27.1) (2022-01-10)
 
 
