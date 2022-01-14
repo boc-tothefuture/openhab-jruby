@@ -39,7 +39,7 @@ module OpenHAB
 
           if timer.respond_to? :id
             logger.trace("Adding #{timer} with id #{timer.id.inspect} timer ids")
-            @timer_ids[timer.id] = Set.new unless @timer_ids[timer.id]
+            @timer_ids[timer.id] = TimerSet.new unless @timer_ids[timer.id]
             @timer_ids[timer.id] << timer
           end
 
@@ -85,6 +85,19 @@ module OpenHAB
           @timer_ids.clear
           @reentrant_timers.clear
           @timers.clear
+        end
+      end
+
+      #
+      # Provide additional methods for the timers set
+      #
+      class TimerSet < Set
+        #
+        # A shorthand to cancel all the timer objects held within the set
+        # so that timers[timer_id].cancel_all is equivalent to timers[timer_id].each(&:cancel)
+        #
+        def cancel_all
+          each(&:cancel)
         end
       end
     end
