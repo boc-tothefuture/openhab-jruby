@@ -246,7 +246,7 @@ namespace :openhab do
       Dir.chdir(OPENHAB_DIR) do
         fail_on_error('runtime/bin/stop')
       end
-      stopped = wait_for(20, 'OpenHAB to stop') { Process.exists?(pid) == false }
+      stopped = wait_for(60, 'OpenHAB to stop') { Process.exists?(pid) == false }
       abort 'Unable to stop OpenHAB' unless stopped
     end
 
