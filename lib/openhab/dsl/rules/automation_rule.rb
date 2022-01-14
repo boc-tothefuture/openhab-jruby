@@ -304,7 +304,7 @@ module OpenHAB
           end
           false
         rescue StandardError => e
-          print_backtrace(e)
+          logger.log_exception(e, name)
         end
         # rubocop:enable Metrics/MethodLength
 
@@ -328,7 +328,7 @@ module OpenHAB
             end
           end
         rescue StandardError => e
-          print_backtrace(e)
+          logger.log_exception(e, name)
         end
 
         #
@@ -397,16 +397,6 @@ module OpenHAB
         def process_run_task(event, task)
           logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
           @run_context.instance_exec(event, &task.block)
-        end
-
-        #
-        # Print error and stack trace without calls to internal classes
-        #
-        # @param [Exception] error A rescued error
-        #
-        def print_backtrace(error)
-          error = logger.clean_backtrace(error)
-          logger.error { "#{error.message} (#{error.class})\nIn rule: #{name}\n#{error.backtrace&.join("\n")}" }
         end
 
         #

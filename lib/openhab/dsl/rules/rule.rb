@@ -26,7 +26,7 @@ module OpenHAB
       @registry = OpenHAB::Core.rule_registry
       class << self
         attr_reader :script_rules, :automation_manager, :registry
-end
+      end
 
       #
       # Create a new rule
@@ -35,7 +35,7 @@ end
       # @yield [] Block executed in context of a RuleConfig
       #
       #
-      # rubocop: disable Metrics
+      # rubocop: disable Metrics/MethodLength
       def rule(rule_name, &block)
         thread_local(RULE_NAME: rule_name) do
           @rule_name = rule_name
@@ -47,10 +47,9 @@ end
           nil # Must return something other than the rule object. See https://github.com/boc-tothefuture/openhab-jruby/issues/438
         end
       rescue StandardError => e
-        puts "#{e.class}: #{e.message}"
-        re_raise_with_backtrace(e)
+        logger.log_exception(e, @rule_name)
       end
-      # rubocop: enable Metrics
+      # rubocop: enable Metrics/MethodLength
 
       #
       # Cleanup rules in this script file
@@ -61,16 +60,6 @@ end
       Core::ScriptHandling.script_unloaded { cleanup_rules }
 
       private
-
-      #
-      # Re-raises a rescued error to OpenHAB with added rule name and stack trace
-      #
-      # @param [Exception] error A rescued error
-      #
-      def re_raise_with_backtrace(error)
-        error = logger.clean_backtrace(error)
-        raise error, "#{error.message}\nIn rule: #{@rule_name}\n#{error.backtrace.join("\n")}"
-      end
 
       #
       # Process a rule based on the supplied configuration
