@@ -184,7 +184,7 @@ namespace :openhab do
     # Set log levels
     state(task.name) do
       start
-      karaf('log:set TRACE jsr223')
+      karaf('log:set TRACE org.openhab.automation.jruby')
       karaf('log:set TRACE org.openhab.core.automation')
       karaf('log:set TRACE org.openhab.automation.jrubyscripting')
       karaf('openhab:users add foo foo administrator')

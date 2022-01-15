@@ -9,25 +9,23 @@ grand_parent: Usage
 
 # Logging
 
-Logging is available everywhere through the logger object. 
+Logging is available everywhere through the logger object.
 
 Logging placed outside of a rule will have the name of the file appened to the logger name. The following entries are in a file named 'log_test.rb'
 
 ```ruby
-logger.trace('Test logging at trace') # 2020-12-03 18:05:20.903 [TRACE] [jsr223.jruby.log_test               ] - Test logging at trace
-logger.debug('Test logging at debug') # 2020-12-03 18:05:32.020 [DEBUG] [jsr223.jruby.log_test               ] - Test logging at debug
-logger.warn('Test logging at warn') # 2020-12-03 18:05:41.817 [WARN ] [jsr223.jruby.log_test               ] - Test logging at warn
-logger.info('Test logging at info') # 2020-12-03 18:05:41.817 [INFO ] [jsr223.jruby.log_test               ] - Test logging at info
-logger.error('Test logging at error') # 2020-12-03 18:06:02.021 [ERROR] [jsr223.jruby.log_test               ] - Test logging at error
+logger.trace('Test logging at trace') # 2020-12-03 18:05:20.903 [TRACE] [org.openhab.automation.jruby.log_test] - Test logging at trace
+logger.debug('Test logging at debug') # 2020-12-03 18:05:32.020 [DEBUG] [org.openhab.automation.jruby.log_test] - Test logging at debug
+logger.warn('Test logging at warn')   # 2020-12-03 18:05:41.817 [WARN ] [org.openhab.automation.jruby.log_test] - Test logging at warn
+logger.info('Test logging at info')   # 2020-12-03 18:05:41.817 [INFO ] [org.openhab.automation.jruby.log_test] - Test logging at info
+logger.error('Test logging at error') # 2020-12-03 18:06:02.021 [ERROR] [org.openhab.automation.jruby.log_test] - Test logging at error
 ```
 
 Logging inside of a rule will have the name of the rule appened to the logger name. The following entries are in a file named 'log_test.rb'
 
 ```ruby
 rule 'foo' do
-  run { logger.trace('Test logging at trace') } # 2020-12-03 18:05:20.903 [TRACE] [jsr223.jruby.log_test.foo               ] - Test logging at trace
+  run { logger.trace('Test logging at trace') } # 2020-12-03 18:05:20.903 [TRACE] [org.openhab.automation.jruby.log_test.foo] - Test logging at trace
   on_start
 end
 ```
-
-

@@ -42,7 +42,7 @@ end
 
 # rubocop:disable Metrics/LineLength
 Then('It should log only {string} at level {string} from {string} within {int} seconds') do |entry, level, logger, seconds|
-  # 2021-11-15 19:24:34.574 [INFO ] [jsr223.jruby.rules.log_test         ] - Log Test
+  # 2021-11-15 19:24:34.574 [INFO ] [org.openhab.automation.jruby.rules.log_test] - Log Test
   # Trim level to the right most 36 chars (per logging config)
   logger_length = 36
   logger = logger[-logger_length, logger_length] if logger.length > logger_length
@@ -233,7 +233,7 @@ Given('metadata added to {string} in namespace {string}:') do |item, namespace, 
 end
 
 Given('(set )log level (to ){word}') do |level|
-  set_log_level('jsr223.jruby', level)
+  set_log_level('org.openhab.automation.jruby', level)
   set_log_level('org.openhab.automation.jrubyscripting', level)
   set_log_level('org.openhab.core.automation', level)
 end
