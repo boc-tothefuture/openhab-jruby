@@ -194,12 +194,7 @@ When('channel {string} is triggered') do |channel|
 end
 
 Given('feature {string} installed') do |feature|
-  openhab_client("feature:install #{feature}")
-  wait_until(seconds: 10, msg: "Feature #{feature} not started") do
-    openhab_client('feature:list').stdout.lines.grep(/#{feature}/).any? { |line| line.include? 'Started' }
-  end
-  sleep 60 # System seems unsettled after adding a feature.. proper way to do this would be set
-  # logging for feature to debug and move on after we see that log line in the wait_until
+  install_feature(feature)
 end
 
 When('channel {string} is triggered with {string}') do |channel, event|

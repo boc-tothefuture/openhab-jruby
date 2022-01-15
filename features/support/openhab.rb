@@ -149,6 +149,21 @@ def link_item(item_name:, channel_uid:)
   Rest.link_item(item_name: item_name, channel_uid: channel_uid)
 end
 
+def install_feature(feature)
+  return if feature_installed?(feature)
+
+  openhab_client("feature:install #{feature}")
+  wait_until(seconds: 10, msg: "Feature #{feature} not started") do
+    feature_installed?(feature)
+  end
+  sleep 60 # System seems unsettled after adding a feature.. proper way to do this would be set
+  # logging for feature to debug and move on after we see that log line in the wait_until
+end
+
+def feature_installed?(feature)
+  openhab_client('feature:list').stdout.lines.grep(/#{feature}/).any? { |line| line.include? 'Started' }
+end
+
 def truncate_log
   File.open(openhab_log, File::TRUNC)
 end
