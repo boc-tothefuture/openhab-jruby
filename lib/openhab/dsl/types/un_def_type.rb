@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.types.UnDefType
+      UnDefType = org.openhab.core.types.UnDefType
 
       # Adds methods to core OpenHAB UnDefType to make it more natural in Ruby
       class UnDefType # rubocop:disable Lint/EmptyClass

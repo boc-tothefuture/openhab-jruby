@@ -5,7 +5,7 @@ require_relative 'numeric_type'
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.QuantityType
+      QuantityType = org.openhab.core.library.types.QuantityType
 
       # global alias
       ::QuantityType = QuantityType

@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.OpenClosedType
+      OpenClosedType = org.openhab.core.library.types.OpenClosedType
 
       # Adds methods to core OpenHAB OpenClosedType to make it more natural in Ruby
       class OpenClosedType

@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.UpDownType
+      UpDownType = org.openhab.core.library.types.UpDownType
 
       # Adds methods to core OpenHAB UpDownType to make it more natural in Ruby
       class UpDownType
