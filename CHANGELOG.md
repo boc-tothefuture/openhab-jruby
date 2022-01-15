@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.28.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.28.0...4.28.1) (2022-01-15)
+
+
+### Bug Fixes
+
+* **exception_handling:** fix java exception handling ([3539136](https://github.com/boc-tothefuture/openhab-jruby/commit/35391361c2713705535aa2f13142ecfa9c97a367))
+* **java_class:** fix java to ruby class ([7f4b0bc](https://github.com/boc-tothefuture/openhab-jruby/commit/7f4b0bc371c30c9258fcc9ed440332511c4caaca))
+
 # [4.28.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.27.1...4.28.0) (2022-01-14)
 
 
