@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.OnOffType
+      OnOffType = org.openhab.core.library.types.OnOffType
 
       # Adds methods to core OpenHAB OnOffType to make it more natural in Ruby
       class OnOffType

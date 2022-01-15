@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.RewindFastforwardType
+      RewindFastforwardType = org.openhab.core.library.types.RewindFastforwardType
 
       # Adds methods to core OpenHAB RewindFastforwardType to make it more
       # natural in Ruby

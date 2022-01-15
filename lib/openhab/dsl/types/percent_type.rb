@@ -5,7 +5,7 @@ require_relative 'decimal_type'
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.PercentType
+      PercentType = org.openhab.core.library.types.PercentType
 
       # global alias
       ::PercentType = PercentType

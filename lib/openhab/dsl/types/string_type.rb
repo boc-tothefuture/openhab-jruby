@@ -7,7 +7,7 @@ require_relative 'comparable_type'
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.StringType
+      StringType = org.openhab.core.library.types.StringType
 
       #
       # Add methods to core OpenHAB StringType to make it behave as a Ruby

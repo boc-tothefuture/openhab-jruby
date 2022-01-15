@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.types.RefreshType
+      RefreshType = org.openhab.core.types.RefreshType
 
       # Adds methods to core OpenHAB RefreshType to make it more natural in Ruby
       class RefreshType # rubocop:disable Lint/EmptyClass

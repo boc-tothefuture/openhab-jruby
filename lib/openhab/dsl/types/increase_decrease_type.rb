@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.IncreaseDecreaseType
+      IncreaseDecreaseType = org.openhab.core.library.types.IncreaseDecreaseType
 
       # Adds methods to core OpenHAB IncreaseDecreaseType to make it more
       # natural in Ruby

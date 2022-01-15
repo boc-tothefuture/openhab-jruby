@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.NextPreviousType
+      NextPreviousType = org.openhab.core.library.types.NextPreviousType
 
       # Adds methods to core OpenHAB NextPreviousType to make it more
       # natural in Ruby

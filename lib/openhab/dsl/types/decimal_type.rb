@@ -6,7 +6,7 @@ require_relative 'numeric_type'
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.DecimalType
+      DecimalType = org.openhab.core.library.types.DecimalType
 
       #
       # Add methods to core OpenHAB DecimalType to make it behave as a Ruby

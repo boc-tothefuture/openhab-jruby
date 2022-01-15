@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.PointType
+      PointType = org.openhab.core.library.types.PointType
 
       # global scope
       # @!visibility private

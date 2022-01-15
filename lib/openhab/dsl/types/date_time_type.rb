@@ -7,8 +7,8 @@ require 'java'
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.DateTimeType
-      java_import java.time.ZonedDateTime
+      DateTimeType = org.openhab.core.library.types.DateTimeType
+      java_import java.time.ZonedDateTime # This is needed for the addon prior to ruby_class fix (OH 3.2.0)
 
       # global alias
       ::DateTimeType = DateTimeType

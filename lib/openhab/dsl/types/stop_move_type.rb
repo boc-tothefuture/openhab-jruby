@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.StopMoveType
+      StopMoveType = org.openhab.core.library.types.StopMoveType
 
       # Adds methods to core OpenHAB StopMoveType to make it more
       # natural in Ruby

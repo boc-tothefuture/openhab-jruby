@@ -6,7 +6,7 @@ require_relative 'percent_type'
 module OpenHAB
   module DSL
     module Types
-      java_import org.openhab.core.library.types.HSBType
+      HSBType = org.openhab.core.library.types.HSBType
 
       # global alias
       ::HSBType = HSBType
