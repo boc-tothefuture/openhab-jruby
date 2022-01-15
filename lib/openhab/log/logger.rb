@@ -82,6 +82,16 @@ module OpenHAB
         error
       end
 
+      #
+      # Print error and stack trace without calls to internal classes
+      #
+      # @param [Exception] error A rescued error
+      #
+      def log_exception(exception, rule_name)
+        exception = clean_backtrace(exception)
+        error { "#{exception.message} (#{exception.class})\nIn rule: #{rule_name}\n#{exception.backtrace&.join("\n")}" }
+      end
+
       private
 
       #

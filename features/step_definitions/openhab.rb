@@ -40,7 +40,7 @@ Then('It should log a line matching regex {string} within {int} seconds') do |re
   end
 end
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 Then('It should log only {string} at level {string} from {string} within {int} seconds') do |entry, level, logger, seconds|
   # 2021-11-15 19:24:34.574 [INFO ] [org.openhab.automation.jruby.rules.log_test] - Log Test
   # Trim level to the right most 36 chars (per logging config)
@@ -52,7 +52,7 @@ Then('It should log only {string} at level {string} from {string} within {int} s
     check_log_regexp(regex)
   end
 end
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 Then('It should not log {string} within {int} seconds') do |string, seconds|
   not_for(seconds: seconds, msg: "'#{string}'' found in log file (#{openhab_log}) within #{seconds} seconds") do

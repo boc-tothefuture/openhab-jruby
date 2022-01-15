@@ -177,7 +177,7 @@ Feature: rule_language
       | not_if  |
 
   @log_level_changed
-  Scenario: Native java exceptions are handled
+  Scenario: Native java exceptions are handled during rule execution
     Given log level INFO
     And code in a rules file
       """
@@ -196,6 +196,23 @@ Feature: rule_language
     And It should log "RUBY.test" within 5 seconds
     And It should log "RUBY.<main>" within 5 seconds
 
+  Scenario: Native java exceptions are handled during rule creation
+    Given log level INFO
+    And code in a rules file
+      """
+      def test
+        Java::JavaLang::Integer.parseInt('k')
+      end
+
+      rule 'test' do
+        test
+      end
+      """
+    When I deploy the rules file
+    Then It should log 'For input string: "k" (Java::JavaLang::NumberFormatException)' within 5 seconds
+    And It should log 'In rule: test' within 5 seconds
+    And It should log "RUBY.test" within 5 seconds
+    And It should log "RUBY.<main>" within 5 seconds
 
   Scenario: OpenHAB config directory is available
     Given code in a rules file:
