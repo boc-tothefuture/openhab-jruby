@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'openhab/log/logger'
+require_relative 'trigger'
 
 module OpenHAB
   module DSL
@@ -23,8 +24,7 @@ module OpenHAB
           separate_groups(items).map do |item|
             logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
             [to].flatten.map do |to_state|
-              trigger, config = create_update_trigger(item, to_state)
-              append_trigger(trigger, config, attach: attach)
+              update_trigger(item: item, to: to_state, attach: attach)
             end
           end.flatten
         end
@@ -32,20 +32,51 @@ module OpenHAB
         private
 
         #
+        # Create the trigger
+        #
+        # @param [Object] item item to create trigger for
+        # @param [Item State] from state to restrict trigger to
+        # @param [Item State] to state to restrict trigger to
+        # @param attach attachment
+        #
+        # @return [Trigger] OpenHAB triggers
+        #
+        def update_trigger(item:, to:, attach:)
+          if to.is_a? Range
+            create_update_range_trigger(item: item, to: to, attach: attach)
+          else
+            create_update_trigger(item: item, to: to, attach: attach)
+          end
+        end
+
+        #
+        # Creates a trigger with a range condition on the 'to' field
+        # @param [Object] item to create changed trigger on
+        # @param [Object] to state restrict trigger to
+        # @param [Object] attach to trigger
+        # @return [Trigger] OpenHAB trigger
+        #
+        def create_update_range_trigger(item:, to:, attach:)
+          trigger = create_update_trigger(item: item, to: nil, attach: attach)
+          @trigger_conditions[trigger.id] = Conditions::Range.new(to: to, from: nil)
+          trigger
+        end
+
+        #
         # Create a trigger for updates
         #
         # @param [Object] item Type of item [Group,Thing,Item] to create update trigger for
         # @param [State] to_state state restriction on trigger
         #
-        # @return [Array<Hash,String>] first element is a String specifying trigger type
-        #  second element is a Hash configuring trigger
+        # @return [Trigger] OpenHAB triggers
         #
-        def create_update_trigger(item, to_state)
-          case item
-          when OpenHAB::DSL::Items::GroupItem::GroupMembers then group_update(item, to_state)
-          when Thing then thing_update(item, to_state)
-          else item_update(item, to_state)
-          end
+        def create_update_trigger(item:, to:, attach:)
+          trigger, config = case item
+                            when OpenHAB::DSL::Items::GroupItem::GroupMembers then group_update(item: item, to: to)
+                            when Thing then thing_update(thing: item, to: to)
+                            else item_update(item: item, to: to)
+                            end
+          append_trigger(trigger, config, attach: attach)
         end
 
         #
@@ -57,9 +88,9 @@ module OpenHAB
         # @return [Array<Hash,String>] first element is a String specifying trigger type
         #  second element is a Hash configuring trigger
         #
-        def item_update(item, to_state)
+        def item_update(item:, to:)
           config = { 'itemName' => item.name }
-          config['state'] = to_state.to_s unless to_state.nil?
+          config['state'] = to.to_s unless to.nil?
           trigger = Trigger::ITEM_STATE_UPDATE
           [trigger, config]
         end
@@ -73,9 +104,9 @@ module OpenHAB
         # @return [Array<Hash,String>] first element is a String specifying trigger type
         #  second element is a Hash configuring trigger
         #
-        def group_update(item, to_state)
+        def group_update(item:, to:)
           config = { 'groupName' => item.group.name }
-          config['state'] = to_state.to_s unless to_state.nil?
+          config['state'] = to.to_s unless to.nil?
           trigger = Trigger::GROUP_STATE_UPDATE
           [trigger, config]
         end
@@ -89,8 +120,8 @@ module OpenHAB
         # @return [Array<Hash,String>] first element is a String specifying trigger type
         #  second element is a Hash configuring trigger
         #
-        def thing_update(thing, to_state)
-          trigger_for_thing(thing, Trigger::THING_UPDATE, to_state)
+        def thing_update(thing:, to:)
+          trigger_for_thing(thing, Trigger::THING_UPDATE, to)
         end
       end
     end

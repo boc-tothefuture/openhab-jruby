@@ -6,13 +6,13 @@ Feature: changed_duration
 
   Scenario Outline: Changed item supports duration and/or to and/or from.
     Given items:
-      | type   | name        | label        | state  |
-      | Number | Alarm_Mode  | Alarm Mode   | <from> |
-      | Number | Alarm_Delay | Alarm Delay  | 10     |
+      | type   | name        | label       | state  |
+      | Number | Alarm_Mode  | Alarm Mode  | <from> |
+      | Number | Alarm_Delay | Alarm Delay | 10     |
     And a rule
       """
       rule 'Execute rule when item is changed to specific number for specified duration' do
-        <rule>
+        <trigger>
         run { logger.info("Alarm Mode Updated")}
       end
       """
@@ -23,7 +23,7 @@ Feature: changed_duration
     Then It <should> log 'Alarm Mode Updated' within 5 seconds
 
     Examples: Checks multiple from and to states
-      | from | to | rule                                                             | should     |
+      | from | to | trigger                                                          | should     |
       | 8    | 14 | changed Alarm_Mode, for: 10.seconds                              | should     |
       | 8    | 14 | changed Alarm_Mode, for: Alarm_Delay                             | should     |
       | 8    | 14 | changed Alarm_Mode, to: 14, for: 10.seconds                      | should     |
@@ -80,7 +80,7 @@ Feature: changed_duration
     And a deployed rule:
       """
       rule "Execute rule when group item is changed" do
-        <rule>
+        <trigger>
         triggered { |item| logger.info("#{item.id} Changed")}
       end
       """
@@ -90,7 +90,7 @@ Feature: changed_duration
     Then It <should> log 'Alarm Two Mode Changed' within 5 seconds
 
     Examples: Checks multiple from and to states
-      | from | to | rule                                                   | should     |
+      | from | to | trigger                                                  | should     |
       | 8    | 14 | changed Modes.members, for: 10.seconds                   | should     |
       | 8    | 14 | changed Modes.members, to: 14, for: 10.seconds           | should     |
       | 8    | 10 | changed Modes.members, to: 14, for: 10.seconds           | should not |
@@ -203,3 +203,33 @@ Feature: changed_duration
     When I wait 2 seconds
     And I remove the rules file
     Then It should not log 'Trigger Delay Fired' within 10 seconds
+
+
+  Scenario Outline: Changed duration support ranges
+    Given items:
+      | type   | name       | state     |
+      | Number | Alarm_Mode | <initial> |
+    And a deployed rule:
+      """
+      rule 'Execute rule with range conditions' do
+        changed Alarm_Mode, <conditions>, for: 10.seconds
+        run { |event| logger.info("Alarm Mode: Changed from #{event.was} to #{event.state}") }
+      end
+      """
+    When item "Alarm_Mode" state is changed to "<change>"
+    Then It should not log 'Alarm Mode: Changed from <initial> to <change>' within 8 seconds
+    But If I wait 5 seconds
+    Then It <should> log 'Alarm Mode: Changed from <initial> to <change>' within 8 seconds
+    Examples: From range
+      | initial | conditions  | change | should     |
+      | 10      | from: 8..10 | 14     | should     |
+      | 15      | from: 4..12 | 14     | should not |
+    Examples: To range
+      | initial | conditions | change | should     |
+      | 4       | to:  8..10 | 9      | should     |
+      | 11      | to: 4..12  | 14     | should not |
+    Examples: From/To range
+      | initial | conditions             | change | should     |
+      | 4       | from: 2..5, to:  8..10 | 9      | should     |
+      | 4       | from: 5..6, to:  8..10 | 9      | should not |
+      | 4       | from: 2..5, to:  8..12 | 14     | should not |

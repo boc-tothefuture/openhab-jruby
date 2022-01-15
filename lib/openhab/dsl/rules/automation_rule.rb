@@ -45,7 +45,7 @@ module OpenHAB
           between = config.between&.yield_self { between(config.between) }
           @between = between || OpenHAB::DSL::Between::ALL_DAY
           # Convert between to correct range or nil if not set
-          @trigger_delays = config.trigger_delays
+          @trigger_conditions = config.trigger_conditions
           @attachments = config.attachments
         end
         # rubocop:enable Metrics/MethodLength
@@ -57,18 +57,12 @@ module OpenHAB
         # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
         #
         #
-        def execute(mod = nil, inputs = nil) # rubocop:disable Metrics/MethodLength
+        def execute(mod = nil, inputs = nil)
           thread_local(RULE_NAME: name) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect})" }
             logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
-            if trigger_delay inputs
-              trigger_delay = trigger_delay(inputs)
-              process_trigger_delay(trigger_delay, mod, inputs)
-            else
-              # If guards are satisfied execute the run type blocks
-              # If they are not satisfied, execute the Othewise blocks
-              queue = create_queue(inputs)
-              process_queue(queue, mod, inputs)
+            trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
+              process_queue(create_queue(inputs), mod, inputs)
             end
           end
         end
@@ -124,18 +118,18 @@ module OpenHAB
         end
 
         #
-        # Returns trigger delay from inputs if it exists
+        # Returns trigger conditions from inputs if it exists
         #
         # @param [Map] inputs map from OpenHAB containing UID
         #
-        # @return [Array] Array of trigger delays that match rule UID
+        # @return [Array] Array of trigger conditions that match rule UID
         #
-        def trigger_delay(inputs)
+        def trigger_conditions(inputs)
           # Parse this to get the trigger UID:
           # ["72698819-83cb-498a-8e61-5aab8b812623.event", "oldState", "module", \
           #  "72698819-83cb-498a-8e61-5aab8b812623.oldState", "event", "newState",\
           #  "72698819-83cb-498a-8e61-5aab8b812623.newState"]
-          @trigger_delays[trigger_id(inputs)]
+          @trigger_conditions[trigger_id(inputs)]
         end
 
         # If an attachment exists for the trigger for this event add it to the event object
@@ -149,138 +143,6 @@ module OpenHAB
 
           event.attachment = attachment
           event
-        end
-
-        #
-        # Check if trigger guards prevent rule execution
-        #
-        # @param [Delay] trigger_delay rules delaying trigger because of
-        # @param [Map] inputs OpenHAB map object describing rule trigger
-        #
-        # @return [Boolean] True if the rule should execute, false if trigger guard prevents execution
-        #
-        def check_trigger_guards(trigger_delay, inputs)
-          new_state, old_state = retrieve_states(inputs)
-          if check_from(trigger_delay, old_state)
-            return true if check_to(trigger_delay, new_state)
-
-            logger.trace("Skipped execution of rule '#{name}' because to state #{new_state}"\
-                         " does not equal specified state(#{trigger_delay.to})")
-          else
-            logger.trace("Skipped execution of rule '#{name}' because old state #{old_state}"\
-                         " does not equal specified state(#{trigger_delay.from})")
-          end
-        end
-
-        #
-        # Rerieve the newState and oldState, alternatively newStatus and oldStatus
-        # from the input map
-        #
-        # @param [Map] inputs OpenHAB map object describing rule trigger
-        #
-        # @return [Array] An array of the values for [newState, oldState] or [newStatus, oldStatus]
-        #
-        def retrieve_states(inputs)
-          old_state = inputs['oldState'] || thing_status_to_sym(inputs['oldStatus'])
-          new_state = inputs['newState'] || thing_status_to_sym(inputs['newStatus'])
-
-          [new_state, old_state]
-        end
-
-        #
-        # Converts a ThingStatus object to a ruby Symbol
-        #
-        # @param [Java::OrgOpenhabCoreThing::ThingStatus] status A ThingStatus instance
-        #
-        # @return [Symbol] A corresponding symbol, in lower case
-        #
-        def thing_status_to_sym(status)
-          status&.to_s&.downcase&.to_sym
-        end
-
-        #
-        # Check the from state against the trigger delay
-        #
-        # @param [TriggerDelay] trigger_delay Information about the trigger delay
-        # @param [Item State] state from state to check
-        #
-        # @return [Boolean] true if no from state is defined or defined state equals supplied state
-        #
-        def check_from(trigger_delay, state)
-          trigger_delay.from.nil? || state == trigger_delay.from
-        end
-
-        #
-        # Check the to state against the trigger delay
-        #
-        # @param [TriggerDelay] trigger_delay Information about the trigger delay
-        # @param [Item State] state to-state to check
-        #
-        # @return [Boolean] true if no to state is defined or defined state equals supplied state
-        #
-        def check_to(trigger_delay, state)
-          trigger_delay.to.nil? || state == trigger_delay.to
-        end
-
-        #
-        # Process any matching trigger delays
-        #
-        # @param [Map] mod OpenHAB map object describing rule trigger
-        # @param [Map] inputs OpenHAB map object describing rule trigger
-        #
-        #
-        def process_trigger_delay(trigger_delay, mod, inputs)
-          if trigger_delay.timer_active?
-            process_active_timer(inputs, mod, trigger_delay)
-          elsif check_trigger_guards(trigger_delay, inputs)
-            logger.trace("Trigger Guards Matched for #{trigger_delay}, delaying rule execution")
-            # Add timer and attach timer to delay object, and also state being tracked to so timer can be cancelled if
-            #   state changes
-            # Also another timer should not be created if changed to same value again but instead rescheduled
-            create_trigger_delay_timer(inputs, mod, trigger_delay)
-          else
-            logger.trace("Trigger Guards did not match for #{trigger_delay}, ignoring trigger.")
-          end
-        end
-
-        #
-        # Creatas a timer for trigger delays
-        #
-        # @param [Hash] inputs rule trigger inputs
-        # @param [Hash] mod rule trigger mods
-        # @param [TriggerDelay] trigger_delay specifications
-        #
-        #
-        def create_trigger_delay_timer(inputs, mod, trigger_delay)
-          logger.trace("Creating timer for rule #{name} and trigger delay #{trigger_delay}")
-          trigger_delay.timer = after(trigger_delay.duration) do
-            logger.trace("Delay Complete for #{trigger_delay}, executing rule")
-            trigger_delay.timer = nil
-            queue = create_queue(inputs)
-            process_queue(queue, mod, inputs)
-          end
-          trigger_delay.tracking_to, = retrieve_states(inputs)
-        end
-
-        #
-        # Process an active trigger timer
-        #
-        # @param [Hash] inputs rule trigger inputs
-        # @param [Hash] mod rule trigger mods
-        # @param [TriggerDelay] trigger_delay specifications
-        #
-        #
-        def process_active_timer(inputs, mod, trigger_delay)
-          state, = retrieve_states(inputs)
-          if state == trigger_delay.tracking_to
-            logger.trace("Item changed to #{state} for #{trigger_delay}, rescheduling timer.")
-            trigger_delay.timer.reschedule(ZonedDateTime.now.plus(trigger_delay.duration))
-          else
-            logger.trace("Item changed to #{state} for #{trigger_delay}, canceling timer.")
-            trigger_delay.timer.cancel
-            # Reprocess trigger delay after canceling to track new state (if guards matched, etc)
-            process_trigger_delay(trigger_delay, mod, inputs)
-          end
         end
 
         #

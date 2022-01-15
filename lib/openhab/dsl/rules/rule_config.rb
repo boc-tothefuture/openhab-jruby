@@ -10,6 +10,7 @@ require_relative 'triggers/command'
 require_relative 'triggers/updated'
 require_relative 'triggers/generic'
 require_relative 'triggers/watch'
+require_relative 'triggers/conditions/none'
 require_relative 'guard'
 require 'openhab/core/entity_lookup'
 require 'openhab/dsl/between'
@@ -37,7 +38,7 @@ module OpenHAB
         attr_accessor :triggers
 
         # @return [Array] Of trigger delays
-        attr_reader :trigger_delays
+        attr_reader :trigger_conditions
 
         # @return [Hash] Hash of trigger UIDs to attachments
         attr_reader :attachments
@@ -86,7 +87,7 @@ module OpenHAB
         #
         def initialize(rule_name, caller_binding)
           @triggers = []
-          @trigger_delays = {}
+          @trigger_conditions = Hash.new(OpenHAB::DSL::Rules::Triggers::Conditions::None.instance)
           @attachments = {}
           @caller = caller_binding.eval 'self'
           name(rule_name)
@@ -145,7 +146,7 @@ module OpenHAB
             "Triggers: (#{triggers}) " \
             "Run blocks: (#{run}) " \
             "on_start: (#{on_start?}) " \
-            "Trigger Waits: #{trigger_delays} " \
+            "Trigger Conditions: #{trigger_conditions} " \
             "Trigger UIDs: #{triggers.map(&:id).join(', ')}" \
             "Attachments: #{attachments} "
         end

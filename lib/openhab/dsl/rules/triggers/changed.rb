@@ -1,24 +1,18 @@
 # frozen_string_literal: true
 
 require 'openhab/log/logger'
+require_relative 'conditions/duration'
+require_relative 'conditions/range'
 
 module OpenHAB
   module DSL
     module Rules
       #
-      # Module holds rule triggers
+      # Module for changed triggers
       #
+
       module Triggers
         include OpenHAB::Log
-
-        #
-        # Struct capturing data necessary for a conditional trigger
-        #
-        TriggerDelay = Struct.new(:to, :from, :duration, :timer, :tracking_to, keyword_init: true) do
-          def timer_active?
-            timer&.is_active
-          end
-        end
 
         #
         # Creates a trigger item, group and thing changed
@@ -38,7 +32,7 @@ module OpenHAB
             wait_duration = binding.local_variable_get(:for)
 
             each_state(from, to) do |from_state, to_state|
-              changed_or_wait(item, from_state, to_state, wait_duration, attach)
+              changed_trigger(item, from_state, to_state, wait_duration, attach)
             end
           end.flatten
         end
@@ -65,7 +59,7 @@ module OpenHAB
         end
 
         #
-        # Create regular or delayed trigger based on duration
+        # Create the trigger
         #
         # @param [Object] item item to create trigger for
         # @param [Item State] from state to restrict trigger to
@@ -75,9 +69,11 @@ module OpenHAB
         #
         # @return [Trigger] OpenHAB triggers
         #
-        def changed_or_wait(item, from, to, duration, attach)
+        def changed_trigger(item, from, to, duration, attach)
           if duration
             changed_wait(item, from: from, to: to, duration: duration, attach: attach)
+          elsif [to, from].grep(Range).any?
+            create_changed_range_trigger(item, from: from, to: to, attach: attach)
           else
             create_changed_trigger(item, from, to, attach)
           end
@@ -90,13 +86,31 @@ module OpenHAB
         # @param [OpenHAB::Core::Duration] duration to delay trigger for until condition is met
         # @param [Item State] to OpenHAB Item State item or group needs to change to
         # @param [Item State] from OpenHAB Item State item or group needs to be coming from
+        # @param [Object] attach to trigger
         #
         # @return [Trigger] OpenHAB trigger
         #
         def changed_wait(item, duration:, to: nil, from: nil, attach: nil)
           trigger = create_changed_trigger(item, nil, nil, attach)
           logger.trace("Creating Changed Wait Change Trigger for #{item}")
-          @trigger_delays[trigger.id] = TriggerDelay.new(to: to, from: from, duration: duration)
+          @trigger_conditions[trigger.id] = Conditions::Duration.new(to: to, from: from, duration: duration)
+          trigger
+        end
+
+        #
+        # Creates a trigger with a range condition on either 'from' or 'to' field
+        # @param [Object] item to create changed trigger on
+        # @param [Object] from state to restrict trigger to
+        # @param [Object] to state restrict trigger to
+        # @param [Object] attach to trigger
+        # @return [Trigger] OpenHAB trigger
+        #
+        def create_changed_range_trigger(item, from:, to:, attach:)
+          # swap range w/ nil if from or to is a range
+          from_range, from = from, from_range if from.is_a? Range
+          to_range, to = to, to_range if to.is_a? Range
+          trigger = create_changed_trigger(item, from, to, attach)
+          @trigger_conditions[trigger.id] = Conditions::Range.new(to: to_range, from: from_range)
           trigger
         end
 
@@ -104,8 +118,8 @@ module OpenHAB
         # Create a changed trigger
         #
         # @param [Object] item to create changed trigger on
-        # @param [String] from state to restrict trigger to
-        # @param [String] to state restrict trigger to
+        # @param [Object] from state to restrict trigger to
+        # @param [Object] to state restrict trigger to
         #
         #
         def create_changed_trigger(item, from, to, attach)

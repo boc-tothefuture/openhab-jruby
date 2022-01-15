@@ -227,3 +227,37 @@ Feature:  changed
       | 10         | 11       | should     |
       | 11         | 12       | should not |
       | 14         | 15       | should     |
+
+  Scenario Outline: Changed support ranges
+    Given items:
+      | type   | name       | state     |
+      | Number | Alarm_Mode | <initial> |
+    And a deployed rule:
+      """
+      rule 'Execute rule with range conditions' do
+        changed Alarm_Mode, <conditions>
+        run { |event| logger.info("Alarm Mode: Changed from #{event.was} to #{event.state}") }
+      end
+      """
+    When item "Alarm_Mode" state is changed to "<change>"
+    Then It <should> log 'Alarm Mode: Changed from <initial> to <change>' within 5 seconds
+    Examples: From range
+      | initial | conditions  | change | should     |
+      | 10      | from: 8..10 | 14     | should     |
+      | 15      | from: 4..12 | 14     | should not |
+    Examples: To range
+      | initial | conditions | change | should     |
+      | 4       | to:  8..10 | 9      | should     |
+      | 11      | to: 4..12  | 14     | should not |
+    Examples: From/To range
+      | initial | conditions             | change | should     |
+      | 4       | from: 2..5, to:  8..10 | 9      | should     |
+      | 4       | from: 5..6, to:  8..10 | 9      | should not |
+      | 4       | from: 2..5, to: 8..12  | 14     | should not |
+    Examples: Endless ranges
+      | initial | conditions | change | should     |
+      | 4       | to: (8..)   | 9      | should     |
+      | 11      | to: (15..)  | 14     | should not |
+
+
+

@@ -89,4 +89,20 @@ Feature:  updated
       | 14     | should     |
       | 10     | should not |
 
-
+  Scenario Outline: Updated support ranges
+    Given items:
+      | type   | name       | state     |
+      | Number | Alarm_Mode | <initial> |
+    And a deployed rule:
+      """
+      rule 'Execute rule with range conditions' do
+        updated Alarm_Mode, <conditions>
+        run { |event| logger.info("Alarm Mode: Updated to #{event.state}") }
+      end
+      """
+    When item "Alarm_Mode" state is changed to "<change>"
+    Then It <should> log 'Alarm Mode: Updated to <change>' within 5 seconds
+    Examples: To range
+      | initial | conditions | change | should     |
+      | 4       | to:  8..10 | 9      | should     |
+      | 11      | to: 4..12  | 14     | should not |

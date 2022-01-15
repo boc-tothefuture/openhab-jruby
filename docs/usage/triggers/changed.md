@@ -20,7 +20,9 @@ grand_parent: Usage
 Changed accepts Items, Things or Groups. 
 To and from accept arrays to match multiple states
 
-The from and to values operate exactly as they do in the DSL and Python rules with the exception of operating on Things.  If changed element being used as a trigger is a thing than the to and from values will accept symbols and strings, where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html). 
+The from and to values operate like they do in the DSL and Python rules with some enhancements:
+1. If the changed element being used as a trigger is a thing, the `to` and `from` values will accept symbols and strings, where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html). 
+2. Support for ranges.
 
 The for parameter provides a method of only executing the rule if the value is changed for a specific duration.  This provides a built-in method of only executing a rule if a condition is true for a period of time without the need to create dummy objects with the expire binding or make or manage your own timers.
 
@@ -50,6 +52,23 @@ rule 'Execute rule when item is changed to specific number, from specific number
 end
 ```
 
+Works with ranges:
+```ruby
+rule 'Execute rule when item is changed to a range of numbers, from a specific range of numbers, for specified duration' do
+  changed Alarm_Mode, from: 8..10, to: 12..14, for: 12.seconds
+  run { logger.info("Alarm Mode Updated")}
+end
+```
+
+Works with endless ranges:
+```ruby
+rule 'Execute rule when item is changed to any number greater than 12'
+  changed Alarm_Mode, to: (12..)   # Parenthesis required for endless ranges
+  run { logger.info("Alarm Mode Updated")}
+end
+```
+
+
 Works with things as well:
 ```ruby
 rule 'Execute rule when thing is changed' do
@@ -57,7 +76,6 @@ rule 'Execute rule when thing is changed' do
    run { |event| logger.info("Thing #{event.uid} status <trigger> to #{event.status}") }
 end
 ```
-
 
 Real world example:
 ```ruby
