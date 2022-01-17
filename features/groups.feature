@@ -229,4 +229,4 @@ Feature:  groups
       logger.info("Item+Group Count: #{(items + groups).count}")
       """
     When I deploy the rules file
-    Then It should log 'Item+Group Count: 8' within 5 seconds
+    Then It should log 'Item+Group Count: 13' within 5 seconds
