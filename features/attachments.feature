@@ -23,15 +23,15 @@ Feature:  attachments
     When <action>
     Then It should log 'attachment - <attachment>' within 5 seconds
     Examples: Checks multiple attachments
-      | trigger                                                    | attachment | action                                            |
-      | changed Switch1                                            | foo        | item "Switch1" state is changed to "ON"           |
-      | received_command Switch1                                   | baz        | item "Switch1" state is changed to "ON"           |
-      | updated Switch1                                            | bar        | item "Switch1" state is changed to "ON"           |
-      | trigger 'core.ItemStateUpdateTrigger', itemName: 'Switch1' | moo        | item "Switch1" state is changed to "ON"           |
-      | channel 'astro:sun:home:rise#event'                        | quz        | channel "astro:sun:home:rise#event " is triggered |
-      | on_start true                                              | qaz        | I wait 2 seconds                                  |
-      | every :second                                              | qux        | I wait 2 seconds                                  |
-      | cron five_seconds_from_now                                 | qab        | I wait 5 seconds                                  |
+      | trigger                                                    | attachment | action                                                    |
+      | changed Switch1                                            | foo        | item "Switch1" state is changed to "ON"                   |
+      | received_command Switch1                                   | baz        | item "Switch1" state is changed to "ON"                   |
+      | updated Switch1                                            | bar        | item "Switch1" state is changed to "ON"                   |
+      | trigger 'core.ItemStateUpdateTrigger', itemName: 'Switch1' | moo        | item "Switch1" state is changed to "ON"                   |
+      | channel 'astro:sun:home:rise#event'                        | quz        | channel "astro:sun:home:rise#event " is triggered         |
+      | on_start true                                              | qaz        | I wait 2 seconds                                          |
+      | every :second                                              | qux        | I wait 2 seconds                                          |
+      | cron five_seconds_from_now                                 | qab        | I wait 5 seconds                                          |
       | watch __conf__+'foo'                                       | qac        | I create a file in subdirectory 'foo' of conf named 'bar' |
 
 
