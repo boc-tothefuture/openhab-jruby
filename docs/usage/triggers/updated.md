@@ -17,7 +17,7 @@ grand_parent: Usage
 
 Changed accepts Items, Things or Groups. 
 
-The to value restricts the rule from running to only if the updated state matches. If the updated element being used as a trigger is a thing than the to and from values will accept symbols and strings, where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html). 
+The `to` value restricts the rule from running only if the updated state matches. If the updated element being used as a trigger is a thing, the `to` and `from` values will accept symbols and strings, where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html).  The `to` value supports ranges.
 
 The examples below assume the following background:
 
@@ -47,6 +47,14 @@ rule 'Execute rule when item is updated to one of many specific states' do
   run { logger.info("Alarm Mode Updated")}
 end
 ```
+
+```ruby
+rule 'Execute rule when item is within a range' do
+  updated Alarm_Mode, to: 7..14
+  run { logger.info("Alarm Mode Updated to a value between 7 and 14")}
+end
+```
+
 
 ```ruby
 rule 'Execute rule when group is updated to any state' do
