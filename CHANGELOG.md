@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.29.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.28.2...4.29.0) (2022-01-17)
+
+
+### Features
+
+* **rules:** support ranges as rule conditions ([8cd6901](https://github.com/boc-tothefuture/openhab-jruby/commit/8cd6901c762d6a903ccc42e7c05e056b6abdd25d))
+
 ## [4.28.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.28.1...4.28.2) (2022-01-17)
 
 ## [4.28.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.28.0...4.28.1) (2022-01-15)
