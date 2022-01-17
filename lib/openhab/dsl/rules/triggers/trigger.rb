@@ -2,6 +2,7 @@
 
 require 'securerandom'
 require 'java'
+require_relative 'cron'
 
 module OpenHAB
   module DSL
@@ -111,7 +112,7 @@ module OpenHAB
           TIME_OF_DAY = 'timer.TimeOfDayTrigger'
 
           # @return [String] A cron trigger
-          CRON = 'timer.GenericCronTrigger'
+          CRON = OpenHAB::DSL::Rules::Triggers::Cron::CRON_TRIGGER_MODULE_ID
 
           #
           # Create a trigger

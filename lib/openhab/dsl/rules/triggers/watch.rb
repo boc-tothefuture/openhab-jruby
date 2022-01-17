@@ -138,11 +138,9 @@ module OpenHAB
 
             # Called by OpenHAB to set the rule engine to invoke when triggered
             # Must match java method name style
-            # rubocop:disable Naming/MethodName
-            def setCallback(callback)
+            def setCallback(callback) # rubocop:disable Naming/MethodName
               @rule_engine_callback = callback
             end
-            # rubocop:enable Naming/MethodName
 
             #
             # Dispose of handler which deactivates watcher
