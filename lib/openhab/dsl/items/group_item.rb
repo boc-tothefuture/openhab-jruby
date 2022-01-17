@@ -32,6 +32,13 @@ module OpenHAB
             group.get_members.to_a
           end
 
+          # Name of the group
+          #
+          # @return [String]
+          def name
+            group.name
+          end
+
           # Send a command to each member of the group
           #
           # @return [GroupMembers] +self+

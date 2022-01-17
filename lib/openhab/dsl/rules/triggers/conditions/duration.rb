@@ -23,12 +23,20 @@ module OpenHAB
           #    timer&.is_active
           #  end
           # end
-
           class Duration
+            #
+            # Create a new duration condition
+            # @param [Object] to optional condition on to state
+            # @param [Object] from optional condition on from state
+            # @param [Duration] Duration to state must stay at specific value before triggering
+            #
             def initialize(to:, from:, duration:)
-              @to = to
-              @from = from
+              to = Conditions::Proc.from_value(to)
+              from = Conditions::Proc.from_value(from)
+              @conditions = Conditions::Proc.new(to: to, from: from)
               @duration = duration
+              logger.trace "Created Duration Condition To(#{to}) From(#{from}) "\
+                           "Conditions(#{@conditions}) Duration(#{@duration})"
             end
 
             # Process rule
@@ -56,15 +64,7 @@ module OpenHAB
             #
             def check_trigger_guards(inputs)
               new_state, old_state = retrieve_states(inputs)
-              if check_from(old_state)
-                return true if check_to(new_state)
-
-                logger.trace("Skipped execution of rule because to state #{new_state}"\
-                             " does not equal specified state(#{@to})")
-              else
-                logger.trace("Skipped execution of rule because old state #{old_state}"\
-                             " does not equal specified state(#{@from})")
-              end
+              @conditions.check_from(state: old_state) && @conditions.check_to(state: new_state)
             end
 
             #
@@ -76,8 +76,8 @@ module OpenHAB
             # @return [Array] An array of the values for [newState, oldState] or [newStatus, oldStatus]
             #
             def retrieve_states(inputs)
-              old_state = inputs['oldState'] || thing_status_to_sym(inputs['oldStatus'])
               new_state = inputs['newState'] || thing_status_to_sym(inputs['newStatus'])
+              old_state = inputs['oldState'] || thing_status_to_sym(inputs['oldStatus'])
 
               [new_state, old_state]
             end
@@ -91,32 +91,6 @@ module OpenHAB
             #
             def thing_status_to_sym(status)
               status&.to_s&.downcase&.to_sym
-            end
-
-            #
-            # Check the from state against the trigger delay
-            #
-            # @param [Item State] state from state to check
-            #
-            # @return [Boolean] true if no from state is defined or defined state equals supplied state
-            #
-            def check_from(state)
-              return @from.include?(state) if @from.is_a?(::Range)
-
-              @from.nil? || @from == state
-            end
-
-            #
-            # Check the to state against the trigger delay
-            #
-            # @param [Item State] state to-state to check
-            #
-            # @return [Boolean] true if no to state is defined or defined state equals supplied state
-            #
-            def check_to(state)
-              return @to.include?(state) if @to.is_a?(::Range)
-
-              @to.nil? || @to == state
             end
 
             #
