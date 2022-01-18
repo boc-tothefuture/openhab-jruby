@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.30.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.29.0...4.30.0) (2022-01-18)
+
+
+### Features
+
+* **conditions:** support procs/lambdas for trigger conditions ([0f0bd16](https://github.com/boc-tothefuture/openhab-jruby/commit/0f0bd160e2d70e6f3ec38f910a4ecbab38af2af7))
+
 # [4.29.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.28.2...4.29.0) (2022-01-17)
 
 
