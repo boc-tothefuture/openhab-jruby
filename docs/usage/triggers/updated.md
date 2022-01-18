@@ -11,13 +11,17 @@ grand_parent: Usage
 
 
 
-| Options | Description                                        | Example                 |
-| ------- | -------------------------------------------------- | ----------------------- |
-| to      | Only execute rule if update state matches to state | `to: 7` or `to: [7,14]` |
+| Options | Description                                        | Example                                                       |
+| ------- | -------------------------------------------------- | ------------------------------------------------------------- |
+| to      | Only execute rule if update state matches to state | `to: 7` or `to: [7,14]` or `to: 7..14`  or `to: ->t {t.odd?}` |
 
 Changed accepts Items, Things or Groups. 
 
-The `to` value restricts the rule from running only if the updated state matches. If the updated element being used as a trigger is a thing, the `to` and `from` values will accept symbols and strings, where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html).  The `to` value supports ranges.
+The `to` option restricts the rule from running only if the updated state matches.
+
+1. If the updated element being used as a trigger is a thing, the `to` option will accept symbols and strings, where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html).
+2. The `to` option supports ranges
+3. The `to` option supports procs
 
 The examples below assume the following background:
 
@@ -73,6 +77,23 @@ end
 ```ruby
 rule 'Execute rule when member of group is changed to one of many states' do
   updated AlarmModes.members, to: [7,14]
+  triggered { |item| logger.info("Group item #{item.id} updated")}
+end
+
+```
+
+Works with procs:
+```ruby
+rule 'Execute rule when member of group is changed to an odd state' do
+  updated AlarmModes.members, to: proc { |t| t.odd? }
+  triggered { |item| logger.info("Group item #{item.id} updated")}
+end
+```
+
+Works with lambda procs:
+```ruby
+rule 'Execute rule when member of group is changed to an odd state' do
+  updated AlarmModes.members, to: -> t { t.odd? }
   triggered { |item| logger.info("Group item #{item.id} updated")}
 end
 ```

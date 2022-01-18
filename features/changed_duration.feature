@@ -204,7 +204,6 @@ Feature: changed_duration
     And I remove the rules file
     Then It should not log 'Trigger Delay Fired' within 10 seconds
 
-
   Scenario Outline: Changed duration support ranges
     Given items:
       | type   | name       | state     |
@@ -233,3 +232,32 @@ Feature: changed_duration
       | 4       | from: 2..5, to:  8..10 | 9      | should     |
       | 4       | from: 5..6, to:  8..10 | 9      | should not |
       | 4       | from: 2..5, to:  8..12 | 14     | should not |
+
+  Scenario Outline: Changed duration support procs
+    Given items:
+      | type   | name       | state     |
+      | Number | Alarm_Mode | <initial> |
+    And a deployed rule:
+      """
+      rule 'Execute rule with range conditions' do
+        changed Alarm_Mode, <conditions>, for: 10.seconds
+        run { |event| logger.info("Alarm Mode: Changed from #{event.was} to #{event.state}") }
+      end
+      """
+    When item "Alarm_Mode" state is changed to "<change>"
+    Then It should not log 'Alarm Mode: Changed from <initial> to <change>' within 8 seconds
+    But If I wait 5 seconds
+    Then It <should> log 'Alarm Mode: Changed from <initial> to <change>' within 8 seconds
+    Examples: From lambda
+      | initial | conditions            | change | should     |
+      | 10      | from: ->f { f == 10 } | 14     | should     |
+      | 15      | from: ->f { f == 10 } | 14     | should not |
+    Examples: To lambda
+      | initial | conditions         | change | should     |
+      | 4       | to: ->t { t == 9 } | 9      | should     |
+      | 11      | to: ->t { t == 13} | 14     | should not |
+    Examples: From/To lambda
+      | initial | conditions                                | change | should     |
+      | 4       | from: ->f { f == 4 }, to: ->t { t == 9 }  | 9      | should     |
+      | 4       | from: ->f { f == 4 }, to: ->t { t == 8 }  | 9      | should not |
+      | 4       | from: ->f { f == 94 }, to: ->t { t == 9 } | 9      | should not |

@@ -10,7 +10,7 @@ require_relative 'triggers/command'
 require_relative 'triggers/updated'
 require_relative 'triggers/generic'
 require_relative 'triggers/watch'
-require_relative 'triggers/conditions/none'
+require_relative 'triggers/conditions/proc'
 require_relative 'guard'
 require 'openhab/core/entity_lookup'
 require 'openhab/dsl/between'
@@ -87,7 +87,7 @@ module OpenHAB
         #
         def initialize(rule_name, caller_binding)
           @triggers = []
-          @trigger_conditions = Hash.new(OpenHAB::DSL::Rules::Triggers::Conditions::None.instance)
+          @trigger_conditions = Hash.new(OpenHAB::DSL::Rules::Triggers::Conditions::Proc::ANY)
           @attachments = {}
           @caller = caller_binding.eval 'self'
           name(rule_name)

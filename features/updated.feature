@@ -106,3 +106,28 @@ Feature:  updated
       | initial | conditions | change | should     |
       | 4       | to:  8..10 | 9      | should     |
       | 11      | to: 4..12  | 14     | should not |
+
+
+  Scenario Outline: Updated support procs
+    Given items:
+      | type   | name       | state     |
+      | Number | Alarm_Mode | <initial> |
+    And a deployed rule:
+      """
+      rule 'Execute rule with proc conditions' do
+        updated Alarm_Mode, <conditions>
+        run { |event| logger.info("Alarm Mode: Updated to #{event.state}") }
+      end
+      """
+    When item "Alarm_Mode" state is changed to "<change>"
+    Then It <should> log 'Alarm Mode: Updated to <change>' within 5 seconds
+    Examples: To with lambda
+      | initial | conditions                     | change | should     |
+      | 4       | to: ->t { (8..10).include? t } | 9      | should     |
+      | 11      | to: ->t { (4..12).include? t } | 14     | should not |
+    Examples: To with proc
+      | initial | conditions                           | change | should     |
+      | 4       | to: proc { \|t\|(8..10).include? t } | 9      | should     |
+      | 11      | to: proc { \|t\|(4..12).include? t } | 14     | should not |
+
+

@@ -2,7 +2,7 @@
 
 require 'openhab/log/logger'
 require_relative 'conditions/duration'
-require_relative 'conditions/range'
+require_relative 'conditions/proc'
 
 module OpenHAB
   module DSL
@@ -74,6 +74,8 @@ module OpenHAB
             changed_wait(item, from: from, to: to, duration: duration, attach: attach)
           elsif [to, from].grep(Range).any?
             create_changed_range_trigger(item, from: from, to: to, attach: attach)
+          elsif [to, from].grep(Proc).any?
+            create_changed_proc_trigger(item, from: from, to: to, attach: attach)
           else
             create_changed_trigger(item, from, to, attach)
           end
@@ -91,10 +93,12 @@ module OpenHAB
         # @return [Trigger] OpenHAB trigger
         #
         def changed_wait(item, duration:, to: nil, from: nil, attach: nil)
-          trigger = create_changed_trigger(item, nil, nil, attach)
-          logger.trace("Creating Changed Wait Change Trigger for #{item}")
-          @trigger_conditions[trigger.id] = Conditions::Duration.new(to: to, from: from, duration: duration)
-          trigger
+          item_name = item.respond_to?(:name) ? item.name : item.to_s
+          logger.trace("Creating Changed Wait Change Trigger for Item(#{item_name}) Duration(#{duration}) "\
+                       "To(#{to}) From(#{from}) Attach(#{attach})")
+          create_changed_trigger(item, nil, nil, attach).tap do |trigger|
+            @trigger_conditions[trigger.id] = Conditions::Duration.new(to: to, from: from, duration: duration)
+          end
         end
 
         #
@@ -106,11 +110,26 @@ module OpenHAB
         # @return [Trigger] OpenHAB trigger
         #
         def create_changed_range_trigger(item, from:, to:, attach:)
-          # swap range w/ nil if from or to is a range
-          from_range, from = from, from_range if from.is_a? Range
-          to_range, to = to, to_range if to.is_a? Range
+          from, to = Conditions::Proc.range_procs(from, to)
+          create_changed_proc_trigger(item, from: from, to: to, attach: attach)
+        end
+
+        #
+        # Creates a trigger with a proc condition on either 'from' or 'to' field
+        # @param [Object] item to create changed trigger on
+        # @param [Object] from state to restrict trigger to
+        # @param [Object] to state restrict trigger to
+        # @param [Object] attach to trigger
+        # @return [Trigger] OpenHAB trigger
+        #
+        def create_changed_proc_trigger(item, from:, to:, attach:)
+          # swap from/to w/ nil if from/to is a proc
+          # rubocop:disable Style/ParallelAssignment
+          from_proc, from = from, nil if from.is_a? Proc
+          to_proc, to = to, nil if to.is_a? Proc
+          # rubocop:enable Style/ParallelAssignment
           trigger = create_changed_trigger(item, from, to, attach)
-          @trigger_conditions[trigger.id] = Conditions::Range.new(to: to_range, from: from_range)
+          @trigger_conditions[trigger.id] = Conditions::Proc.new(to: to_proc, from: from_proc)
           trigger
         end
 

@@ -42,10 +42,10 @@ module OpenHAB
         # @return [Trigger] OpenHAB triggers
         #
         def update_trigger(item:, to:, attach:)
-          if to.is_a? Range
-            create_update_range_trigger(item: item, to: to, attach: attach)
-          else
-            create_update_trigger(item: item, to: to, attach: attach)
+          case to
+          when Range then create_update_range_trigger(item: item, to: to, attach: attach)
+          when Proc then create_update_proc_trigger(item: item, to: to, attach: attach)
+          else create_update_trigger(item: item, to: to, attach: attach)
           end
         end
 
@@ -57,9 +57,21 @@ module OpenHAB
         # @return [Trigger] OpenHAB trigger
         #
         def create_update_range_trigger(item:, to:, attach:)
-          trigger = create_update_trigger(item: item, to: nil, attach: attach)
-          @trigger_conditions[trigger.id] = Conditions::Range.new(to: to, from: nil)
-          trigger
+          to, * = Conditions::Proc.range_procs(to)
+          create_update_proc_trigger(item: item, to: to, attach: attach)
+        end
+
+        #
+        # Creates a trigger with a proc condition on the 'to' field
+        # @param [Object] item to create changed trigger on
+        # @param [Object] to state restrict trigger to
+        # @param [Object] attach to trigger
+        # @return [Trigger] OpenHAB trigger
+        #
+        def create_update_proc_trigger(item:, to:, attach:)
+          create_update_trigger(item: item, to: nil, attach: attach).tap do |trigger|
+            @trigger_conditions[trigger.id] = Conditions::Proc.new(to: to)
+          end
         end
 
         #

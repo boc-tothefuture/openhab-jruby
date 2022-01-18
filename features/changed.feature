@@ -253,11 +253,62 @@ Feature:  changed
       | initial | conditions             | change | should     |
       | 4       | from: 2..5, to:  8..10 | 9      | should     |
       | 4       | from: 5..6, to:  8..10 | 9      | should not |
-      | 4       | from: 2..5, to: 8..12  | 14     | should not |
+      | 4       | from: 2..5, to:  8..12 | 14     | should not |
     Examples: Endless ranges
       | initial | conditions | change | should     |
-      | 4       | to: (8..)   | 9      | should     |
-      | 11      | to: (15..)  | 14     | should not |
+      | 4       | to: (8..)  | 9      | should     |
+      | 11      | to: (15..) | 14     | should not |
+
+  Scenario Outline: Changed supports procs
+    Given items:
+      | type   | name       | state     |
+      | Number | Alarm_Mode | <initial> |
+    And a deployed rule:
+      """
+      rule 'Execute rule with proc conditions' do
+        changed Alarm_Mode, <conditions>
+        run { |event| logger.info("Alarm Mode: Changed from #{event.was} to #{event.state}") }
+      end
+      """
+    When item "Alarm_Mode" state is changed to "<change>"
+    Then It <should> log 'Alarm Mode: Changed from <initial> to <change>' within 5 seconds
+    Examples: From with lambda
+      | initial | conditions                | change | should     |
+      | 10      | from: ->from {from == 10} | 14     | should     |
+      | 15      | from: ->from {from == 10} | 14     | should not |
+    Examples: From with proc
+      | initial | conditions                        | change | should     |
+      | 10      | from: proc { \|from \|from == 10} | 14     | should     |
+      | 15      | from: proc { \|from \|from == 10} | 14     | should not |
+    Examples: To with lambda
+      | initial | conditions           | change | should     |
+      | 4       | to: ->to { to == 9 } | 9      | should     |
+      | 11      | to: ->to { to == 9 } | 14     | should not |
+    Examples: To with proc
+      | initial | conditions                | change | should     |
+      | 4       | to: proc {\|to\|to == 9 } | 9      | should     |
+      | 11      | to: proc {\|to\|to == 9 } | 14     | should not |
+    Examples: From/To with lambdas
+      | initial | conditions                         | change | should     |
+      | 4       | from: ->f {true}, to: ->t {true}   | 9      | should     |
+      | 4       | from: ->f {false}, to: ->t {true}  | 9      | should not |
+      | 4       | from: ->f {true}, to: ->t {false}  | 9      | should not |
+      | 4       | from: ->f {false}, to: ->t {false} | 9      | should not |
+    Examples: From/To with procs
+      | initial | conditions                           | change | should     |
+      | 4       | from: proc {true}, to: proc {true}   | 9      | should     |
+      | 4       | from: proc {false}, to: proc {true}  | 9      | should not |
+      | 4       | from: proc {true}, to: proc {false}  | 9      | should not |
+      | 4       | from: proc {false}, to: proc {false} | 9      | should not |
+    Examples: Mix procs with non-procs
+      | initial | conditions                   | change | should     |
+      | 4       | from: proc {true}, to: 8..10 | 9      | should     |
+      | 4       | from: proc {true}, to: 8..10 | 14     | should not |
+      | 4       | from: 4..10, to: proc {true} | 9      | should     |
+      | 4       | from: 4, to: proc {true}     | 9      | should     |
+
+
+
 
 
 
