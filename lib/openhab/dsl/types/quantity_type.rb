@@ -7,8 +7,8 @@ module OpenHAB
     module Types
       QuantityType = org.openhab.core.library.types.QuantityType
 
-      # global alias
-      ::QuantityType = QuantityType
+      # global alias - required for jrubyscripting addon <= OH3.2.0
+      ::QuantityType = QuantityType if ::QuantityType.is_a?(Java::JavaLang::Class)
 
       # @deprecated
       # Backwards-compatible alias
@@ -20,8 +20,8 @@ module OpenHAB
         include NumericType
 
         # private alias
-        ONE = org.openhab.core.library.unit.Units::ONE
-        private_constant :ONE
+        ONE_UNIT = org.openhab.core.library.unit.Units::ONE
+        private_constant :ONE_UNIT
 
         #
         # Convert this quantity into a another unit
@@ -46,8 +46,8 @@ module OpenHAB
         def <=>(other) # rubocop:disable Metrics
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(self.class)
-            return unitize(other.unit).compare_to(other) if unit == ONE
-            return compare_to(other.unitize(unit)) if other.unit == ONE
+            return unitize(other.unit).compare_to(other) if unit == ONE_UNIT
+            return compare_to(other.unitize(unit)) if other.unit == ONE_UNIT
 
             compare_to(other)
           elsif other.is_a?(Items::NumericItem) ||
@@ -88,7 +88,7 @@ module OpenHAB
           elsif other.is_a?(Type)
             [other, as(other.class)]
           elsif other.respond_to?(:to_d)
-            [QuantityType.new(other.to_d.to_java, ONE), self]
+            [QuantityType.new(other.to_d.to_java, ONE_UNIT), self]
           elsif other.is_a?(String)
             [QuantityType.new(other), self]
           end
@@ -215,7 +215,7 @@ module OpenHAB
           logger.trace("Converting #{self} to #{other_unit}")
 
           case unit
-          when ONE
+          when ONE_UNIT
             QuantityType.new(to_big_decimal, other_unit)
           when other_unit
             self
@@ -224,10 +224,10 @@ module OpenHAB
           end
         end
 
-        # if unit is +ONE+, return a plain Java BigDecimal
+        # if unit is +ONE_UNIT+, return a plain Java BigDecimal
         # @!visibility private
         def deunitize
-          return to_big_decimal if unit == ONE
+          return to_big_decimal if unit == ONE_UNIT
 
           self
         end
