@@ -113,9 +113,9 @@ Feature:  guards
     When I deploy a rule with an error
     Then It should log "<log_line>" within 20 seconds
     Examples:
-      | guard        | log_line                                           |
-      | only_if Foo  | Object passed to only_if must respond_to 'truthy?' |
-      | not_if  Foo  | Object passed to not_if must respond_to 'truthy?'  |
+      | guard       | log_line                                           |
+      | only_if Foo | Object passed to only_if must respond_to 'truthy?' |
+      | not_if  Foo | Object passed to not_if must respond_to 'truthy?'  |
 
 
   Scenario: not_if allows prevents execution of rules when result is false and prevents when true
@@ -222,11 +222,11 @@ Feature:  guards
     Given a deployed rule:
       """
       def meth
-        logger.info("Guard Context: #{self}") 
+        logger.info("Guard Context: #{self}")
       end
 
       def meth2
-        logger.info("Run Context: #{self}") 
+        logger.info("Run Context: #{self}")
       end
 
       rule 'Check guard context' do
@@ -238,15 +238,19 @@ Feature:  guards
     When item "OutsideDimmer" state is changed to "50"
     Then It should log "Guard Context: main" within 5 seconds
     Examples:
-    | guard                                     |
-    | only_if { meth; false }                   |
-    | not_if { meth; true }                     |
+      | guard                   |
+      | only_if { meth; false } |
+      | not_if { meth; true }   |
 
 
 
   Scenario Outline: Between guards accept a mix of string and time of day objects to guard rule execution based on time of day or day of month
     Given a rule template:
       """
+
+      now_less_5m = Time.now - 5*60
+      now_plus_5m = Time.now + 5*60
+
       rule 'Log result of between guard' do
         on_start
         run { logger.info ("Between guard: true")}
@@ -257,17 +261,17 @@ Feature:  guards
     When I deploy the rule
     Then It should log "Between guard: <result>" within 5 seconds
     Examples:
-      | between                                                                                                | result   |
-      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'       | true     |
-      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..TimeOfDay.new(h: Time.now.hour, m: Time.now.min + 5)  | true     |
-      | TimeOfDay.new(h: Time.now.hour, m: Time.now.min - 5)..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'  | true     |
-      | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>'      | false    | 
-      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'             | true     |
+      | between                                                                                                 | result |
+      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'        | true   |
+      | '<%=(Time.now - (5*60)).strftime('%H:%M:%S')%>'..TimeOfDay.new(h: now_plus_5m.hour, m: now_plus_5m.min) | true   |
+      | TimeOfDay.new(h: now_less_5m.hour, m: now_less_5m.min)..'<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>' | true   |
+      | '<%=(Time.now + (5*60)).strftime('%H:%M:%S')%>'..'<%=(Time.now + (10*60)).strftime('%H:%M:%S')%>'       | false  |
+      | '<%=Date.today.prev_day.strftime('%m-%d')%>'..'<%=Date.today.next_day.strftime('%m-%d')%>'              | true   |
 
   Scenario Outline: All item types should work in only_if/not_if guards
-   Given items:
-      | type    | name   | 
-      | <type>  | Foo    | 
+    Given items:
+      | type   | name |
+      | <type> | Foo  |
     Given a deployed rule:
       """
       Foo << <value> if <set_value>
@@ -281,28 +285,28 @@ Feature:  guards
     When I deploy the rule
     Then It should log "Guard: <result>" within 5 seconds
     Examples:
-      | type          | value                       | guard   | set_value | result   |
-      | Switch        | X                           | only_if | false     | Denied   |
-      | Switch        | X                           | not_if  | false     | Allowed  |
-      | Switch        | ON                          | only_if | true      | Allowed  |
-      | Switch        | OFF                         | only_if | true      | Denied   |
-      | Number        | X                           | only_if | false     | Denied   |
-      | Number        | 0                           | only_if | true      | Denied   |
-      | Number        | 10                          | only_if | true      | Allowed  |
-      | DateTime      | X                           | only_if | false     | Denied   |
-      | DateTime      | "1970-01-01T00:00:00+00:00" | only_if | true      | Allowed  |
-      | String        | OFF                         | only_if | false     | Denied   |
-      | String        | ''                          | only_if | true      | Denied   |
-      | String        | 'foo'                       | only_if | true      | Allowed  |
-      | Color         | 'foo'                       | only_if | false     | Denied   |
-      | Color         | '12,14,5'                   | only_if | true      | Allowed  |
-      | Color         | '12,14,5'                   | only_if | true      | Allowed  |
-      | Location      | '12,14'                     | only_if | false     | Denied   |
-      | Location      | '12,14'                     | only_if | true      | Allowed  |
-      | Player        | X                           | only_if | false     | Denied   |
-      | Rollershutter | X                           | only_if | false     | Denied   |
-      | Rollershutter | 40                          | only_if | true      | Allowed  |
-      | Dimmer        | X                           | only_if | false     | Denied   |
-      | Dimmer        | 0                           | only_if | true      | Denied   |
-      | Dimmer        | 10                          | only_if | true      | Allowed  |
- 
+      | type          | value                       | guard   | set_value | result  |
+      | Switch        | X                           | only_if | false     | Denied  |
+      | Switch        | X                           | not_if  | false     | Allowed |
+      | Switch        | ON                          | only_if | true      | Allowed |
+      | Switch        | OFF                         | only_if | true      | Denied  |
+      | Number        | X                           | only_if | false     | Denied  |
+      | Number        | 0                           | only_if | true      | Denied  |
+      | Number        | 10                          | only_if | true      | Allowed |
+      | DateTime      | X                           | only_if | false     | Denied  |
+      | DateTime      | "1970-01-01T00:00:00+00:00" | only_if | true      | Allowed |
+      | String        | OFF                         | only_if | false     | Denied  |
+      | String        | ''                          | only_if | true      | Denied  |
+      | String        | 'foo'                       | only_if | true      | Allowed |
+      | Color         | 'foo'                       | only_if | false     | Denied  |
+      | Color         | '12,14,5'                   | only_if | true      | Allowed |
+      | Color         | '12,14,5'                   | only_if | true      | Allowed |
+      | Location      | '12,14'                     | only_if | false     | Denied  |
+      | Location      | '12,14'                     | only_if | true      | Allowed |
+      | Player        | X                           | only_if | false     | Denied  |
+      | Rollershutter | X                           | only_if | false     | Denied  |
+      | Rollershutter | 40                          | only_if | true      | Allowed |
+      | Dimmer        | X                           | only_if | false     | Denied  |
+      | Dimmer        | 0                           | only_if | true      | Denied  |
+      | Dimmer        | 10                          | only_if | true      | Allowed |
+
