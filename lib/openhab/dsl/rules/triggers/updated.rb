@@ -21,119 +21,133 @@ module OpenHAB
         # @return [Trigger] Trigger for updated entity
         #
         def updated(*items, to: nil, attach: nil)
-          separate_groups(items).map do |item|
+          updated = Updated.new(rule_triggers: @rule_triggers)
+          Updated.flatten_items(items).map do |item|
             logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
             [to].flatten.map do |to_state|
-              update_trigger(item: item, to: to_state, attach: attach)
+              updated.trigger(item: item, to: to_state, attach: attach)
             end
           end.flatten
         end
 
-        private
+        #
+        # Creates updated triggers
+        #
+        class Updated < Trigger
+          include OpenHAB::Log
 
-        #
-        # Create the trigger
-        #
-        # @param [Object] item item to create trigger for
-        # @param [Item State] from state to restrict trigger to
-        # @param [Item State] to state to restrict trigger to
-        # @param attach attachment
-        #
-        # @return [Trigger] OpenHAB triggers
-        #
-        def update_trigger(item:, to:, attach:)
-          case to
-          when Range then create_update_range_trigger(item: item, to: to, attach: attach)
-          when Proc then create_update_proc_trigger(item: item, to: to, attach: attach)
-          else create_update_trigger(item: item, to: to, attach: attach)
+          #
+          # Create the trigger
+          #
+          # @param [Object] item item to create trigger for
+          # @param [Item State] from state to restrict trigger to
+          # @param [Item State] to state to restrict trigger to
+          # @param attach attachment
+          #
+          # @return [Trigger] OpenHAB triggers
+          #
+          def trigger(item:, to:, attach:)
+            case to
+            when Range then range_trigger(item: item, to: to, attach: attach)
+            when Proc then proc_trigger(item: item, to: to, attach: attach)
+            else update_trigger(item: item, to: to, attach: attach)
+            end
           end
-        end
 
-        #
-        # Creates a trigger with a range condition on the 'to' field
-        # @param [Object] item to create changed trigger on
-        # @param [Object] to state restrict trigger to
-        # @param [Object] attach to trigger
-        # @return [Trigger] OpenHAB trigger
-        #
-        def create_update_range_trigger(item:, to:, attach:)
-          to, * = Conditions::Proc.range_procs(to)
-          create_update_proc_trigger(item: item, to: to, attach: attach)
-        end
+          private
 
-        #
-        # Creates a trigger with a proc condition on the 'to' field
-        # @param [Object] item to create changed trigger on
-        # @param [Object] to state restrict trigger to
-        # @param [Object] attach to trigger
-        # @return [Trigger] OpenHAB trigger
-        #
-        def create_update_proc_trigger(item:, to:, attach:)
-          create_update_trigger(item: item, to: nil, attach: attach).tap do |trigger|
-            @trigger_conditions[trigger.id] = Conditions::Proc.new(to: to)
+          # @return [String] A thing status update trigger
+          THING_UPDATE = 'core.ThingStatusUpdateTrigger'
+
+          # @return [String] An item state update trigger
+          ITEM_STATE_UPDATE = 'core.ItemStateUpdateTrigger'
+
+          # @return [String] A group state update trigger for items in the group
+          GROUP_STATE_UPDATE = 'core.GroupStateUpdateTrigger'
+
+          #
+          # Creates a trigger with a range condition on the 'to' field
+          # @param [Object] item to create changed trigger on
+          # @param [Object] to state restrict trigger to
+          # @param [Object] attach to trigger
+          # @return [Trigger] OpenHAB trigger
+          #
+          def range_trigger(item:, to:, attach:)
+            to, * = Conditions::Proc.range_procs(to)
+            proc_trigger(item: item, to: to, attach: attach)
           end
-        end
 
-        #
-        # Create a trigger for updates
-        #
-        # @param [Object] item Type of item [Group,Thing,Item] to create update trigger for
-        # @param [State] to_state state restriction on trigger
-        #
-        # @return [Trigger] OpenHAB triggers
-        #
-        def create_update_trigger(item:, to:, attach:)
-          trigger, config = case item
-                            when OpenHAB::DSL::Items::GroupItem::GroupMembers then group_update(item: item, to: to)
-                            when Thing then thing_update(thing: item, to: to)
-                            else item_update(item: item, to: to)
-                            end
-          append_trigger(trigger, config, attach: attach)
-        end
+          #
+          # Creates a trigger with a proc condition on the 'to' field
+          # @param [Object] item to create changed trigger on
+          # @param [Object] to state restrict trigger to
+          # @param [Object] attach to trigger
+          # @return [Trigger] OpenHAB trigger
+          #
+          def proc_trigger(item:, to:, attach:)
+            conditions = Conditions::Proc.new(to: to)
+            update_trigger(item: item, to: nil, attach: attach, conditions: conditions)
+          end
 
-        #
-        # Create an update trigger for an item
-        #
-        # @param [Item] item to create trigger for
-        # @param [State] to_state optional state restriction for target
-        #
-        # @return [Array<Hash,String>] first element is a String specifying trigger type
-        #  second element is a Hash configuring trigger
-        #
-        def item_update(item:, to:)
-          config = { 'itemName' => item.name }
-          config['state'] = to.to_s unless to.nil?
-          trigger = Trigger::ITEM_STATE_UPDATE
-          [trigger, config]
-        end
+          #
+          # Create a trigger for updates
+          #
+          # @param [Object] item Type of item [Group,Thing,Item] to create update trigger for
+          # @param [State] to_state state restriction on trigger
+          #
+          # @return [Trigger] OpenHAB triggers
+          #
+          def update_trigger(item:, to:, attach: nil, conditions: nil)
+            type, config = case item
+                           when OpenHAB::DSL::Items::GroupItem::GroupMembers then group_update(item: item, to: to)
+                           when Thing then thing_update(thing: item, to: to)
+                           else item_update(item: item, to: to)
+                           end
+            append_trigger(type: type, config: config, attach: attach, conditions: conditions)
+          end
 
-        #
-        # Create an update trigger for a group
-        #
-        # @param [Item] item to create trigger for
-        # @param [State] to_state optional state restriction for target
-        #
-        # @return [Array<Hash,String>] first element is a String specifying trigger type
-        #  second element is a Hash configuring trigger
-        #
-        def group_update(item:, to:)
-          config = { 'groupName' => item.group.name }
-          config['state'] = to.to_s unless to.nil?
-          trigger = Trigger::GROUP_STATE_UPDATE
-          [trigger, config]
-        end
+          #
+          # Create an update trigger for an item
+          #
+          # @param [Item] item to create trigger for
+          # @param [State] to_state optional state restriction for target
+          #
+          # @return [Array<Hash,String>] first element is a String specifying trigger type
+          #  second element is a Hash configuring trigger
+          #
+          def item_update(item:, to:)
+            config = { 'itemName' => item.name }
+            config['state'] = to.to_s unless to.nil?
+            [ITEM_STATE_UPDATE, config]
+          end
 
-        #
-        # Create an update trigger for a thing
-        #
-        # @param [Thing] thing to create trigger for
-        # @param [State] to_state optional state restriction for target
-        #
-        # @return [Array<Hash,String>] first element is a String specifying trigger type
-        #  second element is a Hash configuring trigger
-        #
-        def thing_update(thing:, to:)
-          trigger_for_thing(thing, Trigger::THING_UPDATE, to)
+          #
+          # Create an update trigger for a group
+          #
+          # @param [Item] item to create trigger for
+          # @param [State] to_state optional state restriction for target
+          #
+          # @return [Array<Hash,String>] first element is a String specifying trigger type
+          #  second element is a Hash configuring trigger
+          #
+          def group_update(item:, to:)
+            config = { 'groupName' => item.group.name }
+            config['state'] = to.to_s unless to.nil?
+            [GROUP_STATE_UPDATE, config]
+          end
+
+          #
+          # Create an update trigger for a thing
+          #
+          # @param [Thing] thing to create trigger for
+          # @param [State] to_state optional state restriction for target
+          #
+          # @return [Array<Hash,String>] first element is a String specifying trigger type
+          #  second element is a Hash configuring trigger
+          #
+          def thing_update(thing:, to:)
+            trigger_for_thing(thing: thing, type: THING_UPDATE, to: to)
+          end
         end
       end
     end

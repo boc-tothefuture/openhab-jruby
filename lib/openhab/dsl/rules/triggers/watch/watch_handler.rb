@@ -14,32 +14,15 @@ module OpenHAB
         #
         # Module for watching directories/files
         #
-        module Watch
+        module WatchHandler
           include OpenHAB::Log
-
-          # Characters in an fnmatch compatible glob
-          GLOB_CHARS = ['**', '*', '?', '[', ']', '{', '}'].freeze
-
-          #
-          # Creates trigger types and trigger type factories for OpenHAB
-          #
-          def self.add_watch_handler
-            java_import org.openhab.core.automation.type.TriggerType
-            OpenHAB::Core.automation_manager.add_trigger_handler(
-              OpenHAB::DSL::Rules::Triggers::Watch::WATCH_TRIGGER_MODULE_ID,
-              OpenHAB::DSL::Rules::Triggers::Watch::WatchTriggerHandlerFactory.new
-            )
-
-            OpenHAB::Core.automation_manager.add_trigger_type(watch_trigger_type)
-            OpenHAB::Log.logger(self).trace('Added watch trigger handler')
-          end
 
           #
           # Creates trigger types and trigger type factories for OpenHAB
           #
           private_class_method def self.watch_trigger_type
             TriggerType.new(
-              OpenHAB::DSL::Rules::Triggers::Watch::WATCH_TRIGGER_MODULE_ID,
+              WATCH_TRIGGER_MODULE_ID,
               nil,
               'A path change event is detected',
               'Triggers when a path change event is detected',
@@ -163,44 +146,19 @@ module OpenHAB
               WatchTriggerHandler.new(trigger)
             end
           end
-        end
 
-        #
-        # Create a trigger to watch a path
-        #
-        # @param [String] path to watch
-        #
-        # @return [Trigger] Trigger object
-        #
-        def watch(path, glob: '*', for: %i[created deleted modified], attach: nil)
-          glob, path = glob_for_path(Pathname.new(path), glob)
-          types = [binding.local_variable_get(:for)].flatten
-          conf = { path: path.to_s, types: types.map(&:to_s), glob: glob.to_s }
+          #
+          # Creates trigger types and trigger type factories for OpenHAB
+          #
+          def self.add_watch_handler
+            java_import org.openhab.core.automation.type.TriggerType
+            OpenHAB::Core.automation_manager.add_trigger_handler(
+              WATCH_TRIGGER_MODULE_ID,
+              WatchTriggerHandlerFactory.new
+            )
 
-          logger.trace("Creating a watch trigger for path(#{path}) with glob(#{glob}) for types(#{types})")
-          append_trigger(OpenHAB::DSL::Rules::Triggers::Watch::WATCH_TRIGGER_MODULE_ID,
-                         conf,
-                         attach: attach)
-        end
-
-        private
-
-        #
-        # Automatically creates globs for supplied paths if necessary
-        # @param [Pathname] path to check
-        # @param [String] specified glob
-        #
-        # @return [Pathname,String] Pathname to watch and glob to match
-        def glob_for_path(path, glob)
-          # Checks if the supplied pathname last element contains a glob char
-          if OpenHAB::DSL::Rules::Triggers::Watch::GLOB_CHARS.any? { |char| path.basename.to_s.include? char }
-            # Splits the supplied pathname into a glob string and parent path
-            [path.basename.to_s, path.parent]
-          elsif path.file? || !path.exist?
-            # glob string matching end of Pathname and parent path
-            ["*/#{path.basename}", path.parent]
-          else
-            [glob, path]
+            OpenHAB::Core.automation_manager.add_trigger_type(watch_trigger_type)
+            OpenHAB::Log.logger(self).trace('Added watch trigger handler')
           end
         end
       end
@@ -208,4 +166,4 @@ module OpenHAB
   end
 end
 # Add the watch handler to OpenHAB
-OpenHAB::DSL::Rules::Triggers::Watch.add_watch_handler
+OpenHAB::DSL::Rules::Triggers::WatchHandler.add_watch_handler
