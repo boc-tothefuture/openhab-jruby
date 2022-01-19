@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.30.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.0...4.30.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* **types:** fix already initialized warning on openhab 3.2.0 ([188f2b0](https://github.com/boc-tothefuture/openhab-jruby/commit/188f2b0c48fdb04bc8a90fd0602ee20a66856ed8))
+
 # [4.30.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.29.0...4.30.0) (2022-01-18)
 
 
