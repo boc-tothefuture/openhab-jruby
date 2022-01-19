@@ -5,9 +5,9 @@ module OpenHAB
     module Types
       PointType = org.openhab.core.library.types.PointType
 
-      # global scope
+      # global scope - required for jrubyscripting addon <= OH3.2.0
       # @!visibility private
-      ::PointType = PointType
+      ::PointType = PointType if ::PointType.is_a?(Java::JavaLang::Class)
 
       # Adds methods to core OpenHAB PointType to make it more natural in Ruby
       class PointType

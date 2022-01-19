@@ -10,8 +10,8 @@ module OpenHAB
       DateTimeType = org.openhab.core.library.types.DateTimeType
       java_import java.time.ZonedDateTime # This is needed for the addon prior to ruby_class fix (OH 3.2.0)
 
-      # global alias
-      ::DateTimeType = DateTimeType
+      # global alias - required for jrubyscripting addon <= OH3.2.0
+      ::DateTimeType = DateTimeType if ::DateTimeType.is_a?(Java::JavaLang::Class)
 
       # @deprecated
       # Backwards-compatible alias

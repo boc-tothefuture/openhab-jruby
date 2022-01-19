@@ -7,8 +7,8 @@ module OpenHAB
     module Types
       PercentType = org.openhab.core.library.types.PercentType
 
-      # global alias
-      ::PercentType = PercentType
+      # global alias - required for jrubyscripting addon <= OH3.2.0
+      ::PercentType = PercentType if ::PercentType.is_a?(Java::JavaLang::Class)
 
       # Adds methods to core OpenHAB PercentType to make it more natural in Ruby
       class PercentType < DecimalType
