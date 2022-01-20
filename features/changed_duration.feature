@@ -8,33 +8,32 @@ Feature: changed_duration
     Given items:
       | type   | name        | label       | state  |
       | Number | Alarm_Mode  | Alarm Mode  | <from> |
-      | Number | Alarm_Delay | Alarm Delay | 10     |
+      | Number | Alarm_Delay | Alarm Delay | 5      |
     And a rule
       """
       rule 'Execute rule when item is changed to specific number for specified duration' do
-        <trigger>
+        <trigger>, for: <delay>
         run { logger.info("Alarm Mode Updated")}
       end
       """
     When I deploy the rule
     And item "Alarm_Mode" state is changed to "<to>"
-    And It should not log 'Alarm Mode Updated' within 9 seconds
-    But If I wait 5 seconds
+    And It should not log 'Alarm Mode Updated' within 4 seconds
     Then It <should> log 'Alarm Mode Updated' within 5 seconds
 
     Examples: Checks multiple from and to states
-      | from | to | trigger                                                          | should     |
-      | 8    | 14 | changed Alarm_Mode, for: 10.seconds                              | should     |
-      | 8    | 14 | changed Alarm_Mode, for: Alarm_Delay                             | should     |
-      | 8    | 14 | changed Alarm_Mode, to: 14, for: 10.seconds                      | should     |
-      | 8    | 10 | changed Alarm_Mode, to: 14, for: 10.seconds                      | should not |
-      | 8    | 14 | changed Alarm_Mode, from: 8, to: 14, for: 10.seconds             | should     |
-      | 8    | 10 | changed Alarm_Mode, from: 10, to: 14, for: 10.seconds            | should not |
-      | 8    | 14 | changed Alarm_Mode, to: [10, 14], for: 10.seconds                | should     |
-      | 8    | 14 | changed Alarm_Mode, from: [8, 10], to: 14, for: 10.seconds       | should     |
-      | 8    | 14 | changed Alarm_Mode, from: [8, 10], to: [11, 14], for: 10.seconds | should     |
-      | 8    | 12 | changed Alarm_Mode, from: [8, 10], to: [11, 14], for: 10.seconds | should not |
-      | 8    | 14 | changed Alarm_Mode, from: [9, 10], to: [11, 14], for: 10.seconds | should not |
+      | from | to | trigger                                         | delay       | should     |
+      | 8    | 14 | changed Alarm_Mode                              | 5.seconds   | should     |
+      | 8    | 14 | changed Alarm_Mode                              | Alarm_Delay | should     |
+      | 8    | 14 | changed Alarm_Mode, to: 14                      | 5.seconds   | should     |
+      | 8    | 10 | changed Alarm_Mode, to: 14                      | 5.seconds   | should not |
+      | 8    | 14 | changed Alarm_Mode, from: 8, to: 14             | 5.seconds   | should     |
+      | 8    | 10 | changed Alarm_Mode, from: 10, to: 14            | 5.seconds   | should not |
+      | 8    | 14 | changed Alarm_Mode, to: [10, 14]                | 5.seconds   | should     |
+      | 8    | 14 | changed Alarm_Mode, from: [8, 10], to: 14       | 5.seconds   | should     |
+      | 8    | 14 | changed Alarm_Mode, from: [8, 10], to: [11, 14] | 5.seconds   | should     |
+      | 8    | 12 | changed Alarm_Mode, from: [8, 10], to: [11, 14] | 5.seconds   | should not |
+      | 8    | 14 | changed Alarm_Mode, from: [9, 10], to: [11, 14] | 5.seconds   | should not |
 
   Scenario: Changed item has duration specified and is modified during that duration
     Given items:
@@ -51,7 +50,6 @@ Feature: changed_duration
     Then If I wait 5 seconds
     And item "Alarm_Mode" state is changed to "10"
     And It should not log 'Alarm Mode Updated to 14' within 20 seconds
-    But If I wait 5 seconds
     Then It should log 'Alarm Mode Updated to 10' within 10 seconds
 
   Scenario: Changed item has to and duration specified and is modified during that duration
@@ -61,15 +59,14 @@ Feature: changed_duration
     And a deployed rule:
       """
       rule "Execute rule when item is changed and is modified during specified duration" do
-        changed Alarm_Mode, to: 14, for: 20.seconds
+        changed Alarm_Mode, to: 14, for: 10.seconds
         triggered { |item| logger.info("Alarm Mode Updated to #{item}")}
       end
       """
     When item "Alarm_Mode" state is changed to "14"
     Then If I wait 5 seconds
     And item "Alarm_Mode" state is changed to "10"
-    Then It should not log 'Alarm Mode Updated to 14' within 20 seconds
-    And It should not log 'Alarm Mode Updated to 10' within 20 seconds
+    Then It should not log 'Alarm Mode Updated to' within 20 seconds
 
   Scenario Outline: Changed group items supports duration and/or to and/or from.
     Given group "Modes"
@@ -80,22 +77,22 @@ Feature: changed_duration
     And a deployed rule:
       """
       rule "Execute rule when group item is changed" do
-        <trigger>
+        <trigger>, for: 5.seconds
         triggered { |item| logger.info("#{item.id} Changed")}
       end
       """
     When item "Alarm_Two_Mode" state is changed to "<to>"
-    Then It should not log 'Alarm Two Mode Changed' within 7 seconds
-    But If I wait 5 seconds
+    Then It should not log 'Alarm Two Mode Changed' within 4 seconds
+    But If I wait 1 seconds
     Then It <should> log 'Alarm Two Mode Changed' within 5 seconds
 
     Examples: Checks multiple from and to states
-      | from | to | trigger                                                  | should     |
-      | 8    | 14 | changed Modes.members, for: 10.seconds                   | should     |
-      | 8    | 14 | changed Modes.members, to: 14, for: 10.seconds           | should     |
-      | 8    | 10 | changed Modes.members, to: 14, for: 10.seconds           | should not |
-      | 8    | 14 | changed Modes.members, from: 8, to: 14, for: 10.seconds  | should     |
-      | 8    | 10 | changed Modes.members, from: 10, to: 14, for: 10.seconds | should not |
+      | from | to | trigger                                 | should     |
+      | 8    | 14 | changed Modes.members                   | should     |
+      | 8    | 14 | changed Modes.members, to: 14           | should     |
+      | 8    | 10 | changed Modes.members, to: 14           | should not |
+      | 8    | 14 | changed Modes.members, from: 8, to: 14  | should     |
+      | 8    | 10 | changed Modes.members, from: 10, to: 14 | should not |
 
   Scenario Outline: Changed groups supports duration and/or to and/or from.
     Given groups:
@@ -108,22 +105,22 @@ Feature: changed_duration
     And a deployed rule:
       """
       rule "Execute rule when group is changed" do
-        <rule>
+        <rule>, for: 5.seconds
         triggered { |item| logger.info("#{item.id} Changed")}
       end
       """
     When item "Switch_Two" state is changed to "<to>"
-    Then It should not log 'Switches Changed' within 7 seconds
-    But If I wait 5 seconds
+    Then It should not log 'Switches Changed' within 4 seconds
+    But If I wait 1 seconds
     Then It <should> log 'Switches Changed' within 5 seconds
 
     Examples: Checks multiple from and to states
-      | from | to  | rule                                                 | should     |
-      | OFF  | ON  | changed Switches, for: 10.seconds                    | should     |
-      | OFF  | ON  | changed Switches, to: ON, for: 10.seconds            | should     |
-      | ON   | OFF | changed Switches, to: ON, for: 10.seconds            | should not |
-      | OFF  | ON  | changed Switches, from: OFF, to: ON, for: 10.seconds | should     |
-      | OFF  | ON  | changed Switches, from: ON, to: ON, for: 10.seconds  | should not |
+      | from | to  | rule                                | should     |
+      | OFF  | ON  | changed Switches                    | should     |
+      | OFF  | ON  | changed Switches, to: ON            | should     |
+      | ON   | OFF | changed Switches, to: ON            | should not |
+      | OFF  | ON  | changed Switches, from: OFF, to: ON | should     |
+      | OFF  | ON  | changed Switches, from: ON, to: ON  | should not |
 
   Scenario: Multiple changed with duration triggers
     Given items:
@@ -211,14 +208,14 @@ Feature: changed_duration
     And a deployed rule:
       """
       rule 'Execute rule with range conditions' do
-        changed Alarm_Mode, <conditions>, for: 10.seconds
+        changed Alarm_Mode, <conditions>, for: 5.seconds
         run { |event| logger.info("Alarm Mode: Changed from #{event.was} to #{event.state}") }
       end
       """
     When item "Alarm_Mode" state is changed to "<change>"
-    Then It should not log 'Alarm Mode: Changed from <initial> to <change>' within 8 seconds
-    But If I wait 5 seconds
-    Then It <should> log 'Alarm Mode: Changed from <initial> to <change>' within 8 seconds
+    Then It should not log 'Alarm Mode: Changed from <initial> to <change>' within 4 seconds
+    But If I wait 1 seconds
+    Then It <should> log 'Alarm Mode: Changed from <initial> to <change>' within 5 seconds
     Examples: From range
       | initial | conditions  | change | should     |
       | 10      | from: 8..10 | 14     | should     |
@@ -240,14 +237,14 @@ Feature: changed_duration
     And a deployed rule:
       """
       rule 'Execute rule with range conditions' do
-        changed Alarm_Mode, <conditions>, for: 10.seconds
+        changed Alarm_Mode, <conditions>, for: 5.seconds
         run { |event| logger.info("Alarm Mode: Changed from #{event.was} to #{event.state}") }
       end
       """
     When item "Alarm_Mode" state is changed to "<change>"
-    Then It should not log 'Alarm Mode: Changed from <initial> to <change>' within 8 seconds
-    But If I wait 5 seconds
-    Then It <should> log 'Alarm Mode: Changed from <initial> to <change>' within 8 seconds
+    Then It should not log 'Alarm Mode: Changed from <initial> to <change>' within 4 seconds
+    But If I wait 1 seconds
+    Then It <should> log 'Alarm Mode: Changed from <initial> to <change>' within 5 seconds
     Examples: From lambda
       | initial | conditions            | change | should     |
       | 10      | from: ->f { f == 10 } | 14     | should     |
