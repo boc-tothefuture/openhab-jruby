@@ -99,8 +99,7 @@ module OpenHAB
         # @return [Object] QuantityType or the original value
         #
         def quantify(value)
-          if value.is_a?(Types::DecimalType) && state_description&.pattern
-            item_unit = UnitUtils.parse_unit(state_description.pattern)
+          if value.is_a?(Types::DecimalType) && (item_unit = UnitUtils.parse_unit(state_description&.pattern))
             logger.trace("Unitizing #{value} with unit #{item_unit}")
             Types::QuantityType.new(value.to_big_decimal, item_unit)
           else
