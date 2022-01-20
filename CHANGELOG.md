@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.30.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.1...4.30.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* **logger:** incorrect logger prefix on non standard gem_home path ([a3d9677](https://github.com/boc-tothefuture/openhab-jruby/commit/a3d96779b32d5dd2f46912f1f64321851030296b))
+
 ## [4.30.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.0...4.30.1) (2022-01-19)
 
 
