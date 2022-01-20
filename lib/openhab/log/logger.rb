@@ -245,9 +245,8 @@ module OpenHAB
       #
       def log_caller
         caller_locations.map(&:path)
-                        .grep_v(%r{openhab/core/})
                         .grep_v(/rubygems/)
-                        .grep_v(%r{lib/ruby})
+                        .grep_v(/openhab-scripting/)
                         .first
                         .then { |caller| File.basename(caller, '.*') if caller }
       end
