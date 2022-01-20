@@ -178,14 +178,11 @@ def delete_things
 end
 
 def delete_rules # rubocop:disable Metrics/MethodLength
-  FileUtils.rm Dir.glob(File.join(rules_dir, '*.rb'))
-  deleted = false
   begin
     retries ||= 0
     Rest.rules.each do |rule|
       uid = rule['uid']
       Rest.delete_rule(uid)
-      deleted = true
     end
   rescue StandardError
     raise unless (retries += 1) < 3
@@ -193,8 +190,7 @@ def delete_rules # rubocop:disable Metrics/MethodLength
     sleep 5
     retry
   end
-
-  return unless deleted
+  FileUtils.rm Dir.glob(File.join(rules_dir, '*.rb'))
 
   wait_until(seconds: 30, msg: 'Rules not empty') { Rest.rules.length.zero? }
 end
@@ -204,14 +200,11 @@ def delete_shared_libraries
 end
 
 def delete_items
-  FileUtils.rm Dir.glob(File.join(items_dir, '*.items'))
-  deleted = false
   Rest.items.each do |item|
     Rest.set_item_state(item['name'], 'UNDEF')
     Rest.delete_item(item['name'])
-    deleted = true
   end
-  return unless deleted
+  FileUtils.rm Dir.glob(File.join(items_dir, '*.items'))
 
   wait_until(seconds: 30, msg: 'Items not empty') { Rest.items.length.zero? }
 end
