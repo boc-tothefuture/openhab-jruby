@@ -96,6 +96,31 @@ Feature: persistence
     Then It should log 'Average: 3 kW' within 10 seconds
     And It should log 'Average Max: 3 kW' within 10 seconds
 
+  Scenario: Persistence data on plain Number Item
+    Given groups:
+      | type   | name      | label     | function |
+      | Number | Max_Power | Max Power | MAX      |
+
+    And items:
+      | type   | name         | label | state | groups    |
+      | Number | Number_Power | Power | 0     | Max_Power |
+
+    And code in a rules file:
+      """
+      rule 'update persistence' do
+        on_start
+        run { Number_Power.update 3 }
+        delay 3.second
+        run do
+          logger.info("Average: #{Number_Power.average_since(10.seconds, :mapdb)}")
+          logger.info("Average Max: #{Max_Power.average_since(10.seconds, :mapdb)}")
+        end
+      end
+      """
+    When I deploy the rule
+    Then It should log 'Average: 3' within 10 seconds
+    And It should log 'Average Max: 3' within 10 seconds
+
   Scenario: Check that HistoricState directly returns a state
     Given items:
       | type         | name         | label | pattern | state |
