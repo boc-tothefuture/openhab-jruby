@@ -195,13 +195,13 @@ def delete_shared_libraries
 end
 
 def delete_items
-  FileUtils.rm Dir.glob(File.join(items_dir, '*.items'))
   deleted = false
   Rest.items.each do |item|
     Rest.set_item_state(item['name'], 'UNDEF')
     Rest.delete_item(item['name'])
     deleted = true
   end
+  FileUtils.rm Dir.glob(File.join(items_dir, '*.items'))
   return unless deleted
 
   wait_until(seconds: 30, msg: 'Items not empty') { Rest.items.length.zero? }
