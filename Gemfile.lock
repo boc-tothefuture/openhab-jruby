@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openhab-scripting (4.30.2)
+    openhab-scripting (4.30.3)
       bundler (~> 2.2)
       marcel (~> 1.0)
 

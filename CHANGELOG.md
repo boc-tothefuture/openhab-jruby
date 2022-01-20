@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.30.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.2...4.30.3) (2022-01-20)
+
+
+### Bug Fixes
+
+* **persistence:** npe on dimensioned item without an explicit unit ([251f625](https://github.com/boc-tothefuture/openhab-jruby/commit/251f62541eff71aa5238ff66bde9160b80f69a17))
+
 ## [4.30.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.1...4.30.2) (2022-01-20)
 
 
