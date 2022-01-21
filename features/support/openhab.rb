@@ -179,7 +179,7 @@ end
 
 def delete_rules
   deleted = false
-  Rest.rules.each do |rule|
+  check_auth { Rest.rules }.each do |rule|
     uid = rule['uid']
     Rest.delete_rule(uid)
     deleted = true
@@ -209,4 +209,21 @@ end
 
 def set_log_level(bundle, level)
   openhab_client("log:set #{level.upcase} #{bundle}")
+end
+
+def enable_basic_auth
+  openhab_client('config:property-set -p org.openhab.restauth allowBasicAuth true')
+end
+
+def retry_if_unauthorized(response)
+  return response unless response.unauthorized?
+
+  puts 'Unauthorized. Enabling basic auth and retrying...'
+  enable_basic_auth
+  yield
+end
+
+def check_auth(&block)
+  yield.then { |response| retry_if_unauthorized(response, &block) }
+       .tap { |response| raise "Error in response: #{response.inspect}" unless response.success? }
 end
