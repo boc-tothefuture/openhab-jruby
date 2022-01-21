@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.30.5](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.4...4.30.5) (2022-01-21)
+
+
+### Bug Fixes
+
+* **string_type:** direct regex comparison and inspect ([1703aa2](https://github.com/boc-tothefuture/openhab-jruby/commit/1703aa2600fb1fec846b8b408df23b349073146d))
+
 ## [4.30.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.3...4.30.4) (2022-01-21)
 
 ## [4.30.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.2...4.30.3) (2022-01-20)
