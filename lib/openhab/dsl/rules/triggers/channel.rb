@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'openhab/log/logger'
-require 'openhab/dsl/rules/triggers/trigger'
+require 'openhab/dsl/things'
+require_relative 'trigger'
 
 module OpenHAB
   module DSL
@@ -22,32 +23,59 @@ module OpenHAB
         #   thing(s) to create trigger for if not specified with the channel
         # @param [String, Array<String>] triggered specific triggering condition(s) to match for trigger
         #
-        def channel(*channels, thing: nil, triggered: nil, attach: nil) # rubocop:disable Metrics/AbcSize
-          channels.flatten.product([thing].flatten).each do |(channel, t)|
-            channel = channel.uid if channel.is_a?(org.openhab.core.thing.Channel)
-            t = t.uid if t.is_a?(Thing)
-            channel = [t, channel].compact.join(':')
-            logger.trace("Creating channel trigger for channel(#{channel}), thing(#{t}), trigger(#{triggered})")
+        def channel(*channels, thing: nil, triggered: nil, attach: nil)
+          channel_trigger = Channel.new(rule_triggers: @rule_triggers)
+          Channel.channels(channels: channels, thing: thing).each do |channel|
             [triggered].flatten.each do |trigger|
-              create_channel_trigger(channel, trigger, attach)
+              channel_trigger.trigger(channel: channel, trigger: trigger, attach: attach)
             end
           end
         end
 
-        private
+        #
+        # Creates channel triggers
+        #
+        class Channel < Trigger
+          include OpenHAB::Log
 
-        #
-        # Create a trigger for a channel
-        #
-        # @param [String] channel to look for triggers
-        # @param [String] trigger specific channel trigger to match
-        #
-        #
-        def create_channel_trigger(channel, trigger, attach)
-          config = { 'channelUID' => channel }
-          config['event'] = trigger.to_s unless trigger.nil?
-          logger.trace("Creating Change Trigger for #{config}")
-          append_trigger(Trigger::CHANNEL_EVENT, config, attach: attach)
+          # @return [String] A channel event trigger
+          CHANNEL_EVENT = 'core.ChannelEventTrigger'
+
+          #
+          # Get an enumerator over the product of the channels and things and map them to a channel id
+          # @param [Object] channels to iterate over
+          # @param [Object] thing to combine with channels and iterate over
+          # @return [Enumerable] enumerable channel ids to trigger on
+          def self.channels(channels:, thing:)
+            logger.state 'Creating Channel/Thing Pairs', channels: channels, thing: thing
+            channels.flatten.product([thing].flatten)
+                    .map { |channel_thing| channel_id(*channel_thing) }
+          end
+
+          #
+          # Get a channel id from a channel and thing
+          # @param [Object] channel part of channel id, get UID if object is a Channel
+          # @param [Object] thing part of channel id, get UID if object is a Thing
+          #
+          def self.channel_id(channel, thing)
+            channel = channel.uid if channel.is_a?(org.openhab.core.thing.Channel)
+            thing = thing.uid if thing.is_a?(Thing)
+            [thing, channel].compact.join(':')
+          end
+
+          #
+          # Create a trigger for a channel
+          #
+          # @param [String] channel to look for triggers
+          # @param [String] trigger specific channel trigger to match
+          #
+          #
+          def trigger(channel:, trigger:, attach:)
+            config = { 'channelUID' => channel }
+            config['event'] = trigger.to_s unless trigger.nil?
+            logger.state 'Creating Channel Trigger', channel: channel, config: config
+            append_trigger(type: CHANNEL_EVENT, config: config, attach: attach)
+          end
         end
       end
     end

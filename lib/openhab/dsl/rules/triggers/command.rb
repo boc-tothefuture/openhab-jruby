@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'openhab/log/logger'
+require_relative 'trigger'
 
 module OpenHAB
   module DSL
@@ -22,81 +23,90 @@ module OpenHAB
         #
         #
         def received_command(*items, command: nil, commands: nil, attach: nil)
-          separate_groups(items).map do |item|
-            logger.trace("Creating received command trigger for item(#{item})"\
-                         "command(#{command}) commands(#{commands})")
+          command_trigger = Command.new(rule_triggers: @rule_triggers)
 
-            # Combine command and commands, doing union so only a single nil will be in the combined array.
-            combined_commands = combine_commands(command, commands)
-            create_received_trigger(combined_commands, item, attach)
+          # Combine command and commands, doing union so only a single nil will be in the combined array.
+          combined_commands = Command.combine_commands(command: command, commands: commands)
+
+          Command.flatten_items(items).map do |item|
+            logger.states 'Creating received command trigger', item: item, command: command, commands: commands,
+                                                               combined_commands: combined_commands
+
+            command_trigger.trigger(item: item, commands: combined_commands, attach: attach)
           end.flatten
         end
 
-        private
+        #
+        # Creates command triggers
+        #
+        class Command < Trigger
+          # Combine command and commands into a single array
+          #
+          # @param [Array] command list of commands to trigger on
+          # @param [Array] commands list of commands to trigger on
+          #
+          # @return [Array] Combined flattened and compacted list of commands
+          #
+          def self.combine_commands(command:, commands:)
+            combined_commands = ([command] | [commands]).flatten
 
-        #
-        # Create a received trigger based on item type
-        #
-        # @param [Array] commands to create trigger for
-        # @param [Object] item to create trigger for
-        #
-        #
-        def create_received_trigger(commands, item, attach)
-          commands.map do |command|
-            if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers
-              config, trigger = create_group_command_trigger(item)
-            else
-              config, trigger = create_item_command_trigger(item)
-            end
-            config['command'] = command.to_s unless command.nil?
-            append_trigger(trigger, config, attach: attach)
+            # If either command or commands has a value and one is nil, we need to remove nil from the array.
+            # If it is only now a single nil value, we leave the nil in place, so that we create a trigger
+            # That isn't looking for a specific command.
+            combined_commands = combined_commands.compact unless combined_commands.all?(&:nil?)
+            combined_commands
           end
-        end
 
-        #
-        # Create trigger for item commands
-        #
-        # @param [Item] item to create trigger for
-        #
-        # @return [Array<Hash,Trigger>] first element is hash of trigger config properties
-        #   second element is trigger type
-        #
-        def create_item_command_trigger(item)
-          config = { 'itemName' => item.name }
-          trigger = Trigger::ITEM_COMMAND
-          [config, trigger]
-        end
+          #
+          # Create a received trigger based on item type
+          #
+          # @param [Array] commands to create trigger for
+          # @param [Object] item to create trigger for
+          #
+          #
+          def trigger(item:, commands:, attach:)
+            commands.map do |command|
+              type, config = if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers
+                               group(group: item)
+                             else
+                               item(item: item)
+                             end
+              config['command'] = command.to_s unless command.nil?
+              append_trigger(type: type, config: config, attach: attach)
+            end
+          end
 
-        #
-        # Create trigger for group items
-        #
-        # @param [Group] group to create trigger for
-        #
-        # @return [Array<Hash,Trigger>] first element is hash of trigger config properties
-        #   second element is trigger type
-        #
-        def create_group_command_trigger(group)
-          config = { 'groupName' => group.group.name }
-          trigger = Trigger::GROUP_COMMAND
-          [config, trigger]
-        end
+          private
 
-        #
-        # Combine command and commands into a single array
-        #
-        # @param [Array] command list of commands to trigger on
-        # @param [Array] commands list of commands to trigger on
-        #
-        # @return [Array] Combined flattened and compacted list of commands
-        #
-        def combine_commands(command, commands)
-          combined_commands = ([command] | [commands]).flatten
+          # @return [String] item command trigger
+          ITEM_COMMAND = 'core.ItemCommandTrigger'
 
-          # If either command or commands has a value and one is nil, we need to remove nil from the array.
-          # If it is only now a single nil value, we leave the nil in place, so that we create a trigger
-          # That isn't looking for a specific command.
-          combined_commands = combined_commands.compact unless combined_commands.all?(&:nil?)
-          combined_commands
+          # @return [String] A group command trigger for items in the group
+          GROUP_COMMAND = 'core.GroupCommandTrigger'
+
+          #
+          # Create trigger for item commands
+          #
+          # @param [Item] item to create trigger for
+          #
+          # @return [Array<Hash,Trigger>] first element is hash of trigger config properties
+          #   second element is trigger type
+          #
+          def item(item:)
+            [ITEM_COMMAND, { 'itemName' => item.name }]
+          end
+
+          #
+          # Create trigger for group items
+          #
+          # @param [Group] group to create trigger for
+          #
+          # @return [Array<Hash,Trigger>] first element is hash of trigger config properties
+          #   second element is trigger type
+          #
+          def group(group:)
+            [GROUP_COMMAND, { 'groupName' => group.group.name }]
+          end
         end
       end
     end

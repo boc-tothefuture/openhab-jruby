@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'openhab/dsl/timers'
-require 'openhab/dsl/rules/triggers/trigger'
+require 'openhab/dsl/rules/rule_triggers'
+require 'openhab/dsl/rules/triggers/triggers'
 require 'openhab/log/logger'
 require 'java'
 
@@ -151,8 +152,8 @@ module OpenHAB
               # Capture rule name if known
               @thread_locals = Thread.current[:RULE_NAME] ? { RULE_NAME: Thread.current[:RULE_NAME] } : {}
               set_name("Cancels implicit timer for #{timed_command_details.item.id}")
-              set_triggers([OpenHAB::DSL::Rules::Triggers::Trigger.trigger(
-                type: OpenHAB::DSL::Rules::Triggers::Trigger::ITEM_STATE_CHANGE,
+              set_triggers([OpenHAB::DSL::Rules::RuleTriggers.trigger(
+                type: OpenHAB::DSL::Rules::Triggers::Changed::ITEM_STATE_CHANGE,
                 config: { 'itemName' => timed_command_details.item.name }
               )])
             end

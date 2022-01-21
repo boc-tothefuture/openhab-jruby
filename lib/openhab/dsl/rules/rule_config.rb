@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
 require 'java'
-require 'pp'
+require 'forwardable'
 require_relative 'property'
-require_relative 'triggers/cron'
-require_relative 'triggers/changed'
-require_relative 'triggers/channel'
-require_relative 'triggers/command'
-require_relative 'triggers/updated'
-require_relative 'triggers/generic'
-require_relative 'triggers/watch'
-require_relative 'triggers/conditions/proc'
+require_relative 'triggers/triggers'
 require_relative 'guard'
+require_relative 'rule_triggers'
 require 'openhab/core/entity_lookup'
 require 'openhab/dsl/between'
 require 'openhab/dsl/dsl'
@@ -33,15 +27,10 @@ module OpenHAB
         include OpenHAB::DSL::Rules::Guard
         include OpenHAB::DSL::Rules::Property
         extend OpenHAB::DSL
+        extend Forwardable
 
-        # @return [Array] Of triggers
-        attr_accessor :triggers
-
-        # @return [Array] Of trigger delays
-        attr_reader :trigger_conditions
-
-        # @return [Hash] Hash of trigger UIDs to attachments
-        attr_reader :attachments
+        # Provide backwards compatibility for these fields
+        delegate %i[triggers trigger_conditions attachments] => :@rule_triggers
 
         # @return [Array] Of trigger guards
         attr_accessor :guard
@@ -86,9 +75,7 @@ module OpenHAB
         #   Used to execute within the object's context
         #
         def initialize(rule_name, caller_binding)
-          @triggers = []
-          @trigger_conditions = Hash.new(OpenHAB::DSL::Rules::Triggers::Conditions::Proc::ANY)
-          @attachments = {}
+          @rule_triggers = RuleTriggers.new
           @caller = caller_binding.eval 'self'
           name(rule_name)
           enabled(true)
@@ -147,8 +134,8 @@ module OpenHAB
             "Run blocks: (#{run}) " \
             "on_start: (#{on_start?}) " \
             "Trigger Conditions: #{trigger_conditions} " \
-            "Trigger UIDs: #{triggers.map(&:id).join(', ')}" \
-            "Attachments: #{attachments} "
+            "Trigger UIDs: #{triggers.map(&:id).join(', ')} " \
+            "Attachments: #{attachments}"
         end
       end
     end

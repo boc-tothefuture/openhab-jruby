@@ -29,15 +29,10 @@ Feature:  delay
         run { logger.info("Sleeping") }
         delay 5.seconds
         run { logger.info("Sleeping Again") }
-        delay 5.seconds
-        run { logger.info("Awake") }
       end
       """
     When I deploy the rule
     Then It should log 'Sleeping' within 5 seconds
-    But It should not log 'Sleeping Again' within 5 seconds
+    But It should not log 'Sleeping Again' within 3 seconds
     Then If I wait 3 seconds
     Then It should log 'Sleeping Again' within 5 seconds
-    But It should not log 'Awake' within 2 seconds
-    Then If I wait 3 seconds
-    Then It should log 'Awake' within 5 seconds

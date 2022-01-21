@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'openhab/log/logger'
+require_relative 'trigger'
 
 module OpenHAB
   module DSL
@@ -21,7 +22,7 @@ module OpenHAB
         #
         def trigger(type, attach: nil, **configuration)
           logger.trace("Creating a generic trigger for type(#{type}) with configuration(#{configuration})")
-          append_trigger(type, configuration, attach: attach)
+          Trigger.new(rule_triggers: @rule_triggers).append_trigger(type: type, config: configuration, attach: attach)
         end
       end
     end

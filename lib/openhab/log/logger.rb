@@ -62,6 +62,22 @@ module OpenHAB
       end
 
       #
+      # Logs a map of key(value) with an optional preamble at trace level
+      # @param [String] preamble to put at start of log message
+      # @param [Hash] key and values to log
+      def state(preamble = 'State:', **kwargs)
+        return unless trace_enabled?
+
+        states = kwargs.transform_keys(&:to_s)
+                       .transform_keys(&:capitalize)
+                       .transform_values { |v| v.nil? ? 'nil' : v }
+                       .map { |k, v| "#{k}(#{v})" }
+                       .join(' ')
+        trace "#{preamble} #{states}"
+      end
+      alias states state
+
+      #
       # Cleans the backtrace of an error to remove internal calls. If logging is set
       # to debug or lower, the full backtrace is kept
       #

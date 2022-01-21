@@ -32,9 +32,8 @@ module OpenHAB
         # @param [Config] config Rule configuration
         #
         # Constructor sets a number of variables, no further decomposition necessary
-        # rubocop:disable Metrics/MethodLength
-        # Metrics disabled because only setters are called or defaults set.
-        def initialize(config:)
+        def initialize(config:) # rubocop:disable Metrics/MethodLength
+          # Metrics disabled because only setters are called or defaults set.
           super()
           set_name(config.name)
           set_description(config.description)
@@ -42,13 +41,12 @@ module OpenHAB
           @run_context = config.caller
           @run_queue = config.run
           @guard = config.guard
-          between = config.between&.yield_self { between(config.between) }
-          @between = between || OpenHAB::DSL::Between::ALL_DAY
           # Convert between to correct range or nil if not set
+          between = config.between&.then { between(config.between) }
+          @between = between || OpenHAB::DSL::Between::ALL_DAY
           @trigger_conditions = config.trigger_conditions
           @attachments = config.attachments
         end
-        # rubocop:enable Metrics/MethodLength
 
         #
         # Execute the rule

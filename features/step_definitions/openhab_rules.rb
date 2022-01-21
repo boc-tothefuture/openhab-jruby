@@ -48,6 +48,7 @@ end
 
 def deploy_rule(**kwargs)
   deploy_ruby_file(directory: rules_dir, code: @rule, **kwargs)
+  sleep 1
 end
 
 def wait_for_rule(log_line)
