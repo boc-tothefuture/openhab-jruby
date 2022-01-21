@@ -80,7 +80,7 @@ module OpenHAB
         end
 
         # any method that exists on String gets forwarded to to_s
-        delegate (String.instance_methods - instance_methods) => :to_s
+        delegate (String.instance_methods - instance_methods + %w[=~ inspect]) => :to_s
       end
     end
   end
