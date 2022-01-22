@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.31.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.5...4.31.0) (2022-01-22)
+
+
+### Features
+
+* **triggers:** support quantity string range in trigger conditions ([531ed23](https://github.com/boc-tothefuture/openhab-jruby/commit/531ed232f16eb13bc1ff80fefefa55ed15b5483e))
+
 ## [4.30.5](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.4...4.30.5) (2022-01-21)
 
 
