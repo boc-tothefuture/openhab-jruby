@@ -7,33 +7,36 @@ parent: Execution Blocks
 grand_parent: Usage
 ---
 
-
 # Run
-The run property is the automation code that is executed when a rule is triggered.  This property accepts a block of code and executes it. The block is automatically passed an event object which can be used to access multiple properties about the triggering event.  The code for the automation can be entirely within the run block can call methods defined in the ruby script.
 
-## State/Update Event Properties
-The following properties exist when a run block is triggered from an [updated](#updated) or [changed](#changed) trigger. 
+The run property is the automation code that is executed when a rule is triggered. This property accepts a block of code and executes it. The block is automatically passed an event object which can be used to access multiple properties about the triggering event. The code for the automation can be entirely within the run block can call methods defined in the ruby script.
 
-| Property   | Description                                            |
-| ---------- | ------------------------------------------------------ |
-| item       | Triggering item                                        |
-| state      | New state of triggering item (nil if NULL or UNDEF)    |
-| state?     | New state of triggering item is not NULL or UNDEF      |
-| null?      | New state is NULL                                      |
-| undef?     | New state is UNDEF                                     |
-| was        | Prior state of triggering item (nil if NULL or UNDEF)  |
-| was?       | Prior state of triggering item was not NULL or UNDEF   |
-| was_null?  | Prior state was NULL                                   |
-| was_undef? | Prior state was UNDEF                                  |
-| attachment | Optional user provided attachment to trigger           |
+## Update/Change Event Properties
 
-For compatibility, `last` is also aliased to `was`.
+The following properties exist when a run block is triggered from an [updated](#updated) or [changed](#changed) trigger.
+
+| Property   | Description                                           |
+| ---------- | ----------------------------------------------------- |
+| item       | Triggering item                                       |
+| state      | New state of triggering item (nil if NULL or UNDEF)   |
+| state?     | New state of triggering item is not NULL or UNDEF     |
+| null?      | New state is NULL                                     |
+| undef?     | New state is UNDEF                                    |
+| was        | Prior state of triggering item (nil if NULL or UNDEF) |
+| was?       | Prior state of triggering item was not NULL or UNDEF  |
+| was_null?  | Prior state was NULL                                  |
+| was_undef? | Prior state was UNDEF                                 |
+| attachment | Optional user provided attachment to trigger          |
+
+- `was*` properties are only available for changed trigger.
+- For compatibility, `last` is also aliased to `was`.
 
 ## Command Event Properties
+
 The following properties exist when a run block is triggered from a [received_command](#received_command) trigger.
 
 | Property     | Description                                  |
-|--------------|----------------------------------------------|
+| ------------ | -------------------------------------------- |
 | command      | Command sent to item                         |
 | refresh?     | If the command is REFRESH                    |
 | on?          | If the command is ON                         |
@@ -53,18 +56,18 @@ The following properties exist when a run block is triggered from a [received_co
 | attachment   | Optional user provided attachment to trigger |
 
 ## Thing Event Properties
-The following properties exist when a run block is triggered from an  [updated](#updated) or [changed](#changed) trigger on a Thing.
+
+The following properties exist when a run block is triggered from an [updated](#updated) or [changed](#changed) trigger on a Thing.
 
 | Property   | Description                                                       |
-|------------|-------------------------------------------------------------------|
+| ---------- | ----------------------------------------------------------------- |
 | uid        | UID of the triggered Thing                                        |
 | last       | Status before Change for thing (only valid on Change, not update) |
 | status     | Current status of the triggered Thing                             |
 | attachment | Optional user provided attachment to trigger                      |
 
-
-
 `{}` Style used for single line blocks
+
 ```ruby
 rule 'Access Event Properties' do
   changed TestSwitch
@@ -73,6 +76,7 @@ end
 ```
 
 `do/end` style used for multi-line blocks
+
 ```ruby
 rule 'Multi Line Run Block' do
   changed TestSwitch
@@ -85,6 +89,7 @@ end
 ```
 
 Rules can have multiple run blocks and they are executed in order, Useful when used in combination with delay
+
 ```ruby
 rule 'Multiple Run Blocks' do
   changed TestSwitch
@@ -96,12 +101,13 @@ end
 ```
 
 ## Channel Event Properties
+
 The following property exists when a run block is triggered from a `channel` trigger on a Thing.
 It can be used to get to the Thing.
 
-| Property   | Description                                                       |
-|------------|-------------------------------------------------------------------|
-| channel    | UID of the triggered channel                                      |
+| Property | Description                  |
+| -------- | ---------------------------- |
+| channel  | UID of the triggered channel |
 
 ```ruby
 rule "Keypad Code Received test" do
