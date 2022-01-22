@@ -191,3 +191,26 @@ Feature:  quantity_type
       | source | unit1 | unit2 | target |
       | 0      | °C    | °F    | 32     |
       | 1      | h     | s     | 3600   |
+
+  Scenario Outline: Triggers support ranges with string quantity
+    Given items:
+      | type         | name       | state     |
+      | Number:Power | Item_Power | <initial> |
+    And a rule:
+      """
+      rule 'Execute rule with range conditions' do
+        <trigger> Item_Power, <conditions>
+        run { |event| logger.info("Item Power: <trigger>") }
+      end
+      Item_Power << '<change>'
+      """
+    When I deploy the rule
+    Then It <should> log "Item Power: <trigger>" within 5 seconds
+    Examples: From range
+      | trigger | initial | conditions          | change | should     |
+      | changed | 0 W     | from: '0 W'..'10 W' | 14 W   | should     |
+      | changed | 12 W    | from: '0 W'..'10 W' | 10 W   | should not |
+      | changed | 0 W     | to: '0 W'..'10 W'   | 14 W   | should not |
+      | changed | 0 W     | to: '0 W'..'10 W'   | 10 W   | should     |
+      | updated | 0 W     | to: '0 W'..'10 W'   | 10 W   | should     |
+      | updated | 0 W     | to: '0 W'..'10 W'   | 14 W   | should not |
