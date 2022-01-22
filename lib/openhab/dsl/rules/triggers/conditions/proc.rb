@@ -38,9 +38,9 @@ module OpenHAB
             #
             def self.range_proc(range)
               logger.trace("Creating range proc for #{range}")
-              lambda do |state|
-                logger.trace("Range proc checking if #{state} is in  #{range}")
-                range.cover? state
+              lambda do |val|
+                logger.trace("Range proc checking if #{val} is in #{range}")
+                range.cover? val
               end
             end
 
@@ -77,9 +77,10 @@ module OpenHAB
             # @param [Proc] from Proc to check against from value
             # @param [Proc] to Proc to check against to value
             #
-            def initialize(from: nil, to: nil)
+            def initialize(from: nil, to: nil, command: nil)
               @from = from
               @to = to
+              @command = command
             end
 
             #
@@ -88,7 +89,18 @@ module OpenHAB
             #
             def process(mod:, inputs:) # rubocop:disable Lint/UnusedMethodArgument - mod is unused here but required
               logger.trace("Checking #{inputs} against condition trigger #{self}")
-              yield if check_from(inputs: inputs) && check_to(inputs: inputs)
+              yield if check_procs(inputs: inputs)
+            end
+
+            #
+            # Check if command condition match the proc
+            # @param [Hash] inputs from trigger must be supplied if state is not supplied
+            # @return [true/false] depending on if from is set and matches supplied conditions
+            #
+            def check_command(inputs: nil)
+              command = input_state(inputs, 'command')
+              logger.trace "Checking command(#{@command}) against command(#{command})"
+              check_proc(proc: @command, value: command)
             end
 
             #
@@ -100,7 +112,7 @@ module OpenHAB
             def check_from(inputs: nil, state: nil)
               state ||= input_state(inputs, 'oldState')
               logger.trace "Checking from(#{@from}) against state(#{state})"
-              check_proc(proc: @from, state: state)
+              check_proc(proc: @from, value: state)
             end
 
             #
@@ -112,27 +124,34 @@ module OpenHAB
             def check_to(inputs: nil, state: nil)
               state ||= input_state(inputs, 'newState', 'state')
               logger.trace "Checking to(#{@to}) against state(#{state})"
-              check_proc(proc: @to, state: state)
+              check_proc(proc: @to, value: state)
             end
 
             # Describe the Proc Condition as a string
             # @return [String] string representation of proc condition
             #
             def to_s
-              "From:(#{@from}) To:(#{@to})"
+              "From:(#{@from}) To:(#{@to}) Command:(#{@command})"
             end
 
             private
 
+            #
+            # Check all procs
+            # @param [Hash] inputs from event
+            # @return [true/false] true if all procs return true, false otherwise
+            def check_procs(inputs:)
+              check_from(inputs: inputs) && check_to(inputs: inputs) && check_command(inputs: inputs)
+            end
+
             # Check if a field matches the proc condition
             # @param [Proc] proc to call
-            # @param [Hash] inputs containing fields
-            # @param [Array] fields array of fields to extract from inputs, first one found is passed to proc
+            # @param [Hash] value to check
             # @return [true,false] true if proc is nil or proc.call returns true, false otherwise
-            def check_proc(proc:, state:)
-              return true if proc.nil? || proc.call(state)
+            def check_proc(proc:, value:)
+              return true if proc.nil? || proc.call(value)
 
-              logger.trace("Skipped execution of rule because state #{state} evalulated false for (#{proc})")
+              logger.trace("Skipped execution of rule because value #{value} evaluated false for (#{proc})")
               false
             end
 
