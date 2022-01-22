@@ -40,7 +40,7 @@ module OpenHAB
               logger.trace("Creating range proc for #{range}")
               lambda do |state|
                 logger.trace("Range proc checking if #{state} is in  #{range}")
-                range.include? state
+                range.cover? state
               end
             end
 
