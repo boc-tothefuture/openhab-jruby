@@ -315,6 +315,11 @@ namespace :openhab do
     fail_on_error("gem install #{gem_file} -i #{gem_home} --no-document")
   end
 
+  desc 'Clean up local gems'
+  task :cleanupgems do
+    fail_on_error('gem uninstall openhab-scripting -a', ruby_env)
+  end
+
   desc 'Deploy adhoc test Openhab'
   task adhoc: [:deploy, @deploy_dir] do
     Dir.glob(File.join(@deploy_dir, '*.rb')) { |file| rm file }
