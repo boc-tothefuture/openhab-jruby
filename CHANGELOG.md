@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.32.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.31.0...4.32.0) (2022-01-23)
+
+
+### Features
+
+* **command:** received_command supports ranges and procs ([ab3d974](https://github.com/boc-tothefuture/openhab-jruby/commit/ab3d974c4ebbdcb7ffd73190f5d865c38a5ab2f8))
+
 # [4.31.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.30.5...4.31.0) (2022-01-22)
 
 
