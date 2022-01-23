@@ -237,3 +237,47 @@ Feature:  received_command
       | MOVE    | STOP      | UP,DOWN                      | MOVE    | cond3     |
       | 0       | STOP,MOVE | UP,DOWN                      | 0       | cond3     |
       | 100     | STOP,MOVE | 100                          | UP      | cond2     |
+
+
+  Scenario Outline: received command support ranges
+    Given items:
+      | type   | name       | state     |
+      | Number | Alarm_Mode | <initial> |
+    And a deployed rule:
+      """
+      rule 'Execute rule with range conditions' do
+        received_command Alarm_Mode, <conditions>
+        run { |event| logger.info("Alarm Mode: Received command #{event.command}") }
+      end
+      """
+    When item "Alarm_Mode" state is changed to "<change>"
+    Then It <should> log 'Alarm Mode: Received command <change>' within 5 seconds
+    Examples: With range
+      | initial | conditions       | change | should     |
+      | 4       | commands:  8..10 | 9      | should     |
+      | 11      | commands: 4..12  | 14     | should not |
+
+
+  Scenario Outline: Received command supports procs
+    Given items:
+      | type   | name       | state     |
+      | Number | Alarm_Mode | <initial> |
+    And a deployed rule:
+      """
+      rule 'Execute rule with proc conditions' do
+        received_command Alarm_Mode, <conditions>
+        run { |event| logger.info("Alarm Mode: Received command #{event.command}") }
+      end
+      """
+    When item "Alarm_Mode" state is changed to "<change>"
+    Then It <should> log 'Alarm Mode: Received command <change>' within 5 seconds
+    Examples: With lambda
+      | initial | conditions                          | change | should     |
+      | 4       | command: ->t { (8..10).include? t } | 9      | should     |
+      | 11      | command: ->t { (4..12).include? t } | 14     | should not |
+    Examples: With proc
+      | initial | conditions                                | change | should     |
+      | 4       | command: proc { \|t\|(8..10).include? t } | 9      | should     |
+      | 11      | command: proc { \|t\|(4..12).include? t } | 14     | should not |
+
+

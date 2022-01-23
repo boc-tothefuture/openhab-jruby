@@ -29,10 +29,11 @@ module OpenHAB
           combined_commands = Command.combine_commands(command: command, commands: commands)
 
           Command.flatten_items(items).map do |item|
-            logger.states 'Creating received command trigger', item: item, command: command, commands: commands,
-                                                               combined_commands: combined_commands
+            combined_commands.map do |cmd|
+              logger.states 'Creating received command trigger', item: item, command: cmd
 
-            command_trigger.trigger(item: item, commands: combined_commands, attach: attach)
+              command_trigger.trigger(item: item, command: cmd, attach: attach)
+            end
           end.flatten
         end
 
@@ -58,22 +59,61 @@ module OpenHAB
           end
 
           #
+          # Create a received command trigger
+          #
+          # @param [Object] item item to create trigger for
+          # @param [Object] command to check against
+          # @param [Object] attach attachment
+          #
+          # @return [Trigger] OpenHAB triggers
+          #
+          def trigger(item:, command:, attach:)
+            case command
+            when Range then range_trigger(item: item, command: command, attach: attach)
+            when Proc then proc_trigger(item: item, command: command, attach: attach)
+            else command_trigger(item: item, command: command, attach: attach)
+            end
+          end
+
+          #
+          # Creates a trigger with a range condition on the 'command' field
+          # @param [Object] item to create changed trigger on
+          # @param [Object] command to restrict trigger to
+          # @param [Object] attach to trigger
+          # @return [Trigger] OpenHAB trigger
+          #
+          def range_trigger(item:, command:, attach:)
+            command_range, * = Conditions::Proc.range_procs(command)
+            proc_trigger(item: item, command: command_range, attach: attach)
+          end
+
+          #
+          # Creates a trigger with a proc condition on the 'command' field
+          # @param [Object] item to create changed trigger on
+          # @param [Object] command to restrict trigger to
+          # @param [Object] attach to trigger
+          # @return [Trigger] OpenHAB trigger
+          #
+          def proc_trigger(item:, command:, attach:)
+            conditions = Conditions::Proc.new(command: command)
+            command_trigger(item: item, command: nil, attach: attach, conditions: conditions)
+          end
+
+          #
           # Create a received trigger based on item type
           #
           # @param [Array] commands to create trigger for
           # @param [Object] item to create trigger for
           #
           #
-          def trigger(item:, commands:, attach:)
-            commands.map do |command|
-              type, config = if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers
-                               group(group: item)
-                             else
-                               item(item: item)
-                             end
-              config['command'] = command.to_s unless command.nil?
-              append_trigger(type: type, config: config, attach: attach)
-            end
+          def command_trigger(item:, command:, attach: nil, conditions: nil)
+            type, config = if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers
+                             group(group: item)
+                           else
+                             item(item: item)
+                           end
+            config['command'] = command.to_s unless command.nil?
+            append_trigger(type: type, config: config, attach: attach, conditions: conditions)
           end
 
           private
