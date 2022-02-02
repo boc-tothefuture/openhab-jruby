@@ -437,6 +437,9 @@ Feature: comparisons
         [ Color                       , '!='  , HSBType.new(0, 100, 100)    , false ]  ,
         [ Color                       , '=='  , 100                         , true  ]  ,
         [ Color                       , '=='  , ON                          , true  ]  ,
+        [ Color                       , '=='  , HSBType.new(1, 100, 100)    , false ]  ,
+        [ Color                       , '=='  , HSBType.new(0, 99, 100)     , false ]  ,
+        [ Color                       , '=='  , HSBType.new(0, 100, 99)     , false ]  ,
 
         # Rollershutters
         [ ShutterTwo                  , '=='  , 50                          , true  ]  ,
@@ -559,18 +562,19 @@ Feature: comparisons
       failed_tests = []
       tests.each_with_index do |test, index|
         left, operator, right, expected_result = test
-        logger.info(test_to_s(test))
+        test = test_to_s(test)
+        logger.info("Test ##{index} start: #{test}")
         result = left.__send__(operator, right)
         if result == expected_result
-          logger.info("#{index} Test OK")
+          logger.info("Test ##{index} result: PASSED")
           ok_count += 1
         else
-          failed_tests << test
-          logger.error("#{index} Test ERROR")
+          failed_tests << "##{index} #{test}"
+          logger.error("Test ##{index} result: FAILED")
         end
       rescue => e
-        failed_tests << test
-        logger.error("#{index} Test ERROR")
+        failed_tests << "##{index} #{test}"
+        logger.error("Test ##{index} result: FAILED with error")
         logger.error("#{e}: #{e.backtrace}")
       end
 
@@ -578,7 +582,7 @@ Feature: comparisons
         logger.info("All tests passed")
       else
         logger.error("Some tests failed:")
-        failed_tests.each { |test| logger.error(test_to_s(test)) }
+        failed_tests.each { |test| logger.error(test) }
       end
       logger.info("Total tests: #{tests.count}, passed: #{ok_count}, failed: #{tests.count - ok_count}")
       """

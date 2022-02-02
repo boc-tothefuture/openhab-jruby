@@ -105,13 +105,15 @@ module OpenHAB
         #
         #   nil is returned if the two values are incomparable
         #
-        def <=>(other)
+        def <=>(other) # rubocop:disable Metrics
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(Items::ColorItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(ColorItem))
-            return false unless other.state?
+            return nil unless other.state?
 
             self <=> other.state
+          elsif other.is_a?(HSBType)
+            to_a <=> other.to_a
           elsif other.respond_to?(:to_str)
             self <=> HSBType.new(other)
           else
@@ -176,6 +178,12 @@ module OpenHAB
         # @!visibility private
         def to_s
           "#{hue},#{saturation},#{brightness}"
+        end
+
+        # Convert to an array
+        # @return [Array] An array of [hue, saturation, brightness]
+        def to_a
+          [hue, saturation, brightness]
         end
 
         # @!attribute [r] saturation
