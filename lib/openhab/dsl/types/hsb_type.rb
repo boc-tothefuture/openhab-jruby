@@ -105,13 +105,15 @@ module OpenHAB
         #
         #   nil is returned if the two values are incomparable
         #
-        def <=>(other)
+        def <=>(other) # rubocop:disable Metrics
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(Items::ColorItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(ColorItem))
-            return false unless other.state?
+            return nil unless other.state?
 
             self <=> other.state
+          elsif other.is_a?(HSBType)
+            to_a <=> other.to_a
           elsif other.respond_to?(:to_str)
             self <=> HSBType.new(other)
           else
@@ -176,6 +178,29 @@ module OpenHAB
         # @!visibility private
         def to_s
           "#{hue},#{saturation},#{brightness}"
+        end
+
+        #
+        # Convert the ColorItem to a hash
+        # @param [:hsb, :rgb] format for hash
+        # @return [Hash] in requested format
+        def to_h(format = :hsb)
+          values = to_a(format)
+          keys = (format == :hsb ? %i[hue saturation brightness] : %i[red green blue])
+          keys.zip(values).to_h
+        end
+
+        #
+        # Convert the ColorItem to an array of values
+        # @param [:hsb, :rgb] format for elements in the array
+        # @return [Array] of ColorItem components in requested format
+        def to_a(format = :hsb)
+          case format
+          when :hsb then [hue, saturation, brightness]
+          when :rgb then [red, green, blue].map(&:to_byte)
+          else
+            raise ArgumentError, "Unsupported format #{format}"
+          end
         end
 
         # @!attribute [r] saturation
