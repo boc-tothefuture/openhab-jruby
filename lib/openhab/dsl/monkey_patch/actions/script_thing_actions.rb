@@ -9,12 +9,10 @@ module OpenHAB
       # Patches OpenHAB actions
       #
       module Actions
-        java_import Java::OrgOpenhabCoreAutomationModuleScriptInternalDefaultscope::ScriptThingActions
-
         #
         # MonkeyPatching ScriptThingActions
         #
-        class ScriptThingActions
+        class << $actions # rubocop:disable Style/GlobalVars
           field_reader :THING_ACTIONS_MAP
 
           #
@@ -23,7 +21,7 @@ module OpenHAB
           # @return [Set] of keys for defined actions in the form of 'scope-thing_uid'
           #
           def action_keys
-            ScriptThingActions.THING_ACTIONS_MAP.keys
+            self.class.THING_ACTIONS_MAP.keys
           end
         end
       end
