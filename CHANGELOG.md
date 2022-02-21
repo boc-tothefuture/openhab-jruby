@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.32.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.0...4.32.1) (2022-02-21)
+
+
+### Bug Fixes
+
+* **color_item:** move to_h and to_a from color_item into hsb_type ([b00bbe7](https://github.com/boc-tothefuture/openhab-jruby/commit/b00bbe7bbe4a4d847177d538f018cf71c98120b6))
+* **hsbtype:** comparison against another hsbtype only checks for brightness ([2cebe9e](https://github.com/boc-tothefuture/openhab-jruby/commit/2cebe9e2f2bd498ab33714210aeb6a70caff8787))
+
 # [4.32.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.31.0...4.32.0) (2022-01-23)
 
 
