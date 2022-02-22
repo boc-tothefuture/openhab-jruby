@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.32.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.1...4.32.2) (2022-02-22)
+
+
+### Bug Fixes
+
+* **logger:** move logger class into core module to prevent unintentional modification ([1ab681f](https://github.com/boc-tothefuture/openhab-jruby/commit/1ab681f9947dfe290a14ed4721ac30b1cfc16ac3))
+
 ## [4.32.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.0...4.32.1) (2022-02-21)
 
 
