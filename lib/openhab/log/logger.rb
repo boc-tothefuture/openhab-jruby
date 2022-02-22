@@ -8,7 +8,8 @@ module OpenHAB
   #
   # Provides access to the OpenHAB logging using a Ruby logging methods
   #
-  module Log
+
+  module Core
     #
     # Ruby Logger that forwards messages at appropriate levels to OpenHAB Logger
     #
@@ -105,7 +106,9 @@ module OpenHAB
       #
       def log_exception(exception, rule_name)
         exception = clean_backtrace(exception)
-        error { "#{exception.message} (#{exception.class})\nIn rule: #{rule_name}\n#{exception.backtrace&.join("\n")}" }
+        error do
+          "#{exception.message} (#{exception.class})\nIn rule: #{rule_name}\n#{exception.backtrace&.join("\n")}"
+        end
       end
 
       private
@@ -152,6 +155,12 @@ module OpenHAB
         end
       end
     end
+  end
+
+  module Log
+    #
+    # Ruby Logger that forwards messages at appropriate levels to OpenHAB Logger
+    #
 
     # Logger caches
     @loggers = {}
@@ -180,7 +189,7 @@ module OpenHAB
         # of logger name requires lots of operations and logger
         # names for some objects are specific to the class
         logger_name = logger_name(object)
-        @loggers[logger_name] ||= Logger.new(logger_name)
+        @loggers[logger_name] ||= OpenHAB::Core::Logger.new(logger_name)
       end
 
       private
