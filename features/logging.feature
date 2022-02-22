@@ -99,4 +99,15 @@ Feature:  logging
     And item "Foo" state is changed to "5"
     Then It should log only "Baz" at level "INFO" from 'org.openhab.automation.jruby.log_file.log_test' within 8 seconds
 
+  Scenario: Logger works after requiring third party gems
+    Given code in a rules file
+      """
+      gemfile do
+        source 'https://rubygems.org'
+        gem 'httparty'
+      end
 
+      logger.info("OpenHAB Rules!")
+      """
+    When I deploy the rules file
+    Then It should log "OpenHAB Rules!" within 5 seconds
