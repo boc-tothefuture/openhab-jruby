@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.32.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.2...4.32.3) (2022-02-24)
+
+
+### Bug Fixes
+
+* **script_thing_actions:** adapt to changes in openhab 3.3 ([41cbb55](https://github.com/boc-tothefuture/openhab-jruby/commit/41cbb5533a8e9a15f134ceab91ae527ba767e02d))
+
 ## [4.32.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.1...4.32.2) (2022-02-22)
 
 
