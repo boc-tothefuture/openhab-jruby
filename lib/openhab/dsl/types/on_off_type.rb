@@ -20,8 +20,7 @@ module OpenHAB
         # Invert the type
         # @return [OnOffType] +OFF+ if +ON+, +ON+ if +OFF+
         def !
-          return OFF if on?
-          return ON if off?
+          on? ? OFF : ON
         end
       end
     end
