@@ -222,3 +222,15 @@ Feature: rule_language
       """
     When I deploy the rules file
     Then It should log 'Conf directory is openhab/conf' within 5 seconds
+
+  Scenario: Rule method returns the rule object with Rule UID
+    Given code in a rules file:
+      """
+      rule = rule 'test' do
+        on_start
+        run { logger.info('inside rule') }
+      end
+      logger.info "Rule UID: '#{rule.uid}'"
+      """
+    When I deploy the rules file
+    Then It should log /Rule UID: '.+'/ within 5 seconds
