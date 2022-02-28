@@ -236,3 +236,8 @@ end
 Given('log level for {word} is set to {word}') do |bundle, level|
   set_log_level(bundle, level)
 end
+
+Given('The version of {string} bundle is {string}') do |bundle, version|
+  actual_version = bundle_version(bundle)
+  raise "'#{bundle}' version is '#{actual_version}'" unless actual_version == version
+end

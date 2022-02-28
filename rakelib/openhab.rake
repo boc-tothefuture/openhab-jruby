@@ -18,6 +18,9 @@ namespace :openhab do
   @state_dir = File.join(OPENHAB_DIR, 'rake_state')
   @services_config_file = File.join(OPENHAB_DIR, 'conf/services/jruby.cfg')
   @addons_config_file = File.join(OPENHAB_DIR, 'conf/services/addons.cfg')
+  # Temporary bundle for testing
+  # @jruby_bundle = 'https://github.com/jimtng/openhab-addons/releases/download/v0.1/org.openhab.automation.jrubyscripting-3.3.0-SNAPSHOT.jar'
+  @jruby_bundle = 'https://ci.openhab.org/job/openHAB-Addons/lastStableBuild/artifact/bundles/org.openhab.automation.jrubyscripting/target/org.openhab.automation.jrubyscripting-3.3.0-SNAPSHOT.jar'
 
   CLOBBER << OPENHAB_DIR
   CLOBBER << @services_config_file
@@ -164,7 +167,14 @@ namespace :openhab do
   desc 'Install JRuby Bundle'
   task bundle: [:download, :services, @deploy_dir] do |task|
     state(task.name) do
-      File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      # Temporarily disabling this for testing with new addon
+      # File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      # Temporary bundle
+      start
+      unless karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').include?('Installed')
+        karaf("bundle:install #{@jruby_bundle}")
+      end
+      karaf("bundle:start #{bundle_id}")
     end
   end
 

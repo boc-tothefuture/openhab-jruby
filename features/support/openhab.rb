@@ -227,3 +227,8 @@ def check_auth(&block)
   yield.then { |response| retry_if_unauthorized(response, &block) }
        .tap { |response| raise "Error in response: #{response.inspect}" unless response.success? }
 end
+
+def bundle_version(bundle)
+  output = openhab_client("bundle:list --no-format #{bundle}").out
+  output.lines.last.split[3].chomp
+end
