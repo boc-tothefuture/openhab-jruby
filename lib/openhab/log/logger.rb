@@ -270,8 +270,7 @@ module OpenHAB
       #
       def log_caller
         caller_locations.map(&:path)
-                        .grep_v(/rubygems/)
-                        .grep_v(/openhab-scripting/)
+                        .grep_v(/rubygems|openhab-scripting|<script>/)
                         .first
                         .then { |caller| File.basename(caller, '.*') if caller }
       end
