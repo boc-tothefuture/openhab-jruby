@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.32.5](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.4...4.32.5) (2022-02-28)
+
+
+### Bug Fixes
+
+* **logger:** exclude <script> in log prefix ([ddb7104](https://github.com/boc-tothefuture/openhab-jruby/commit/ddb71040cab0c6a25b28881d103c91bae7812bae))
+* **rule:** rule method returns the created rule ([afe7f69](https://github.com/boc-tothefuture/openhab-jruby/commit/afe7f69f5f36e1a82a62add82181009370508643))
+
 ## [4.32.4](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.3...4.32.4) (2022-02-27)
 
 ## [4.32.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.2...4.32.3) (2022-02-24)
