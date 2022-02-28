@@ -34,7 +34,6 @@ module OpenHAB
       # @yield [] Block executed in context of a RuleConfig
       #
       #
-      # rubocop: disable Metrics/MethodLength
       def rule(rule_name, &block)
         thread_local(RULE_NAME: rule_name) do
           @rule_name = rule_name
@@ -43,12 +42,10 @@ module OpenHAB
           config.guard = Guard::Guard.new(run_context: config.caller, only_if: config.only_if, not_if: config.not_if)
           logger.trace { config.inspect }
           process_rule_config(config)
-          nil # Must return something other than the rule object. See https://github.com/boc-tothefuture/openhab-jruby/issues/438
         end
       rescue StandardError => e
         logger.log_exception(e, @rule_name)
       end
-      # rubocop: enable Metrics/MethodLength
 
       #
       # Cleanup rules in this script file
@@ -71,10 +68,10 @@ module OpenHAB
 
         rule = AutomationRule.new(config: config)
         Rules.script_rules << rule
-        add_rule(rule)
+        added_rule = add_rule(rule)
 
         rule.execute(nil, { 'event' => Struct.new(:attachment).new(config.start_attachment) }) if config.on_start?
-        rule
+        added_rule
       end
 
       #
