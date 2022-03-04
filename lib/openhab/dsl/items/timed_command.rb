@@ -49,7 +49,7 @@ module OpenHAB
             return super(command) unless duration
 
             # Timer needs access to rule to disable, rule needs access to timer to cancel.
-            # Using a mutux to ensure neither fires before the other is constructed
+            # Using a mutex to ensure neither fires before the other is constructed
             semaphore = Mutex.new
 
             semaphore.synchronize do
@@ -144,7 +144,7 @@ module OpenHAB
             include OpenHAB::Log
             include OpenHAB::Core::ThreadLocal
 
-            def initialize(timed_command_details, semaphore, &block)
+            def initialize(timed_command_details, semaphore, &block) # rubocop:disable Metric/MethodLength
               super()
               @semaphore = semaphore
               @timed_command_details = timed_command_details
@@ -154,7 +154,8 @@ module OpenHAB
               set_name("Cancels implicit timer for #{timed_command_details.item.id}")
               set_triggers([OpenHAB::DSL::Rules::RuleTriggers.trigger(
                 type: OpenHAB::DSL::Rules::Triggers::Changed::ITEM_STATE_CHANGE,
-                config: { 'itemName' => timed_command_details.item.name }
+                config: { 'itemName' => timed_command_details.item.name,
+                          'previousState' => timed_command_details.command.to_s }
               )])
             end
 
