@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.32.6](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.5...4.32.6) (2022-03-04)
+
+
+### Bug Fixes
+
+* **timed_command:** timed command cancelled by its own command ([075e627](https://github.com/boc-tothefuture/openhab-jruby/commit/075e6276f761616601b893539819b68e8aa403a0))
+
 ## [4.32.5](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.4...4.32.5) (2022-02-28)
 
 
