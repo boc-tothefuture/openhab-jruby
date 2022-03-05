@@ -45,8 +45,8 @@ module OpenHAB
             end
 
             #
-            # Create a range proc for the supplied range object
-            # @param [Range] range to build proc for
+            # Create an equality proc for the supplied range object
+            # @param [State] value to build proc for
             #
             def self.equality_proc(value)
               logger.trace("Creating equality proc for #{value}")

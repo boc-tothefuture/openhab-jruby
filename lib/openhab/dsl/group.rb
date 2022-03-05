@@ -2,8 +2,8 @@
 
 require 'singleton'
 
-require 'openhab/dsl/lazy_array'
 require 'openhab/core/entity_lookup'
+require 'openhab/dsl/lazy_array'
 
 module OpenHAB
   module DSL
@@ -11,6 +11,19 @@ module OpenHAB
     # Provides access to OpenHAB Groups
     #
     module Groups
+      module_function
+
+      #
+      # Retrieve all OpenHAB groups
+      #
+      # @return [Set] of OpenHAB Groups
+      #
+      def groups
+        OpenHAB::DSL::Support::Groups.instance
+      end
+    end
+
+    module Support
       #
       # Provide access to groups as a set
       #
@@ -26,7 +39,7 @@ module OpenHAB
         #
         def [](name)
           group = OpenHAB::Core::EntityLookup.lookup_item(name)
-          group.is_a?(Items::GroupItem) ? group : nil
+          group.is_a?(OpenHAB::DSL::Items::GroupItem) ? group : nil
         end
         alias include? []
         alias key? include?
@@ -35,15 +48,6 @@ module OpenHAB
         def to_a
           $ir.items.grep(org.openhab.core.items.GroupItem) # rubocop:disable Style/GlobalVars
         end
-      end
-
-      #
-      # Retreive all OpenHAB groups
-      #
-      # @return [Set] of OpenHAB Groups
-      #
-      def groups
-        Groups.instance
       end
     end
   end

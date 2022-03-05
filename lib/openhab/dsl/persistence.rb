@@ -6,6 +6,8 @@ module OpenHAB
     # Provides support for interacting with OpenHAB Persistence service
     #
     module Persistence
+      module_function
+
       #
       # Sets a thread local variable to set the default persistence service
       # for method calls inside the block

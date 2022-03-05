@@ -12,7 +12,6 @@ module OpenHAB
     # Provides access to and ruby wrappers around OpenHAB timers
     #
     module Timers
-      include OpenHAB::Log
       java_import org.openhab.core.model.script.actions.ScriptExecution
       java_import java.time.ZonedDateTime
 
@@ -83,7 +82,7 @@ module OpenHAB
         #
         # Constructs a block to execute timer within
         #
-        # @param [Semaphore] Semaphore to obtain before executing
+        # @param [Semaphore] semaphore to obtain before executing
         #
         # @return [Proc] Block for timer to execute
         #
@@ -101,7 +100,7 @@ module OpenHAB
         #
         # Convert argument to a duration
         #
-        # @params [Java::JavaTimeTemporal::TemporalAmount, #to_f, #to_i, nil] duration Duration
+        # @param [Java::JavaTimeTemporal::TemporalAmount, #to_f, #to_i, nil] duration Duration
         #
         # @raise if duration cannot be used for a timer
         #

@@ -19,16 +19,13 @@ module OpenHAB
   #
   # @param [Object] base Object to decorate with DSL and helper methods
   #
-  #
-  # Number of extensions and includes requires more lines
   def self.extended(base)
     OpenHAB::Core.wait_till_openhab_ready
-    base.extend Log
     base.extend OpenHAB::Core::ScriptHandling
+    base.extend OpenHAB::Core::ScriptHandlingCallbacks
     base.extend OpenHAB::Core::EntityLookup
     base.extend OpenHAB::DSL
 
-    base.send :include, OpenHAB::Core::ScriptHandlingCallbacks
     logger.debug "OpenHAB JRuby Scripting Library Version #{OpenHAB::VERSION} Loaded"
 
     OpenHAB::Core.add_rubylib_to_load_path
@@ -36,7 +33,4 @@ module OpenHAB
 end
 
 # Extend caller with OpenHAB methods
-
-# rubocop: disable Style/MixinUsage
-extend OpenHAB
-# rubocop: enable Style/MixinUsage
+extend OpenHAB # rubocop:disable Style/MixinUsage

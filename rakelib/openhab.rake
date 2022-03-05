@@ -240,6 +240,11 @@ namespace :openhab do
     start
   end
 
+  desc 'Start OpenHAB Karaf Client'
+  task :client do
+    exec(@karaf_client)
+  end
+
   def stop
     if running?
       pid = File.read(File.join(OPENHAB_DIR, 'userdata/tmp/karaf.pid')).chomp.to_i

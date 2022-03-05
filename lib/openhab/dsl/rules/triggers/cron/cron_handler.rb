@@ -57,7 +57,7 @@ module OpenHAB
             field_accessor :callback
 
             # Creates a new CronTriggerHandler
-            # @param [Trigger] OpenHAB trigger associated with handler
+            # @param [Trigger] trigger OpenHAB trigger associated with handler
             #
             def initialize(trigger)
               @trigger = trigger
@@ -113,7 +113,7 @@ module OpenHAB
             include org.openhab.core.automation.module.script.rulesupport.shared.factories.ScriptedTriggerHandlerFactory
 
             # Invoked by the OpenHAB core to get a trigger handler for the supllied trigger
-            # @param [Trigger] OpenHAB trigger
+            # @param [Trigger] trigger OpenHAB trigger
             #
             # @return [WatchTriggerHandler] trigger handler for supplied trigger
             def get(trigger)

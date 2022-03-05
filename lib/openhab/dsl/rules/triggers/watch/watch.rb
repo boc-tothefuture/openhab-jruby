@@ -18,6 +18,9 @@ module OpenHAB
         # Create a trigger to watch a path
         #
         # @param [String] path to watch
+        # @param [String] glob
+        # @param [Array, Symbol] for types of changes to watch: +:created+, +:deleted+, +:modified+
+        # @param [Object] attach object to be attached to the trigger
         #
         # @return [Trigger] Trigger object
         #
@@ -40,10 +43,12 @@ module OpenHAB
 
           #
           # Automatically creates globs for supplied paths if necessary
+          #
           # @param [Pathname] path to check
-          # @param [String] specified glob
+          # @param [String] glob
           #
           # @return [Pathname,String] Pathname to watch and glob to match
+          #
           def self.glob_for_path(path, glob)
             # Checks if the supplied pathname last element contains a glob char
             if GLOB_CHARS.any? { |char| path.basename.to_s.include? char }
@@ -60,8 +65,8 @@ module OpenHAB
           #
           # Create a watch trigger based on item type
           #
-          # @param [Array] commands to create trigger for
-          # @param [Object] item to create trigger for
+          # @param [Config] config Rule configuration
+          # @param [Object] attach object to be attached to the trigger
           #
           #
           def trigger(config:, attach:)

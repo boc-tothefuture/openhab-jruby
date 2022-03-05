@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'java'
-require 'set'
 require 'openhab/core/thread_local'
 require 'openhab/log/logger'
 require 'openhab/dsl/between'
@@ -57,8 +56,8 @@ module OpenHAB
         #
         def execute(mod = nil, inputs = nil)
           thread_local(RULE_NAME: name) do
-            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs&.pretty_inspect})" }
-            logger.trace { "Event details #{inputs['event'].pretty_inspect}" } if inputs&.key?('event')
+            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
+            logger.trace { "Event details #{inputs['event'].inspect}" } if inputs&.key?('event')
             trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
               process_queue(create_queue(inputs), mod, inputs)
             end
@@ -131,8 +130,8 @@ module OpenHAB
         end
 
         # If an attachment exists for the trigger for this event add it to the event object
-        # @param [Object] Event
-        # @param [Hash] Inputs into event
+        # @param [Object] event Event
+        # @param [Hash] inputs Inputs into event
         # @return [Object] Event with attachment added
         #
         def add_attachment(event, inputs)

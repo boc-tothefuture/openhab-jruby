@@ -22,6 +22,7 @@ module OpenHAB
         # @param [String, Thing, ThingUID, Array<String, Thing, ThingUID>] thing
         #   thing(s) to create trigger for if not specified with the channel
         # @param [String, Array<String>] triggered specific triggering condition(s) to match for trigger
+        # @param [Object] attach object to be attached to the trigger
         #
         def channel(*channels, thing: nil, triggered: nil, attach: nil)
           channel_trigger = Channel.new(rule_triggers: @rule_triggers)
@@ -68,6 +69,7 @@ module OpenHAB
           #
           # @param [String] channel to look for triggers
           # @param [String] trigger specific channel trigger to match
+          # @param [Object] attach object to be attached to the trigger
           #
           #
           def trigger(channel:, trigger:, attach:)

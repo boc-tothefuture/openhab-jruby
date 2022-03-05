@@ -234,3 +234,37 @@ Feature: rule_language
       """
     When I deploy the rules file
     Then It should log /Rule UID: '.+'/ within 5 seconds
+    
+  Scenario: DSL methods don't leak into other objects
+    Given a raw rule:
+      """
+      original_methods = Class.methods
+
+      require 'openhab'
+
+      leaked_methods = (Class.methods - original_methods).sort
+      logger.info "Leaked methods: #{leaked_methods}"
+      """
+    When I deploy the rules file
+    Then It should log "Leaked methods: []" within 5 seconds
+
+  @wip
+  Scenario: Check constants introduced by the library
+    Given a raw rule:
+      """
+      def all_constants
+        Object.ancestors.map(&:constants).concat(Object.constants).flatten.uniq.sort
+      end
+
+      original_constants = all_constants
+
+      require 'openhab'
+
+      added_constants = (all_constants - original_constants).sort
+
+      # added_constants.each {|s| logger.info "#{s} => #{Object.const_get(s).class.name}" }
+      logger.info "Added constants: #{added_constants}"
+      logger.info "OK"
+      """
+    When I deploy the rules file
+    Then It should log "OK" within 5 seconds

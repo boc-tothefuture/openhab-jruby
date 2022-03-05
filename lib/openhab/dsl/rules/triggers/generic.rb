@@ -15,8 +15,9 @@ module OpenHAB
         #
         # Create a generic trigger given the trigger type uid and a configuration hash
         #
-        # @param [Type] Trigger type UID
-        # @param [Configuration] A hash containing the trigger configuration entries
+        # @param [Type] type Trigger type UID
+        # @param [Object] attach object to be attached to the trigger
+        # @param [Configuration] configuration A hash containing the trigger configuration entries
         #
         # @return [Trigger] Trigger object
         #

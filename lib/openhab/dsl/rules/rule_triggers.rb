@@ -33,9 +33,6 @@ module OpenHAB
         #
         # Create a new RuleTrigger
         #
-        # @param [Object] caller_binding The object initializing this configuration.
-        #   Used to execute within the object's context
-        #
         def initialize
           @triggers = []
           @trigger_conditions = Hash.new(OpenHAB::DSL::Rules::Triggers::Conditions::Proc::ANY)
@@ -47,6 +44,7 @@ module OpenHAB
         #
         # @param [String] type of trigger to create
         # @param [Map] config map describing trigger configuration
+        # @param [Object] attach object to be attached to the trigger
         #
         # @return [Trigger] OpenHAB trigger
         #

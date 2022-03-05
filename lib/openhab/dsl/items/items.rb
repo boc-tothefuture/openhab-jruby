@@ -43,7 +43,7 @@ module OpenHAB
         # define predicates for checking if an item is in one of the Enum states
         def def_predicate_methods(klass)
           values_for_enums(klass.ACCEPTED_DATA_TYPES).each do |state|
-            _command_predicate, state_predicate = Types::PREDICATE_ALIASES[state.to_s]
+            _command_predicate, state_predicate = OpenHAB::DSL::PREDICATE_ALIASES[state.to_s]
             next if klass.instance_methods.include?(state_predicate)
 
             logger.trace("Defining #{klass}##{state_predicate} for #{state}")
@@ -59,7 +59,7 @@ module OpenHAB
         # as well as predicates for if an ItemCommandEvent is one of those commands
         def def_command_methods(klass) # rubocop:disable Metrics method has single purpose
           values_for_enums(klass.ACCEPTED_COMMAND_TYPES).each do |value|
-            command = Types::COMMAND_ALIASES[value.to_s]
+            command = OpenHAB::DSL::COMMAND_ALIASES[value.to_s]
             next if klass.instance_methods.include?(command)
 
             logger.trace("Defining #{klass}##{command} for #{value}")

@@ -4,7 +4,7 @@ module OpenHAB
   module DSL
     module Rules
       # Module containing terse rule stubs
-      module Terse
+      module TerseRule
         %i[changed channel cron every updated received_command].each do |trigger|
           class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
             def #{trigger}(*args, name: nil, **kwargs, &block)                   # def changed(*args, name: nil, **kwargs, &block)

@@ -13,9 +13,10 @@ module OpenHAB
       class PointType
         # @!parse include PrimitiveType
 
-        # @param latitude [DecimalType, QuantityType, StringType, Numeric]
-        # @param longitude [DecimalType, QuantityType, StringType, Numeric]
-        # @param altitude [DecimalType, QuantityType, StringType, Numeric]
+        # @overload initialize(latitude, longitude, altitude)
+        #   @param [DecimalType, QuantityType, StringType, Numeric] latitude
+        #   @param [DecimalType, QuantityType, StringType, Numeric] longitude
+        #   @param [DecimalType, QuantityType, StringType, Numeric] altitude
         def initialize(*args) # rubocop:disable Metrics
           args = from_hash(args.first.to_hash) if args.first.respond_to? :to_hash
           if (2..3).cover?(args.length)

@@ -2,13 +2,8 @@
 
 require 'openhab/log/configuration'
 require 'java'
-require 'pp'
 
 module OpenHAB
-  #
-  # Provides access to the OpenHAB logging using a Ruby logging methods
-  #
-
   module Core
     #
     # Ruby Logger that forwards messages at appropriate levels to OpenHAB Logger
@@ -65,7 +60,7 @@ module OpenHAB
       #
       # Logs a map of key(value) with an optional preamble at trace level
       # @param [String] preamble to put at start of log message
-      # @param [Hash] key and values to log
+      # @param [Hash] kwargs key and values to log
       def state(preamble = 'State:', **kwargs)
         return unless trace_enabled?
 
@@ -102,7 +97,8 @@ module OpenHAB
       #
       # Print error and stack trace without calls to internal classes
       #
-      # @param [Exception] error A rescued error
+      # @param [Exception] exception A rescued error
+      # @param [String] rule_name The name of the rule where the exception occurred
       #
       def log_exception(exception, rule_name)
         exception = clean_backtrace(exception)
@@ -157,10 +153,11 @@ module OpenHAB
     end
   end
 
+  #
+  # Provides access to the OpenHAB logging using a Ruby logging methods
+  #
   module Log
-    #
-    # Ruby Logger that forwards messages at appropriate levels to OpenHAB Logger
-    #
+    module_function
 
     # Logger caches
     @loggers = {}
@@ -180,7 +177,7 @@ module OpenHAB
       #
       # Injects a logger into the base class
       #
-      # @param [Class] class the logger is for
+      # @param [Object] object the logger is for
       #
       # @return [Logger] for the supplied name
       #
@@ -189,7 +186,7 @@ module OpenHAB
         # of logger name requires lots of operations and logger
         # names for some objects are specific to the class
         logger_name = logger_name(object)
-        @loggers[logger_name] ||= OpenHAB::Core::Logger.new(logger_name)
+        @loggers[logger_name] ||= Core::Logger.new(logger_name)
       end
 
       private
@@ -230,11 +227,7 @@ module OpenHAB
       end
 
       #
-      # Configure a logger for the supplied classname
-      #
-      # @param [String] classname to create logger for
-      #
-      # @return [Logger] Logger for the supplied classname
+      # Returns the rules file name
       #
       def rules_file
         # Each rules file gets its own context
@@ -255,13 +248,6 @@ module OpenHAB
 
         klass_name
       end
-
-      #  "#{rule_name.downcase}.#{klass_name}"
-      #  if klass_name == 'Object'
-      #  "rules.#{rules_file_name.downcase}"
-      #  else
-      #  "rules.#{rules_file_name.downcase}.#{klass_name}"
-      #  end
 
       #
       # Figure out the log prefix

@@ -8,6 +8,17 @@ require 'openhab/dsl/lazy_array'
 module OpenHAB
   module DSL
     module Items
+      module_function
+
+      # Fetches all non-group items from the item registry
+      # @return [ItemRegistry]
+      def items
+        OpenHAB::DSL::Support::ItemRegistry.instance
+      end
+    end
+
+    # Provide supporting objects for DSL functions
+    module Support
       #
       # Provides access to all OpenHAB items, and acts like an array.
       #
@@ -37,12 +48,6 @@ module OpenHAB
         def to_a
           $ir.items.to_a # rubocop:disable Style/GlobalVars
         end
-      end
-
-      # Fetches all non-group items from the item registry
-      # @return [ItemRegistry]
-      def items
-        ItemRegistry.instance
       end
     end
   end

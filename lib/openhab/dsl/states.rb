@@ -8,12 +8,45 @@ module OpenHAB
     # Manages storing and restoring item state
     #
     module States
-      java_import org.openhab.core.model.script.actions.BusEvent
+      module_function
 
+      #
+      # Store states of supplied items
+      #
+      # @param [Array] items to store states of
+      #
+      # @return [StateStorage] item states
+      #
+      def store_states(*items)
+        items = items.flatten.map do |item|
+          item.respond_to?(:__getobj__) ? item.__getobj__ : item
+        end
+        states = OpenHAB::DSL::Support::StateStorage.from_items(*items)
+        if block_given?
+          yield
+          states.restore
+        end
+        states
+      end
+    end
+
+    module Support
+      java_import org.openhab.core.model.script.actions.BusEvent
       #
       # Delegates state storage to a Hash providing methods to operate with states
       #
       class StateStorage < SimpleDelegator
+        #
+        # Create a StateStorage object that stores the states of the given items
+        #
+        # @param [Array<Item>] *items A list of items
+        #
+        # @return [StateStorage] A state storage object
+        #
+        def self.from_items(*items)
+          StateStorage.new(BusEvent.storeStates(*items).to_h)
+        end
+
         #
         # Restore the stored states of all items
         #
@@ -38,25 +71,6 @@ module OpenHAB
         def changed?
           any? { |item, value| item != value }
         end
-      end
-
-      #
-      # Store states of supplied items
-      #
-      # @param [Array] items to store states of
-      #
-      # @return [StateStorage] item states
-      #
-      def store_states(*items)
-        items = items.flatten.map do |item|
-          item.respond_to?(:__getobj__) ? item.__getobj__ : item
-        end
-        states = StateStorage.new(BusEvent.storeStates(*items).to_h)
-        if block_given?
-          yield
-          states.restore
-        end
-        states
       end
     end
   end

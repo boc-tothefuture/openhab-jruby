@@ -17,6 +17,8 @@ module OpenHAB
     # Provides support for interacting with OpenHAB Units of Measurement
     #
     module Units
+      module_function
+
       # @return The default unit for the current thread
       def unit(unit = nil, &block)
         return with_unit(unit, &block) if unit || block # back-compat

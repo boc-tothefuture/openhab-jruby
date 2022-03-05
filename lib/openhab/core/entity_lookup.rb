@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'pp'
-require 'java'
-require 'set'
-
 require 'openhab/log/logger'
 require_relative 'item_proxy'
 

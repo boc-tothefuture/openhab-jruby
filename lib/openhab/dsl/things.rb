@@ -132,6 +132,8 @@ module OpenHAB
         end
       end
 
+      module_function
+
       #
       # Get all things known to OpenHAB
       #

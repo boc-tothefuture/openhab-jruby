@@ -7,6 +7,8 @@ module OpenHAB
   module DSL
     # Supports between range syntax
     module Between
+      module_function
+
       # Creates a range that can be compared against time of day/month days or strings
       # to see if they are within the range
       # @since 2.4.0

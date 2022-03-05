@@ -18,6 +18,8 @@ module OpenHAB
       # Import common actions
       %w[Exec HTTP Ping].each { |action| java_import "org.openhab.core.model.script.actions.#{action}" }
 
+      module_function
+
       #
       # Return an OpenHAB Action object for the given scope and thing
       #

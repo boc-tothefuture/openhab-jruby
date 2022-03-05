@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'delegate'
-require 'pp'
 require 'forwardable'
 require 'openhab/core/osgi'
 require 'openhab/log/logger'
@@ -89,7 +88,7 @@ module OpenHAB
           #
           # Recursively convert the supplied Hash object into a Ruby Hash and recreate the keys and values
           #
-          # @param [Hash] Hash to convert
+          # @param [Hash] hash to convert
           #
           # @return [Hash] The converted hash
           #
