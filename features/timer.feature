@@ -16,6 +16,18 @@ Feature:  timer
     But if I wait 2 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
+  Scenario: Timers can be created with create_timer
+    Given code in a rules file
+      """
+      create_timer 5.seconds do
+        logger.info("Timer Fired")
+      end
+      """
+    When I deploy the rules file
+    Then It should not log 'Timer Fired' within 4 seconds
+    But if I wait 2 seconds
+    Then It should log 'Timer Fired' within 5 seconds
+
   Scenario: Timers support non-integral durations
     Given code in a rules file
       """
