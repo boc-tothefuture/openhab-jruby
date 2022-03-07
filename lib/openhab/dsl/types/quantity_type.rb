@@ -26,10 +26,6 @@ module OpenHAB
         #
         # Convert this quantity into a another unit
         #
-        # @param [Object] other String or Unit to convert to
-        #
-        # @return [QuantityType] This quantity converted to another unit
-        #
         alias | to_unit
 
         #

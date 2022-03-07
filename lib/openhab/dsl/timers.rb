@@ -13,11 +13,13 @@ module OpenHAB
       include OpenHAB::Log
 
       # Manages timers
-      @timer_manager = TimerManager.new
+      @timer_manager = OpenHAB::DSL::Support::TimerManager.new
 
       class << self
         attr_reader :timer_manager
       end
+
+      module_function
 
       #
       # Execute the supplied block after the specified duration
@@ -66,7 +68,7 @@ module OpenHAB
         else
           logger.trace('No reentrant timer found, creating new timer')
         end
-        ReentrantTimer.new(duration: duration, id: id, thread_locals: thread_locals, &block)
+        OpenHAB::DSL::ReentrantTimer.new(duration: duration, id: id, thread_locals: thread_locals, &block)
       end
     end
   end

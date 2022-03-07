@@ -8,8 +8,6 @@ module OpenHAB
         # Extend integer to create duration object
         #
         module IntegerExtensions
-          include OpenHAB::Core
-
           #
           # Create Duration with the specified unit
           #

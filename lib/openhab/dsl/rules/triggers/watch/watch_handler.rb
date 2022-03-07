@@ -79,7 +79,7 @@ module OpenHAB
             # Invoked by java super class when an watch event occurs
             # @param [String] _event ignored
             # @param [StandardWatchEventKind] kind NIO watch event kind
-            # @param [java.nio.Path] Path that had an event
+            # @param [java.nio.Path] path that had an event
             def processWatchEvent(_event, kind, path)
               @block.call(WatchEvent.new(EVENT_TO_SYMBOL[kind], Pathname.new(path.to_s)))
             end
@@ -92,7 +92,7 @@ module OpenHAB
             include org.openhab.core.automation.handler.TriggerHandler
 
             # Creates a new WatchTriggerHandler
-            # @param [Trigger] OpenHAB trigger associated with handler
+            # @param [Trigger] trigger OpenHAB trigger associated with handler
             #
             def initialize(trigger)
               @trigger = trigger
@@ -139,7 +139,7 @@ module OpenHAB
             include org.openhab.core.automation.module.script.rulesupport.shared.factories.ScriptedTriggerHandlerFactory
 
             # Invoked by the OpenHAB core to get a trigger handler for the supllied trigger
-            # @param [Trigger] OpenHAB trigger
+            # @param [Trigger] trigger OpenHAB trigger
             #
             # @return [WatchTriggerHandler] trigger handler for supplied trigger
             def get(trigger)

@@ -28,7 +28,7 @@ module OpenHAB
             # Create a new duration condition
             # @param [Object] to optional condition on to state
             # @param [Object] from optional condition on from state
-            # @param [Duration] Duration to state must stay at specific value before triggering
+            # @param [Duration] duration to state must stay at specific value before triggering
             #
             def initialize(to:, from:, duration:)
               to = Conditions::Proc.from_value(to)
@@ -118,7 +118,7 @@ module OpenHAB
             # Creates a timer for trigger delays
             #
             # @param [Hash] inputs rule trigger inputs
-            # @param [Hash] mod rule trigger mods
+            # @param [Hash] _mod rule trigger mods
             #
             #
             def create_trigger_delay_timer(inputs, _mod)

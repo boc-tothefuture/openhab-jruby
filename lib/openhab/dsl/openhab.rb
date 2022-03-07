@@ -10,6 +10,8 @@ module OpenHAB
     module Core
       include OpenHAB::Log
 
+      module_function
+
       #
       # Return the OpenHAB conf directory as a ruby pathname
       #

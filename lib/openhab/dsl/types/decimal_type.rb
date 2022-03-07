@@ -22,9 +22,10 @@ module OpenHAB
         include ComparableType
 
         #
-        # Create a new instance of DateTimeType
+        # Create a new instance of DecimalType
         #
-        # @param value [java.math.BigDecimal, Items::NumericItem, Numeric]
+        # @param [java.math.BigDecimal, Items::NumericItem, Numeric] args Create a DecimalType from the given value
+        #
         def initialize(*args) # rubocop:disable Metrics
           unless args.length == 1
             super

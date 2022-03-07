@@ -15,6 +15,7 @@ module OpenHAB
         #
         # @param [Object] value Symbol or Duration to execute this rule
         # @param [Object] at TimeOfDay or String representing TimeOfDay in which to execute rule
+        # @param [Object] attach object to be attached to the trigger
         #
         #
         def every(value, at: nil, attach: nil)
@@ -30,6 +31,7 @@ module OpenHAB
         # Create a OpenHAB Cron trigger
         #
         # @param [String] expression OpenHAB style cron expression
+        # @param [Object] attach object to be attached to the trigger
         #
         def cron(expression, attach: nil)
           cron = Cron.new(rule_triggers: @rule_triggers)
@@ -171,8 +173,8 @@ module OpenHAB
           #
           # Create a cron trigger based on item type
           #
-          # @param [Array] commands to create trigger for
-          # @param [Object] item to create trigger for
+          # @param [Config] config Rule configuration
+          # @param [Object] attach object to be attached to the trigger
           #
           #
           def trigger(config:, attach:)

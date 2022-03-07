@@ -17,6 +17,7 @@ module OpenHAB
         #
         # @param [Array] items array to trigger on updated
         # @param [State] to to match for tigger
+        # @param [Object] attach object to be attached to the trigger
         #
         # @return [Trigger] Trigger for updated entity
         #
@@ -40,9 +41,8 @@ module OpenHAB
           # Create the trigger
           #
           # @param [Object] item item to create trigger for
-          # @param [Item State] from state to restrict trigger to
           # @param [Item State] to state to restrict trigger to
-          # @param attach attachment
+          # @param [Object] attach object to be attached to the trigger
           #
           # @return [Trigger] OpenHAB triggers
           #
@@ -69,7 +69,7 @@ module OpenHAB
           # Creates a trigger with a range condition on the 'to' field
           # @param [Object] item to create changed trigger on
           # @param [Object] to state restrict trigger to
-          # @param [Object] attach to trigger
+          # @param [Object] attach object to be attached to the trigger
           # @return [Trigger] OpenHAB trigger
           #
           def range_trigger(item:, to:, attach:)
@@ -81,7 +81,7 @@ module OpenHAB
           # Creates a trigger with a proc condition on the 'to' field
           # @param [Object] item to create changed trigger on
           # @param [Object] to state restrict trigger to
-          # @param [Object] attach to trigger
+          # @param [Object] attach object to be attached to the trigger
           # @return [Trigger] OpenHAB trigger
           #
           def proc_trigger(item:, to:, attach:)
@@ -93,7 +93,8 @@ module OpenHAB
           # Create a trigger for updates
           #
           # @param [Object] item Type of item [Group,Thing,Item] to create update trigger for
-          # @param [State] to_state state restriction on trigger
+          # @param [State] to state restriction on trigger
+          # @param [Object] attach object to be attached to the trigger
           #
           # @return [Trigger] OpenHAB triggers
           #
@@ -110,7 +111,7 @@ module OpenHAB
           # Create an update trigger for an item
           #
           # @param [Item] item to create trigger for
-          # @param [State] to_state optional state restriction for target
+          # @param [State] to optional state restriction for target
           #
           # @return [Array<Hash,String>] first element is a String specifying trigger type
           #  second element is a Hash configuring trigger
@@ -125,7 +126,7 @@ module OpenHAB
           # Create an update trigger for a group
           #
           # @param [Item] item to create trigger for
-          # @param [State] to_state optional state restriction for target
+          # @param [State] to optional state restriction for target
           #
           # @return [Array<Hash,String>] first element is a String specifying trigger type
           #  second element is a Hash configuring trigger
@@ -140,7 +141,7 @@ module OpenHAB
           # Create an update trigger for a thing
           #
           # @param [Thing] thing to create trigger for
-          # @param [State] to_state optional state restriction for target
+          # @param [State] to optional state restriction for target
           #
           # @return [Array<Hash,String>] first element is a String specifying trigger type
           #  second element is a Hash configuring trigger

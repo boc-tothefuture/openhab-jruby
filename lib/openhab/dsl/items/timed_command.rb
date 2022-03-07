@@ -43,7 +43,7 @@ module OpenHAB
           #
           #
           # rubocop: disable Metrics/MethodLength
-          # The mutex makes this over 10 lines, but there is usable way to break thsi method up
+          # The mutex makes this over 10 lines, but there is usable way to break this method up
           def command(command, for: nil, on_expire: nil, &block)
             duration = binding.local_variable_get(:for)
             return super(command) unless duration
@@ -86,8 +86,9 @@ module OpenHAB
             timed_command_details.timer = timed_command_timer(timed_command_details, semaphore, &block)
             timed_command_details.cancel_rule = TimedCommandCancelRule.new(timed_command_details, semaphore,
                                                                            &block)
-            timed_command_details.rule_uid = OpenHAB::DSL::Rules.automation_manager
-                                                                .addRule(timed_command_details.cancel_rule).getUID
+            timed_command_details.rule_uid = OpenHAB::DSL::Rules::Rule.automation_manager
+                                                                      .addRule(timed_command_details.cancel_rule)
+                                                                      .getUID
             logger.trace "Created Timed Command #{timed_command_details}"
             TimedCommand.timed_commands[self] = timed_command_details
           end
@@ -120,10 +121,10 @@ module OpenHAB
           # rubocop: enable Metrics/MethodLength
 
           # Cancels timed command rule
-          # @param [TimedCommandDetailed] timed_command details about the timed command
+          # @param [TimedCommandDetailed] timed_command_details details about the timed command
           def cancel_timed_command_rule(timed_command_details)
             logger.trace "Removing rule: #{timed_command_details.rule_uid}"
-            OpenHAB::DSL::Rules.registry.remove(timed_command_details.rule_uid)
+            OpenHAB::DSL::Rules::Rule.registry.remove(timed_command_details.rule_uid)
           end
 
           #
@@ -162,7 +163,7 @@ module OpenHAB
             #
             # Execute the rule
             #
-            # @param [Map] mod map provided by OpenHAB rules engine
+            # @param [Map] _mod map provided by OpenHAB rules engine
             # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
             #
             #

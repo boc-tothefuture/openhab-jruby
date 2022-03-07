@@ -22,6 +22,7 @@ module OpenHAB
         # @param [to] to state for object to change for
         # @param [from] from <description>
         # @param [OpenHAB::Core::Duration] for Duration to delay trigger until to state is met
+        # @param [Object] attach object to be attached to the trigger
         #
         # @return [Trigger] OpenHAB trigger
         #
@@ -69,7 +70,7 @@ module OpenHAB
           # @param [Item State] from state to restrict trigger to
           # @param [Item State] to state to restrict trigger to
           # @param [OpenHAB::Core::Duration, nil] duration ruration to delay trigger until to state is met
-          # @param attach attachment
+          # @param [Object] attach object to be attached to the trigger
           #
           # @return [Trigger] OpenHAB triggers
           #
@@ -103,7 +104,7 @@ module OpenHAB
           # @param [OpenHAB::Core::Duration] duration to delay trigger for until condition is met
           # @param [Item State] to OpenHAB Item State item or group needs to change to
           # @param [Item State] from OpenHAB Item State item or group needs to be coming from
-          # @param [Object] attach to trigger
+          # @param [Object] attach object to be attached to the trigger
           #
           # @return [Trigger] OpenHAB trigger
           #
@@ -120,7 +121,7 @@ module OpenHAB
           # @param [Object] item to create changed trigger on
           # @param [Object] from state to restrict trigger to
           # @param [Object] to state restrict trigger to
-          # @param [Object] attach to trigger
+          # @param [Object] attach object to be attached to the trigger
           # @return [Trigger] OpenHAB trigger
           #
           def range_trigger(item:, from:, to:, attach:)
@@ -133,7 +134,7 @@ module OpenHAB
           # @param [Object] item to create changed trigger on
           # @param [Object] from state to restrict trigger to
           # @param [Object] to state restrict trigger to
-          # @param [Object] attach to trigger
+          # @param [Object] attach object to be attached to the trigger
           # @return [Trigger] OpenHAB trigger
           #
           def proc_trigger(item:, from:, to:, attach:)
@@ -152,7 +153,7 @@ module OpenHAB
           # @param [Object] item to create changed trigger on
           # @param [Object] from state to restrict trigger to
           # @param [Object] to state restrict trigger to
-          #
+          # @param [Object] attach object to be attached to the trigger
           #
           def changed_trigger(item:, from:, to:, attach: nil, conditions: nil)
             type, config = case item

@@ -26,7 +26,6 @@ module OpenHAB
         prepend OpenHAB::DSL::Rules::Triggers
         include OpenHAB::DSL::Rules::Guard
         include OpenHAB::DSL::Rules::Property
-        extend OpenHAB::DSL
         extend Forwardable
 
         # Provide backwards compatibility for these fields
@@ -86,7 +85,7 @@ module OpenHAB
         # Start this rule on system startup
         #
         # @param [Boolean] run_on_start Run this rule on start, defaults to True
-        #
+        # @param [Object] attach object to be attached to the trigger
         #
         # rubocop: disable Style/OptionalBooleanParameter
         # Disabled cop due to use in a DSL

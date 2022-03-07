@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
+require 'set'
 require 'openhab/log/logger'
 require_relative 'reentrant_timer'
 
 module OpenHAB
   module DSL
     #
-    # Provides access to and ruby wrappers around OpenHAB timers
+    # Provides supporting classes for Timers module
     #
-    module Timers
+    module Support
       #
       # Manages data structures that track timers
       #
@@ -52,7 +53,7 @@ module OpenHAB
 
         # Fetches the reentrant timer that matches the supplied id and block if it exists
         #
-        # @param [Object] Object to associate with timer
+        # @param [Object] id Object to associate with timer
         # @param [Block] block to execute, block is passed a Timer object
         #
         # @return [RentrantTimer] Timer object if it exists, nil otherwise

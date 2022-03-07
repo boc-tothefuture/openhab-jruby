@@ -38,7 +38,7 @@ module OpenHAB
 
           #
           # Creates a new Trigger
-          # @param [RuleTrigger] rule trigger information
+          # @param [RuleTrigger] rule_triggers rule trigger information
           def initialize(rule_triggers:)
             @rule_triggers = rule_triggers
           end
@@ -47,7 +47,7 @@ module OpenHAB
           # Create a trigger for a thing
           #
           # @param [Thing] thing to create trigger for
-          # @param [Trigger] trigger to map with thing
+          # @param [Trigger] type trigger to map with thing
           # @param [State] to for thing
           # @param [State] from state of thing
           #

@@ -21,7 +21,8 @@ def identifying_log_line(uid)
 end
 
 def prepend_identifying_log_line_to_rule(code, uid)
-  code.insert require_openhab.length, %[\n\nlogger.info("#{identifying_started_log_line(uid)}")\n\n]
+  pattern = require_openhab.gsub %(['"]), %(['"]) # allow raw rules with `require "openhab"` and `require 'openhab'`
+  code.sub!(/#{pattern}/, %[#{require_openhab}\n\nlogger.info("#{identifying_started_log_line(uid)}")\n\n])
 end
 
 def append_identifying_log_line_to_rule(code, uid)
@@ -74,6 +75,13 @@ def deploy_ruby_file(code:, directory:, filename: '', check_position: :end, chec
   create_log_markers(code, uid) if check
   atomic_rule_write(code, File.join(directory, filename))
   wait_for_rule(log_line) if check
+end
+
+# A raw rule is one where we don't automatically insert `require 'openhab'`
+# It must be inserted manually in the code doc_string by the test author.
+# This gives the author control over what goes before the require line.
+Given('a raw rule(:)') do |doc_string|
+  @rule = doc_string
 end
 
 Given('a rule(:)') do |doc_string|

@@ -20,6 +20,7 @@ module OpenHAB
         # @param [Array] items Array of items to create trigger for
         # @param [Array] command commands to match for trigger
         # @param [Array] commands commands to match for trigger
+        # @param [Object] attach object to be attached to the trigger
         #
         #
         def received_command(*items, command: nil, commands: nil, attach: nil)
@@ -63,7 +64,7 @@ module OpenHAB
           #
           # @param [Object] item item to create trigger for
           # @param [Object] command to check against
-          # @param [Object] attach attachment
+          # @param [Object] attach object to be attached to the trigger
           #
           # @return [Trigger] OpenHAB triggers
           #
@@ -79,7 +80,7 @@ module OpenHAB
           # Creates a trigger with a range condition on the 'command' field
           # @param [Object] item to create changed trigger on
           # @param [Object] command to restrict trigger to
-          # @param [Object] attach to trigger
+          # @param [Object] attach object to be attached to the trigger
           # @return [Trigger] OpenHAB trigger
           #
           def range_trigger(item:, command:, attach:)
@@ -91,7 +92,7 @@ module OpenHAB
           # Creates a trigger with a proc condition on the 'command' field
           # @param [Object] item to create changed trigger on
           # @param [Object] command to restrict trigger to
-          # @param [Object] attach to trigger
+          # @param [Object] attach object to be attached to the trigger
           # @return [Trigger] OpenHAB trigger
           #
           def proc_trigger(item:, command:, attach:)
@@ -102,9 +103,9 @@ module OpenHAB
           #
           # Create a received trigger based on item type
           #
-          # @param [Array] commands to create trigger for
           # @param [Object] item to create trigger for
-          #
+          # @param [String] command to create trigger for
+          # @param [Object] attach object to be attached to the trigger
           #
           def command_trigger(item:, command:, attach: nil, conditions: nil)
             type, config = if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers

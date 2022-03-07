@@ -48,8 +48,8 @@ module OpenHAB
           DAYS_IN_YEAR = 366
 
           # Create a new MonthDayRange element
-          # @param [MonthDay] MonthDay element
-          # @param [Range] Underlying MonthDay range
+          # @param [MonthDay] month_day MonthDay element
+          # @param [Range] range Underlying MonthDay range
           #
           def initialize(month_day:, range:)
             @month_day = month_day

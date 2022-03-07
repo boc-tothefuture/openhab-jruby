@@ -153,7 +153,7 @@ module OpenHAB
         def things
           registry = OpenHAB::Core::OSGI.service('org.openhab.core.thing.link.ItemChannelLinkRegistry')
           channels = registry.get_bound_channels(name).to_a
-          channels.map(&:thing_uid).uniq.map { |tuid| Object.things[tuid] }
+          channels.map(&:thing_uid).uniq.map { |tuid| OpenHAB::DSL::Things.things[tuid] }
         end
         alias all_linked_things things
 
