@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.32.7](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.6...4.32.7) (2022-03-07)
+
+
+### Bug Fixes
+
+* **dsl:** dsl methods leaked into other objects ([3d17030](https://github.com/boc-tothefuture/openhab-jruby/commit/3d17030848d0b2d18d945dd08b03a672f1e74513))
+
 ## [4.32.6](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.5...4.32.6) (2022-03-04)
 
 
