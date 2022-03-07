@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Guards
-nav_order: 3
+nav_order: 4
 has_children: true
 parent: Usage
 ---
@@ -20,8 +20,6 @@ Truthyness for Item types:
 | Dimmer     | state != 0         |
 | String     | Not Blank          |
 
-
-
 ## Guard Combination
 
 only_if and not_if can be used on the same rule, both be satisfied for a rule to execute.
@@ -37,6 +35,7 @@ end
 
 
 #### Guard Event Access
+
 Guards have access to event information.
 
 ```ruby

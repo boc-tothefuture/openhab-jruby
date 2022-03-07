@@ -1,60 +1,80 @@
 ---
 layout: default
-title: Creating rules in the UI
-nav_order: 2
+title: Creating Rules in the UI
+nav_order: 7
 has_children: false
 parent: Usage
 ---
 
-## Creating rules in Main UI ##
+# Creating Rules in Main UI
 
 Rules can be created in the UI as well as in rules files, but some things are a bit different.
-First of all only the execution blocks need to be created in the script. All triggers and conditions
+First of all, only the execution blocks need to be created in the script. All triggers and conditions
 are created directly in the UI instead.
 
-To create a rule:
+**To create a rule:**
+
 1. Go to the Rules section in the UI and add a new rule.
-2. Input a name for your rule, and configure the Triggers (note that only the predefined triggers are available,
-the specializations the script library adds, such as the `every` trigger cannot be used)
+2. Input a name for your rule, and configure the Triggers through the UI.
 3. When adding an Action, select **Run script**, and then **Ruby**. A script editor will open where you can write your code.
-4. When you are done, save the script and go back to complete the configuration
+4. When you are done, save the script and go back to complete the configuration.
 
-To make all the extras available to your rule, the first line should be `require 'openhab'`. This will enable
-all the special methods for Items, Things, Actions, Logging etc. that are documented here, and the event properties
-documented for the Run execution block.
+## UI Rules vs File-based Rules
 
-Note that the Delay, Triggered, and Otherwise Execution blocks cannot be used, but the same functionality can be
-acheived in other ways. E.g instead of `delay 5.seconds` you can use `sleep 5` which causes the script to pause
-for 5 seconds, or you can use timers like in the example below. Otherwise can be implemented with an `if-else` block. Guards can't be used either, but similar functionality can be achieved through Conditions.
+The following features of this library are only usable within file-based rules:
 
-## Examples ##
+* `Triggers`: UI-based rules provide equivalent triggers through the UI.
+* `Guards`: UI-based rules use `Conditions` in the UI instead. Alternatively it can be implemented inside the rule code.
+* `Execution Blocks`: The UI-based rules will execute your JRuby script as if it's inside a `run` execution block. 
+A special `event` variable is available within your code to provide it with additional information regarding the event. 
+For more details see the [run execution block](../execution/run/).
+* `delay`: There is no direct equivalent in the UI. It can be achieved using timers like in the example below.
+* `otherwise`: There is no direct equivalent in the UI. However, it can be implemented within the rule using an `if-else` block.
 
-Reset the switch that triggered the rule after 5 seconds
+## Loading the Scripting Library
+
+To make all the features offered by this library available to your rule, the JRuby scripting addon needs to
+be [configured](../../installation/#from-the-user-interface) to install the `openhab-scripting` gem and
+require the `openhab` script. This will enable all the special methods for [Items](../items/),
+[Things](../things/), [Actions](../misc/actions/), [Logging](../logging/) etc. that are documented here,
+and the `event` properties documented for the [Run execution block](../execution/run/).
+
+## Examples
+
+### Reset the switch that triggered the rule after 5 seconds
 
 Trigger defined as:
-- When: a member of an item group recieves a command
+
+- When: a member of an item group receives a command
 - Group: Reset_5Seconds
 - Command: ON
 
 ```ruby
-require 'openhab'
-
 logger.info("#{event.item.id} Triggered the rule")
 after 5.seconds do
   event.item << OFF
 end
 ```
 
-Update a DateTime Item with the current time when a motion sensor is triggered
+### Update a DateTime Item with the current time when a motion sensor is triggered
+
+Given the following group and items:
+```
+Group MotionSensors
+Switch Sensor1 (MotionSensors)
+Switch Sensor2 (MotionSensors)
+
+DateTime Sensor1_LastMotion
+DateTime Sensor2_LastMotion
+```
 
 Trigger defined as:
+
 - When: the state of a member of an item group is updated
 - Group: MotionSensors
 - State: ON
 
 ```ruby
-require 'openhab'
-
 logger.info("#{event.item.id} Triggered")
 items["#{event.item_name}_LastMotion"].update Time.now
 ```

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Triggers
-nav_order: 1
+nav_order: 2
 has_children: true
 parent: Usage
 ---
@@ -17,6 +17,8 @@ All triggers support event attachments that enable the association of an object 
 This enables one to use the same rule and take different actions if the trigger is different. 
 
 The attached object is then available on the event object with by the 'attachment' accessor.
+
+Note: The trigger attachment feature is not available for UI rules.
 
 ## Example
 
