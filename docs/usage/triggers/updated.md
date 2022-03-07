@@ -1,21 +1,25 @@
 ---
 layout: default
 title: Updated
-nav_order: 4
+nav_order: 2
 has_children: false
 parent: Triggers
 grand_parent: Usage
 ---
 
-# Updated 
+# updated 
 
+Execute the rule when the state of an `item`, `group`, `members of group`, or `thing` is updated.
 
+**Syntax:**
+```ruby
+updated <entity> [to:]
+```
 
-| Options | Description                                        | Example                                                       |
-| ------- | -------------------------------------------------- | ------------------------------------------------------------- |
-| to      | Only execute rule if update state matches to state | `to: 7` or `to: [7,14]` or `to: 7..14`  or `to: ->t {t.odd?}` |
-
-Changed accepts Items, Things or Groups. 
+| Options  | Description                                                               | Example                                                       |
+| -------- | ------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `entity` | One or more item, group, member of group, or thing to monitor for updates | `updated SwitchItem1`<br/>`updated Switches.members`          |
+| `to:`    | Only execute rule if update state matches to state                        | `to: 7` or `to: [7,14]` or `to: 7..14`  or `to: ->t {t.odd?}` |
 
 The `to` option restricts the rule from running only if the updated state matches.
 

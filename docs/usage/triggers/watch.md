@@ -1,21 +1,21 @@
 ---
 layout: default
 title: Watch Trigger
-nav_order: 11
+nav_order: 8
 has_children: false
 parent: Triggers
 grand_parent: Usage
 ---
 
-# Watch
+# watch
 
 `watch` provides the ability to create a trigger on file and directory changes
 
-| argument      | Description                                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------------------------- |
-|               | Path to watch for changes, can be a directory or a file                                                       |
-| glob:         | Limit events to paths matching this glob. Globs are matched using [File.fnmatch?](https://ruby-doc.org/core-2.6/File.html#method-c-fnmatch-3F) rules |
-| for:          | Array of symbols to limit events to only specific change types, valid values are :created, :deleted, :modified |  
+| argument | Description                                                                                                                                          |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+|          | Path to watch for changes, can be a directory or a file                                                                                              |
+| glob:    | Limit events to paths matching this glob. Globs are matched using [File.fnmatch?](https://ruby-doc.org/core-2.6/File.html#method-c-fnmatch-3F) rules |
+| for:     | Array of symbols to limit events to only specific change types, valid values are :created, :deleted, :modified                                       |
 
 
 If a file or a path that does not exist is supplied as the argument to watch, the parent directory will be watched and the file or non-existent part of the supplied path will become the glob. For example, if the directory given is `/tmp/foo/bar` and `/tmp/foo` exists but `bar` does not exist inside of of `/tmp/foo` then the directory `/tmp/foo` will be watched for any files that match `*/bar`. 
@@ -28,11 +28,11 @@ In other words, `watch '/tmp/foo/*bar'` is equivalent to `watch '/tmp/foo', glob
 ## Event
 
 When an event is triggered to a rule, the event object has the following fields
-| field         | Description                                                                                                                 |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| path          | Ruby [Pathname](https://ruby-doc.org/stdlib-2.6.3/libdoc/pathname/rdoc/Pathname.html) object of the path that had an event  |
-| type          | Type of changes as a symbol, valid values are :created, :deleted, or :modified                                              | 
-| attachment    | Attachment if supplied                                                                                                      |
+| field      | Description                                                                                                                |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------- |
+| path       | Ruby [Pathname](https://ruby-doc.org/stdlib-2.6.3/libdoc/pathname/rdoc/Pathname.html) object of the path that had an event |
+| type       | Type of changes as a symbol, valid values are :created, :deleted, or :modified                                             |
+| attachment | Attachment if supplied                                                                                                     |
 
 
 

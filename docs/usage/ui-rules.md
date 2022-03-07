@@ -27,17 +27,17 @@ The following features of this library are only usable within file-based rules:
 * `Guards`: UI-based rules use `Conditions` in the UI instead. Alternatively it can be implemented inside the rule code.
 * `Execution Blocks`: The UI-based rules will execute your JRuby script as if it's inside a `run` execution block. 
 A special `event` variable is available within your code to provide it with additional information regarding the event. 
-For more details see the [run execution block](../execution/run/).
+For more details see the [run execution block]({% link usage/execution/run.md %}).
 * `delay`: There is no direct equivalent in the UI. It can be achieved using timers like in the example below.
 * `otherwise`: There is no direct equivalent in the UI. However, it can be implemented within the rule using an `if-else` block.
 
 ## Loading the Scripting Library
 
 To make all the features offered by this library available to your rule, the JRuby scripting addon needs to
-be [configured](../../installation/#from-the-user-interface) to install the `openhab-scripting` gem and
-require the `openhab` script. This will enable all the special methods for [Items](../items/),
-[Things](../things/), [Actions](../misc/actions/), [Logging](../logging/) etc. that are documented here,
-and the `event` properties documented for the [Run execution block](../execution/run/).
+be [configured]({% link usage/items.md %}#from-the-user-interface) to install the `openhab-scripting` gem and
+require the `openhab` script. This will enable all the special methods for [Items]({% link usage/items.md %}),
+[Things]({% link usage/things.md %}), [Actions]({% link usage/misc/actions.md %}), [Logging]({% link usage/misc/logging.md %}) etc. that are documented here,
+and the `event` properties documented for the [Run execution block]({% link usage/execution/run.md %}).
 
 ## Examples
 

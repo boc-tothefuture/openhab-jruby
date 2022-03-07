@@ -6,17 +6,19 @@ has_children: true
 parent: Usage
 ---
 
-# Trigger Attachments
+# Triggers
+
+Triggers specify what will cause the execution blocks to run. Multiple triggers can be defined within the same rule. This section only applies to file-based rules. Triggers for UI-based rules are specified through the UI.
+
+## Trigger Attachments
 
 All triggers support event attachments that enable the association of an object to a trigger.
 
 | Method | Description                   | example                       |
-|--------|-------------------------------|-------------------------------|
+| ------ | ----------------------------- | ----------------------------- |
 | attach | attach an object to a trigger | changed Switch, attach: 'foo' |
 
-This enables one to use the same rule and take different actions if the trigger is different. 
-
-The attached object is then available on the event object with by the 'attachment' accessor.
+This enables one to use the same rule and take different actions if the trigger is different. The attached object is passed to the execution block through the `event.attachment` accessor.
 
 Note: The trigger attachment feature is not available for UI rules.
 
@@ -29,4 +31,3 @@ rule 'Set Dark switch at sunrise and sunset' do
   run { |event| Dark << event.attachment }
 end
 ```
-

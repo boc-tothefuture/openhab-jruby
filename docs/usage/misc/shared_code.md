@@ -11,7 +11,7 @@ grand_parent: Usage
 
 If you would like to easily share code among multiple rules files, you can
 place it in `<OPENHAB_CONF>/automation/lib/ruby/personal`. Assuming `$RUBYLIB`
-is set up correctly in `jruby.conf` (see [Installation](../../../installation)),
+is set up correctly in `jruby.conf` (see [Installation]({% link installation/index.md%})),
 you can then simply `require` the file from your rules files. Because the
 library files _aren't_ in the `jsr223` directory, they won't be automatically
 loaded individually by OpenHAB, only when you `require` them.

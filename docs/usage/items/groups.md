@@ -15,12 +15,12 @@ A group can be accessed directly by name, to access all groups use the `groups` 
 
 ## Group Methods
 
-| Method             | Description                                                                                     |
-| ------------------ | ----------------------------------------------------------------------------------------------- |
-| members            | Used to inform a rule that you want it to operate on the items in the group (see example below) |
+| Method             | Description                                                                                                                                                                                                              |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| members            | Used to inform a rule that you want it to operate on the items in the group (see example below)                                                                                                                          |
 | all_members        | Gets all descendants of the group recursively excluding groups. Pass :all as argument to include groups as well, or :groups to only get the sub groups. It's also possible to pass a block to make more advanced filters |
-| each               | Iterates through the members of the group and execute the code in the provided block for each member |
-| enumerable methods | All methods [here](https://ruby-doc.org/core-2.6.8/Enumerable.html)                             |
+| each               | Iterates through the members of the group and execute the code in the provided block for each member                                                                                                                     |
+| enumerable methods | All methods [here](https://ruby-doc.org/core-2.6.8/Enumerable.html)                                                                                                                                                      |
 
 ## Use in triggers
 
