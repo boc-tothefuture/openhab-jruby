@@ -50,15 +50,17 @@ module OpenHAB
         # If +ensure_states+ is active (by block or chained method), then
         # check if this item is in the command's state before actually
         # sending the command
-        def command(command)
-          return super unless Thread.current[:ensure_states]
+        %i[command update].each do |ensured_method|
+          define_method(ensured_method) do |command|
+            return super(command) unless Thread.current[:ensure_states]
 
-          logger.trace do
-            "#{name} ensure #{command}, format_type_pre: #{format_type_pre(command)}, current state: #{state}"
+            logger.trace do
+              "#{name} ensure #{command}, format_type_pre: #{format_type_pre(command)}, current state: #{state}"
+            end
+            return if state == format_type_pre(command)
+
+            super(command)
           end
-          return if state == format_type_pre(command)
-
-          super
         end
         alias << command
       end
