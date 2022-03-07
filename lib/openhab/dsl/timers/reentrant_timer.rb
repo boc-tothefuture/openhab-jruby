@@ -10,7 +10,7 @@ module OpenHAB
     #
     # @author Brian O'Connell
     # @since 2.0.0
-    class ReentrantTimer < Timers::Timer
+    class ReentrantTimer < Timer
       include OpenHAB::Log
 
       attr_reader :id, :reentrant_id

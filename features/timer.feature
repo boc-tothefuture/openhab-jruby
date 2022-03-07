@@ -167,17 +167,6 @@ Feature:  timer
     And if I wait 3 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
-
-  Scenario: Timers can be created without using the after syntax
-    Given code in a rules file
-      """
-      Timer.new(duration: 1.second) do |timer|
-        logger.info("Timer is active? #{timer.is_active}")
-      end
-      """
-    When I deploy the rules file
-    Then It should log 'Timer is active? true' within 5 seconds
-
   Scenario: Timers in rules are cancelled if the script is removed
     Given a rule:
       """
