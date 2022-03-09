@@ -59,11 +59,14 @@ class OpenHABClient
   end
 end
 
-def openhab_client(command)
-  # OpenHABClient.instance.command(command)
-  # Optimized client is currently failing on feature installs
-  cmd = TTY::Command.new(:printer => :null)
-  cmd.run(File.join(openhab_dir, "runtime/bin/client -p habopen  '#{command}'"), only_output_on_error: true)
+def openhab_client(command, optimized_client: true)
+  if optimized_client
+    OpenHABClient.instance.command(command)
+  else
+    # Optimized client is currently failing on feature installs
+    cmd = TTY::Command.new(:printer => :null)
+    cmd.run!(File.join(openhab_dir, "runtime/bin/client -p habopen  '#{command}'"), only_output_on_error: true)
+  end
 end
 
 def items_dir
@@ -152,16 +155,15 @@ end
 def install_feature(feature)
   return if feature_installed?(feature)
 
-  openhab_client("feature:install #{feature}")
-  wait_until(seconds: 10, msg: "Feature #{feature} not started") do
-    feature_installed?(feature)
-  end
-  sleep 60 # System seems unsettled after adding a feature.. proper way to do this would be set
-  # logging for feature to debug and move on after we see that log line in the wait_until
+  openhab_client("feature:install #{feature}", optimized_client: false)
+  wait_until(seconds: 120, msg: "Feature #{feature} not started") { feature_installed?(feature) }
 end
 
 def feature_installed?(feature)
-  openhab_client('feature:list').stdout.lines.grep(/#{feature}/).any? { |line| line.include? 'Started' }
+  # System seems unsettled after adding a feature and sometimes openhab would restart
+  # do not use optimized_client
+  openhab_client('feature:list -i --no-format', optimized_client: false)
+    .stdout.lines.grep(/#{feature}/).grep(/Started/).any?
 end
 
 def truncate_log
