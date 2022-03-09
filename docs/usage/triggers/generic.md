@@ -1,13 +1,13 @@
 ---
 layout: default
 title: Generic Trigger
-nav_order: 7
+nav_order: 9
 has_children: false
 parent: Triggers
 grand_parent: Usage
 ---
 
-# Trigger
+# trigger
 
 `trigger` provides the ability to create a trigger type not already covered by the other methods.
 

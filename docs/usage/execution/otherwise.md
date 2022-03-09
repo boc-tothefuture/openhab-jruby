@@ -9,7 +9,7 @@ grand_parent: Usage
 
 
 # Otherwise
-The otherwise property is the automation code that is executed when a rule is triggered and guards are not satisfied.  This property accepts a block of code and executes it. The block is automatically passed an event object which can be used to access multiple properties about the triggering event. 
+The otherwise property is the automation code that is executed when a rule is triggered and guards are not satisfied.  This property accepts a block of code and executes it. The block is automatically passed an event object which can be used to access multiple properties about the triggering event.
 
 ## Event Properties
 

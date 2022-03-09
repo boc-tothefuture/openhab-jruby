@@ -6,8 +6,8 @@ has_children: false
 parent: Usage
 ---
 
+# Rule Syntax
 
-##  Rule Syntax
 ```ruby
 require 'openhab'
 
@@ -18,7 +18,7 @@ rule 'name' do |<rule>|
 end
 ```
 
-### All of the properties that are available to the rule resource are
+## All of the properties that are available to the rule resource are
 
 | Property         | Type                                                                    | Last/Multiple | Options                               | Default | Description                                                                 | Examples                                                                                                                                                                                                              |
 | ---------------- | ----------------------------------------------------------------------- | ------------- | ------------------------------------- | ------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

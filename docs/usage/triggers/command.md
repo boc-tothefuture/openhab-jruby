@@ -1,20 +1,27 @@
 ---
 layout: default
 title: Received Command
-nav_order: 5
+nav_order: 3
 has_children: false
 parent: Triggers
 grand_parent: Usage
 ---
 
+# received_command
 
-# Received_Command
+Execute the rule when an `item`, `group`, or `member of group` received a command.
 
+**Syntax:**
 
-| Options  | Description                                                          | Example                                  |
-| -------- | -------------------------------------------------------------------- | ---------------------------------------- |
-| command  | Only execute rule if the command matches this/these command/commands | `command: 7` or  `command: ->c {c.odd?}` |
-| commands | Alias of command, may be used if matching more than one command      | `commands: [7,14]` or  `commands: 7..14` |
+```ruby
+received_command entity [command:]
+```
+
+| Options     | Description                                                                      | Example                                  |
+| ----------- | -------------------------------------------------------------------------------- | ---------------------------------------- |
+| `entity`    | One or more item, group, or member of group. Multiple entities can be specified. | `received_command SwitchItem1`           |
+| `command:`  | Only execute rule if the command matches this/these command/commands             | `command: 7` or  `command: ->c {c.odd?}` |
+| `commands:` | Alias of command, may be used if matching more than one command                  | `commands: [7,14]` or  `commands: 7..14` |
 
 The `command` or `commands` option restricts the rule from running only if the command matches the supplied arguments
 1. The `command` or `commands` option supports an array of commands

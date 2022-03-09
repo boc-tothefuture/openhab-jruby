@@ -1,16 +1,16 @@
 ---
 layout: default
 title: Items
-nav_order: 4
+nav_order: 5
 has_children: true
 parent: Usage
 ---
 
-
 # Items
+
 Items can be directly accessed, compared, etc, without any special accessors. You may use the item name anywhere within the code and it will automatically be loaded.
 
-All items can be accessed as an enumerable the `items` method. 
+All items can be accessed as an enumerable using the `items` method. 
 
 | Method             | Description                                                                    |
 |--------------------|--------------------------------------------------------------------------------|
@@ -24,7 +24,6 @@ Item Definition
 ```
 Dimmer DimmerTest "Test Dimmer"
 Switch SwitchTest "Test Switch"
-
 ```
 
 ```ruby

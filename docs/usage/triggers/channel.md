@@ -9,13 +9,16 @@ grand_parent: Usage
 
 # channel
 
-| Option    | Description                                                                   | Example                                                |
-| --------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
-| triggered | Only execute rule if the event on the channel matches this/these event/events | `triggered: 'START' ` or `triggered: ['START','STOP']` |
-| thing     | Thing for specified channels                                                  | `thing: 'astro:sun:home'`                              |
+The channel trigger executes rule when a specific channel is triggered. The syntax supports one or more channels with one or more triggers.
+`thing` is an optional parameter that makes it easier to set triggers on multiple channels on the same thing.
 
-The channel trigger executes rule when a specific channel is triggered.  The syntax supports one or more channels with one or more triggers.   For `thing` is an optional parameter that makes it easier to set triggers on multiple channels on the same thing.
+| Option       | Description                                                                   | Example                                                |
+| ------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `triggered:` | Only execute rule if the event on the channel matches this/these event/events | `triggered: 'START' ` or `triggered: ['START','STOP']` |
+| `thing:`     | Thing for specified channels                                                  | `thing: 'astro:sun:home'`                              |
 
+
+## Examples
 
 ```ruby
 rule 'Execute rule when channel is triggered' do

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Things
-nav_order: 5
+nav_order: 6
 has_children: false
 parent: Usage
 has_toc: false
@@ -31,7 +31,7 @@ things['mqtt:topic:4'].uid.bridge_ids => []
 
 The standard [JRuby alternate names and bean convention applies](https://github.com/jruby/jruby/wiki/CallingJavaFromJRuby#alternative-names-and-beans-convention), such that `getUID` becomes `uid`.
 
-Actions are available via thing objects. For more details see [Actions](../misc/actions/)
+Actions are available via thing objects. For more details see [Actions]({% link usage/misc/actions.md %})
 
 Thing status is available through `status` method, which returns one of the values from [ThingStatus](https://www.openhab.org/docs/concepts/things.html#thing-status). Boolean methods are available based on this. 
 

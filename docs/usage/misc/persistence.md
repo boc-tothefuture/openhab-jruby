@@ -28,9 +28,9 @@ grand_parent: Usage
 | `updated_since`   | timestamp, service                    | boolean                     |                                                                 |
 | `variance_since`  | timestamp, service                    | DecimalType or QuantityType |                                                                 |
 
-* The `timestamp` parameter accepts a java ZonedDateTime or a [Duration](../duration/) object that specifies how far back in time.
+* The `timestamp` parameter accepts a java ZonedDateTime or a [Duration]({% link usage/misc/duration.md %}) object that specifies how far back in time.
 * The `service` optional parameter accepts the name of the persistence service to use, as a String or Symbol. When not specified, the system's default persistence service will be used.
-* Dimensioned NumberItems will return a [QuantityType](../../items/number/#quantities) object
+* Dimensioned NumberItems will return a [QuantityType]({% link usage/items/number.md %}#quantities) object
 * `HistoricState` holds the item state and the timestamp data from OpenHAB's [HistoricItem](https://openhab.org/javadoc/latest/org/openhab/core/persistence/historicitem). It contains the following properties:
   * `timestamp` - a ZonedDateTime object indicating the timestamp of the persisted data
   * `state` - the state of the item persisted at the timestamp above. This will be a QuantityType for dimensioned NumberItem. It is not necessary to access the `state` property, as the HistoricState itself will return the state. See the example below.
