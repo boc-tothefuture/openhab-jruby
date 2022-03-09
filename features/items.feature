@@ -206,8 +206,8 @@ Feature:  items
 
   Scenario: Dangling group references are ignored
     Given groups:
-      | name         |
-      | Numbers      |
+      | name    |
+      | Numbers |
     Given items:
       | type   | name    | groups                |
       | Number | Number3 | Numbers, PrimeNumbers |
@@ -242,7 +242,7 @@ Feature:  items
 
   Scenario: Item returns nil for an unlinked item
     Given items:
-      | type | name |
+      | type   | name    |
       | Number | Number1 |
     And code in a rules file
       """
@@ -254,13 +254,13 @@ Feature:  items
   Scenario: Item returns its linked thing
     Given feature 'openhab-binding-astro' installed
     And items:
-      | type | name |
+      | type   | name      |
       | String | PhaseName |
     And things:
       | id   | thing_uid | label          | config                | status |
       | home | astro:sun | Astro Sun Data | {"geolocation":"0,0"} | enable |
     And linked:
-      | item | channel |
+      | item      | channel                   |
       | PhaseName | astro:sun:home:phase#name |
     And code in a rules file
       """
@@ -271,30 +271,29 @@ Feature:  items
 
   Scenario: Item returns all its linked things
     Given feature 'openhab-binding-astro' installed
-    And feature 'openhab-binding-systeminfo' installed
     And items:
-      | type | name |
+      | type   | name          |
       | String | TooManyThings |
     And things:
-      | id   | thing_uid | label          | config                | status |
-      | home | astro:sun | Astro Sun Data | {"geolocation":"0,0"} | enable |
-      | systeminfo | systeminfo:computer | System Info | { } | enable |
+      | id   | thing_uid  | label           | config                | status |
+      | home | astro:sun  | Astro Sun Data  | {"geolocation":"0,0"} | enable |
+      | home | astro:moon | Astro Moon Data | {"geolocation":"0,0"} | enable |
     And linked:
-      | item | channel |
-      | TooManyThings | astro:sun:home:phase#name |
-      | TooManyThings | systeminfo:computer:systeminfo:network#ip |
+      | item          | channel                    |
+      | TooManyThings | astro:sun:home:phase#name  |
+      | TooManyThings | astro:moon:home:phase#name |
     And code in a rules file
       """
       logger.info("Thing: #{TooManyThings.things.map(&:uid).map(&:to_s).sort.join(',')}")
       """
     When I deploy the rules file
-    Then It should log "Thing: astro:sun:home,systeminfo:computer:systeminfo" within 5 seconds
+    Then It should log "Thing: astro:moon:home,astro:sun:home" within 5 seconds
 
   Scenario: Referenced items always access latest item instance
     Given items:
-      | type   | name          | label      |
-      | String | FooString     | foo        |
-      | Switch | MySwitch      | switch     |
+      | type   | name      | label  |
+      | String | FooString | foo    |
+      | Switch | MySwitch  | switch |
     And a rule:
       """
       h = { foo: FooString }
@@ -307,8 +306,8 @@ Feature:  items
     When I deploy the rule
     Then It should log "Label: foo" within 5 seconds
     But If items:
-      | type   | name          | label      |
-      | String | FooString     | bar        |
+      | type   | name      | label |
+      | String | FooString | bar   |
     And item 'MySwitch' state is changed to 'ON'
     Then It should log "Label: bar" within 5 seconds
 
