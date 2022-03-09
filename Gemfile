@@ -29,3 +29,7 @@ group :development do
   gem 'tty-command'
   gem 'yard'
 end
+
+group :jekyll_plugins do
+  gem 'jekyll-remote-theme'
+end
