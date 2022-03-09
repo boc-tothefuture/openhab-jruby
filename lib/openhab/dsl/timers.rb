@@ -36,8 +36,10 @@ module OpenHAB
         thread_locals ||= {}
         return Timers.reentrant_timer(duration: duration, thread_locals: thread_locals, id: id, &block) if id
 
-        Timer.new(duration: duration, thread_locals: thread_locals, &block)
+        OpenHAB::DSL::Timer.new(duration: duration, thread_locals: thread_locals, &block)
       end
+      # An alias for +after+
+      alias create_timer after
 
       #
       # Provdes access to the hash for mapping timer ids to the set of active timers associated with that id
