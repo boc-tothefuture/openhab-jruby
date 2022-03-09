@@ -15,3 +15,4 @@ openhab.code-workspace
 /.idea/
 .java-verison
 .jekyll-cache/
+.sass-cache/

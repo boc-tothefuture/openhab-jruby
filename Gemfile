@@ -17,7 +17,7 @@ group :development do
   gem 'guard-rubocop'
   gem 'guard-shell'
   gem 'guard-yard'
-  gem 'jekyll', '~> 4.2', require: false
+  gem 'jekyll', '~> 3.9.0', require: false
   gem 'just-the-docs', '~> 0.3'
   gem 'kramdown-parser-gfm'
   gem 'process_exists'

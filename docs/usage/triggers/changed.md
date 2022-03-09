@@ -17,12 +17,12 @@ Execute the rule when an `item`, `group`, `member of group`, or `thing` changed 
 changed entity [from:] [to:] [for:]
 ```
 
-| Options  | Description                                                                                          | Examples                                             |
-| -------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `entity` | One or more item, group, member of group, or thing to monitor for changes                            | `changed SwitchItem1`<br/>`changed Switches.members` |
-| `from:`  | Optional: Only execute rule if previous state matches from state(s)                                  | `from: OFF` or `from: 4..9`                          |
-| `to:`    | Optional: Only execute rule if new state matches to state(s)                                         | `to: ON` or `to: ->t { t.even? }`                    |
-| `for:`   | Optional: Only execute rule if value stays changed for [duration]({% link usage/misc/duration.md %}) | `for: 10.seconds`                                    |
+| Options  | Description                                                                                                            | Examples                                             |
+| -------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `entity` | One or more item, group, member of group, or thing to monitor for changes                                              | `changed SwitchItem1`<br/>`changed Switches.members` |
+| `from:`  | Optional: Only execute rule if previous state matches from state(s)                                                    | `from: OFF` or `from: 4..9`                          |
+| `to:`    | Optional: Only execute rule if new state matches to state(s)                                                           | `to: ON` or `to: ->t { t.even? }`                    |
+| `for:`   | Optional: Only execute rule if value stays changed for [duration]({{ site.baseurl }}{% link usage/misc/duration.md %}) | `for: 10.seconds`                                    |
 
 The `from` and `to` options are enhanced compared to the rules DSL:
 
