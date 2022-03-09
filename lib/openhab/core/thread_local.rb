@@ -18,7 +18,7 @@ module OpenHAB
       # @param [Hash] values Keys and values to set for running thread, if hash is nil no values are set
       #
       def self.thread_local(**values)
-        old_values = values.map { |key, _value| [key, Thread.current[key]] }.to_h
+        old_values = values.to_h { |key, _value| [key, Thread.current[key]] }
         values.each { |key, value| Thread.current[key] = value }
         logger.trace "Executing block with thread local context: #{values} - old context: #{old_values}"
         yield
