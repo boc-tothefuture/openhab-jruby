@@ -1,5 +1,19 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.33.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.7...4.33.0) (2022-03-09)
+
+
+### Bug Fixes
+
+* **build:** specify the local theme for jekyll ([d9a3be3](https://github.com/boc-tothefuture/openhab-jruby/commit/d9a3be3326b7c84123420a7761295a1c97f32bbc))
+* **ensure:** implement ensure.update ([c519b8b](https://github.com/boc-tothefuture/openhab-jruby/commit/c519b8b654d87cd93cf5b02cb16feee055b2ddb8))
+* **timer:** remove timer class from top-level ([4c22e5a](https://github.com/boc-tothefuture/openhab-jruby/commit/4c22e5a00a08e1f5bff55d05f6d7297e11448eac))
+
+
+### Features
+
+* **timer:** add create_timer as an alias for after ([3753304](https://github.com/boc-tothefuture/openhab-jruby/commit/3753304f1a4c720670dc9c495503b422b9142ad0))
+
 ## [4.32.7](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.6...4.32.7) (2022-03-07)
 
 
