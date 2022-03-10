@@ -18,9 +18,11 @@ Style/Documentation:
   Enabled: false
 Style/HashSyntax:
   UseHashRocketsWithSymbolValues: true
+Gemspec/RequireMFA:
+  Enabled: false
 
 # The following is excluded because it is within the shipped Gem
 # the cop is searching for the gem itself, so exclude this file
 Bundler/GemFilename:
   Exclude:
-    - lib/openhab/dsl/gems.rb 
+    - lib/openhab/dsl/gems.rb

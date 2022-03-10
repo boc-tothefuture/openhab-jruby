@@ -32,11 +32,11 @@ A simplified cron trigger with human-readable syntax.
 | [Numeric].minutes | Execute rule every X minutes             | 3.minutes  |
 | [Numeric].hours   | Execute rule every X minutes             | 10.hours   |
 
-| Option | Description                                                                                                                                  | Example                                        |
-| ------ | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `:at`  | Limit the execution to specific times of day. The value can either be a String or a [TimeOfDay]({% link usage/misc/time_of_day.md %}) object | at: '16:45' or at: TimeOfDay.new(h: 16, m: 45) |
+| Option | Description                                                                                                                                                    | Example                                        |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `:at`  | Limit the execution to specific times of day. The value can either be a String or a [TimeOfDay]({{ site.baseurl }}{% link usage/misc/time_of_day.md %}) object | at: '16:45' or at: TimeOfDay.new(h: 16, m: 45) |
 
-Note: The `[Numeric].seconds` specifies a [Duration]({% link usage/misc/duration.md %}) / interval. 
+Note: The `[Numeric].seconds` specifies a [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %}) / interval. 
 A floating point can also be used to specify a fractional unit of time, e.g. `1.5.hours`
 
 ## Examples

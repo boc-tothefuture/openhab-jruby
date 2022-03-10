@@ -145,7 +145,7 @@ module OpenHAB
             include OpenHAB::Log
             include OpenHAB::Core::ThreadLocal
 
-            def initialize(timed_command_details, semaphore, &block) # rubocop:disable Metric/MethodLength
+            def initialize(timed_command_details, semaphore, &block) # rubocop:disable Metrics/MethodLength
               super()
               @semaphore = semaphore
               @timed_command_details = timed_command_details
