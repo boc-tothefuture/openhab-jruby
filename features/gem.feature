@@ -1,5 +1,5 @@
 Feature:  gem
-  Openhab Gem Support
+  Supports inline bundler to install Ruby Gems
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

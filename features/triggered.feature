@@ -1,5 +1,5 @@
 Feature:  triggered
-  Openhab Action Support
+  Automation is executed in triggered blocks
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

@@ -1,5 +1,5 @@
 Feature:  items
-  Rule languages supports groups
+  Rule languages supports items
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

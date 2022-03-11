@@ -1,7 +1,6 @@
 ---
 layout: default
 title: DimmerItem
-nav_order: 2
 has_children: false
 parent: Items
 grand_parent: Usage

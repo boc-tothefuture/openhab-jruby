@@ -1,14 +1,13 @@
 ---
 layout: default
 title: Gem Cleanup
-nav_order: 2
 has_children: false
 parent: Examples
 ---
 
 ## Gem Cleanup
 
-The OpenHAB JRuby add-on will automatically download and install the latest version of the library according to the [settings in jruby.cfg]({{ site.baseurl }}{% link installation/index.md %}#installation). Over time, the older versions of the library will accumulate in the gem_home directory. The following code saved as `gem_cleanup.rb` or another name of your choice can be placed in the `jsr223/ruby/personal/` directory to perform uninstallation of the older gem versions.
+The OpenHAB JRuby add-on will automatically download and install the latest version of the library according to the [settings in jruby.cfg]({{ site.baseurl }}{% link installation.md %}#installation). Over time, the older versions of the library will accumulate in the gem_home directory. The following code saved as `gem_cleanup.rb` or another name of your choice can be placed in the `jsr223/ruby/personal/` directory to perform uninstallation of the older gem versions.
 
 ```ruby
 require 'rubygems/commands/uninstall_command'

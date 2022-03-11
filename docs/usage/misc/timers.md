@@ -130,3 +130,5 @@ rule 'Cancel timer' do
   on_start true
 end
 ```
+
+See also: [Changed Duration]({{ site.baseurl }}{% link usage/triggers/changed.md %}#changed-duration), [Timed Commands]({{ site.baseurl }}{% link usage/items/index.md %}#timed-commands)

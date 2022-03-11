@@ -1,5 +1,5 @@
 Feature:  received_command
-  Rule languages supports changed item features
+  Rule languages supports item received command trigger
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

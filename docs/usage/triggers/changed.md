@@ -31,7 +31,9 @@ The `from` and `to` options are enhanced compared to the rules DSL:
 3. Support for ranges
 4. Support for [procs/lambdas](https://ruby-doc.org/core-2.6/Proc.html) for complex state matches
 
-The for parameter provides a method of only executing the rule if the value is changed for a specific duration.
+## Changed Duration
+
+The `for` parameter provides a method of only executing the rule if the value is changed for a specific duration.
 This provides a built-in method of only executing a rule if a condition is true for a period of time without the
 need to create dummy objects with the expire binding or make or manage your own timers.
 
@@ -42,6 +44,8 @@ rule "Execute rule when item is changed for specified duration" do
   run { logger.info("Alarm Mode Updated")}
 end
 ```
+
+## Examples
 
 Multiple items can be separated with a comma:
 ```ruby

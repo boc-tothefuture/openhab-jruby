@@ -1,7 +1,6 @@
 ---
 layout: default
 title: RollershutterItem
-nav_order: 1
 has_children: false
 parent: Items
 grand_parent: Usage
@@ -12,15 +11,15 @@ grand_parent: Usage
 
 This class extends the RollershutterItem type with additional methods
 
-| Method   | Description                                  | Example                                              |
-| -------- | -------------------------------------------- | ---------------------------------------------------- |
-| up?      | Returns true if item state == UP             | `puts "#{item.name} is up" if item.up?`              |
-| down?    | Returns true if item state == DOWN           | `puts "#{item.name} is down" if item.down?`          |
-| up       | Send UP command to item                      | `item.up`                                            |
-| down     | Send DOWN command to item                    | `item.down`                                          |
-| stop     | Send STOP command to item                    | `item.stop`                                          |
-| move     | Send MOVE command to item                    | `item.move`                                          |
-| position | Gets the position of the rollershutter       | `puts "#{item.name} is at #{item.position} percent"` |
+| Method   | Description                            | Example                                              |
+| -------- | -------------------------------------- | ---------------------------------------------------- |
+| up?      | Returns true if item state == UP       | `puts "#{item.name} is up" if item.up?`              |
+| down?    | Returns true if item state == DOWN     | `puts "#{item.name} is down" if item.down?`          |
+| up       | Send UP command to item                | `item.up`                                            |
+| down     | Send DOWN command to item              | `item.down`                                          |
+| stop     | Send STOP command to item              | `item.stop`                                          |
+| move     | Send MOVE command to item              | `item.move`                                          |
+| position | Gets the position of the rollershutter | `puts "#{item.name} is at #{item.position} percent"` |
 
 
 ## Examples ##
