@@ -13,16 +13,19 @@ module OpenHAB
         #
         # Create a rule that executes at the specified interval
         #
-        # @param [Object] value Symbol or Duration to execute this rule
+        # @param [Object] value String, Symbol, Duration, or MonthDay to execute this rule
         # @param [Object] at TimeOfDay or String representing TimeOfDay in which to execute rule
         # @param [Object] attach object to be attached to the trigger
         #
         #
         def every(value, at: nil, attach: nil)
+          return every(MonthDay.parse(value), at: at, attach: attach) if value.is_a? String
+
           cron_expression = case value
                             when Symbol then Cron.from_symbol(value, at)
                             when Java::JavaTime::Duration then Cron.from_duration(value, at)
-                            else raise ArgumentExpression, 'Unknown interval'
+                            when Java::JavaTime::MonthDay then Cron.from_monthday(value, at)
+                            else raise ArgumentError, 'Unknown interval'
                             end
           cron(cron_expression, attach: attach)
         end
@@ -32,8 +35,18 @@ module OpenHAB
         #
         # @param [String] expression OpenHAB style cron expression
         # @param [Object] attach object to be attached to the trigger
+        # @param [Hash] elements cron expression elements (second, minute, hour, dom, month, dow, year)
         #
-        def cron(expression, attach: nil)
+        def cron(expression = nil, attach: nil, **fields)
+          if fields.any?
+            raise ArgumentError, 'Cron elements cannot be used with a cron expression' if expression
+
+            cron_expression = Cron.from_fields(fields)
+            return cron(cron_expression, attach: attach)
+          end
+
+          raise ArgumentError, 'Missing cron expression or elements' unless expression
+
           cron = Cron.new(rule_triggers: @rule_triggers)
           cron.trigger(config: { 'cronExpression' => expression }, attach: attach)
         end
@@ -59,7 +72,8 @@ module OpenHAB
               hour: '*',
               dom: '?',
               month: '*',
-              dow: '?'
+              dow: '?',
+              year: '*'
             }.freeze
           private_constant :CRON_EXPRESSION_MAP
 
@@ -96,7 +110,7 @@ module OpenHAB
           #
           # Create a cron map from a duration
           #
-          # @param [java::time::Duration] duration
+          # @param [Java::JavaTime::Duration] duration
           # @param [Object] at TimeOfDay or String representing time of day
           #
           # @return [Hash] map describing cron expression
@@ -105,6 +119,20 @@ module OpenHAB
             raise ArgumentError, '"at" cannot be used with duration' if at
 
             map_to_cron(duration_to_map(duration))
+          end
+
+          #
+          # Create a cron map from a MonthDay
+          #
+          # @param [Java::JavaTime::MonthDay] month_day
+          # @param [Object] at TimeOfDay or String representing time of day
+          #
+          # @return [Hash] map describing cron expression
+          #
+          def self.from_monthday(monthday, at)
+            expression_map = EXPRESSION_MAP[:day].merge(month: monthday.month_value, dom: monthday.day_of_month)
+            expression_map = at_condition(expression_map, at) if at
+            map_to_cron(expression_map)
           end
 
           #
@@ -122,6 +150,19 @@ module OpenHAB
           end
 
           #
+          # Create a cron map from cron elements
+          #
+          # @param [Hash] elements Cron fields (second, minute, hour, dom, month, dow, year)
+          #
+          # @return [Hash] map describing cron expression
+          #
+          def self.from_fields(fields)
+            fields = fields.transform_values { |value| value.to_s.gsub(/\s+/, '') }
+            expression_map = CRON_EXPRESSION_MAP.merge(fields)
+            map_to_cron(expression_map)
+          end
+
+          #
           # Map cron expression to to cron string
           #
           # @param [Map] map of cron expression
@@ -129,7 +170,7 @@ module OpenHAB
           # @return [String] OpenHAB cron string
           #
           def self.map_to_cron(map)
-            %i[second minute hour dom month dow].map { |field| map.fetch(field) }.join(' ')
+            %i[second minute hour dom month dow year].map { |field| map.fetch(field) }.join(' ')
           end
 
           #

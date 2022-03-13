@@ -4,32 +4,32 @@ Feature:  every
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
-  Scenario: Using cron shortcuts ':minute'
+  Scenario: Using cron shortcuts ':second'
     Given a rule
       """
-      rule 'Log the rule name every minute' do | rule |
-        every :minute
+      rule 'Log the rule name every second' do | rule |
+        every :second
         run { logger.info "Rule '#{rule.name}' executed" }
       end
       """
     When I deploy the rule
-    Then It should log "Rule 'Log the rule name every minute' executed" within 62 seconds
+    Then It should log "Rule 'Log the rule name every second' executed" within 5 seconds
 
   Scenario Outline: Cron support days of the week and time of day
     Given a rule template:
       """
-            def five_seconds_from_now_string
-              (Time.now + 5).strftime('%H:%M:%S')
-            end
+      def five_seconds_from_now_string
+        (Time.now + 5).strftime('%H:%M:%S')
+      end
 
-            def five_seconds_from_now_tod
-              TimeOfDay.parse(five_seconds_from_now_string)
-            end
+      def five_seconds_from_now_tod
+        TimeOfDay.parse(five_seconds_from_now_string)
+      end
 
-            rule 'Simple' do | rule |
-              every  <%= ":#{Date.today.strftime('%A').downcase.to_sym}" %>, at: <five_seconds_from_now>
-              run { logger.info "Rule #{rule.name} executed" }
-            end
+      rule 'Simple' do | rule |
+        every  <%= ":#{Date.today.strftime('%A').downcase.to_sym}" %>, at: <five_seconds_from_now>
+        run { logger.info "Rule #{rule.name} executed" }
+      end
       """
     When I deploy the rule
     Then It should log 'Rule Simple executed' within 15 seconds
@@ -49,3 +49,30 @@ Feature:  every
       """
     When I deploy the rule
     Then It should log 'Rule Every 5 seconds executed' within 10 seconds
+
+  Scenario Outline: Every can use MonthDay
+    Given a rule:
+      """
+      time = (Time.now + 3).strftime('%H:%M:%S')
+      today = Java::JavaTime::ZonedDateTime.now
+
+      def monthday(zdt)
+        MonthDay.of(zdt.month_value, zdt.day_of_month)
+      end
+
+      rule 'Every MonthDay' do
+        every <monthday>, at: time
+        run { logger.info "Rule Every MonthDay executed" }
+      end
+      """
+    When I deploy the rule
+    Then It <should> log 'Rule Every MonthDay executed' within 5 seconds
+    Examples:
+      | monthday                        | should     |
+      | monthday(today)                 | should     |
+      | monthday(today).to_s            | should     |
+      | monthday(today.plus_days(1))    | should not |
+      | monthday(today.minus_days(1))   | should not |
+      | monthday(today.plus_months(1))  | should not |
+      | monthday(today.minus_months(1)) | should not |
+
