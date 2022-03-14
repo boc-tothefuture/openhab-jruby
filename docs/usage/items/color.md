@@ -1,7 +1,6 @@
 ---
 layout: default
 title: ColorItem
-nav_order: 1
 has_children: false
 parent: Items
 grand_parent: Usage

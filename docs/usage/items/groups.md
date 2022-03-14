@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Groups
-nav_order: 5
 has_children: false
 parent: Items
 grand_parent: Usage

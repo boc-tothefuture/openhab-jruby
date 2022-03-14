@@ -1,7 +1,6 @@
 ---
 layout: default
 title: ImageItem
-nav_order: 1
 has_children: false
 parent: Items
 grand_parent: Usage
@@ -10,14 +9,14 @@ grand_parent: Usage
 
 # ImageItem
 
-| Method            | Description                                                                                   | Options   | Example                                       |
-| ----------------- | --------------------------------------------------------------------------------------------- | --------- | --------------------------------------------- |
-| mime_type         | Get the mime type for the image                                                               |           | `item.mine_type`                              |
-| bytes             | Get the bytes that comprise the image data                                                    |           | `item.bytes`                                  |
-| update            | Update the image with with a base 64 encoded image data                                       |           | `item.update "data:image/png;base64,iVBO..."` |
-| update_from_bytes | Update the image from a byte array, mime_type will be automatically detected unless specified | mime_type | `item.update_from_bytes [0,23,45]...`         |
-| update_from_file  | Update the image from a file, mime_type will be automatically detected unless specified       | mime_type | `item.update_from_file '/tmp/foo.png'`        |
-| update_from_url   | Update the image from a url                                                                   |           | `item.update_from_url 'https://www.foobar.com/baz.png'`        |
+| Method            | Description                                                                                   | Options   | Example                                                 |
+| ----------------- | --------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------- |
+| mime_type         | Get the mime type for the image                                                               |           | `item.mine_type`                                        |
+| bytes             | Get the bytes that comprise the image data                                                    |           | `item.bytes`                                            |
+| update            | Update the image with with a base 64 encoded image data                                       |           | `item.update "data:image/png;base64,iVBO..."`           |
+| update_from_bytes | Update the image from a byte array, mime_type will be automatically detected unless specified | mime_type | `item.update_from_bytes [0,23,45]...`                   |
+| update_from_file  | Update the image from a file, mime_type will be automatically detected unless specified       | mime_type | `item.update_from_file '/tmp/foo.png'`                  |
+| update_from_url   | Update the image from a url                                                                   |           | `item.update_from_url 'https://www.foobar.com/baz.png'` |
 
 
 ## Examples ##

@@ -1,7 +1,6 @@
 ---
 layout: default
 title: NumberItem
-nav_order: 4
 has_children: false
 parent: Items
 grand_parent: Usage

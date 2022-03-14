@@ -34,8 +34,8 @@ For more details see the [run execution block]({{ site.baseurl }}{% link usage/e
 ## Loading the Scripting Library
 
 To make all the features offered by this library available to your rule, the JRuby scripting addon needs to
-be [configured]({{ site.baseurl }}{% link usage/items.md %}#from-the-user-interface) to install the `openhab-scripting` gem and
-require the `openhab` script. This will enable all the special methods for [Items]({{ site.baseurl }}{% link usage/items.md %}),
+be [configured]({{ site.baseurl }}{% link usage/items/index.md %}#from-the-user-interface) to install the `openhab-scripting` gem and
+require the `openhab` script. This will enable all the special methods for [Items]({{ site.baseurl }}{% link usage/items/index.md %}),
 [Things]({{ site.baseurl }}{% link usage/things.md %}), [Actions]({{ site.baseurl }}{% link usage/misc/actions.md %}), [Logging]({{ site.baseurl }}{% link usage/misc/logging.md %}) etc. that are documented here,
 and the `event` properties documented for the [Run execution block]({{ site.baseurl }}{% link usage/execution/run.md %}).
 

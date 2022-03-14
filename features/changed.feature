@@ -1,5 +1,5 @@
 Feature:  changed
-  Rule languages supports changed item features
+  Rule languages supports item changed trigger
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries

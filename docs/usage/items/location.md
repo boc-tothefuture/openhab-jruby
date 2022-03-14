@@ -1,7 +1,6 @@
 ---
 layout: default
-title: Location
-nav_order: 1
+title: LocationItem
 has_children: false
 parent: Items
 grand_parent: Usage
@@ -11,9 +10,9 @@ grand_parent: Usage
 # Location Item
 Represents GPS coordinates
 
-| Method | Description                            | parameter types         | Example                 |
-| ------ | -------------------------------------- | ----------------------- | ----------------------- |
-| -      | alias for distance_from                | Location, Point, String | `Location2 - Location1` |
+| Method | Description             | parameter types         | Example                 |
+| ------ | ----------------------- | ----------------------- | ----------------------- |
+| -      | alias for distance_from | Location, Point, String | `Location2 - Location1` |
 
 
 ## Examples ##
