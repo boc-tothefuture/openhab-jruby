@@ -46,13 +46,13 @@ namespace :openhab do
   def ready?(fail_on_error: false)
     return unless running?
 
-    if fail_on_error
-      fail_on_error("#{@karaf_client} 'system:version'")
-      true
-    else
-      cmd = TTY::Command.new(:printer => :null)
-      cmd.run!("#{@karaf_client} 'system:version'").success?
-    end
+    command = "#{@karaf_client} 'system:start-level'"
+
+    cmd = TTY::Command.new(:printer => :null)
+    ready = cmd.run!(command).out.chomp.casecmp?('Level 100')
+    raise 'OpenHAB is not ready' if !ready && fail_on_error
+
+    ready
   end
 
   def ensure_openhab_running
