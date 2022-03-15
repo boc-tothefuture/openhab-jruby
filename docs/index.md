@@ -166,7 +166,7 @@ rule 'Humidity: Control ExhaustFan' do
     logger.info("#{humidity.name} #{humidity} evolution_rate: #{evo_rate}")
 
     if (humidity > 70 && evo_rate > 15) || humidity > 85
-      BathRoom_ExhaustFan.ensure.on if Sun_Elevation.positive? || BathRoom_Light.state.gnil? || BathRoom_Light.on?
+      BathRoom_ExhaustFan.ensure.on if Sun_Elevation.positive? || BathRoom_Light.state.nil? || BathRoom_Light.on?
     elsif humidity < 70 || evo_rate < -5
       BathRoom_ExhaustFan.ensure.off
     end
