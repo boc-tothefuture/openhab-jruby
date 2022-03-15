@@ -7,8 +7,10 @@ has_children: false
 
 # Ruby Basics
 
-The OpenHAB JRuby scripting automation is based on the [JRuby](https://www.jruby.org/) implementation of the [Ruby](https://www.ruby-lang.org/) language. This page offers a quick overview of Ruby to help you get started writing rules. However, it is by no means comprehensive. 
-A wealth of information can be found on [Ruby's web site](https://www.ruby-lang.org/en/documentation/).
+The OpenHAB JRuby scripting automation is based on the [JRuby](https://www.jruby.org/) implementation of the 
+[Ruby](https://www.ruby-lang.org/) language. This page offers a quick overview of Ruby to help you get started
+writing rules. However, it is by no means comprehensive. A wealth of information can be found on 
+[Ruby's web site](https://www.ruby-lang.org/en/documentation/).
 
 ## Data Types
 
@@ -177,5 +179,14 @@ end
 # the following example will cause an error
 after 5.seconds { }
 ```
+
+## Source Code Formatting
+
+The [ruby style guide](https://github.com/rubocop/ruby-style-guide) 
+offers the generally accepted standards for Ruby source code formatting.
+
+When working with file based rules in a source code editor (e.g. VSCode), it is highly recommended to integrate 
+[Rubocop](https://rubocop.org/) (or [rubocop-daemon](https://github.com/fohte/rubocop-daemon))
+as the source code formatter and linter for Ruby.
 
 Happy coding!
