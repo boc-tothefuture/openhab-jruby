@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.34.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.33.1...4.34.0) (2022-03-15)
+
+
+### Features
+
+* **cron:** support fields for cron and monthday object for every ([0e53986](https://github.com/boc-tothefuture/openhab-jruby/commit/0e53986e76353d910d5c73a54393d500c87e7ffa))
+
 ## [4.33.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.33.0...4.33.1) (2022-03-10)
 
 # [4.33.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.32.7...4.33.0) (2022-03-09)
