@@ -18,3 +18,17 @@ Feature:  cron
       """
     When I deploy the rule
     Then It should log 'Cron rule executed' within 15 seconds
+
+  Scenario: Cron can use specifiers
+    Given a rule
+      """
+      schedule = Time.now + 5
+
+      rule 'Using Cron Syntax' do
+        cron second: schedule.sec, minute: schedule.min
+        run { logger.info "Cron rule executed" }
+      end
+      """
+    When I deploy the rule
+    Then It should not log 'Cron rule executed' within 3 seconds
+    And It should log 'Cron rule executed' within 10 seconds
