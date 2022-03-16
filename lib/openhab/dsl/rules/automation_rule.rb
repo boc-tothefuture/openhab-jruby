@@ -42,7 +42,7 @@ module OpenHAB
           @guard = config.guard
           # Convert between to correct range or nil if not set
           between = config.between&.then { between(config.between) }
-          @between = between || OpenHAB::DSL::Between::ALL_DAY
+          @between = between
           @trigger_conditions = config.trigger_conditions
           @attachments = config.attachments
         end
@@ -153,6 +153,8 @@ module OpenHAB
         # Loggging inflates method length
         def check_guards(event:)
           if @guard.should_run? event
+            return true if @between.nil?
+
             now = Time.now
             return true if @between.cover? now
 
