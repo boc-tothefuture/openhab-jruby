@@ -28,6 +28,18 @@ module OpenHAB
         end
         states
       end
+
+      #
+      # Check if all the given items have a state (not UNDEF or NULL)
+      #
+      # @param [Array] items whose state must be non-nil
+      # @param [<Type>] check_things when true, also ensures that all linked things are online
+      #
+      # @return [Boolean] true if all the items have a state, false otherwise
+      #
+      def state?(*items, things: false)
+        items.flatten.all? { |item| (!things || item.things.all?(&:online?)) && item.state? }
+      end
     end
 
     module Support
