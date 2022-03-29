@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.35.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.34.1...4.35.0) (2022-03-29)
+
+
+### Features
+
+* **state:** add state? helper method ([e8bb65e](https://github.com/boc-tothefuture/openhab-jruby/commit/e8bb65e17f654cc5ad9d58deb11eda7a304f9859))
+
 ## [4.34.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.34.0...4.34.1) (2022-03-16)
 
 # [4.34.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.33.1...4.34.0) (2022-03-15)
