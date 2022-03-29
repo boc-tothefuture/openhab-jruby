@@ -7,7 +7,7 @@ parent: Misc
 grand_parent: Usage
 ---
 
-### store_states
+# store_states
 
 store_states takes one or more items or groups and returns a map `{Item => State}` with the current state of each item. It is implemented by calling OpenHAB's [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
 
@@ -39,4 +39,4 @@ The returned states variable is a hash that supports some additional methods:
 | --------------- | ---------------------------------------------------------------------------------------- |
 | restore         | Restores the states of all the stored items by calling events.restoreStates() internally |
 | changed?        | Returns true if any of the stored items had changed states                               |
-| restore_changes | restores only items whose state had changed    
+| restore_changes | restores only items whose state had changed                                              |
