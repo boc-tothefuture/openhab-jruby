@@ -40,6 +40,32 @@ Feature:  timer
     But if I wait 3 seconds
     Then It should log 'Timer Fired' within 5 seconds
 
+  Scenario: Timers support ZonedDateTime
+    Given code in a rules file
+      """
+      java_import java.time.ZonedDateTime # this import is not needed on OH 3.3+
+
+      after ZonedDateTime.now.plus_seconds(3) do
+        logger.info("Timer Fired")
+      end
+      """
+    When I deploy the rules file
+    Then It should not log 'Timer Fired' within 1 seconds
+    But if I wait 3 seconds
+    Then It should log 'Timer Fired' within 5 seconds
+
+  Scenario: Timers support Ruby Time
+    Given code in a rules file
+      """
+      after Time.now + 3 do
+        logger.info("Timer Fired")
+      end
+      """
+    When I deploy the rules file
+    Then It should not log 'Timer Fired' within 1 seconds
+    But if I wait 3 seconds
+    Then It should log 'Timer Fired' within 5 seconds
+
   Scenario: Timers support number items
     Given items:
       | type   | name       | label      | state   |
@@ -124,7 +150,6 @@ Feature:  timer
       """
     When I deploy the rules file
     Then It should log 'Timer is active? true' within 5 seconds
-
 
   Scenario: Timers can be rescheduled
     Given code in a rules file

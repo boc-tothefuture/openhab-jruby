@@ -76,19 +76,15 @@ module OpenHAB
         private
 
         #
-        # Convert timestamp to ZonedDateTime if it's a TemporalAmount
+        # Convert timestamp to ZonedDateTime with duration negated to indicate a time in the past
         #
-        # @param [Object] timestamp to convert
+        # @param [Object] timestamp timestamp to convert
         #
         # @return [ZonedDateTime]
         #
         def to_zdt(timestamp)
-          if timestamp.is_a? Java::JavaTimeTemporal::TemporalAmount
-            logger.trace("Converting #{timestamp} (#{timestamp.class}) to ZonedDateTime")
-            Java::JavaTime::ZonedDateTime.now.minus(timestamp)
-          else
-            timestamp
-          end
+          timestamp = timestamp.negated if timestamp.is_a? Java::JavaTime::Duration
+          OpenHAB::DSL.to_zdt(timestamp)
         end
 
         #

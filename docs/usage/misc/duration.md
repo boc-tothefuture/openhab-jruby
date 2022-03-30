@@ -19,12 +19,12 @@ object that is used by the [Every trigger]({{ site.baseurl }}{% link usage/trigg
 
 ## Extended Methods
 
-| Method                                      | Description                    |
-| ------------------------------------------- | ------------------------------ |
-| hour or hours                               | Convert number to hours        |
-| minute or minutes                           | Convert number to minutes      |
-| second or seconds                           | Convert number to seconds      |
-| millis or millisecond or milliseconds or ms | Convert number to milliseconds |
+| Method                                              | Description                    | Examples              |
+| --------------------------------------------------- | ------------------------------ | --------------------- |
+| `hour` or `hours`                                   | Convert number to hours        | `1.hour`, `2.5 hours` |
+| `minute` or `minutes`                               | Convert number to minutes      | `3.minutes`           |
+| `second` or `seconds`                               | Convert number to seconds      | `5.seconds`           |
+| `millis` or `millisecond` or `milliseconds` or `ms` | Convert number to milliseconds | `200.ms`              |
 
 
 ## Examples
