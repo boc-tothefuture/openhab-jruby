@@ -1,10 +1,10 @@
-@wip
 Feature:  ruby
   Support for various types of ruby variables
 
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
+  @wip
   Scenario: Instance variables are available with a rule
     Given a rule
       """
@@ -17,6 +17,7 @@ Feature:  ruby
     When I deploy the rule
     Then It should log 'Foo is bar' within 5 seconds
 
+  @wip
   Scenario: Rule variables are available between rules
     Given a rule
       """
@@ -39,6 +40,7 @@ Feature:  ruby
     When I deploy the rule
     Then It should log 'Foo is defined: true' within 5 seconds
 
+  @wip
   Scenario: Instance variables are not shared between rules files
     Given a deployed rule:
       """
@@ -67,3 +69,10 @@ Feature:  ruby
     When I deploy the rule
     Then It should log 'Foo is defined: false' within 5 seconds
 
+  Scenario: Works on JRuby 9.3.4.0
+    Given a rule
+      """
+      logger.info "JRuby Version #{RUBY_ENGINE_VERSION}"
+      """
+    When I deploy the rule
+    Then It should log 'Ruby Version 9.3.4.0' within 5 seconds
