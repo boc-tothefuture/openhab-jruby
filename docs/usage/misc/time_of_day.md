@@ -27,6 +27,7 @@ TimeOfDay class can be used in rules for time related logic. Methods:
 A TimeOfDay object can be compared against another TimeOfDay object or a parseable string representation of time.
 
 Note: the following global constants are available:
+
 | Name     | Description |
 | -------- | ----------- |
 | MIDNIGHT | 00:00       |

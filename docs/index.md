@@ -20,9 +20,34 @@ The following examples are for file-based rules but most of them are applicable 
 ### Trigger when an item changed state
 
 ```ruby
+rule 'Turn on light when sensor changed to open' do
+  changed Door_Sensor, to: OPEN 
+  run { Cupboard_Light.on }
+end
+```
+
+Use multiple triggers
+
+```ruby
+rule 'Control light based on multiple doors' do
+  changed Door_Sensor1, to: OPEN
+  changed Door_Sensor2, to: OPEN
+  run { Cupboard_Light.on }
+end
+
+# Which is the same as:
+rule 'Control light based on multiple doors' do
+  changed Door_Sensor1, Door_Sensor2, to: OPEN
+  run { Cupboard_Light.on }
+end
+```
+
+Check against multiple states
+
+```ruby
 rule 'Control light based on door state' do
-  changed Door_Sensor, to: [OPEN, CLOSED] 
-  run { Cupboard_Light << Door_Sensor.open? } # Send a command using boolean
+  changed Door_Sensor, to: [OPEN, CLOSED]
+  run { Cupboard_Light << Door_Sensor.open? } # Send a boolean command to a Switch Item
 end
 ```
 

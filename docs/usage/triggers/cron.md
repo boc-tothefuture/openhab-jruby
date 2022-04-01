@@ -30,9 +30,9 @@ Cron Field Names
 
 | Field     | Description                                      |
 | --------- | ------------------------------------------------ |
-| `second:` | Defaults to `0` when not specified               |
-| `minute:` | Defaults to `0` when not specified               |
-| `hour:`   | Defaults to `0` when not specified               |
+| `second:` | Defaults to `*` when not specified               |
+| `minute:` | Defaults to `*` when not specified               |
+| `hour:`   | Defaults to `*` when not specified               |
 | `dom:`    | Day of month. Defaults to `?` when not specified |
 | `month:`  | Defaults to `*` when not specified               |
 | `dow:`    | Day of week. Defaults to `?` when not specified  |
