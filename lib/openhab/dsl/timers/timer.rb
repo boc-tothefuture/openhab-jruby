@@ -29,7 +29,6 @@ module OpenHAB
       # @param [Duration] duration Duration until timer should fire
       # @param [Block] block Block to execute when timer fires
       #
-      # rubocop: disable Metrics/MethodLength
       def initialize(duration:, thread_locals: {}, &block)
         @duration = duration
         @thread_locals = thread_locals
@@ -39,15 +38,12 @@ module OpenHAB
         semaphore = Mutex.new
 
         semaphore.synchronize do
-          @timer = ScriptExecution.createTimer(
-            ZonedDateTime.now.plus(to_duration(@duration)), timer_block(semaphore, &block)
-          )
+          @timer = ScriptExecution.createTimer(OpenHAB::DSL.to_zdt(@duration), timer_block(semaphore, &block))
           @rule_timers = Thread.current[:rule_timers]
           super(@timer)
           Timers.timer_manager.add(self)
         end
       end
-      # rubocop: enable Metrics/MethodLength
 
       #
       # Reschedule timer
@@ -60,7 +56,7 @@ module OpenHAB
         duration ||= @duration
 
         Timers.timer_manager.add(self)
-        @timer.reschedule(ZonedDateTime.now.plus(to_duration(duration)))
+        @timer.reschedule(OpenHAB::DSL.to_zdt(duration))
       end
 
       #
@@ -92,26 +88,44 @@ module OpenHAB
           end
         }
       end
+    end
 
-      #
-      # Convert argument to a duration
-      #
-      # @param [Java::JavaTimeTemporal::TemporalAmount, #to_f, #to_i, nil] duration Duration
-      #
-      # @raise if duration cannot be used for a timer
-      #
-      # @return Argument converted to seconds if it responds to #to_f or #to_i, otherwise duration unchanged
-      #
-      def to_duration(duration)
-        if duration.nil? || duration.is_a?(Java::JavaTimeTemporal::TemporalAmount)
-          duration
-        elsif duration.respond_to?(:to_f)
-          duration.to_f.seconds
-        elsif duration.respond_to?(:to_i)
-          duration.to_i.seconds
-        else
-          raise ArgumentError, "Supplied argument '#{duration}' cannot be converted to a duration"
-        end
+    #
+    # Convert TemporalAmount (Duration), seconds (float, integer), and Ruby Time to ZonedDateTime
+    # Note: TemporalAmount is added to now
+    #
+    # @param [Object] timestamp to convert
+    #
+    # @return [ZonedDateTime]
+    #
+    def self.to_zdt(timestamp)
+      logger.trace("Converting #{timestamp} (#{timestamp.class}) to ZonedDateTime")
+      return unless timestamp
+
+      case timestamp
+      when Java::JavaTimeTemporal::TemporalAmount then ZonedDateTime.now.plus(timestamp)
+      when ZonedDateTime then timestamp
+      when Time then timestamp.to_java(ZonedDateTime)
+      else
+        to_zdt(seconds_to_duration(timestamp)) ||
+          raise(ArgumentError, 'Timestamp must be a ZonedDateTime, a Duration, a Numeric, or a Time object')
+      end
+    end
+
+    #
+    # Convert numeric seconds to a Duration object
+    #
+    # @param [Float, Integer] secs The number of seconds in integer or float
+    #
+    # @return [Duration]
+    #
+    def self.seconds_to_duration(secs)
+      return unless secs
+
+      if secs.respond_to?(:to_f)
+        secs.to_f.seconds
+      elsif secs.respond_to?(:to_i)
+        secs.to_i.seconds
       end
     end
   end

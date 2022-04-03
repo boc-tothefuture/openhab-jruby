@@ -121,6 +121,30 @@ Feature: persistence
     Then It should log 'Average: 3' within 10 seconds
     And It should log 'Average Max: 3' within 10 seconds
 
+  Scenario: Persistence support various time arguments
+    Given items:
+      | type   | name         | label | state |
+      | Number | Number_Power | Power | 10    |
+
+    And code in a rules file:
+      """
+      rule 'update persistence' do
+        on_start
+        run { Number_Power.update 3 }
+        delay 5.second
+        run do
+          logger.info("Max: #{Number_Power.maximum_since(<time>, :mapdb)}")
+        end
+      end
+      """
+    When I deploy the rule
+    Then It should log 'Max: 3' within 10 seconds
+    Examples:
+      | time                               |
+      | 3.seconds                          |
+      | ZonedDateTime.now.minus_seconds(3) |
+      | Time.now - 3                       |
+
   Scenario: Check that HistoricState directly returns a state
     Given items:
       | type         | name         | label | pattern | state |

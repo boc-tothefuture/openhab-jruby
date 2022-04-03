@@ -9,17 +9,17 @@ grand_parent: Usage
 
 # Timers
 
-Timers are created using the `after` method.
+Timers are created using the `after` method. `create_timer` is an alias to `after` for compatibility reasons.
 
 After method parameters
 
-| Parameter | Description                                                        |
-| --------- | ------------------------------------------------------------------ |
-| duration  | Duration for timer                                                 |
-| id        | Optional object that is used to identify the timer                 |
-| block     | Block to execute after duration, block will be passed timer object |
+| Parameter | Description                                                                                                                                                          |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| time      | Accepts a [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %}), Ruby [Time](https://ruby-doc.org/core-2.6.3/Time.html), or Java `ZonedDateTime` for timer |
+| id        | Optional object that is used to identify the timer                                                                                                                   |
+| block     | Block to execute after duration, block will be passed timer object                                                                                                   |
 
-Timers with an id are reentrant, by id and block. Reentrant means that when the same id and block are encountered the timer is resheduled rather than creating a second new timer.
+Timers with an id are reentrant, by id and block. Reentrant means that when the same id and block are encountered the timer is rescheduled rather than creating a second new timer.
 
 ## Timer Object
 

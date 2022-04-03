@@ -28,7 +28,7 @@ grand_parent: Usage
 | `updated_since`   | timestamp, service                    | boolean                     |                                                                 |
 | `variance_since`  | timestamp, service                    | DecimalType or QuantityType |                                                                 |
 
-* The `timestamp` parameter accepts a java ZonedDateTime or a [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %}) object that specifies how far back in time.
+* The `timestamp` parameter accepts a java ZonedDateTime, a Ruby [Time](https://ruby-doc.org/core-2.6.3/Time.html), or a [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %}) object that specifies how far back in time.
 * The `service` optional parameter accepts the name of the persistence service to use, as a String or Symbol. When not specified, the system's default persistence service will be used.
 * Dimensioned NumberItems will return a [QuantityType]({{ site.baseurl }}{% link usage/items/number.md %}#quantities) object
 * `HistoricState` holds the item state and the timestamp data from OpenHAB's [HistoricItem](https://openhab.org/javadoc/latest/org/openhab/core/persistence/historicitem). It contains the following properties:
