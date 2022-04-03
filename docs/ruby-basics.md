@@ -146,7 +146,25 @@ rule 'name' do
 end
 ```
 
+## Ruby's Safe Navigation Operator
+
+Ruby has a [safe navigation operator](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html#label-Safe+navigation+operator) 
+`&.` which is similar to `?.` in C#, Groovy, Kotlin, etc.
+
+```ruby
+# Instead of:
+if items['My_Item']
+  items['My_Item'].on
+end
+
+# We can write it as:
+items['My_Item']&.on
+```
+
+
 ## Some Gotchas
+
+### Exiting early 
 
 To [exit early from a block](https://stackoverflow.com/questions/1402757/how-to-break-out-from-a-ruby-block), use `next` instead of `return`.
 
@@ -161,6 +179,10 @@ rule 'rule name' do
   end
 end
 ```
+
+Note: To exit early from a UI rule, use `return`.
+
+### Parentheses
 
 In Ruby, parentheses are optional when calling a method. However, when calling a method with arguments and a single-line block, 
 the parentheses must be used. Example:
@@ -178,6 +200,16 @@ end
 
 # the following example will cause an error
 after 5.seconds { }
+```
+
+### Zero is "truthy" in Ruby
+
+```ruby
+if 0
+  logger.info "This will always be executed"
+else
+  logger.info "This will never be executed"
+end
 ```
 
 ## Source Code Formatting

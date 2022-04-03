@@ -9,9 +9,10 @@ grand_parent: Usage
 
 # Logging
 
-Logging is available everywhere through the logger object.
+Logging is available everywhere through the `logger` object.
 
-Logging placed outside of a rule will have the name of the file appened to the logger name. The following entries are in a file named 'log_test.rb'
+The logging prefix is `org.openhab.automation.jruby`. Logging within file-based rules
+will have the name of the file appended to the logger name. The following entries are in a file named 'log_test.rb'
 
 ```ruby
 logger.trace('Test logging at trace') # 2020-12-03 18:05:20.903 [TRACE] [org.openhab.automation.jruby.log_test] - Test logging at trace
@@ -27,5 +28,35 @@ Logging inside of a rule will have the name of the rule appened to the logger na
 rule 'foo' do
   run { logger.trace('Test logging at trace') } # 2020-12-03 18:05:20.903 [TRACE] [org.openhab.automation.jruby.log_test.foo] - Test logging at trace
   on_start
+end
+```
+
+## Logger Methods
+
+The `logger` object has the following methods
+
+| Method            |
+| ----------------- |
+| info              |
+| warn              |
+| error             |
+| debug             |
+| trace             |
+| is_info_enabled?  |
+| is_warn_enabled?  |
+| is_error_enabled? |
+| is_debug_enabled? |
+| is_trace_enabled? |
+
+The `info`, `warn`, `error`, `debug`, and `trace` methods can accept a block that returns a string to be logged which will only be executed if the corresponding trace level is
+enabled.
+
+### Example
+
+```ruby
+logger.trace do
+  total = Item1 + Item2
+  average = total / 2
+ "Total: #{total}, Average: #{average}" 
 end
 ```
