@@ -171,6 +171,7 @@ module OpenHAB
             # rubocop: disable Metrics/AbcSize
             # There is no feasible way to break this method into smaller components
             def execute(_mod = nil, inputs = nil)
+              OpenHAB::DSL.import_presets
               @semaphore.synchronize do
                 thread_local(@thread_locals) do
                   logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\

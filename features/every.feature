@@ -54,7 +54,7 @@ Feature:  every
     Given a rule:
       """
       time = (Time.now + 3).strftime('%H:%M:%S')
-      today = Java::JavaTime::ZonedDateTime.now
+      today = ZonedDateTime.now
 
       def monthday(zdt)
         MonthDay.of(zdt.month_value, zdt.day_of_month)

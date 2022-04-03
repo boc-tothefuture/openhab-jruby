@@ -24,7 +24,6 @@ Feature: persistence
   Scenario: Make calls to various Persistence methods
     Given code in a rules file:
       """
-      java_import java.time.ZonedDateTime
       @@last_update = nil
 
       rule 'record updated time' do

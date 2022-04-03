@@ -234,7 +234,7 @@ Feature: rule_language
       """
     When I deploy the rules file
     Then It should log /Rule UID: '.+'/ within 5 seconds
-    
+
   Scenario: DSL methods don't leak into other objects
     Given a raw rule:
       """

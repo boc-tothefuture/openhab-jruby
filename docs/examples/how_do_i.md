@@ -741,16 +741,7 @@ Exec.executeCommandLine('/path/to/program')
 
 ### Use ZonedDateTime
 
-Prior to OpenHAB 3.3, ZonedDateTime needs to be imported before use. From OpenHAB 3.3+ the following classes are available without having to import them manually:
-
-* `ZonedDateTime`
-* `ZoneId`
-* `Duration`
-* `ChronoUnit`
-
 ```ruby
-java_import java.time.ZonedDateTime # Not needed on OpenHAB 3.3+
-
 ZonedDateTime.now.plus_minutes(30)
 ```
 
