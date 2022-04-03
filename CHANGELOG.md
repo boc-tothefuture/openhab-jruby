@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.36.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.35.0...4.36.0) (2022-04-03)
+
+
+### Features
+
+* add support for timer and persistence to accept zoneddatetime and rubytime ([640cf0e](https://github.com/boc-tothefuture/openhab-jruby/commit/640cf0ec24ee7b34faec819ae194c9a2ffd4c344))
+
 # [4.35.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.34.1...4.35.0) (2022-03-29)
 
 
