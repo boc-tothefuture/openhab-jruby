@@ -33,23 +33,12 @@ end
 
 ## Logger Methods
 
-The `logger` object has the following methods
+The `logger` object has the following methods:
 
-| Method            |
-| ----------------- |
-| info              |
-| warn              |
-| error             |
-| debug             |
-| trace             |
-| is_info_enabled?  |
-| is_warn_enabled?  |
-| is_error_enabled? |
-| is_debug_enabled? |
-| is_trace_enabled? |
+* `info`, `warn`, `error`, `debug`, and `trace` log a message at the corresponding level. They can accept a block
+  that returns a string. The block is executed if the log level is enabled.
+* `info_enabled?`, `warn_enabled?`, `error_enabled?`, `debug_enabled?`, and `trace_enabled?` return true if the log level is enabled.
 
-The `info`, `warn`, `error`, `debug`, and `trace` methods can accept a block that returns a string to be logged which will only be executed if the corresponding trace level is
-enabled.
 
 ### Example
 
