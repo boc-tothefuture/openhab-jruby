@@ -38,11 +38,12 @@ When an event is triggered to a rule, the event object has the following fields
 
 ## Examples
 
- Watch `items` directory inside of the openhab configuration path and log any changes. `__conf__` is available and is the path to the OpenHAB configuration directory as a Ruby pathname object.
+Watch `items` directory inside of the openhab configuration path and log any changes. `OpenHAB.conf_root` is available and is the path 
+to the OpenHAB configuration directory as a Ruby pathname object.
 
 ```ruby
 rule 'watch directory' do
-  watch __conf__/'items'
+  watch OpenHAB.conf_root/'items'
   run { |event| logger.info("#{event.path.basename} - #{event.type}") }
 end
 ```
@@ -50,7 +51,7 @@ end
  Watch `items` directory for files that end in `*.erb` inside of the openhab configuration path and log any changes
 ```ruby
 rule 'watch directory' do
-  watch __conf__/'items', glob: '*.erb'
+  watch OpenHAB.conf_root/'items', glob: '*.erb'
   run { |event| logger.info("#{event.path.basename} - #{event.type}") }
 end
 ```
@@ -58,7 +59,7 @@ end
 Watch `items/foo.items` inside of the openhab configuration path and log any changes
 ```ruby
 rule 'watch directory' do
-  watch __conf__/'items/foo.items'
+  watch OpenHAB.conf_root/'items/foo.items'
   run { |event| logger.info("#{event.path.basename} - #{event.type}") }
 end
 ```
@@ -66,7 +67,7 @@ end
 Watch `items/*.items` inside of the openhab configuration path and log any changes
 ```ruby
 rule 'watch directory' do
-  watch __conf__/'items/*.items'
+  watch OpenHAB.conf_root/'items/*.items'
   run { |event| logger.info("#{event.path.basename} - #{event.type}") }
 end
 ```
@@ -74,7 +75,7 @@ end
 Watch `items/*.items` inside of the openhab configuration path for when items files are deleted or created (ignore changes)
 ```ruby
 rule 'watch directory' do
-  watch __conf__/'items/*.items', for: [:deleted, :created]
+  watch OpenHAB.conf_root/'items/*.items', for: [:deleted, :created]
   run { |event| logger.info("#{event.path.basename} - #{event.type}") }
 end
 ```

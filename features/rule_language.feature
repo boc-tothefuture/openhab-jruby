@@ -217,8 +217,8 @@ Feature: rule_language
   Scenario: OpenHAB config directory is available
     Given code in a rules file:
       """
-        logger.info("Conf #{__conf__}")
-        logger.info("Conf directory is #{__conf__.each_filename.to_a.last(2).join('/')}")
+        logger.info("Conf #{OpenHAB.conf_root}")
+        logger.info("Conf directory is #{OpenHAB.conf_root.each_filename.to_a.last(2).join('/')}")
       """
     When I deploy the rules file
     Then It should log 'Conf directory is openhab/conf' within 5 seconds
@@ -234,7 +234,7 @@ Feature: rule_language
       """
     When I deploy the rules file
     Then It should log /Rule UID: '.+'/ within 5 seconds
-    
+
   Scenario: DSL methods don't leak into other objects
     Given a raw rule:
       """
