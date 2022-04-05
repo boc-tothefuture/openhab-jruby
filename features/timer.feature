@@ -258,7 +258,7 @@ Feature:  timer
       end
 
       rule 'Cancel timer' do
-        run { timers[:foo]&.cancel_all }
+        run { timers[:foo]&.cancel }
         on_start true
       end
       """
@@ -290,7 +290,7 @@ Feature:  timer
         on_start true
         run do
           logger.info("timers[:foo] is nil before cancel: #{timers[:foo].nil?}")
-          timers[:foo]&.cancel_all
+          timers[:foo]&.cancel
           logger.info("timers[:foo] is nil after cancel: #{timers[:foo].nil?}")
         end
       end
@@ -298,4 +298,21 @@ Feature:  timer
     When I deploy the rule
     Then It should log 'timers[:foo] is nil before cancel: false' within 5 seconds
     And It should log 'timers[:foo] is nil after cancel: true' within 5 seconds
+
+  Scenario: Managed timers can be rescheduled
+    Given code in a rules file:
+      """
+      after 1.hours, :id => :foo do
+        logger.info "Timer Fired"
+      end
+
+      rule 'Cancel timer' do
+        on_start
+        run do
+          timers[:foo]&.reschedule 1.second
+        end
+      end
+      """
+    When I deploy the rule
+    Then It should log 'Timer Fired' within 5 seconds
 
