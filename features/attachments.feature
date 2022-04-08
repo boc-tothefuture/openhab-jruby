@@ -21,7 +21,7 @@ Feature:  attachments
       end
       """
     When <action>
-    Then It should log 'attachment - <attachment>' within 5 seconds
+    Then It should log 'attachment - <attachment>' within 15 seconds
     Examples: Checks multiple attachments
       | trigger                                                    | attachment | action                                                    |
       | changed Switch1                                            | foo        | item "Switch1" state is changed to "ON"                   |
@@ -32,7 +32,7 @@ Feature:  attachments
       | on_start true                                              | qaz        | I wait 2 seconds                                          |
       | every :second                                              | qux        | I wait 2 seconds                                          |
       | cron five_seconds_from_now                                 | qab        | I wait 5 seconds                                          |
-      | watch __conf__+'foo'                                       | qac        | I create a file in subdirectory 'foo' of conf named 'bar' |
+      | watch OpenHAB.conf_root/'foo'                              | qac        | I create a file in subdirectory 'foo' of conf named 'bar' |
 
 
   Scenario Outline: Guards have access to attachments
