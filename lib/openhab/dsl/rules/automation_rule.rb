@@ -23,7 +23,6 @@ module OpenHAB
         include OpenHAB::Log
         include OpenHAB::Core::ThreadLocal
         include OpenHAB::DSL::Between
-        java_import java.time.ZonedDateTime
 
         #
         # Create a new Rule
@@ -55,6 +54,7 @@ module OpenHAB
         #
         #
         def execute(mod = nil, inputs = nil)
+          OpenHAB::DSL.import_presets
           thread_local(RULE_NAME: name) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs['event'].inspect}" } if inputs&.key?('event')

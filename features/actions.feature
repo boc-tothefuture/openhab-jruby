@@ -22,11 +22,10 @@ Feature:  actions
   Scenario: Exec action is supported
     Given a rule
       """
-      java_import java.time.Duration
       rule 'Execute command line' do
         on_start
         run do
-          output = Exec.executeCommandLine(Duration.ofSeconds(2), '/bin/echo', 'Hello, World!').chomp
+          output = Exec.executeCommandLine(2.seconds, '/bin/echo', 'Hello, World!').chomp
           logger.info("executeCommandLine output: '#{output}'")
         end
       end

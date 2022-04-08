@@ -43,8 +43,6 @@ Feature:  timer
   Scenario: Timers support ZonedDateTime
     Given code in a rules file
       """
-      java_import java.time.ZonedDateTime # this import is not needed on OH 3.3+
-
       after ZonedDateTime.now.plus_seconds(3) do
         logger.info("Timer Fired")
       end

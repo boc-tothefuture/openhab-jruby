@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require_relative 'imports'
+
+OpenHAB::DSL.import_presets
+
 require 'openhab/log/logger'
 
 # the order of these is important

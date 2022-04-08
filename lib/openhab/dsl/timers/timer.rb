@@ -9,7 +9,6 @@ require 'openhab/core/thread_local'
 module OpenHAB
   module DSL
     java_import org.openhab.core.model.script.actions.ScriptExecution
-    java_import java.time.ZonedDateTime
 
     # Ruby wrapper for OpenHAB Timer
     # This class implements delegator to delegate methods to the OpenHAB timer
@@ -80,6 +79,7 @@ module OpenHAB
       #
       def timer_block(semaphore)
         proc {
+          OpenHAB::DSL.import_presets
           semaphore.synchronize do
             Timers.timer_manager.delete(self)
             thread_local(@thread_locals) do
