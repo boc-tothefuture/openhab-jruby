@@ -95,10 +95,23 @@ module OpenHAB
       class TimerSet < Set
         #
         # A shorthand to cancel all the timer objects held within the set
-        # so that timers[timer_id].cancel_all is equivalent to timers[timer_id].each(&:cancel)
+        # so that timers[timer_id].cancel is equivalent to timers[timer_id].each(&:cancel)
         #
-        def cancel_all
+        def cancel
           each(&:cancel)
+        end
+        # @deprecated Please use {cancel} instead
+        alias cancel_all cancel
+
+        #
+        # A shorthand to reschedule all the timer objects held within the set
+        #
+        # @param [Duration] duration An optional duration to reschedule
+        #
+        # @return [TimerSet] Set of timers
+        #
+        def reschedule(duration = nil)
+          each { |timer| timer.reschedule duration }
         end
       end
     end

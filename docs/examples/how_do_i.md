@@ -668,7 +668,7 @@ rule 'cancel all timers' do
   received_command Cancel_All_Timers, to: ON # Send a command to this item to cancel all timers
   run do
     gOutdoorLights.each do |item_as_timer_id|
-      timers[item_as_timer_id]&.cancel_all 
+      timers[item_as_timer_id]&.cancel 
     end
   end
 end
@@ -677,7 +677,7 @@ rule 'reschedule all timers' do
   received_command Reschedule_All_Timers, to: ON # Send a command to this item to restart all timers
   run do
     gOutdoorLights.each do |item_as_timer_id|
-      timers[item_as_timer_id]&.each(&:reschedule) # Note timers[] returns a Set of timers
+      timers[item_as_timer_id]&.reschedule
     end
   end
 end
