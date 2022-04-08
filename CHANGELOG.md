@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.37.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.36.0...4.37.0) (2022-04-08)
+
+
+### Bug Fixes
+
+* **zoneddatetime:** make ZonedDateTime available on OpenHAB 3.2 ([c22be74](https://github.com/boc-tothefuture/openhab-jruby/commit/c22be74104ef5254223838adcc3adaa70e2edefa))
+
+
+### Features
+
+* **conf:** rename __conf__ to OpenHAB.conf_root ([ea0a657](https://github.com/boc-tothefuture/openhab-jruby/commit/ea0a65736821bbd64fe3ed199229953b55f6a1ab))
+* **timers[]:** add #reschedule, rename #cancel_all to #cancel ([38da4a0](https://github.com/boc-tothefuture/openhab-jruby/commit/38da4a01607830fb44cb17c6b52f46000de2ddc0))
+
 # [4.36.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.35.0...4.36.0) (2022-04-03)
 
 
