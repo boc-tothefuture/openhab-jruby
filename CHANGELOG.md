@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.37.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.37.0...4.37.1) (2022-04-09)
+
+
+### Bug Fixes
+
+* **numeric_item:** make NumericItem#| raise NoMethodError when state is nil ([ac289fc](https://github.com/boc-tothefuture/openhab-jruby/commit/ac289fc2c7a9d1dba7f4c5b908d1f0fd2eb49875))
+
 # [4.37.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.36.0...4.37.0) (2022-04-08)
 
 
