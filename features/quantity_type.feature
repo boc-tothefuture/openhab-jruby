@@ -37,6 +37,27 @@ Feature:  quantity_type
       | 50.0 \|'°F'    | 50.0 °F |
       | 50.to_d \|'°F' | 50.0 °F |
 
+  Scenario Outline: Numeric item triggers NoMethodError when | is applied to a NULL/UNDEF state
+    Given items:
+      | type   | name        | state   |
+      | Number | NumberItem1 | <state> |
+    And code in a rules file
+      """
+        begin
+          NumberItem1 | 'W'
+          logger.info("All Good!")
+        rescue NoMethodError
+          logger.info("NoMethodError caught!")
+        end
+      """
+    When I deploy the rules file
+    Then It should log '<result>' within 5 seconds
+    Examples:
+      | state | result                |
+      | NULL  | NoMethodError caught! |
+      | UNDEF | NoMethodError caught! |
+      | 10    | All Good!             |
+
   Scenario Outline: QuantityType responds to math operations where operand is a quantity type
     Given code in a rules file
       """

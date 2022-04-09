@@ -19,9 +19,24 @@ module OpenHAB
         def self.included(klass)
           klass.prepend ItemEquality # make sure this is first
           klass.extend Forwardable
-          klass.delegate %i[+ - * / % | to_d to_f to_i to_int] => :state
+          klass.delegate %i[+ - * / % to_d to_f to_i to_int] => :state
           # remove the JRuby default == so that we can inherit the Ruby method
           klass.remove_method :==
+        end
+
+        #
+        # Convert state to a Quantity by calling state (DecimalType)#|
+        # Raise a NoMethodError if state is nil (NULL or UNDEF) instead of delegating to it.
+        # because nil#| would return true, causing an unexpected result
+        #
+        # @param [Unit, String] other the unit to convert to
+        #
+        # @return [QuantityType] the QuantityType in the given unit
+        #
+        def |(other)
+          raise NoMethodError, 'State is nil' unless state?
+
+          state.|(other)
         end
 
         #
