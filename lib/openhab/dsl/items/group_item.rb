@@ -47,6 +47,17 @@ module OpenHAB
 
         remove_method :==
 
+        # Override Enumerable because we want to send them to the base item if possible
+        #
+        # @return [GroupMembers] +self+
+        %i[command update].each do |method|
+          define_method(method) do |command|
+            return base_item.__send__(method, command) if base_item
+
+            super(command)
+          end
+        end
+
         #
         # Get an Array-like object representing the members of the group
         #
@@ -87,10 +98,6 @@ module OpenHAB
           end
         end
 
-        # don't want to inherit these from Enumerable, because we want to send them to the base item
-        remove_method %i[ensure refresh on off up down stop move increase decrease play pause rewind fast_forward next
-                         previous]
-
         # Delegate missing methods to +base_item+ if possible
         def method_missing(method, *args, &block)
           return base_item.__send__(method, *args, &block) if base_item.respond_to?(method)
@@ -105,6 +112,7 @@ module OpenHAB
           super
         end
 
+        # Is this ever called?
         # give the base item type a chance to format commands
         # @!visibility private
         def format_type(command)

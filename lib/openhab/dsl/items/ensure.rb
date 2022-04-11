@@ -99,6 +99,7 @@ module OpenHAB
     module Items
       GenericItem.prepend(OpenHAB::DSL::Ensure::GenericItem)
       GroupItem::GroupMembers.include(OpenHAB::DSL::Ensure::Ensurable)
+      Enumerable.include(OpenHAB::DSL::Ensure::Ensurable)
     end
   end
 end

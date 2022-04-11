@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'enumerable'
+require_relative 'semantics/enumerable'
 
 module OpenHAB
   module DSL
@@ -86,7 +86,7 @@ module OpenHAB
       #
       # @return [Class]
       def location_type
-        SemanticsAction.get_location_type(Self)&.ruby_class
+        SemanticsAction.get_location_type(self)&.ruby_class
       end
 
       # Gets the related Equipment Item of this Item.
@@ -168,8 +168,6 @@ module OpenHAB
         members.points(*point_or_property_types)
       end
     end
-
-    GenericItem.include(Semantics)
   end
 end
 
@@ -204,7 +202,7 @@ module Enumerable
   #   lGreatRoom.equipments.flat_map(&:members).points(Semantics::Switch)
   def points(*point_or_property_types) # rubocop:disable Metrics
     unless (0..2).cover?(point_or_property_types.length)
-      raise ArgumentError, "wrong number of arguments (given #{point_or_property_types.length}, expected 1..2)"
+      raise ArgumentError, "wrong number of arguments (given #{point_or_property_types.length}, expected 0..2)"
     end
     unless point_or_property_types.all? do |tag|
              tag < OpenHAB::DSL::Semantics::Point || tag < OpenHAB::DSL::Semantics::Property
@@ -220,8 +218,8 @@ module Enumerable
       next unless point.point?
 
       point_or_property_types.all? do |tag|
-        (tag < OpenHAB::DSL::Semantics::Point && point.point_type <= tag) ||
-          (tag < OpenHAB::DSL::Semantics::Property && point.property_type <= tag)
+        (tag < OpenHAB::DSL::Semantics::Point && point.point_type&.<=(tag)) ||
+          (tag < OpenHAB::DSL::Semantics::Property && point.property_type&.<=(tag))
       end
     end
   end
