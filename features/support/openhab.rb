@@ -6,7 +6,8 @@ require 'singleton'
 require 'tty-command'
 require 'fileutils'
 
-Item = Struct.new(:type, :name, :state, :label, :groups, :group_type, :pattern, :function, :params, keyword_init: true)
+Item = Struct.new(:type, :name, :state, :label, :tags, :groups, :group_type, :pattern, :function, :params,
+                  keyword_init: true)
 
 def openhab_dir
   File.realpath 'tmp/openhab'
