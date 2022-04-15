@@ -80,6 +80,7 @@ class Rest
     body[:type] = item.type
     body[:name] = item.name
     body[:label] = item.label if item.label && item.label.strip != ''
+    item_tags(body, item)
     item_groups(body, item)
     body
   end
@@ -100,6 +101,10 @@ class Rest
     function_body[:name] = item.function
     function_body[:params] = item.params if item.params
     body[:function] = function_body
+  end
+
+  def self.item_tags(body, item)
+    body[:tags] = item.tags unless item.tags.nil? || item.tags.empty?
   end
 
   def self.item_groups(body, item)

@@ -82,15 +82,7 @@ end
 
 Given('groups:') do |table|
   table.hashes.each do |row|
-    group_type = row['type']
-    name = row['name']
-    label = nil_if_blank(row['label'])
-    pattern = nil_if_blank(row['pattern'])
-    function = nil_if_blank(row['function'])
-    params = row['params']&.split(',')&.map(&:strip)
-    groups = [row['group']]
-    item = Item.new(type: 'Group', name: name, label: label, groups: groups, pattern: pattern, group_type: group_type,
-                    function: function, params: params)
+    item = item_from_row(row, type: 'Group', group_type: row['type'])
     add_item(item: item)
   end
 end
@@ -111,15 +103,7 @@ end
 Given(/(?: I add)?items:/) do |table|
   items = []
   table.hashes.each do |row|
-    type = row['type']
-    name = row['name']
-    label = nil_if_blank(row['label'])
-    groups = [row['group']]
-    groups << row['groups']&.split(',')
-    groups = groups&.flatten
-    state = nil_if_blank(row['state'])
-    pattern = nil_if_blank(row['pattern'])
-    item = Item.new(type: type, name: name, state: state, label: label, groups: groups, pattern: pattern)
+    item = item_from_row(row, type: row['type'])
     add_item(item: item)
     items << item
   end
@@ -235,4 +219,30 @@ end
 
 Given('log level for {word} is set to {word}') do |bundle, level|
   set_log_level(bundle, level)
+end
+
+#
+# Create an Item object from row
+#
+# @param [Hash] row input hash
+#
+# @return [Item]
+#
+def item_from_row(row, type:, group_type: nil) # rubocop:disable Metrics/AbcSize
+  name = row['name']
+  label = nil_if_blank(row['label'])
+  pattern = nil_if_blank(row['pattern'])
+  function = nil_if_blank(row['function'])
+  state = nil_if_blank(row['state'])
+
+  params = array_from_list(row['params'])
+  groups = array_from_list(row['group'], row['groups'])
+  tags = array_from_list(row['tag'], row['tags'])
+
+  Item.new(type: type, name: name, label: label, tags: tags, groups: groups, group_type: group_type,
+           pattern: pattern, function: function, params: params, state: state)
+end
+
+def array_from_list(*list)
+  list.compact.flat_map { |data| data.split(',').map(&:strip) }
 end

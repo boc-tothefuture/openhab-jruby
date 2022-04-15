@@ -69,11 +69,18 @@ module OpenHAB
               end                                                                                       # end
             RUBY
 
-            logger.trace("Defining GroupItem::GroupMembers##{command} for #{value}")
-            GroupItem::GroupMembers.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+            logger.trace("Defining Enumerable##{command} for #{value}")
+            Enumerable.class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{command}        # def on
                 each(&:#{command})  #   each(&:on)
               end                   # end
+            RUBY
+
+            # Override the inherited methods from Enumerable and send it to the base_item
+            GroupItem.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+              def #{command}                 # def on
+                method_missing(:#{command})  #   method_missing(:on)
+              end                            # end
             RUBY
 
             logger.trace("Defining ItemCommandEvent##{command}? for #{value}")

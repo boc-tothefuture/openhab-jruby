@@ -73,6 +73,13 @@ module OpenHAB
           @item = item
         end
 
+        # @!visibility private
+        # this is explicitly defined, instead of aliased, because #command
+        # doesn't actually exist as a method, and will go through method_missing
+        def <<(command)
+          command(command)
+        end
+
         # activate +ensure_states+ before forwarding to the wrapped object
         def method_missing(method, *args, &block)
           return super unless @item.respond_to?(method)
@@ -92,6 +99,7 @@ module OpenHAB
     module Items
       GenericItem.prepend(OpenHAB::DSL::Ensure::GenericItem)
       GroupItem::GroupMembers.include(OpenHAB::DSL::Ensure::Ensurable)
+      Enumerable.include(OpenHAB::DSL::Ensure::Ensurable)
     end
   end
 end
