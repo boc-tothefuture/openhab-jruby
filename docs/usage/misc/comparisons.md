@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Type Comparisons
+title: Comparisons
 nav_order: 12
 has_children: false
 parent: Misc
@@ -9,7 +9,36 @@ grand_parent: Usage
 
 # Item and State Type Comparisons
 
-Some OpenHAB item types can accept different command types. For example, a Dimmer item can accept a command with an `OnOffType`, `IncreaseDecreaseType` or a `PercentType`. However, ultimately an item only stores its state in its native type, e.g. a Dimmer item's native type is PercentType.
+Comparison of two items implicitly compares their states. For example:
+
+```ruby
+if Item1 == Item2
+  logger.info('The state of Item1 is the same as the state of Item2')
+end
+```
+
+Comparing the actual items can be achieved using `#item` method of either operand:
+
+```ruby
+Item1.item == items['Item1'].item   # This would always return true
+Item1.item == Item2.item            # This would always return false
+
+# When Item1, Item2 and Item3 all have the same state:
+[Item1, Item2].include?(Item3.item) # => false - Check for the existence of Item3 inside the array
+[Item1, Item2].include?(Item3)      # => true - State check
+```
+
+Using `#item` is not necessary for hash keys because Hash keys are indexed by their hash codes.
+
+```ruby
+# When Item1 and Item2 contain the same state:
+hash = { Item1 => 'value1', Item2 => 'value2' }
+hash[Item2] # => 'value2' this will correctly match Item2's value in the hash
+```
+
+Some OpenHAB item types can accept different command types. For example, a Dimmer item can accept a command 
+with an `OnOffType`, `IncreaseDecreaseType` or a `PercentType`. However, ultimately an item only stores its 
+state in its native type, e.g. a Dimmer item's native type is PercentType.
 
 ## Loose Type Comparisons
 
