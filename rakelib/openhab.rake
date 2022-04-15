@@ -5,6 +5,7 @@ require 'tty-command'
 require 'process_exists'
 require 'erb'
 require 'digest/md5'
+require 'net/http'
 
 # rubocop: disable Metrics/BlockLength
 # Disabled due to part of buid / potentially refactor into classes
@@ -42,6 +43,25 @@ namespace :openhab do
     end
   end
 
+  # Get openhab http port
+  def openhab_port
+    command = "#{@karaf_client} 'system:property org.osgi.service.http.port'"
+
+    cmd = TTY::Command.new(:printer => :null)
+    cmd.run!(command).out.chomp
+  end
+
+  # Check if openhab is listening on port 8080
+  def http_ready?
+    uri = URI('http://127.0.0.1/')
+    uri.port = openhab_port
+    Net::HTTP.start(uri.host, uri.port) do |http|
+      request = Net::HTTP::Get.new uri
+      response = http.request request
+      return response.is_a? Net::HTTPSuccess
+    end
+  end
+
   # There can be a delay between when OpenHAB is running and ready to process commands
   def ready?(fail_on_error: false)
     return unless running?
@@ -50,6 +70,7 @@ namespace :openhab do
 
     cmd = TTY::Command.new(:printer => :null)
     ready = cmd.run!(command).out.chomp.casecmp?('Level 100')
+    ready &&= http_ready?
     raise 'OpenHAB is not ready' if !ready && fail_on_error
 
     ready

@@ -38,20 +38,15 @@ Feature:  states
       """
       Switch1.update <state>
       sleep 0.5
-      if state? Switch1, Switch2
-        logger.info "All items have a valid state"
-      else
-        logger.info "Some states are nil"
-      end
+      logger.info "All items have a valid state: #{state? Switch1, Switch2}"
       """
     When I start deploying the rule
-    Then It <should> log "All items have a valid state" within 3 seconds
-    And It <should_not> log "Some states are nil" within 3 seconds
+    Then It should log "All items have a valid state: <result>" within 3 seconds
     Examples:
-      | state | should     | should_not |
-      | ON    | should     | should not |
-      | UNDEF | should not | should     |
-      | NULL  | should not | should     |
+      | state | result |
+      | ON    | true   |
+      | UNDEF | false  |
+      | NULL  | false  |
 
   Scenario Outline: Check item states before executing a rule
     Given code in a rules file:
@@ -61,16 +56,17 @@ Feature:  states
       rule 'state check' do
         on_start
         only_if { state? Switch1, Switch2 }
-        run { logger.info "All items have a valid state" }
+        run { logger.info "All items have a valid state: true" }
+        otherwise { logger.info "All items have a valid state: false" }
       end
       """
     When I deploy the rule
-    Then It <should> log "All items have a valid state" within 3 seconds
+    Then It should log "All items have a valid state: <result>" within 3 seconds
     Examples:
-      | state | should     |
-      | ON    | should     |
-      | UNDEF | should not |
-      | NULL  | should not |
+      | state | result |
+      | ON    | true   |
+      | UNDEF | false  |
+      | NULL  | false  |
 
   Scenario Outline: Check item states and their thing status
     Given feature 'openhab-binding-astro' installed
