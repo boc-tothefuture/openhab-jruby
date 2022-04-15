@@ -57,7 +57,7 @@ module OpenHAB
         # @return [Boolean]
         #
         def ==(other) # rubocop:disable Metrics
-          logger.trace("(#{self.class}) #{self} == #{other} (#{other.class})")
+          logger.trace { "(#{self.class}) #{self} == #{other} (#{other.class})" }
           if other.is_a?(Items::LocationItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(LocationItem))
             return false unless other.state?

@@ -48,8 +48,8 @@ module OpenHAB
         #                   or item state of the same type
         #
         def ===(other)
-          logger.trace("(#{self.class}) #{self} === #{other} (#{other.class})")
-          other = other.state if other.respond_to?(:state)
+          logger.trace { "Type (#{self.class}) #{self} === #{other} (#{other.class})" }
+          other = other.state if other.respond_to?(:state) && !other.is_a?(OpenHAB::DSL::GenericItemObject)
           return false unless instance_of?(other.class)
 
           eql?(other)
@@ -62,7 +62,7 @@ module OpenHAB
         #   type conversions
         #
         def ==(other) # rubocop:disable Metrics
-          logger.trace("(#{self.class}) #{self} == #{other} (#{other.class})")
+          logger.trace { "(#{self.class}) #{self} == #{other} (#{other.class})" }
           return true if equal?(other)
 
           # i.e. ON == OFF, REFRESH == ON, ON == REFRESH

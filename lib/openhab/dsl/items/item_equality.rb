@@ -22,7 +22,7 @@ module OpenHAB
         # @return [Boolean]
         #
         def ==(other)
-          logger.trace("ItemEquality#== (#{self.class}) #{self} == #{other} (#{other.class})")
+          logger.trace { "ItemEquality#== (#{self.class}) #{self} == #{other} (#{other.class})" }
           return eql?(other) if generic_item_object?(other)
           return true if equal?(other) || eql?(other)
           return true if !state? && other.nil?
@@ -30,6 +30,14 @@ module OpenHAB
           return raw_state == other.raw_state if other.is_a?(GenericItem)
 
           state == other
+        end
+
+        #
+        # Check item object equality for grep
+        #
+        def ===(other)
+          logger.trace { "ItemEquality#=== (#{self.class}) #{self} == #{other} (#{other.class})" }
+          eql?(other)
         end
 
         private

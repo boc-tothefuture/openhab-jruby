@@ -383,4 +383,22 @@ Feature:  items
     And It should log "Same Item object comparison 2: true" within 5 seconds
     And It should log "Same Item object comparison 3: true" within 5 seconds
 
+  Scenario: GroupItem grep can use Item.item
+    Given group "Switches"
+    And items:
+      | type   | name    | group    | state |
+      | Switch | Switch1 | Switches | OFF   |
+      | Switch | Switch2 | Switches | OFF   |
+    And a rule:
+      """
+      logger.info "grep result1: #{Switches.grep(Switch1.item).first.name}"
+      logger.info "grep result2: #{Switches.grep(Switch2.item).first.name}"
+      logger.info "grep result3: #{Switches.grep(Switch1).first.name}"
+      logger.info "grep result4: #{Switches.grep(Switch2).first.name}"
+      """
+    When I deploy the rule
+    Then It should log "grep result1: Switch1" within 5 seconds
+    And It should log "grep result2: Switch2" within 5 seconds
+    And It should log "grep result3: Switch1" within 5 seconds
+    And It should log "grep result4: Switch2" within 5 seconds
 
