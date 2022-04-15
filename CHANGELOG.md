@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.38.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.37.1...4.38.0) (2022-04-15)
+
+
+### Features
+
+* **semantics:** add semantic helper methods to items ([a16f976](https://github.com/boc-tothefuture/openhab-jruby/commit/a16f9768b57763145e8b90a0877108d09c57dfe8)), closes [#370](https://github.com/boc-tothefuture/openhab-jruby/issues/370)
+
 ## [4.37.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.37.0...4.37.1) (2022-04-09)
 
 
