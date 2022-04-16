@@ -12,16 +12,22 @@ require 'net/http'
 # rubocop: disable Rake/MethodDefinitionInTask Legacy code
 namespace :openhab do
   @openhab_version = ENV['OPENHAB_VERSION'] || '3.2.0'
+  @port_numbers = {
+    ssh: { port: ENV['OPENHAB_SSH_PORT'] || 8101, config: 'org.apache.karaf.shell:sshPort' },
+    lsp: { port: ENV['OPENHAB_LSP_PORT'] || 5007, config: 'org.openhab.lsp:port' }
+  }
   karaf_client_path = File.join(OPENHAB_DIR, 'runtime/bin/client')
-  karaf_client_args = [karaf_client_path, '-p', 'habopen'].freeze
+  karaf_client_args = [karaf_client_path, '-a', @port_numbers[:ssh][:port], '-p', 'habopen'].freeze
   @karaf_client = karaf_client_args.join(' ')
   @deploy_dir = File.join(OPENHAB_DIR, 'conf/automation/jsr223/ruby/personal')
   @state_dir = File.join(OPENHAB_DIR, 'rake_state')
   @services_config_file = File.join(OPENHAB_DIR, 'conf/services/jruby.cfg')
   @addons_config_file = File.join(OPENHAB_DIR, 'conf/services/addons.cfg')
+  @port_config_file = File.join(OPENHAB_DIR, 'conf/services/port_config.cfg')
 
   CLOBBER << OPENHAB_DIR
   CLOBBER << @services_config_file
+  CLOBBER << @port_config_file
   CLOBBER << TMP_DIR
   CLEAN << @deploy_dir
 
@@ -200,10 +206,16 @@ namespace :openhab do
     end
   end
 
+  def configure_ports
+    port_config = @port_numbers.values.map { |service| "#{service[:config]} = #{service[:port]}" }.join("\n")
+    File.write(@port_config_file, port_config) unless port_config.empty?
+  end
+
   desc 'Configure'
   task configure: %i[download] do |task|
     # Set log levels
     state(task.name) do
+      configure_ports
       start
       karaf('log:set TRACE org.openhab.automation.jruby')
       karaf('log:set TRACE org.openhab.core.automation')
@@ -238,7 +250,9 @@ namespace :openhab do
       'LANG' => ENV['LANG'],
       'JAVA_HOME' => ENV['JAVA_HOME'],
       'KARAF_REDIRECT' => karaf_log,
-      'EXTRA_JAVA_OPTS' => '-Xmx4g'
+      'EXTRA_JAVA_OPTS' => '-Xmx4g',
+      'OPENHAB_HTTP_PORT' => ENV['OPENHAB_HTTP_PORT'] || '8080',
+      'OPENHAB_HTTPS_PORT' => ENV['OPENHAB_HTTPS_PORT'] || '8443'
     }
   end
 

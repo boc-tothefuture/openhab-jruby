@@ -25,7 +25,12 @@ The development process has been tested on MacOS, others operating systems may w
 2. Fork [the repo](https://github.com/boc-tothefuture/openhab-jruby) and clone it
 3. Install [bundler](https://bundler.io/)
 4. Run `bundler install` from inside of the repo directory
-5. Run `bundle exec rake openhab:setup` from inside of the repo directory.  This will download a copy of OpenHAB local in your development environment, start it and prepare it for JRuby OpenHAB Scripting Development
+5. To avoid conflicts, the OpenHAB development instance can use custom ports by defining these environment variables:
+   * `OPENHAB_HTTP_PORT` 
+   * `OPENHAB_HTTPS_PORT`
+   * `OPENHAB_SSL_PORT`
+   * `OPENHAB_LSP_PORT`
+6. Run `bundle exec rake openhab:setup` from inside of the repo directory.  This will download a copy of OpenHAB local in your development environment, start it and prepare it for JRuby OpenHAB Scripting Development
 
 # Code Documentation
 Code documentation is written in [Yard](https://yardoc.org/) and the current documentation for this project is available [here](https://www.rubydoc.info/gems/openhab-scripting/).

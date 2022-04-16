@@ -11,8 +11,12 @@ class Rest
   include HTTParty
   persistent_connection_adapter
 
+  def self.openhab_port
+    @openhab_port ||= ENV['OPENHAB_HTTP_PORT'] || 8080
+  end
+
   format :json
-  base_uri 'http://localhost:8080'
+  base_uri "http://localhost:#{openhab_port}"
   basic_auth 'foo', 'foo'
 
   def self.rules
