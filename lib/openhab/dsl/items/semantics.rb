@@ -148,8 +148,8 @@ module OpenHAB
       # @example Search a Thermostat item for is setpoints
       #   eFamilyThermostat.points(Semantics::Control, Semantics::Temperature)
       #   # => [FamilyThermostat_HeatingSetpoint, FamilyThermostat_CoolingSetpoint]
-      # @example Given a A/V receiver's input item, search for it's power item
-      #   FamilyReceiver_Input.points(Semantics::Switch) # => FamilyReceiver_Switch
+      # @example Given a A/V receiver's input item, search for its power item
+      #   FamilyReceiver_Input.points(Semantics::Switch) # => [FamilyReceiver_Switch]
       #
       # @param [Class] point_or_property_types
       #   Pass 1 or 2 classes that are sub-classes of [Point] or [Property].
