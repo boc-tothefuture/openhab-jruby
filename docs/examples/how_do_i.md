@@ -701,6 +701,19 @@ daily_max = My_Item.maximum_since(24.hours)
 
 See [Persistence]({{ site.baseurl }}{% link usage/misc/persistence.md %})
 
+## Use Semantic Model
+
+```ruby
+# get the lightbulbs (equipment) in the room (location) 
+room_lights = LivingRoom_Motion.location.equipments(Semantics::Lightbulb)
+# get the switches (points)
+light_switches = room_lights.flat_map(&:members).points(Semantics::Switch)
+# turn them all on if they're not already on
+light_switches.ensure.on
+```
+
+See [Semantics]({{ site.baseurl }}{% link usage/misc/semantics.md %})
+
 ## Use Logging
 
 ```ruby
