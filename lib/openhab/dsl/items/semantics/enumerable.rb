@@ -76,4 +76,11 @@ module Enumerable
 
   # @!method previous
   #   Send the +PREVIOUS+ command to every item in the collection
+
+  # @!visibility private
+  # can't use `include`, because Enumerable has already been included
+  # in other classes
+  def ensure
+    OpenHAB::DSL::Ensure::GenericItemDelegate.new(self)
+  end
 end
