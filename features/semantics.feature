@@ -101,7 +101,6 @@ Feature: semantics
       """
       begin
         points = <item>.equipments
-                       .flat_map { |e| e.respond_to?(:members) ? e.members : e }
                        .points(<args>)
                        .map(&:name)
                        .sort
@@ -124,5 +123,54 @@ Feature: semantics
       | gPatio | Semantics::Light, Semantics::Level    | Exception caught: |
       | gPatio | Semantics::Room                       | Exception caught: |
       | gPatio | Semantics::Control, Semantics::Switch | Exception caught: |
+
+  Scenario: Support GroupItem as Point
+    Given groups:
+      | name         | groups       | tags      |
+      | My_Equipment | gIndoor      | Lightbulb |
+      | GroupPoint   | My_Equipment | Switch    |
+    And items:
+      | type   | name       | groups       | tags           |
+      | Dimmer | Brightness | My_Equipment | Control, Level |
+    And code in a rules file:
+      """
+      logger.info  gIndoor.equipments
+                          .points
+                          .map(&:name)
+                          .sort
+                          .to_s
+      """
+    When I deploy the rules file
+    Then It should log '["Brightness", "GroupPoint"]' within 5 seconds
+
+  Scenario: Support Item as Equipment
+    Given groups:
+      | name       | groups  | tags      |
+      | Equipment1 | gIndoor | Lightbulb |
+    And items:
+      | type   | name       | groups     | tags           |
+      | Switch | Equipment2 | gIndoor    | Lightbulb      |
+      | Dimmer | Brightness | Equipment1 | Control, Level |
+    And code in a rules file:
+      """
+      logger.info  gIndoor.equipments
+                          .map(&:name)
+                          .sort
+                          .to_s
+      """
+    When I deploy the rules file
+    Then It should log '["Equipment1", "Equipment2"]' within 5 seconds
+
+  Scenario: Get sub Equipment
+    Given groups:
+      | name         | groups           | tags      |
+      | SubEquipment | Patio_Light_Bulb | Lightbulb |
+    And code in a rules file:
+      """
+      logger.info gPatio.equipments(Semantics::Lightbulb).equipments.map(&:name)
+      """
+    When I deploy the rules file
+    Then It should log '["SubEquipment"]' within 5 seconds
+
 
 

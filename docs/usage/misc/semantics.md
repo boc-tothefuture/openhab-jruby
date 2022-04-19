@@ -83,7 +83,6 @@ rule "turn off all lights in the room when switch double-tapped down" do
       .item
       .location
       .equipments(Semantics::Lightbulb)
-      .flat_map(&:members)
       .points(Semantics::Switch)
       .ensure.off
   end

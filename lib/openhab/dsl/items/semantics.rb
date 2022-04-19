@@ -199,7 +199,7 @@ module Enumerable
   # Returns a new array of items that are semantics points (optionally of a given type)
   #
   # @example Get all the power switch items for every equipment in a room
-  #   lGreatRoom.equipments.flat_map(&:members).points(Semantics::Switch)
+  #   lGreatRoom.equipments.points(Semantics::Switch)
   def points(*point_or_property_types) # rubocop:disable Metrics
     unless (0..2).cover?(point_or_property_types.length)
       raise ArgumentError, "wrong number of arguments (given #{point_or_property_types.length}, expected 0..2)"
@@ -214,13 +214,30 @@ module Enumerable
       raise ArgumentError, 'point_or_property_types cannot both be a subclass of Point or Property'
     end
 
-    select do |point|
-      next unless point.point?
-
+    filter_with_members(&:point?)
+      .select do |point|
       point_or_property_types.all? do |tag|
         (tag < OpenHAB::DSL::Semantics::Point && point.point_type&.<=(tag)) ||
           (tag < OpenHAB::DSL::Semantics::Property && point.property_type&.<=(tag))
       end
     end
+  end
+
+  #
+  # Select the elements where the given block returns true.
+  # If the block returns false but the element is a GroupItem with members,
+  # merge its members into the result and filter them using the same block
+  #
+  # @param [Block] &block A block that returns true for the elements and members to be included in the result
+  #
+  # @return [Array] The resulting array
+  #
+  # !@visibility private
+  def filter_with_members(&block)
+    selected, others = partition(&block)
+    others.select { |e| e.respond_to?(:members) }
+          .flat_map(&:members)
+          .select(&block)
+          .concat(selected)
   end
 end
