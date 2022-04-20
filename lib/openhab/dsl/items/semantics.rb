@@ -235,9 +235,6 @@ module Enumerable
   # !@visibility private
   def filter_with_members(&block)
     selected, others = partition(&block)
-    others.select { |e| e.respond_to?(:members) }
-          .flat_map(&:members)
-          .select(&block)
-          .concat(selected)
+    others.members.select(&block).concat(selected)
   end
 end

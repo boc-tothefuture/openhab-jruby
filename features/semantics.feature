@@ -14,16 +14,17 @@ Feature: semantics
       | LivingRoom_Light1_Bulb | gLivingRoom, gMyGroup | Lightbulb            |
       | LivingRoom_Light2_Bulb | gLivingRoom           | Lightbulb, CustomTag |
     And items:
-      | type   | name                         | groups                 | tags                      |
-      | Switch | NoSemantic                   |                        |                           |
-      | Dimmer | Patio_Light_Brightness       | Patio_Light_Bulb       | Control,Level             |
-      | Color  | Patio_Light_Color            | Patio_Light_Bulb       | Control,Light             |
-      | Switch | Patio_Motion                 | gPatio                 | MotionDetector, CustomTag |
-      | Dimmer | LivingRoom_Light1_Brightness | LivingRoom_Light1_Bulb | Control,Level             |
-      | Color  | LivingRoom_Light1_Color      | LivingRoom_Light1_Bulb | Control,Light             |
-      | Dimmer | LivingRoom_Light2_Brightness | LivingRoom_Light2_Bulb | Control,Level             |
-      | Color  | LivingRoom_Light2_Color      | LivingRoom_Light2_Bulb | Control,Light             |
-      | Switch | LivingRoom_Motion            | gLivingRoom            | MotionDetector            |
+      | type   | name                         | groups                           | tags                      |
+      | Switch | NoSemantic                   |                                  |                           |
+      | Dimmer | Patio_Light_Brightness       | Patio_Light_Bulb                 | Control,Level             |
+      | Color  | Patio_Light_Color            | Patio_Light_Bulb                 | Control,Light             |
+      | Switch | Patio_Motion                 | gPatio                           | MotionDetector, CustomTag |
+      | Dimmer | LivingRoom_Light1_Brightness | LivingRoom_Light1_Bulb           | Control,Level             |
+      | Color  | LivingRoom_Light1_Color      | LivingRoom_Light1_Bulb           | Control,Light             |
+      | Switch | LivingRoom_Light1_Custom     | LivingRoom_Light1_Bulb, gMyGroup |                           |
+      | Dimmer | LivingRoom_Light2_Brightness | LivingRoom_Light2_Bulb           | Control,Level             |
+      | Color  | LivingRoom_Light2_Color      | LivingRoom_Light2_Bulb           | Control,Light             |
+      | Switch | LivingRoom_Motion            | gLivingRoom                      | MotionDetector            |
 
   Scenario Outline: Items have semantics methods
     Given code in a rules file
@@ -95,6 +96,9 @@ Feature: semantics
       | item              | method                                                                | result                     |
       | LivingRoom_Motion | location.not_member_of(gMyGroup).tagged("CustomTag").map(&:name).sort | ["LivingRoom_Light2_Bulb"] |
       | LivingRoom_Motion | location.equipments.tagged("CustomTag").map(&:name).sort              | ["LivingRoom_Light2_Bulb"] |
+    Examples: Enumerable#members
+      | item                   | method                                       | result                       |
+      | gLivingRoom.equipments | members.member_of(gMyGroup).map(&:name).sort | ["LivingRoom_Light1_Custom"] |
 
   Scenario Outline: Enumerable supports points
     Given code in a rules file
@@ -161,13 +165,13 @@ Feature: semantics
     When I deploy the rules file
     Then It should log '["Equipment1", "Equipment2"]' within 5 seconds
 
-  Scenario: Get sub Equipment
+  Scenario: Get sub-equipment (equipment that belong to another equipment)
     Given groups:
       | name         | groups           | tags      |
       | SubEquipment | Patio_Light_Bulb | Lightbulb |
     And code in a rules file:
       """
-      logger.info gPatio.equipments(Semantics::Lightbulb).equipments.map(&:name)
+      logger.info gPatio.equipments(Semantics::Lightbulb).members.equipments.map(&:name)
       """
     When I deploy the rules file
     Then It should log '["SubEquipment"]' within 5 seconds
