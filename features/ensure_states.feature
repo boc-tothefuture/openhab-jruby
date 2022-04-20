@@ -233,3 +233,22 @@ Feature:  ensure_states
     And "Switch1" should be in state "ON" within 5 seconds
     And It should not log "Switch1 received command" within 5 seconds
 
+  Scenario Outline: ensure is available on Enumerable
+    Given code in a rules file
+      """
+      rule "command received" do
+        received_command DimmerOne, DimmerTwo
+        run do |event|
+          logger.trace("Dimmers received command")
+        end
+      end
+      sleep 1
+      [DimmerOne, DimmerTwo].ensure.command <command>
+      """
+    When I deploy the rules file
+    Then It <should> log "Dimmers received command" within 5 seconds
+    Examples:
+      | command | should     |
+      | 50      | should not |
+      | 10      | should     |
+
