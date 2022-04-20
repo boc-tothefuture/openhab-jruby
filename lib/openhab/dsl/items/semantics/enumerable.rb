@@ -32,6 +32,11 @@ module Enumerable
     each { |i| i.update(state) }
   end
 
+  # Returns the group members the elements
+  def members
+    select { |e| e.respond_to? :members }.flat_map(&:members)
+  end
+
   # @!method refresh
   #   Send the +REFRESH+ command to every item in the collection
 
