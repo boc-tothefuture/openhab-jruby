@@ -4,12 +4,23 @@ require 'securerandom'
 require 'json'
 
 Given('Clean OpenHAB with latest Ruby Libraries') do
-  delete_rules
-  delete_shared_libraries
-  delete_items
-  delete_things
-  delete_conf_foo
-  truncate_log
+  attempt = 1
+  begin
+    delete_rules
+    delete_shared_libraries
+    delete_items
+    delete_things
+    delete_conf_foo
+    truncate_log
+  rescue PersistentHTTP::Error => e
+    raise if attempt > 2
+
+    attempt += 1
+    puts "Error encountered: #{e.message}. Restarting Openhab for attempt ##{attempt}"
+    stop_openhab
+    start_openhab
+    retry
+  end
 end
 
 Then(/^It should log "([^"]*)" within (\d+) seconds$/) do |string, seconds|

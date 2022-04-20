@@ -20,7 +20,7 @@ class Rest
   basic_auth 'foo', 'foo'
 
   def self.rules
-    retry_on_failure { get('/rest/rules') }
+    get('/rest/rules')
   end
 
   def self.rule(rule:)
@@ -121,15 +121,5 @@ class Rest
     body = { itemName: item_name, channelUID: channel_uid }
     escaped_channel_uid = URI.encode_www_form_component(channel_uid)
     put("/rest/links/#{item_name}/#{escaped_channel_uid}", headers: json, body: body.to_json)
-  end
-
-  def self.retry_on_failure(retries = 5)
-    1.upto(retries) do |i|
-      return yield
-    rescue PersistentHTTP::Error
-      raise if i >= retries
-
-      sleep 1
-    end
   end
 end
