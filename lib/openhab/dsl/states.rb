@@ -33,7 +33,7 @@ module OpenHAB
       # Check if all the given items have a state (not UNDEF or NULL)
       #
       # @param [Array] items whose state must be non-nil
-      # @param [<Type>] check_things when true, also ensures that all linked things are online
+      # @param [<Type>] things when true, also ensures that all linked things are online
       #
       # @return [Boolean] true if all the items have a state, false otherwise
       #
@@ -51,7 +51,7 @@ module OpenHAB
         #
         # Create a StateStorage object that stores the states of the given items
         #
-        # @param [Array<Item>] *items A list of items
+        # @param [Array<Item>] items A list of items
         #
         # @return [StateStorage] A state storage object
         #

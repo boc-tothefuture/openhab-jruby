@@ -35,7 +35,7 @@ module OpenHAB
         #
         # @param [String] expression OpenHAB style cron expression
         # @param [Object] attach object to be attached to the trigger
-        # @param [Hash] elements cron expression elements (second, minute, hour, dom, month, dow, year)
+        # @param [Hash] fields cron expression elements (second, minute, hour, dom, month, dow, year)
         #
         def cron(expression = nil, attach: nil, **fields)
           if fields.any?
@@ -124,7 +124,7 @@ module OpenHAB
           #
           # Create a cron map from a MonthDay
           #
-          # @param [Java::JavaTime::MonthDay] month_day
+          # @param [Java::JavaTime::MonthDay] monthday a {MonthDay} object
           # @param [Object] at TimeOfDay or String representing time of day
           #
           # @return [Hash] map describing cron expression
@@ -152,7 +152,7 @@ module OpenHAB
           #
           # Create a cron map from cron elements
           #
-          # @param [Hash] elements Cron fields (second, minute, hour, dom, month, dow, year)
+          # @param [Hash] fields Cron fields (second, minute, hour, dom, month, dow, year)
           #
           # @return [Hash] map describing cron expression
           #
