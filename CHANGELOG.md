@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.39.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.38.0...4.39.0) (2022-04-20)
+
+
+### Bug Fixes
+
+* **ensure:** ensure didn't work on Enumerable ([5cfe07b](https://github.com/boc-tothefuture/openhab-jruby/commit/5cfe07bae4ad71c6e1699e03d2d091ad05a0a6cc))
+
+
+### Features
+
+* **enumerable:** add Enumerable#members ([e093bed](https://github.com/boc-tothefuture/openhab-jruby/commit/e093bed1c6641090d7f4304ae4138da50e915c2a))
+* **semantics:** incorporate flat_map into Enumerable#points ([a74194b](https://github.com/boc-tothefuture/openhab-jruby/commit/a74194bb301b83898b0fea2fd0e4cdec651512ca))
+
 # [4.38.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.37.1...4.38.0) (2022-04-15)
 
 
