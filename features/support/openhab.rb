@@ -181,16 +181,16 @@ def delete_things
 end
 
 def delete_rules
+  FileUtils.rm Dir.glob(File.join(rules_dir, '*.rb'))
   deleted = false
   check_auth { Rest.rules }.each do |rule|
     uid = rule['uid']
     Rest.delete_rule(uid)
     deleted = true
   end
-  FileUtils.rm Dir.glob(File.join(rules_dir, '*.rb'))
   return unless deleted
 
-  wait_until(seconds: 30, msg: 'Rules not empty') { Rest.rules.length.zero? }
+  wait_until(seconds: 10, msg: 'Rules not empty') { Rest.rules.length.zero? }
 end
 
 def delete_shared_libraries

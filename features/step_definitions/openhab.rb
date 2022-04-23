@@ -12,7 +12,7 @@ Given('Clean OpenHAB with latest Ruby Libraries') do
     delete_things
     delete_conf_foo
     truncate_log
-  rescue PersistentHTTP::Error => e
+  rescue StandardError => e
     raise if attempt > 2
 
     attempt += 1
