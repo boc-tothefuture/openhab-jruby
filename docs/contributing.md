@@ -28,7 +28,7 @@ The development process has been tested on MacOS, others operating systems may w
 5. To avoid conflicts, the OpenHAB development instance can use custom ports by defining these environment variables:
    * `OPENHAB_HTTP_PORT` 
    * `OPENHAB_HTTPS_PORT`
-   * `OPENHAB_SSL_PORT`
+   * `OPENHAB_SSH_PORT`
    * `OPENHAB_LSP_PORT`
 6. Run `bundle exec rake openhab:setup` from inside of the repo directory.  This will download a copy of OpenHAB local in your development environment, start it and prepare it for JRuby OpenHAB Scripting Development
 
