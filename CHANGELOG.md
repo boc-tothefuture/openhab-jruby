@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.40.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.39.1...4.40.0) (2022-04-24)
+
+
+### Features
+
+* **grep:** support grepping items from enumerable ([ef29edd](https://github.com/boc-tothefuture/openhab-jruby/commit/ef29edd2c4c1122045ad14c644dd7a0c341c6c70))
+* **item_equality:** add the ability to compare item objects ([0f4608b](https://github.com/boc-tothefuture/openhab-jruby/commit/0f4608b80c3b7307cdcde6f04841e43a27373b40))
+
 ## [4.39.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.39.0...4.39.1) (2022-04-24)
 
 
