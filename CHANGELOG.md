@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.39.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.39.0...4.39.1) (2022-04-24)
+
+
+### Bug Fixes
+
+* **semantics:** groupitem.points failed to return its siblings ([afbec5e](https://github.com/boc-tothefuture/openhab-jruby/commit/afbec5e7a15008d90a31aa491858213f2b82466c))
+* **semantics:** revert the members search for enumerable#points ([4e62458](https://github.com/boc-tothefuture/openhab-jruby/commit/4e62458a983071a62380fe7b22e9d464d45a5b9b))
+
 # [4.39.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.38.0...4.39.0) (2022-04-20)
 
 
