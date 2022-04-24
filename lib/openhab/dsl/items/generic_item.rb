@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/items/metadata'
-require 'openhab/dsl/items/persistence'
-require 'openhab/dsl/items/semantics'
+require 'delegate'
+require 'forwardable'
+
+require_relative 'metadata'
+require_relative 'persistence'
+require_relative 'semantics'
 
 require_relative 'item_equality'
 
@@ -170,6 +173,17 @@ module OpenHAB
           other.instance_of?(self.class) && hash == other.hash
         end
 
+        #
+        # A method to indicate that item comparison is requested instead of state comparison
+        #
+        # Example: Item1.item == items['Item1'].item should return true
+        #
+        # See ItemEquality#==
+        #
+        def item
+          @item ||= GenericItemObject.new(self)
+        end
+
         # @!method null?
         #   Check if the item state == +NULL+
         #   @return [Boolean]
@@ -200,6 +214,16 @@ module OpenHAB
           format_type(command)
         end
       end
+    end
+
+    # A helper class to flag that item comparison is wanted instead of state comparison
+    # It is used by ItemEquality#===
+    class GenericItemObject < SimpleDelegator
+      extend Forwardable
+      include Log
+      include OpenHAB::DSL::Items::ItemEquality
+
+      def_delegator :__getobj__, :instance_of? # instance_of? is used by GenericItem#eql? to check for item equality
     end
   end
 end

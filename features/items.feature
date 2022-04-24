@@ -311,3 +311,94 @@ Feature:  items
     And item 'MySwitch' state is changed to 'ON'
     Then It should log "Label: bar" within 5 seconds
 
+  Scenario: Item objects can be compared in a case statement
+    Given a rule:
+      """
+      logger.info case SwitchTwo.item
+                  when DimmerTest then 'Matched DimmerTest'
+                  when SwitchTest then 'Matched SwitchTest'
+                  when SwitchTwo then 'Matched SwitchTwo'
+                  end
+      """
+    When item 'DimmerTest' state is changed to '0'
+    And I deploy the rule
+    Then It should log "Matched SwitchTwo" within 5 seconds
+
+  Scenario: Items matches array#include?
+    Given a rule:
+      """
+      logger.info("SwitchTwo in array? #{[DimmerTest, SwitchTwo].include?(SwitchTwo.item)}")
+      logger.info("DimmerTest in array? #{[SwitchTwo, SwitchTest].include?(DimmerTest.item)}")
+      logger.info("SwitchTest in array? #{[DimmerTest, SwitchTwo].include?(SwitchTest.item)}")
+      """
+    When item 'DimmerTest' state is changed to '0'
+    And I deploy the rule
+    Then It should log "SwitchTwo in array? true" within 5 seconds
+    And It should log "DimmerTest in array? false" within 5 seconds
+    And It should log "SwitchTest in array? false" within 5 seconds
+
+  Scenario: Items matches hash#key?
+    Given a rule:
+      """
+      logger.info("SwitchTwo in hash? #{{DimmerTest => true, SwitchTwo => true}.key?(SwitchTwo)}")
+      logger.info("SwitchTwo.item in hash? #{{DimmerTest => true, SwitchTwo => true}.key?(SwitchTwo.item)}")
+      logger.info("DimmerTest in hash? #{{SwitchTwo => true, SwitchTest => true}.key?(DimmerTest)}")
+      logger.info("SwitchTest in hash? #{{DimmerTest => true, SwitchTwo => true}.key?(SwitchTest)}")
+      """
+    When item 'DimmerTest' state is changed to '0'
+    And I deploy the rule
+    Then It should log "SwitchTwo in hash? true" within 5 seconds
+    And It should log "SwitchTwo.item in hash? true" within 5 seconds
+    And It should log "DimmerTest in hash? false" within 5 seconds
+    And It should log "SwitchTest in hash? false" within 5 seconds
+
+  Scenario: Items matches hash#value?
+    Given a rule:
+      """
+      logger.info("SwitchTwo in value? #{{a: DimmerTest, b: SwitchTwo}.value?(SwitchTwo.item)}")
+      logger.info("DimmerTest in value? #{{a: SwitchTwo, b: SwitchTest}.value?(DimmerTest.item)}")
+      logger.info("SwitchTest in value? #{{a: DimmerTest, b: SwitchTwo}.value?(SwitchTest.item)}")
+      """
+    When item 'DimmerTest' state is changed to '0'
+    And I deploy the rule
+    Then It should log "SwitchTwo in value? true" within 5 seconds
+    And It should log "DimmerTest in value? false" within 5 seconds
+    And It should log "SwitchTest in value? false" within 5 seconds
+
+  Scenario: Direct comparison of Items
+    Given a rule:
+      """
+      logger.info("State comparison: #{SwitchTwo == SwitchTest}")
+      logger.info("Different Item objects comparison1: #{SwitchTwo.item == SwitchTest.item}")
+      logger.info("Different Item objects comparison2: #{SwitchTwo.item == SwitchTest}")
+      logger.info("Same Item object comparison 1: #{SwitchTwo.item == items['SwitchTwo'].item}")
+      logger.info("Same Item object comparison 2: #{SwitchTwo == items['SwitchTwo'].item}")
+      logger.info("Same Item object comparison 3: #{SwitchTwo.item == items['SwitchTwo']}")
+      """
+    When I deploy the rule
+    Then It should log "State comparison: true" within 5 seconds
+    And It should log "Different Item objects comparison1: false" within 5 seconds
+    And It should log "Different Item objects comparison2: false" within 5 seconds
+    And It should log "Same Item object comparison 1: true" within 5 seconds
+    And It should log "Same Item object comparison 2: true" within 5 seconds
+    And It should log "Same Item object comparison 3: true" within 5 seconds
+
+  Scenario: GroupItem grep can use Item.item
+    Given group "Switches"
+    And items:
+      | type   | name    | group    | state |
+      | Switch | Switch1 | Switches | OFF   |
+      | Switch | Switch2 | Switches | OFF   |
+    And a rule:
+      """
+      logger.info "grep result1: #{Switches.grep(Switch1.item).first.name}"
+      logger.info "grep result2: #{Switches.grep(Switch2.item).first.name}"
+      logger.info "grep result3: #{Switches.grep(Switch1).first.name}"
+      logger.info "grep result4: #{Switches.grep(Switch2).first.name}"
+      """
+    When I deploy the rule
+    Then It should log "grep result1: Switch1" within 5 seconds
+    And It should log "grep result2: Switch2" within 5 seconds
+    And It should log "grep result3: Switch1" within 5 seconds
+    And It should log "grep result4: Switch2" within 5 seconds
+
