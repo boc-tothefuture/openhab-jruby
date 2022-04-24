@@ -33,6 +33,9 @@ This can be extremely useful to find related items in rules that are executed fo
 | `point_type`     | Returns the sub-class of `Point` this Item is tagged with                                                                                                                                                                                             |
 | `property_type`  | Returns the sub-class of `Property` this Item is tagged with                                                                                                                                                                                          |
 
+Note: In openHAB 3.2, `Item#equipment` and `Item#location` will return itself instead of its parent equipment or location if it itself is an equipment or a location.
+This behavior changed in openHAB 3.3 to return its parent equipment/location or nil if none is found.
+
 ## Enumerable helper methods
 
 [Enumerable helper methods](https://www.rubydoc.info/gems/openhab-scripting/Enumerable)
