@@ -154,7 +154,7 @@ rule 'automatic reentrant timer' do
   end
 end
 
-# timers[] is a pre-existing array that keeps track of reentrant timer ids
+# timers[] is a built-in hash that keeps track of reentrant timer ids
 rule 'cancel timer' do
   changed Light_Item, to: OFF
   run { timers[Motion_Sensor]&.cancel }
