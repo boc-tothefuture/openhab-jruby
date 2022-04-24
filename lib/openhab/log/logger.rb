@@ -54,7 +54,9 @@ module OpenHAB
         define_method(level) do |msg = nil, &block|
           log(severity: level, msg: msg, &block)
         end
-        define_method("#{level}_enabled?") { @sl4fj_logger.send("is_#{level}_enabled") }
+        define_method("#{level}?") { @sl4fj_logger.send("is_#{level}_enabled") }
+        # @deprecated
+        alias_method "#{level}_enabled?", "#{level}?"
       end
 
       #
@@ -62,7 +64,7 @@ module OpenHAB
       # @param [String] preamble to put at start of log message
       # @param [Hash] kwargs key and values to log
       def state(preamble = 'State:', **kwargs)
-        return unless trace_enabled?
+        return unless trace?
 
         states = kwargs.transform_keys(&:to_s)
                        .transform_keys(&:capitalize)
@@ -82,7 +84,7 @@ module OpenHAB
       # @return [Exception] the exception, potentially with a cleaned backtrace.
       #
       def clean_backtrace(error)
-        return error if debug_enabled?
+        return error if debug?
 
         if error.respond_to? :backtrace_locations
           backtrace = error.backtrace_locations.map(&:to_s).grep_v(INTERNAL_CALL_REGEX)
@@ -122,7 +124,7 @@ module OpenHAB
         raise ArgumentError, "Unknown Severity #{severity}" unless LEVELS.include? severity
 
         # Dynamically check enablement of underlying logger, this expands to "is_<level>_enabled"
-        return unless send("#{severity}_enabled?")
+        return unless send("#{severity}?")
 
         # Process block if no message provided
         msg = yield if msg.nil? && block_given?

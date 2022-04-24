@@ -20,6 +20,24 @@ Feature:  logging
       | info  |
       | error |
 
+  # Is this test necessary? Enabling it will add more test time.
+  @wip
+  Scenario Outline: Logging supports predicate methods
+    Given code in a rules file
+      """
+      # Log at a level
+      logger.info "log <level>? #{logger.<level>?}"
+      """
+    When I deploy the rules file
+    Then It should log /log <level>\? (true|false)/ within 5 seconds
+    Examples:
+      | level |
+      | trace |
+      | debug |
+      | warn  |
+      | info  |
+      | error |
+
   Scenario: Logging accepts block
     Given code in a rules file
       """
