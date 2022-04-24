@@ -707,7 +707,7 @@ See [Persistence]({{ site.baseurl }}{% link usage/misc/persistence.md %})
 # get the lightbulbs (equipment) in the room (location) 
 room_lights = LivingRoom_Motion.location.equipments(Semantics::Lightbulb)
 # get the switches (points)
-light_switches = room_lights.points(Semantics::Switch)
+light_switches = room_lights.members.points(Semantics::Switch)
 # turn them all on if they're not already on
 light_switches.ensure.on
 ```

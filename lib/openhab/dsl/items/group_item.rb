@@ -44,6 +44,7 @@ module OpenHAB
 
         include Enumerable
         include ComparableItem
+        prepend Semantics # make Semantics#points take precedence over Enumerable#points for GroupItem
 
         remove_method :==
 
