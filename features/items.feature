@@ -365,23 +365,30 @@ Feature:  items
     And It should log "DimmerTest in value? false" within 5 seconds
     And It should log "SwitchTest in value? false" within 5 seconds
 
-  Scenario: Direct comparison of Items
-    Given a rule:
+  Scenario Outline: Direct comparison of Items
+    Given items:
+      | type   | name               | state |
+      | String | NonNullStringItem1 | hi    |
+      | String | NullStringItem1    | NULL  |
+    And a rule:
       """
-      logger.info("State comparison: #{SwitchTwo == SwitchTest}")
-      logger.info("Different Item objects comparison1: #{SwitchTwo.item == SwitchTest.item}")
-      logger.info("Different Item objects comparison2: #{SwitchTwo.item == SwitchTest}")
-      logger.info("Same Item object comparison 1: #{SwitchTwo.item == items['SwitchTwo'].item}")
-      logger.info("Same Item object comparison 2: #{SwitchTwo == items['SwitchTwo'].item}")
-      logger.info("Same Item object comparison 3: #{SwitchTwo.item == items['SwitchTwo']}")
+      logger.info("<left> == <right>: #{<left> == <right>}")
       """
     When I deploy the rule
-    Then It should log "State comparison: true" within 5 seconds
-    And It should log "Different Item objects comparison1: false" within 5 seconds
-    And It should log "Different Item objects comparison2: false" within 5 seconds
-    And It should log "Same Item object comparison 1: true" within 5 seconds
-    And It should log "Same Item object comparison 2: true" within 5 seconds
-    And It should log "Same Item object comparison 3: true" within 5 seconds
+    Then It should log "<left> == <right>: <result>" within 5 seconds
+    Examples: State comparisons
+      | left      | right      | result |
+      | SwitchTwo | SwitchTest | true   |
+    Examples: Different item objects comparisons
+      | left               | right                | result |
+      | SwitchTwo.item     | SwitchTest.item      | false  |
+      | SwitchTwo.item     | SwitchTest           | false  |
+      | NonNullStringItem1 | NullStringItem1.item | false  |
+    Examples: Same item object comparisons
+      | left           | right                   | result |
+      | SwitchTwo.item | items['SwitchTwo'].item | true   |
+      | SwitchTwo      | items['SwitchTwo'].item | true   |
+      | SwitchTwo.item | items['SwitchTwo']      | true   |
 
   Scenario: GroupItem grep can use Item.item
     Given group "Switches"
