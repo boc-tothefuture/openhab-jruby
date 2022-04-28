@@ -73,8 +73,7 @@ module OpenHAB
 
         # Gets the related Location Item of this Item.
         #
-        # Returns +self+ if this Item is a Location. Otherwise, checks ancestor
-        # groups one level at a time, returning the first Location Item found.
+        # Checks ancestor groups one level at a time, returning the first Location Item found.
         #
         # @return [GenericItem, nil]
         def location
@@ -92,8 +91,7 @@ module OpenHAB
 
         # Gets the related Equipment Item of this Item.
         #
-        # Returns +self+ if this Item is an Equipment. Otherwise, checks ancestor
-        # groups one level at a time, returning the first Equipment Item found.
+        # Checks ancestor groups one level at a time, returning the first Equipment Item found.
         #
         # @return [GenericItem, nil]
         def equipment
