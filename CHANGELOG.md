@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+# [4.41.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.40.0...4.41.0) (2022-04-28)
+
+
+### Bug Fixes
+
+* comparing non null vs null comparable-item objects raised an exception ([2844d7a](https://github.com/boc-tothefuture/openhab-jruby/commit/2844d7abbea381309205152c3826ea258dcc937f))
+
+
+### Features
+
+* **logging:** change logger level predicate method names ([a7305d3](https://github.com/boc-tothefuture/openhab-jruby/commit/a7305d3543fb4aabe19fe963d960b1db71a28ab6))
+* **semantics:** rename sublocations to locations ([f2dfd29](https://github.com/boc-tothefuture/openhab-jruby/commit/f2dfd2922e246c820635fb02bbe15bcf5fa3bf64))
+
 # [4.40.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.39.1...4.40.0) (2022-04-24)
 
 
