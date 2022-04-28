@@ -41,7 +41,7 @@ based on custom tags or group memberships that are outside the semantic model.
 
 | Method          | Description                                                                                                                                                  |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `sublocations`  | Selects elements that are a semantics Location (optionally of the given type)                                                                                |
+| `locations`     | Selects elements that are a semantics Location (optionally of the given type)                                                                                |
 | `equipments`    | Selects elements that are a semantics equipment (optionally of the given type)                                                                               |
 | `points`        | Selects elements that are semantics points (optionally of a given type)                                                                                      |
 | `tagged`        | Selects elements that have at least one of the given tags                                                                                                    |
@@ -59,8 +59,9 @@ The Enumerable helper methods apply to:
   [#location](https://www.rubydoc.info/gems/openhab-scripting/OpenHAB/DSL/Items/Semantics#location-instance_method)
   and [#equipment](https://www.rubydoc.info/gems/openhab-scripting/OpenHAB/DSL/Items/Semantics#equipment-instance_method)
   because they are also group items. An exception is for Equipments that are an item (not a group)
-* Array of items, such as the return value of `#equipments`, `#sublocations`, `#points`, `#tagged`, `#not_tagged`,
+* Array of items, such as the return value of `#equipments`, `#locations`, `#points`, `#tagged`, `#not_tagged`,
   `#member_of`, `#not_member_of`, `#members` methods, etc.
+* `items[]` hash which contains all items in the system.
 
 ## Semantic Classes
 
@@ -77,7 +78,7 @@ as constants in the `Semantics` module with the corresponding name. The followin
 | `Semantics::Power`      | `org.openhab.core.semantics.model.property.Power`      |
 | ...                     | ...                                                    |
 
-These constants can be used as arguments to the `#points`, `#sublocations` and `#equipments` methods to filter their results.
+These constants can be used as arguments to the `#points`, `#locations` and `#equipments` methods to filter their results.
 They can also be compared against the return value of `semantic_type`, `location_type`, `equipment_type`,
 `point_type`, and `property_type`.
 
@@ -181,4 +182,29 @@ rule 'Switch TV to Netflix on startup' do
     application << 'netflix'
   end
 end
+```
+
+### Find all semantic entities regardless of hierarchy
+
+```ruby
+# All locations
+items.locations
+
+# All rooms
+items.locations(Semantics::Room)
+
+# All equipments
+items.equipments
+
+# All lightbulbs
+items.equipments(Semantics::Lightbulb)
+
+# All blinds
+items.equipments(Semantics::Blinds)
+
+# Turn off all "Power control"
+items.points(Semantics::Control, Semantics::Power).off
+
+# All items tagged "SmartLightControl"
+items.tagged("SmartLightControl")
 ```

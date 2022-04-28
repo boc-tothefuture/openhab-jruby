@@ -108,18 +108,18 @@ Feature: semantics
     When I deploy the rules file
     Then It should log 'Item <item>.<method>: <result>' within 5 seconds
     Examples: Enumerable methods
-      | item        | method                                               | result                                               |
-      | gPatio      | equipments.map(&:name).sort                          | ["Patio_Light_Bulb", "Patio_Motion"]                 |
-      | gIndoor     | sublocations.map(&:name).sort                        | ["gLivingRoom"]                                      |
-      | gIndoor     | sublocations(Semantics::Room).map(&:name).sort       | ["gLivingRoom"]                                      |
-      | gIndoor     | sublocations(Semantics::LivingRoom).map(&:name).sort | ["gLivingRoom"]                                      |
-      | gIndoor     | sublocations(Semantics::FamilyRoom).map(&:name).sort | []                                                   |
-      | gIndoor     | sublocations(Semantics::Light).map(&:name).sort      | Exception caught:                                    |
-      | items       | tagged("CustomTag").map(&:name).sort                 | ["LivingRoom_Light2_Bulb", "Patio_Motion"]           |
-      | gLivingRoom | tagged("Lightbulb").map(&:name).sort                 | ["LivingRoom_Light1_Bulb", "LivingRoom_Light2_Bulb"] |
-      | gLivingRoom | not_tagged("Lightbulb").map(&:name).sort             | ["LivingRoom_Motion"]                                |
-      | gLivingRoom | members.member_of(gMyGroup).map(&:name).sort         | ["LivingRoom_Light1_Bulb"]                           |
-      | gLivingRoom | members.not_member_of(gMyGroup).map(&:name).sort     | ["LivingRoom_Light2_Bulb", "LivingRoom_Motion"]      |
+      | item        | method                                            | result                                               |
+      | gPatio      | equipments.map(&:name).sort                       | ["Patio_Light_Bulb", "Patio_Motion"]                 |
+      | gIndoor     | locations.map(&:name).sort                        | ["gLivingRoom"]                                      |
+      | gIndoor     | locations(Semantics::Room).map(&:name).sort       | ["gLivingRoom"]                                      |
+      | gIndoor     | locations(Semantics::LivingRoom).map(&:name).sort | ["gLivingRoom"]                                      |
+      | gIndoor     | locations(Semantics::FamilyRoom).map(&:name).sort | []                                                   |
+      | gIndoor     | locations(Semantics::Light).map(&:name).sort      | Exception caught:                                    |
+      | items       | tagged("CustomTag").map(&:name).sort              | ["LivingRoom_Light2_Bulb", "Patio_Motion"]           |
+      | gLivingRoom | tagged("Lightbulb").map(&:name).sort              | ["LivingRoom_Light1_Bulb", "LivingRoom_Light2_Bulb"] |
+      | gLivingRoom | not_tagged("Lightbulb").map(&:name).sort          | ["LivingRoom_Motion"]                                |
+      | gLivingRoom | members.member_of(gMyGroup).map(&:name).sort      | ["LivingRoom_Light1_Bulb"]                           |
+      | gLivingRoom | members.not_member_of(gMyGroup).map(&:name).sort  | ["LivingRoom_Light2_Bulb", "LivingRoom_Motion"]      |
     Examples: Chaining methods
       | item              | method                                                                | result                     |
       | LivingRoom_Motion | location.not_member_of(gMyGroup).tagged("CustomTag").map(&:name).sort | ["LivingRoom_Light2_Bulb"] |

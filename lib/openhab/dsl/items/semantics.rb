@@ -173,7 +173,7 @@ end
 # Additions to Enumerable to allow easily filtering groups of items based on the semantic model
 module Enumerable
   # Returns a new array of items that are a semantics Location (optionally of the given type)
-  def sublocations(type = nil)
+  def locations(type = nil)
     if type && !(type < OpenHAB::DSL::Items::Semantics::Location)
       raise ArgumentError, 'type must be a subclass of Location'
     end
@@ -183,6 +183,8 @@ module Enumerable
 
     result
   end
+  # @deprecated Please use {#locations}
+  alias sublocations locations
 
   # Returns a new array of items that are a semantics equipment (optionally of the given type)
   #
