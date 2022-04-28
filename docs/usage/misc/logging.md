@@ -37,8 +37,7 @@ The `logger` object has the following methods:
 
 * `info`, `warn`, `error`, `debug`, and `trace` log a message at the corresponding level. They can accept a block
   that returns a string. The block is executed if the log level is enabled.
-* `info_enabled?`, `warn_enabled?`, `error_enabled?`, `debug_enabled?`, and `trace_enabled?` return true if the log level is enabled.
-
+* `info?`, `warn?`, `error?`, `debug?`, and `trace?` return true if the log level is enabled.
 
 ### Example
 
