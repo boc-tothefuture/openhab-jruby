@@ -16,20 +16,9 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-      - name: Install bundler
-        run: gem install bundler:2.2.7 -N
-      - name: Gem Cache
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - name: Rubocop
         run: bundle exec rubocop
 
@@ -47,20 +36,9 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-      - name: Install bundler
-        run: gem install bundler:2.2.7 -N
-      - name: Gem Cache
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - name: Cucumber Lint
         run: bundle exec cuke_linter -p features/
 
@@ -69,20 +47,9 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-      - name: Install bundler
-        run: gem install bundler:2.2.7 -N
-      - name: Gem Cache
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - name: Yard Coverage
         run: |
           bundle exec yard stats --list-undoc --private
@@ -95,20 +62,9 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-      - name: Install bundler
-        run: gem install bundler:2.2.7 -N
-      - name: Gem Cache
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - id: set-matrix
         run: |
           JSON=$(bundle exec rake github:oh_versions)
@@ -123,24 +79,9 @@ jobs:
       matrix: ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-      - uses: actions/setup-java@v1
-        with:
-          java-version: "11.0.8"
-          java-package: jre
-      - name: Install bundler
-        run: gem install bundler:2.2.7 -N
-      - name: Cache Gems
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - name: Cache OpenHAB setup
         id: cache
         uses: actions/cache@v2
@@ -160,20 +101,9 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-      - name: Install bundler
-        run: gem install bundler:2.2.7 -N
-      - name: Gem Cache
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - name: Remove env.rb file
         run: |
           rm features/support/env.rb
@@ -191,24 +121,13 @@ jobs:
       matrix: ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
       - uses: actions/setup-java@v1
         with:
-          java-version: "11.0.8"
+          java-version: "11"
           java-package: jre
-      - name: Install bundler
-        run: gem install bundler:2.2.7 -N
-      - name: Restore Gems
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
       - name: Restore OpenHAB setup
         uses: actions/cache@v2
         with:
@@ -252,20 +171,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-      - name: Install bundler
-        run: gem install bundler:2.2.7 -N
-      - name: Gem Cache
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: gems-${{ hashFiles('**/Gemfile.lock') }}
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundler-cache: true
       - name: Build yard docs
         run: |
           bundle exec rake docs:yard
@@ -289,6 +197,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      # We need to use the setup-ruby's non cached bundler action here
+      # otherwise the gem build will fail because it is not a development instance
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
