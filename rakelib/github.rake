@@ -51,14 +51,16 @@ namespace :github do
     features_per_runner = (feature_list.length / runners_per_version.to_f).ceil
     # puts "#{feature_list.length} total features,  #{features_per_runner} features per runner"
 
-    include_map = {}
-    include_map['include'] = feature_list
-                             .each_slice(features_per_runner).to_a
-                             .map do |features|
+    include_list = feature_list
+                   .each_slice(features_per_runner).to_a
+                   .map do |features|
       OPENHAB_VERSIONS.map do |version|
         { features: features.join(' '), openhab_version: version }
       end
     end.flatten
+
+    include_map = {}
+    include_map['include'] = include_list.map.with_index(1) { |element, i| element.merge({ index: i }) }
     puts include_map.to_json
   end
 

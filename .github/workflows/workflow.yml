@@ -142,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.features }}
+          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.index }}
           path: tmp/
           retention-days: 2
 
