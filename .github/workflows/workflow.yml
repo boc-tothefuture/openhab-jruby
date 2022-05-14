@@ -1,6 +1,6 @@
 name: Openhab-JRuby-Scripting
 
-on: 
+on:
   pull_request:
   push:
     branches:
@@ -11,30 +11,29 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
-
- rubocop:
-   runs-on: ubuntu-latest
-   if: "!contains(github.event.head_commit.message, 'ci skip')"
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
+  rubocop:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install bundler
+        run: gem install bundler:2.2.7 -N
+      - name: Gem Cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-     - name: Rubocop 
-       run: bundle exec rubocop
+      - name: Rubocop
+        run: bundle exec rubocop
 
- commit-lint:
+  commit-lint:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
@@ -43,151 +42,153 @@ jobs:
           fetch-depth: 0
       - uses: wagoid/commitlint-github-action@v4
 
- cucumber-lint:
-   runs-on: ubuntu-latest
-   if: "!contains(github.event.head_commit.message, 'ci skip')"
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
+  cucumber-lint:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install bundler
+        run: gem install bundler:2.2.7 -N
+      - name: Gem Cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-     - name: Cucumber Lint 
-       run: bundle exec cuke_linter -p features/
- 
- yard-coverage:
-   runs-on: ubuntu-latest
-   if: "!contains(github.event.head_commit.message, 'ci skip')"
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
-     - name: Yard Coverage
-       run: |
-            bundle exec yard stats --list-undoc --private
-            bundle exec yard stats --private | grep "100.00% documented"
+      - name: Cucumber Lint
+        run: bundle exec cuke_linter -p features/
 
- openhab-matrix:
-   runs-on: ubuntu-latest
-   if: "!contains(github.event.head_commit.message, 'ci skip')"
-   outputs:
+  yard-coverage:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install bundler
+        run: gem install bundler:2.2.7 -N
+      - name: Gem Cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Yard Coverage
+        run: |
+          bundle exec yard stats --list-undoc --private
+          bundle exec yard stats --private | grep "100.00% documented"
+
+  openhab-matrix:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-   steps: 
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install bundler
+        run: gem install bundler:2.2.7 -N
+      - name: Gem Cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-     - id: set-matrix
-       run: |
-         JSON=$(bundle exec rake github:oh_versions)
-         echo $JSON
-         echo "::set-output name=matrix::$( echo "$JSON" )"
+      - id: set-matrix
+        run: |
+          JSON=$(bundle exec rake github:oh_versions)
+          echo $JSON
+          echo "::set-output name=matrix::$( echo "$JSON" )"
 
-
- openhab-setup:
-   needs: [openhab-matrix]
-   runs-on: ubuntu-latest
-   if: "!contains(github.event.head_commit.message, 'ci skip')"
-   strategy:
-    matrix:  ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - uses: actions/setup-java@v1
-       with:
-         java-version: '11.0.8' 
-         java-package: jre
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Cache Gems 
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
+  openhab-setup:
+    needs: [openhab-matrix]
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    strategy:
+      matrix: ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "11.0.8"
+          java-package: jre
+      - name: Install bundler
+        run: gem install bundler:2.2.7 -N
+      - name: Cache Gems
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-     - name: Cache OpenHAB setup
-       id: cache
-       uses: actions/cache@v2
-       with: 
-        path: tmp/
-        key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
-     - name: Setup OpenHAB
-       if: steps.cache.outputs.cache-hit != 'true'
-       env:
-          OPENHAB_VERSION: ${{ matrix.openhab_version }} 
-       run: bundle exec rake openhab:setup
- 
- cucumber-matrix:
-   runs-on: ubuntu-latest
-   if: "!contains(github.event.head_commit.message, 'ci skip')"
-   outputs:
+      - name: Cache OpenHAB setup
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: tmp/
+          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
+      - name: Setup OpenHAB
+        if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          OPENHAB_VERSION: ${{ matrix.openhab_version }}
+        run: bundle exec rake openhab:setup
+
+  cucumber-matrix:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-   steps: 
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install bundler
+        run: gem install bundler:2.2.7 -N
+      - name: Gem Cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-     - id: set-matrix
-       run: |
-         JSON=$(bundle exec rake github:matrix)
-         echo $JSON
-         echo "::set-output name=matrix::$( echo "$JSON" )"
+      - name: Remove env.rb file
+        run: |
+          rm features/support/env.rb
+      - id: set-matrix
+        run: |
+          JSON=$(bundle exec rake github:matrix[20])
+          echo $JSON
+          echo "::set-output name=matrix::$( echo "$JSON" )"
 
- cucumber:
+  cucumber:
     needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
-      matrix:  ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
@@ -195,13 +196,13 @@ jobs:
           ruby-version: ${{ env.RUBY_VERSION }}
       - uses: actions/setup-java@v1
         with:
-          java-version: '11.0.8' 
+          java-version: "11.0.8"
           java-package: jre
       - name: Install bundler
         run: gem install bundler:2.2.7 -N
-      - name: Restore Gems 
+      - name: Restore Gems
         uses: actions/cache@v2
-        with: 
+        with:
           path: vendor/bundle
           key: gems-${{ hashFiles('**/Gemfile.lock') }}
       - name: Install gems
@@ -210,11 +211,11 @@ jobs:
           bundle install --jobs 4 --retry 3
       - name: Restore OpenHAB setup
         uses: actions/cache@v2
-        with: 
+        with:
           path: tmp/
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: Cucumber
-        run: bundle exec rake features[${{ matrix.file }}]
+        run: bundle exec rake "features[${{ matrix.features }}]"
       - name: Generate OpenHAB Dump
         run: bundle exec rake openhab:dump
         if: failure()
@@ -222,101 +223,99 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.feature }}
+          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.features }}
           path: tmp/
           retention-days: 2
 
- pickles-docs:
-  if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
-  runs-on: windows-latest
-  steps:
-    - uses: actions/checkout@v2
-    - name: Install pickles
-      run: choco install pickles
-    - name: Generate Pickles docs
-      shell: cmd
-      run:  |
+  pickles-docs:
+    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install pickles
+        run: choco install pickles
+      - name: Generate Pickles docs
+        shell: cmd
+        run: |
           call refreshenv
           pickles -f features -o pickles --df html || VER>NUL
-    - uses: actions/upload-artifact@v2
-      with:
-        name: pickles-docs
-        path: pickles/
-        if-no-files-found: error
-        retention-days: 1
-  
- docs:
-   needs: [cucumber, pickles-docs]
-   if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
-   runs-on: ubuntu-latest
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-         ruby-version: ${{ env.RUBY_VERSION }}
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
-     - name: Build yard docs
-       run: |
-          bundle exec rake docs:yard
-     - name: Download pickles docs
-       uses: actions/download-artifact@v2
-       with:
-         name: pickles-docs
-         path: docs/pickles
-     - name: Publish docs
-       uses: JamesIves/github-pages-deploy-action@3.7.1
-       with:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         BRANCH: gh-pages 
-         FOLDER: docs 
-         CLEAN: true 
-         SINGLE_COMMIT: true 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pickles-docs
+          path: pickles/
+          if-no-files-found: error
+          retention-days: 1
 
- 
- release:
-   needs: cucumber 
-   if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
-   runs-on: ubuntu-latest
-   steps:
-     - uses: actions/checkout@v2
-     - uses: actions/setup-ruby@v1
-       with:
-        ruby-version: ${{ env.RUBY_VERSION }}
-     - uses: actions/setup-node@v2
-       with:
-        node-version: '15'
-     - name: Install bundler
-       run: gem install bundler:2.2.7 -N
-     - name: Gem Cache
-       uses: actions/cache@v2
-       with: 
-        path: vendor/bundle
-        key: gems-${{ hashFiles('**/Gemfile.lock') }}
-     - name: Install gems
-       run: |
+  docs:
+    needs: [cucumber, pickles-docs]
+    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install bundler
+        run: gem install bundler:2.2.7 -N
+      - name: Gem Cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-     - name: Install Semantic Release
-       run: |
-         npm install semantic-release@^17.0.0
-         npm install @semantic-release/changelog@^5.0.0 -D
-         npm install @semantic-release/git@^9.0.0 -D
-         npm install semantic-release-rubygem@^1.0.0 -D
-         npm install conventional-changelog-conventionalcommits@^4.0.0 -D
-         npm install @semantic-release/changelog@^5.0.0 -D
-     - name: Release
-       run: |
+      - name: Build yard docs
+        run: |
+          bundle exec rake docs:yard
+      - name: Download pickles docs
+        uses: actions/download-artifact@v2
+        with:
+          name: pickles-docs
+          path: docs/pickles
+      - name: Publish docs
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: docs
+          CLEAN: true
+          SINGLE_COMMIT: true
+
+  release:
+    needs: cucumber
+    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'ci skip')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "15"
+      - name: Install bundler
+        run: gem install bundler:2.2.7 -N
+      - name: Gem Cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Install Semantic Release
+        run: |
+          npm install semantic-release@^17.0.0
+          npm install @semantic-release/changelog@^5.0.0 -D
+          npm install @semantic-release/git@^9.0.0 -D
+          npm install semantic-release-rubygem@^1.0.0 -D
+          npm install conventional-changelog-conventionalcommits@^4.0.0 -D
+          npm install @semantic-release/changelog@^5.0.0 -D
+      - name: Release
+        run: |
           npx semantic-release
-       env:
-        GEM_HOST_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
-     
+        env:
+          GEM_HOST_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
