@@ -312,7 +312,7 @@ namespace :openhab do
     puts 'Deleting any existing dumps'
     dump = Dir[dumps].each { |dump_file| rm dump_file }
 
-    karaf('dev:dump-create')
+    karaf('dev:dump-create --no-heap-dump')
 
     wait_for(30, 'Dump to be created') do
       Dir[dumps].any?
