@@ -18,6 +18,8 @@ grand_parent: Usage
 
 ## Example
 
+### PID Controller Trigger
+
 Create a trigger for the [PID Controller Automation](https://www.openhab.org/addons/automation/pidcontroller/) add-on.
 
 ```ruby
@@ -34,6 +36,20 @@ rule 'PID Control' do
   run do |event|
     logger.info("PID controller command: #{event.command}")
     ControlItem << event.command
+  end
+end
+```
+
+### DateTime Trigger
+
+This trigger type is available in openHAB 3.3.0.M4+
+
+```ruby
+rule 'DateTime Trigger' do
+  description 'Triggers at a time specified in MyDateTimeItem'
+  trigger 'timer.DateTimeTrigger', itemName: MyDateTimeItem.name
+  run do 
+    logger.info("DateTimeTrigger has been triggered")
   end
 end
 ```
