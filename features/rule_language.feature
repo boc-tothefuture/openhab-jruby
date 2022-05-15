@@ -158,7 +158,7 @@ Feature: rule_language
       rule 'test' do
         on_start
         <block> { test }
-        delay 5.seconds
+        delay 1.seconds
         run { logger.info('This one works!') }
       end
       """
@@ -196,6 +196,7 @@ Feature: rule_language
     And It should log "RUBY.test" within 5 seconds
     And It should log "RUBY.<main>" within 5 seconds
 
+  @log_level_changed
   Scenario: Native java exceptions are handled during rule creation
     Given log level INFO
     And code in a rules file
