@@ -20,7 +20,7 @@ Feature:  ensure_states
         rule "command received" do
           <trigger_type> DimmerOne
           run do |event|
-            logger.trace("DimmerOne <trigger_type>")
+            logger.info("DimmerOne <trigger_type>")
           end
         end
         DimmerOne.ensure.<command>
@@ -55,11 +55,11 @@ Feature:  ensure_states
         rule "command received" do
           <trigger_type> DimmerOne
           run do |event|
-            logger.trace("DimmerOne <trigger_type>")
+            logger.info("DimmerOne <trigger_type>")
           end
         end
         DimmerOne.ensure.<command>
-        logger.trace("Command sent")
+        logger.info("Command sent")
       """
     When I deploy the rules file
     Then It should log "Command sent" within 5 seconds
@@ -91,7 +91,7 @@ Feature:  ensure_states
         rule "command received" do
           received_command DimmerOne
           run do |event|
-            logger.trace("DimmerOne received command")
+            logger.info("DimmerOne received command")
           end
         end
         Dimmers.ensure.<command>
@@ -119,11 +119,11 @@ Feature:  ensure_states
         rule "command received" do
           received_command DimmerOne
           run do |event|
-            logger.trace("DimmerOne received command")
+            logger.info("DimmerOne received command")
           end
         end
         Dimmers.ensure.<command>
-        logger.trace("Command sent")
+        logger.info("Command sent")
       """
     When I deploy the rules file
     Then It should log "Command sent" within 5 seconds
@@ -146,7 +146,7 @@ Feature:  ensure_states
         rule "command received" do
           received_command DimmerOne
           run do |event|
-            logger.trace("DimmerOne received command")
+            logger.info("DimmerOne received command")
           end
         end
         Dimmers.members.ensure.<command>
@@ -170,13 +170,13 @@ Feature:  ensure_states
         rule "command received" do
           <trigger_type> DimmerOne
           run do |event|
-            logger.trace("DimmerOne <trigger_type>")
+            logger.info("DimmerOne <trigger_type>")
           end
         end
         ensure_states do
           DimmerOne.<command>
         end
-        logger.trace("Command sent")
+        logger.info("Command sent")
       """
     When I deploy the rules file
     Then It should log "Command sent" within 5 seconds
@@ -196,11 +196,11 @@ Feature:  ensure_states
         rule "command received" do
           <trigger_type> Switch1
           run do |event|
-            logger.trace("Switch1 <trigger_type>")
+            logger.info("Switch1 <trigger_type>")
           end
         end
         Switch1.ensure.<command>
-        logger.trace("Command sent")
+        logger.info("Command sent")
       """
     When I deploy the rules file
     Then It should log "Command sent" within 5 seconds
@@ -222,11 +222,11 @@ Feature:  ensure_states
         rule "command received" do
           received_command Switch1
           run do |event|
-            logger.trace("Switch1 received command")
+            logger.info("Switch1 received command")
           end
         end
         Switch1.ensure.update ON
-        logger.trace("Item updated")
+        logger.info("Item updated")
       """
     When I deploy the rules file
     Then It should log "Item updated" within 5 seconds
@@ -239,7 +239,7 @@ Feature:  ensure_states
       rule "command received" do
         received_command DimmerOne, DimmerTwo
         run do |event|
-          logger.trace("Dimmers received command")
+          logger.info("Dimmers received command")
         end
       end
       sleep 1

@@ -168,7 +168,7 @@ def feature_installed?(feature)
 end
 
 def truncate_log
-  File.open(openhab_log, File::TRUNC)
+  File.open(openhab_log, File::TRUNC) {} # rubocop:disable Lint/EmptyBlock
 end
 
 def delete_conf_foo
