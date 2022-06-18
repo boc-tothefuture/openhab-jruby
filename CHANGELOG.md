@@ -1,5 +1,34 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.42.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.41.0...4.42.0) (2022-06-18)
+
+
+### Features
+
+* add support for persistence 'between' methods ([fc46fc4](https://github.com/boc-tothefuture/openhab-jruby/commit/fc46fc41e58788ff26f4c4d8b7ee62e45a6ab2f9))
+
+
+### Documentation
+
+* add an example for DateTimeTrigger ([279b81a](https://github.com/boc-tothefuture/openhab-jruby/commit/279b81aab1ac16b1f64d37eb3947e7c909292677))
+
+
+### Build System
+
+* add --no-heap-dump to dev:dump-create ([228710c](https://github.com/boc-tothefuture/openhab-jruby/commit/228710cf20ea00c3ab03c5cbe07247f3d72128b3))
+* close file handle in truncate_log ([359ae07](https://github.com/boc-tothefuture/openhab-jruby/commit/359ae0768773b1733227f39eee098c4bdc29ca91))
+* include more commit types in the changelog ([2002afb](https://github.com/boc-tothefuture/openhab-jruby/commit/2002afb0012b0f178d121d3f92768029842f94ce))
+* update build to use openhab 3.3.0M5 ([46b9f32](https://github.com/boc-tothefuture/openhab-jruby/commit/46b9f329dbd6b58bcad17cd703a6dd927498ace0))
+* use a simpler setup-ruby action ([8187e77](https://github.com/boc-tothefuture/openhab-jruby/commit/8187e77ead0e476876cb52e9e018cd22dd44d5df))
+* use index in log dump file in github action ([01e683a](https://github.com/boc-tothefuture/openhab-jruby/commit/01e683a548679cd4d1e7bbb1ee8e2361bde83f58))
+* **ci:** optimize CI builds by splitting features across number of runners ([ed85b4d](https://github.com/boc-tothefuture/openhab-jruby/commit/ed85b4db59a543e3abee2dc6883f1932790e4deb))
+
+
+### Tests
+
+* **ensure_states:** change logging from trace to info ([7686d32](https://github.com/boc-tothefuture/openhab-jruby/commit/7686d32ef13f14eb5528cea9b9e7b349d3779c9b))
+* **rule_language:** [@log](https://github.com/log)_level_changed was missing ([fe61b04](https://github.com/boc-tothefuture/openhab-jruby/commit/fe61b040019142ba9525685f742b13d0eb54e233))
+
 # [4.41.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.40.0...4.41.0) (2022-04-28)
 
 
