@@ -46,7 +46,7 @@ Feature: persistence
             logger.info("Last update: #{Test_Group.last_update}")
             %i[
             average_since
-            changed_since
+            changed_since?
             delta_since
             deviation_since
             evolution_rate
@@ -54,7 +54,7 @@ Feature: persistence
             maximum_since
             minimum_since
             sum_since
-            updated_since
+            updated_since?
             variance_since
             ].each do |method|
               logger.info("#{method}: #{Number1.__send__(method, 1.minute)}")
@@ -62,6 +62,23 @@ Feature: persistence
               logger.info("#{method}: #{Test_Group.__send__(method, 1.minute)}")
               logger.info("#{method}: #{Test_Group.__send__(method, ZonedDateTime.now.minusMinutes(1))}")
             end
+
+            %i[
+              average_between
+              changed_between?
+              delta_between
+              deviation_between
+              maximum_between
+              minimum_between
+              sum_between
+              updated_between?
+              variance_between
+            ].each do |method|
+              logger.info("#{method}: #{Number1.__send__(method, 2.minute, 1.minute)}")
+              logger.info("#{method}: #{Number1.__send__(method, ZonedDateTime.now.minusMinutes(2), ZonedDateTime.now.minusMinutes(1))}")
+              logger.info("#{method}: #{Test_Group.__send__(method, 2.minute, 1.minute)}")
+              logger.info("#{method}: #{Test_Group.__send__(method, ZonedDateTime.now.minusMinutes(2), ZonedDateTime.now.minusMinutes(1))}")
+            end if PersistenceExtensions.methods.include? :average_between
             logger.info("Persistence checks done")
           end
         end
