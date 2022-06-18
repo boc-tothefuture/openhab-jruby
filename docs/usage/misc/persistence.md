@@ -11,35 +11,45 @@ grand_parent: Usage
 
 [Persistence](https://www.openhab.org/docs/configuration/persistence.html) functions can be accessed through the item object. The following methods related to persistence are available: 
 
-| Method            | Parameters                            | Return Value                | Example                                                         |
-| ----------------- | ------------------------------------- | --------------------------- | --------------------------------------------------------------- |
-| `persist`         | service                               | Nil                         | `Item1.persist`                                                 |
-| `last_update`     | service                               | ZonedDateTime               | `Item1.last_update`                                             |
-| `previous_state`  | skip_equal: (default: false), service | item state                  | `Item1.previous_state` `Item1.previous_state(skip_equal: true)` |
-| `average_since`   | timestamp, service                    | DecimalType or QuantityType | `Item1.average_since(-1.hours, :influxdb)`                      |
-| `changed_since`   | timestamp, service                    | boolean                     |                                                                 |
-| `delta_since`     | timestamp, service                    | DecimalType or QuantityType |                                                                 |
-| `deviation_since` | timestamp, service                    | DecimalType or QuantityType |                                                                 |
-| `evolution_rate`  | timestamp, service                    | DecimalType                 |                                                                 |
-| `historic_state`  | timestamp, service                    | HistoricState               |                                                                 |
-| `maximum_since`   | timestamp, service                    | HistoricState               |                                                                 |
-| `minimum_since`   | timestamp, service                    | HistoricState               |                                                                 |
-| `sum_since`       | timestamp, service                    | DecimalType or QuantityType |                                                                 |
-| `updated_since`   | timestamp, service                    | boolean                     |                                                                 |
-| `variance_since`  | timestamp, service                    | DecimalType or QuantityType |                                                                 |
+| Method              | Parameters                            | Return Value                | Example                                                         |
+| ------------------- | ------------------------------------- | --------------------------- | --------------------------------------------------------------- |
+| `persist`           | service                               | Nil                         | `Item1.persist`                                                 |
+| `last_update`       | service                               | ZonedDateTime               | `Item1.last_update`                                             |
+| `previous_state`    | skip_equal: (default: false), service | item state                  | `Item1.previous_state` `Item1.previous_state(skip_equal: true)` |
+| `average_between`   | begin, end, service                   | DecimalType or QuantityType | `Item1.average_between(2.hours, 1.hours, :influxdb)`            |
+| `average_since`     | timestamp, service                    | DecimalType or QuantityType | `Item1.average_since(1.hours, :influxdb)`                       |
+| `changed_between?`  | begin, end, service                   | boolean                     |                                                                 |
+| `changed_since?`    | timestamp, service                    | boolean                     |                                                                 |
+| `delta_between`     | begin, end, service                   | DecimalType or QuantityType |                                                                 |
+| `delta_since`       | timestamp, service                    | DecimalType or QuantityType |                                                                 |
+| `deviation_between` | begin, end, service                   | DecimalType or QuantityType |                                                                 |
+| `deviation_since`   | timestamp, service                    | DecimalType or QuantityType |                                                                 |
+| `evolution_rate`    | timestamp, service                    | DecimalType                 |                                                                 |
+| `historic_state`    | timestamp, service                    | HistoricState               |                                                                 |
+| `maximum_between`   | begin, end, service                   | HistoricState               |                                                                 |
+| `maximum_since`     | timestamp, service                    | HistoricState               |                                                                 |
+| `minimum_between`   | begin, end, service                   | HistoricState               |                                                                 |
+| `minimum_since`     | timestamp, service                    | HistoricState               |                                                                 |
+| `sum_between`       | begin, end, service                   | DecimalType or QuantityType |                                                                 |
+| `sum_since`         | timestamp, service                    | DecimalType or QuantityType |                                                                 |
+| `updated_between?`  | begin, end, service                   | boolean                     |                                                                 |
+| `updated_since?`    | timestamp, service                    | boolean                     |                                                                 |
+| `variance_between`  | begin, end, service                   | DecimalType or QuantityType |                                                                 |
+| `variance_since`    | timestamp, service                    | DecimalType or QuantityType |                                                                 |
 
-* The `timestamp` parameter accepts a java ZonedDateTime, a Ruby [Time](https://ruby-doc.org/core-2.6.3/Time.html), or a [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %}) object that specifies how far back in time.
+* The `timestamp`, `begin` and `end` parameters accept a java ZonedDateTime, a Ruby [Time](https://ruby-doc.org/core-2.6.3/Time.html), or a [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %}) object that specifies how far back in time.
 * The `service` optional parameter accepts the name of the persistence service to use, as a String or Symbol. When not specified, the system's default persistence service will be used.
 * Dimensioned NumberItems will return a [QuantityType]({{ site.baseurl }}{% link usage/items/number.md %}#quantities) object
-* `HistoricState` holds the item state and the timestamp data from OpenHAB's [HistoricItem](https://openhab.org/javadoc/latest/org/openhab/core/persistence/historicitem). It contains the following properties:
+* `HistoricState` the item state with timestamp attribute from OpenHAB's [HistoricItem](https://openhab.org/javadoc/latest/org/openhab/core/persistence/historicitem). It contains the following properties:
   * `timestamp` - a ZonedDateTime object indicating the timestamp of the persisted data
   * `state` - the state of the item persisted at the timestamp above. This will be a QuantityType for dimensioned NumberItem. It is not necessary to access the `state` property, as the HistoricState itself will return the state. See the example below.
-  
-  
+* The `*_between` persistence methods are available since OpenHAB 3.3M7
 
-### Examples:
+  
+## Examples:
 
 Given the following items are configured to persist on every change:
+
 ```
 Number        UV_Index
 Number:Power  Power_Usage "Power Usage [%.2f W]"
