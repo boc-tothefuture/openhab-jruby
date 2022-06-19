@@ -2,9 +2,8 @@
 
 require 'json'
 require 'open3'
-require 'pp'
 
-OPENHAB_VERSIONS = ['3.2.0', '3.3.0'].freeze
+OPENHAB_VERSIONS = ['3.3.0', '3.4.0.M5+jruby9.4'].freeze
 
 # Get list
 # rubocop: disable Metrics/MethodLength

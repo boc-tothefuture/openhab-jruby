@@ -12,6 +12,7 @@ require 'net/http'
 # rubocop: disable Rake/MethodDefinitionInTask Legacy code
 namespace :openhab do
   @openhab_version = ENV['OPENHAB_VERSION'] || '3.3.0'
+  @openhab_version, @bundle_version = @openhab_version.split('+')
   @port_numbers = {
     ssh: { port: ENV['OPENHAB_SSH_PORT'] || 8101, config: 'org.apache.karaf.shell:sshPort' },
     lsp: { port: ENV['OPENHAB_LSP_PORT'] || 5007, config: 'org.openhab.lsp:port' }
@@ -151,11 +152,11 @@ namespace :openhab do
       openhab_zip = "openhab-#{@openhab_version}.zip"
       download_url = case @openhab_version
                      when /.*-SNAPSHOT/
-                       'https://ci.openhab.org/job/openHAB3-Distribution/lastSuccessfulBuild/artifact/'\
+                       'https://ci.openhab.org/job/openHAB3-Distribution/lastSuccessfulBuild/artifact/' \
                        "distributions/openhab/target/#{openhab_zip}"
                      else
                        # The same for releases and milestones
-                       'https://github.com/openhab/openhab-distro/releases/download/'\
+                       'https://github.com/openhab/openhab-distro/releases/download/' \
                        "#{@openhab_version}/#{openhab_zip}"
                      end
       Dir.chdir(OPENHAB_DIR) do
@@ -177,6 +178,8 @@ namespace :openhab do
       services_config = ERB.new <<~SERVICES
         org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
         org.openhab.automation.jrubyscripting:rubylib=<%= ruby_lib_dir %>
+        org.openhab.automation.jrubyscripting:gems=
+        org.openhab.automation.jrubyscripting:require=
       SERVICES
       File.write(@services_config_file, services_config.result)
     end
@@ -189,7 +192,14 @@ namespace :openhab do
   desc 'Install JRuby Bundle'
   task bundle: [:download, :services, @deploy_dir] do |task|
     state(task.name) do
-      File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      case @bundle_version
+      when 'jruby9.4'
+        download_url = 'https://github.com/jimtng/openhab-addons/releases/download/jrubyscripting-jruby-9.4.0.0-0.0.2/org.openhab.automation.jrubyscripting-3.4.0-SNAPSHOT.jar'
+        file = File.join(OPENHAB_DIR, 'addons/org.openhab.automation.jrubyscripting-3.4.0-SNAPSHOT.jar')
+        IO.copy_stream(open(download_url), file) # rubocop: disable Security/Open
+      else
+        File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      end
     end
   end
 
@@ -245,8 +255,8 @@ namespace :openhab do
 
   def openhab_env
     {
-      'LANG' => ENV['LANG'],
-      'JAVA_HOME' => ENV['JAVA_HOME'],
+      'LANG' => ENV.fetch('LANG', nil),
+      'JAVA_HOME' => ENV.fetch('JAVA_HOME', nil),
       'KARAF_REDIRECT' => karaf_log,
       'EXTRA_JAVA_OPTS' => '-Xmx4g',
       'OPENHAB_HTTP_PORT' => ENV['OPENHAB_HTTP_PORT'] || '8080',
