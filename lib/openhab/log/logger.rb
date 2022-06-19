@@ -212,7 +212,7 @@ module OpenHAB
               .then { |klass| java_klass(klass) }
               .then(&:name)
               .then { |name| filter_base_classes(name) }
-              .then { |name| name&.prepend('.') }
+              .then { |name| ".#{name}" unless name.nil? } # name is frozen in jruby 9.4
       end
 
       # Get the appropriate java class for the supplied klass if the supplied

@@ -82,7 +82,7 @@ module OpenHAB
           OpenHAB::DSL.import_presets
           semaphore.synchronize do
             Timers.timer_manager.delete(self)
-            thread_local(@thread_locals) do
+            thread_local(**@thread_locals) do
               yield(self)
             end
           end
