@@ -12,6 +12,7 @@ require 'net/http'
 # rubocop: disable Rake/MethodDefinitionInTask Legacy code
 namespace :openhab do
   @openhab_version = ENV['OPENHAB_VERSION'] || '3.2.0'
+  @openhab_version, @bundle_version = @openhab_version.split('+')
   @port_numbers = {
     ssh: { port: ENV['OPENHAB_SSH_PORT'] || 8101, config: 'org.apache.karaf.shell:sshPort' },
     lsp: { port: ENV['OPENHAB_LSP_PORT'] || 5007, config: 'org.openhab.lsp:port' }
@@ -191,7 +192,14 @@ namespace :openhab do
   desc 'Install JRuby Bundle'
   task bundle: [:download, :services, @deploy_dir] do |task|
     state(task.name) do
-      File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      case @bundle_version
+      when 'jruby9.4'
+        download_url = 'https://github.com/jimtng/openhab-addons/releases/download/jruby-9.4-0.0.1/org.openhab.automation.jrubyscripting-3.3.0-SNAPSHOT.jar'
+        file = File.join(OPENHAB_DIR, 'addons/org.openhab.automation.jrubyscripting-3.3.0-SNAPSHOT.jar')
+        IO.copy_stream(open(download_url), file) # rubocop: disable Security/Open
+      else
+        File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      end
     end
   end
 
