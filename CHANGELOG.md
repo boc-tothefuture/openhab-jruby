@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.42.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.42.0...4.42.1) (2022-06-20)
+
+
+### Bug Fixes
+
+* **persistence:** between called the wrong method ([f6b4b7a](https://github.com/boc-tothefuture/openhab-jruby/commit/f6b4b7a725d62e3ae382de3e86f279fcaff6917e))
+
+
+### Build System
+
+* upgrade test to 3.3.0.M7 ([128e132](https://github.com/boc-tothefuture/openhab-jruby/commit/128e13215e71e0dee2b80eb6b44a3f68e16c06f6))
+
 ## [4.42.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.41.0...4.42.0) (2022-06-18)
 
 
