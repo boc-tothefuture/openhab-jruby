@@ -220,10 +220,10 @@ module OpenHAB
         end
 
         PERSISTENCE_METHODS.each do |method|
-          public_method = method.to_s.delete_suffix('?') # For some reason, the boolean methods with '?' are missing
           define_method(method) do |timestamp, service = nil|
             service ||= persistence_service
-            result = PersistenceExtensions.public_send(public_method, self, to_zdt(timestamp), service&.to_s)
+            result = PersistenceExtensions.public_send(method.to_s.delete_suffix('?'), self, to_zdt(timestamp),
+                                                       service&.to_s)
             wrap_result(result, method)
           end
 
@@ -232,8 +232,8 @@ module OpenHAB
           between_method = method.to_s.sub('_since', '_between').to_sym
           define_method(between_method) do |start, finish, service = nil|
             service ||= persistence_service
-            result = PersistenceExtensions.public_send(public_method, self, to_zdt(start), to_zdt(finish),
-                                                       service&.to_s)
+            result = PersistenceExtensions.public_send(between_method.to_s.delete_suffix('?'), self, to_zdt(start),
+                                                       to_zdt(finish), service&.to_s)
             wrap_result(result, method)
           end
         end
