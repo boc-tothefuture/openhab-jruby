@@ -11,10 +11,10 @@ grand_parent: Usage
 
 `trigger` provides the ability to create a trigger type not already covered by the other methods.
 
-| Options       | Description                                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------------------------- |
-| type_uid      | A string representing the trigger type uid                                                                    |
-| configuration | a hash containing the configurations for the trigger, or a list of named keywords for the configuration items |
+| Options       | Description                                     |
+| ------------- | ----------------------------------------------- |
+| type_uid      | A string representing the trigger type uid      |
+| configuration | named keywords for the trigger's configurations |
 
 ## Example
 
