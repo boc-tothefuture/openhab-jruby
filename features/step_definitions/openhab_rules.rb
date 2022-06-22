@@ -30,7 +30,7 @@ def append_identifying_log_line_to_rule(code, uid)
 end
 
 def atomic_rule_write(rule_content, deploy_path)
-  temp_file = Tempfile.create(['cucumber_test', '.rb'])
+  temp_file = Tempfile.create(['cucumber_test', '.rb'], File.join(openhab_dir, 'userdata/tmp'))
   temp_file.write(rule_content)
   temp_file.close
 
