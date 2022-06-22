@@ -69,7 +69,7 @@ def deploy_ruby_file(code:, directory:, filename: '', check_position: :end, chec
   log_line = case check_position
              when :start then identifying_started_log_line(uid)
              when :end then identifying_log_line(uid)
-             else raise ArgumentError, 'log_line can either be :start or :end'
+             else raise ArgumentError, 'check_position can either be :start or :end'
              end
 
   create_log_markers(code, uid) if check
