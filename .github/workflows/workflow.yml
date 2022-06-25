@@ -109,7 +109,7 @@ jobs:
           rm features/support/env.rb
       - id: set-matrix
         run: |
-          JSON=$(bundle exec rake github:matrix[20])
+          JSON=$(bundle exec rake github:matrix[40])
           echo $JSON
           echo "::set-output name=matrix::$( echo "$JSON" )"
 
