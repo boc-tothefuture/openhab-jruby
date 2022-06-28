@@ -37,7 +37,7 @@ module OpenHAB
           end
 
           # if we're NULL or UNDEF, implement special logic
-          return nil_comparison unless state?
+          return nil_comparison(other) unless state?
 
           # delegate to how the state compares to the other object
           state <=> other
@@ -45,9 +45,10 @@ module OpenHAB
 
         # Special logic for NULL/UNDEF state comparison
         # @!visibility private
-        def nil_comparison
+        def nil_comparison(other)
           # if comparing to nil, consider ourselves equal
           return 0 if other.nil?
+
           # if the other object is an Item, only consider equal if we're
           # in the same _kind_ of UnDefType state
           return raw_state == other.raw_state if other.is_a?(GenericItem) && !other.state?
