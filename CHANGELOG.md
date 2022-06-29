@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.42.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.42.1...4.42.2) (2022-06-29)
+
+
+### Bug Fixes
+
+* **items:** fix ComparableItem#nil_comparison ([0908ef6](https://github.com/boc-tothefuture/openhab-jruby/commit/0908ef636c2424e8957603515c99d1235bc6428e))
+* **ruby:** fix some minor ruby warnings ([040e836](https://github.com/boc-tothefuture/openhab-jruby/commit/040e8367c7ff031b0492b7d8956aa65bd8a93020))
+
 ### [4.42.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.42.0...4.42.1) (2022-06-20)
 
 
