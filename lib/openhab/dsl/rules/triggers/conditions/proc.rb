@@ -20,9 +20,6 @@ module OpenHAB
           class Proc
             include OpenHAB::Log
 
-            # Proc that doesn't check any fields
-            ANY = Proc.new.freeze
-
             #
             # Converts supplied ranges to procs that check range
             # @param [Array] ranges objects to convert to range proc if they are ranges
@@ -82,6 +79,9 @@ module OpenHAB
               @to = to
               @command = command
             end
+
+            # Proc that doesn't check any fields
+            ANY = Proc.new.freeze # this needs to be defined _after_ initialize so its instance variables are set
 
             #
             # Process rule

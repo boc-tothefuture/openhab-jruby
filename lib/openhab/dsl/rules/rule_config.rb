@@ -8,7 +8,6 @@ require_relative 'guard'
 require_relative 'rule_triggers'
 require 'openhab/core/entity_lookup'
 require 'openhab/dsl/between'
-require 'openhab/dsl/dsl'
 require 'openhab/dsl/timers'
 
 module OpenHAB
