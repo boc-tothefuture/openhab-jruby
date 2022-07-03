@@ -7,9 +7,10 @@ Feature:  ensure_states
       | type   | name    | function |
       | Dimmer | Dimmers | AVG      |
     And items:
-      | type   | name      | label      | group   | state |
-      | Dimmer | DimmerOne | Dimmer One | Dimmers | 50    |
-      | Dimmer | DimmerTwo | Dimmer Two | Dimmers | 50    |
+      | type               | name      | label        | group   | state |
+      | Dimmer             | DimmerOne | Dimmer One   | Dimmers | 50    |
+      | Dimmer             | DimmerTwo | Dimmer Two   | Dimmers | 50    |
+      | Number:Temperature | Temp      | Temp [%d °F] |         | 80    |
 
   Scenario Outline: ensure sends commands if not in given state
     Given item states:
@@ -252,3 +253,12 @@ Feature:  ensure_states
       | 50      | should not |
       | 10      | should     |
 
+  Scenario: ensure works sending a number to a quantity
+    Given code in a rules file
+      """
+      Temp.ensure << 75
+      sleep 1
+      logger.info("Temp is #{Temp.state}")
+      """
+    When I deploy the rules file
+    Then It <should> log "Temp is 75 °F" within 5 seconds

@@ -37,6 +37,14 @@ module OpenHAB
         # @!method move
         #   Send the +MOVE+ command to the item
         #   @return [RollershutterItem] +self+
+
+        # raw numbers translate directly to PercentType, not a DecimalType
+        # @!visibility private
+        def format_type(command)
+          return Types::PercentType.new(command) if command.is_a?(Numeric)
+
+          super
+        end
       end
     end
   end
