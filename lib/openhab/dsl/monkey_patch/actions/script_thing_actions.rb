@@ -9,10 +9,19 @@ module OpenHAB
       # Patches OpenHAB actions
       #
       module Actions
+        begin
+          # openHAB 3.3 uses ScriptThingActionsImpl
+          java_import Java::OrgOpenhabCoreAutomationModuleScriptInternalDefaultscope::ScriptThingActionsImpl
+        rescue NameError
+          # openHAB 3.2 uses ScriptThingActions
+          java_import Java::OrgOpenhabCoreAutomationModuleScriptInternalDefaultscope::ScriptThingActions
+          ScriptThingActionsImpl = ScriptThingActions
+        end
+
         #
         # MonkeyPatching ScriptThingActions
         #
-        class << $actions # rubocop:disable Style/GlobalVars
+        class ScriptThingActionsImpl
           field_reader :THING_ACTIONS_MAP
 
           #
