@@ -101,6 +101,18 @@ module OpenHAB
         volume = Types::PercentType.new(volume) unless volume.is_a?(Types::PercentType) || volume.nil?
         Audio.playSound sink&.to_s, filename.to_s, volume
       end
+
+      #
+      # Play an audio stream from an URL to the given sink(s). Set url to nil if streaming should be stopped
+      #
+      # @param [String] url The URL of the audio stream
+      # @param [String] sink The audio sink, or nil to use the default audio sink
+      #
+      # @return [void]
+      #
+      def play_stream(url, sink: nil)
+        Audio.playStream sink&.to_s, url
+      end
     end
   end
 end
