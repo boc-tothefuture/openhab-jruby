@@ -12,7 +12,6 @@ require 'openhab/dsl/items/items'
 require 'openhab/dsl/monkey_patch/ruby/ruby'
 
 require 'openhab/dsl/monkey_patch/events/events'
-require 'openhab/dsl/monkey_patch/actions/actions'
 require 'openhab/dsl/rules/rule'
 require 'openhab/dsl/rules/terse'
 require_relative 'actions'

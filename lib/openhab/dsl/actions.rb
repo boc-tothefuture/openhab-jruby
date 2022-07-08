@@ -43,14 +43,8 @@ module OpenHAB
       #
       def actions_for_thing(thing_uid)
         thing_uid = thing_uid.to_s
-        # rubocop: disable Style/GlobalVars
-        action_keys = $actions.action_keys
-        # rubocop: enable Style/GlobalVars
-        logger.trace("Registered actions: '#{action_keys}' for thing '#{thing_uid}'")
-        action_keys.map { |action_key| action_key.split('-', 2) }
-                   .select { |action_pair| action_pair.last == thing_uid }
-                   .map(&:first)
-                   .map { |scope| actions(scope, thing_uid) }
+        scope = thing_uid.split(':').first
+        [actions(scope, thing_uid)].compact
       end
 
       #
