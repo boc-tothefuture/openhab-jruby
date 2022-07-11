@@ -88,6 +88,7 @@ module OpenHAB
             @item.__send__(method, *args, &block)
           end
         end
+        ruby2_keywords :method_missing if respond_to? :ruby2_keywords
 
         # .
         def respond_to_missing?(method, include_private = false)

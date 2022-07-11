@@ -24,12 +24,12 @@ Feature: persistence
   Scenario: Make calls to various Persistence methods
     Given code in a rules file:
       """
-      @@last_update = nil
+      @last_update = nil
 
       rule 'record updated time' do
         updated Number1
         triggered do |item|
-          @@last_update = ZonedDateTime.now
+          @last_update = ZonedDateTime.now
           logger.info("#{item.name} = #{item.state} at: #{TimeOfDay.now}")
         end
       end

@@ -33,7 +33,7 @@ module OpenHAB
       # @param [Hash] values Keys and values to set for running thread, if hash is nil no values are set
       #
       def thread_local(**values, &block)
-        ThreadLocal.thread_local(values, &block)
+        ThreadLocal.thread_local(**values, &block)
       end
     end
   end
