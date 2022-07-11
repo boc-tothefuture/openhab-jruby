@@ -35,6 +35,7 @@ module OpenHAB
               from = Conditions::Proc.from_value(from)
               @conditions = Conditions::Proc.new(to: to, from: from)
               @duration = duration
+              @timer = nil
               logger.trace "Created Duration Condition To(#{to}) From(#{from}) "\
                            "Conditions(#{@conditions}) Duration(#{@duration})"
             end
