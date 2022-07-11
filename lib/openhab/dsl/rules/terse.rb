@@ -11,7 +11,8 @@ module OpenHAB
               name ||= infer_rule_name(#{trigger.inspect}, args, kwargs)  #   name ||= infer_rule_name(:changed, args, kwargs)
               id = Rule.infer_rule_id_from_block(block)                   #   id = Rule.infer_rule_id_from_block(block)
               name ||= id                                                 #   name ||= id
-              rule name, id: id do                                        #   rule name, id: id do
+              script = block.source rescue nil                            #   script = block.source rescue nil
+              rule name, id: id, script: script do                        #   rule name, id: id, script: script do
                 #{trigger}(*args, **kwargs)                               #     changed(*args, **kwargs)
                 run(&block)                                               #     run(&block)
               end                                                         #   end

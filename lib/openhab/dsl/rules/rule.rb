@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'method_source'
+
 require 'openhab/core/thread_local'
 require 'openhab/core/services'
 require 'openhab/log/logger'
@@ -45,9 +47,10 @@ module OpenHAB
         # @yield [] Block executed in context of a RuleConfig
         #
         #
-        def rule(rule_name = nil, id: nil, &block) # rubocop:disable Metrics
+        def rule(rule_name = nil, id: nil, script: nil, &block) # rubocop:disable Metrics
           id ||= Rule.infer_rule_id_from_block(block)
           rule_name ||= id
+          script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
           OpenHAB::Core::ThreadLocal.thread_local(RULE_NAME: rule_name) do
             @rule_name = rule_name
@@ -58,7 +61,7 @@ module OpenHAB
             config.guard = Guard::Guard.new(run_context: config.caller, only_if: config.only_if,
                                             not_if: config.not_if)
             logger.trace { config.inspect }
-            process_rule_config(config)
+            process_rule_config(config, script)
           end
         rescue StandardError => e
           logger.log_exception(e, @rule_name)
@@ -80,12 +83,15 @@ module OpenHAB
         # @param [RuleConfig] config for rule
         #
         #
-        def process_rule_config(config)
+        def process_rule_config(config, script) # rubocop:disable Metrics
           return unless create_rule?(config)
 
           rule = AutomationRule.new(config: config)
           Rule.script_rules << rule
           added_rule = add_rule(rule)
+          added_rule.actions.first.id = 'script'
+          added_rule.actions.first.configuration.put('type', 'application/x-ruby')
+          added_rule.actions.first.configuration.put('script', script)
 
           rule.execute(nil, { 'event' => Struct.new(:attachment).new(config.start_attachment) }) if config.on_start?
           added_rule
