@@ -7,15 +7,16 @@ module OpenHAB
       module TerseRule
         %i[changed channel cron every updated received_command].each do |trigger|
           class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
-            def #{trigger}(*args, name: nil, **kwargs, &block)                   # def changed(*args, name: nil, **kwargs, &block)
-              name ||= infer_rule_name(#{trigger.inspect}, args, kwargs)         #   name ||= infer_rule_name(:changed, args, kwargs)
-              name ||= infer_rule_name_from_block(block)                         #   name ||= infer_rule_name_from_block(block)
-              rule name do                                                       #   rule name do
-                #{trigger}(*args, **kwargs)                                      #     changed(*args, **kwargs)
-                run(&block)                                                      #     run(&block)
-              end                                                                #   end
-            end                                                                  # end
-            module_function #{trigger.inspect}                                   # module_function :changed
+            def #{trigger}(*args, name: nil, **kwargs, &block)            # def changed(*args, name: nil, **kwargs, &block)
+              name ||= infer_rule_name(#{trigger.inspect}, args, kwargs)  #   name ||= infer_rule_name(:changed, args, kwargs)
+              id = Rule.infer_rule_id_from_block(block)                   #   id = Rule.infer_rule_id_from_block(block)
+              name ||= id                                                 #   name ||= id
+              rule name, id: id do                                        #   rule name, id: id do
+                #{trigger}(*args, **kwargs)                               #     changed(*args, **kwargs)
+                run(&block)                                               #     run(&block)
+              end                                                         #   end
+            end                                                           # end
+            module_function #{trigger.inspect}                            # module_function :changed
           RUBY
         end
 
@@ -42,13 +43,6 @@ module OpenHAB
           name += " to #{kwargs[:to].inspect}" if kwargs[:to]
           name += " #{kwargs[:command].inspect}" if kwargs[:command]
           name
-        end
-
-        # get the block's source location, stripping some amount of common information
-        def infer_rule_name_from_block(block)
-          file = block.source_location.first.dup
-          file.sub!("#{org.openhab.core.OpenHAB.config_folder}/", '')
-          "#{file}:#{block.source_location.last}"
         end
       end
     end

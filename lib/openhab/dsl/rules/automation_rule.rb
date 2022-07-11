@@ -24,18 +24,21 @@ module OpenHAB
         include OpenHAB::Core::ThreadLocal
         include OpenHAB::DSL::Between
 
+        field_writer :uid
+
         #
         # Create a new Rule
         #
         # @param [Config] config Rule configuration
         #
         # Constructor sets a number of variables, no further decomposition necessary
-        def initialize(config:) # rubocop:disable Metrics/MethodLength
+        def initialize(config:) # rubocop:disable Metrics
           # Metrics disabled because only setters are called or defaults set.
           super()
           set_name(config.name)
           set_description(config.description)
           set_triggers(config.triggers)
+          self.uid = config.uid
           @run_context = config.caller
           @run_queue = config.run
           @guard = config.guard
