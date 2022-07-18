@@ -1,5 +1,15 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.43.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.0...4.43.1) (2022-07-18)
+
+
+### Bug Fixes
+
+* **ensure:** with QuantityType and plain number ([83036b8](https://github.com/boc-tothefuture/openhab-jruby/commit/83036b84aee376b8e6565d11a9e563d7024ad924))
+* **terse:** improve automatic naming of terse rules ([9683845](https://github.com/boc-tothefuture/openhab-jruby/commit/9683845aea9bec223bcf8c592e16d2344ac1b7c2))
+* **ui:** attach rule source to rule ([940780f](https://github.com/boc-tothefuture/openhab-jruby/commit/940780fd903891fe3c0e6e28be310c2345cf031b))
+* **ui:** improve rule UIDs ([f41f5c5](https://github.com/boc-tothefuture/openhab-jruby/commit/f41f5c5159567b6deedd271325439c8767e66917))
+
 ## [4.43.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.42.2...4.43.0) (2022-07-11)
 
 
