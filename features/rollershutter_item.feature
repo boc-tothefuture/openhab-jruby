@@ -14,7 +14,7 @@ Feature: rollershutter_item
     And item "RollerTwo" state is changed to "0"
     And code in a rules file
       """
-      java_import Java::OrgOpenhabCoreLibraryTypes::DecimalType
+      java_import Java::OrgOpenhabCoreLibraryTypes::PercentType
 
       RollerOne << <command>
       """
@@ -24,7 +24,7 @@ Feature: rollershutter_item
       | initial | command             | final |
       | 50      | 70                  | 70    |
       | 50      | RollerTwo           | 0     |
-      | 50      | DecimalType.new(10) | 10    |
+      | 50      | PercentType.new(10) | 10    |
 
   Scenario: Command methods work
     Given item "RollerOne" state is changed to "<initial>"

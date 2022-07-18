@@ -51,6 +51,14 @@ module OpenHAB
         # @!method decrease
         #   Send the +DECREASE+ command to the item
         #   @return [DimmerItem] +self+
+
+        # raw numbers translate directly to PercentType, not a DecimalType
+        # @!visibility private
+        def format_type(command)
+          return Types::PercentType.new(command) if command.is_a?(Numeric)
+
+          super
+        end
       end
     end
   end

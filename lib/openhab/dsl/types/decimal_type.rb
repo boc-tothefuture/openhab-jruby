@@ -36,14 +36,14 @@ module OpenHAB
           if value.is_a?(java.math.BigDecimal)
             super
           elsif value.is_a?(BigDecimal)
-            super(value.to_java)
+            super(value.to_java.strip_trailing_zeros)
           elsif value.is_a?(DecimalType)
             super(value.to_big_decimal)
           elsif value.is_a?(Items::NumericItem) ||
                 (value.is_a?(Items::GroupItem) && value.base_item.is_a?(Items::NumericItem))
             super(value.state)
           elsif value.respond_to?(:to_d)
-            super(value.to_d.to_java)
+            super(value.to_d.to_java.strip_trailing_zeros)
           else # rubocop:disable Lint/DuplicateBranch
             # duplicates the Java BigDecimal branch, but that needs to go first
             # in order to avoid unnecessary conversions

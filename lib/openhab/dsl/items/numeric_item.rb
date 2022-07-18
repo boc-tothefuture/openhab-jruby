@@ -64,15 +64,10 @@ module OpenHAB
           return [other, state] if other.is_a?(Types::NumericType) || other.respond_to?(:to_d)
         end
 
-        # strip trailing zeros from commands
+        # raw numbers translate directly to DecimalType, not a string
         # @!visibility private
         def format_type(command)
-          # DecimalType and PercentType we want to make sure we don't have extra zeros
-          if command.instance_of?(Types::DecimalType) || command.instance_of?(Types::PercentType)
-            return command.to_big_decimal.strip_trailing_zeros.to_plain_string
-          end
-          # BigDecimal types have trailing zeros stripped
-          return command.to_java.strip_trailing_zeros.to_plain_string if command.is_a?(BigDecimal)
+          return Types::DecimalType.new(command) if command.is_a?(Numeric)
 
           super
         end
