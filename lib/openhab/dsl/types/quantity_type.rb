@@ -8,7 +8,7 @@ module OpenHAB
       QuantityType = org.openhab.core.library.types.QuantityType
 
       # global alias - required for jrubyscripting addon <= OH3.2.0
-      ::QuantityType = QuantityType if ::QuantityType.is_a?(Java::JavaLang::Class)
+      ::QuantityType = QuantityType if ::QuantityType.is_a?(java.lang.Class)
 
       # @deprecated
       # Backwards-compatible alias

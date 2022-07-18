@@ -11,7 +11,7 @@ module OpenHAB
           #
           # Create Duration with the specified unit
           #
-          # @return [Java::JavaTime::Duration] Duration with number of units from self
+          # @return [java.time.Duration] Duration with number of units from self
           #
           %w[millis seconds minutes hours].each do |unit|
             define_method(unit) { java.time.Duration.public_send("of_#{unit}", self) }
@@ -32,7 +32,7 @@ module OpenHAB
           #
           # Create Duration with number of milliseconds
           #
-          # @return [Java::JavaTime::Duration] Duration truncated to an integral number of milliseconds from self
+          # @return [java.time.Duration] Duration truncated to an integral number of milliseconds from self
           #
           def millis
             java.time.Duration.of_millis(to_i)
@@ -41,7 +41,7 @@ module OpenHAB
           #
           # Create Duration with number of seconds
           #
-          # @return [Java::JavaTime::Duration] Duration with number of seconds from self
+          # @return [java.time.Duration] Duration with number of seconds from self
           #
           def seconds
             (self * 1000).millis
@@ -50,7 +50,7 @@ module OpenHAB
           #
           # Create Duration with number of minutes
           #
-          # @return [Java::JavaTime::Duration] Duration with number of minutes from self
+          # @return [java.time.Duration] Duration with number of minutes from self
           #
           def minutes
             (self * 60).seconds
@@ -59,7 +59,7 @@ module OpenHAB
           #
           # Create Duration with number of hours
           #
-          # @return [Java::JavaTime::Duration] Duration with number of hours from self
+          # @return [java.time.Duration] Duration with number of hours from self
           #
           def hours
             (self * 60).minutes

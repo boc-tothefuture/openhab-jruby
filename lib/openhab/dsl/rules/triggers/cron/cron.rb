@@ -23,8 +23,8 @@ module OpenHAB
 
           cron_expression = case value
                             when Symbol then Cron.from_symbol(value, at)
-                            when Java::JavaTime::Duration then Cron.from_duration(value, at)
-                            when Java::JavaTime::MonthDay then Cron.from_monthday(value, at)
+                            when java.time.Duration then Cron.from_duration(value, at)
+                            when java.time.MonthDay then Cron.from_monthday(value, at)
                             else raise ArgumentError, 'Unknown interval'
                             end
           cron(cron_expression, attach: attach)
@@ -110,7 +110,7 @@ module OpenHAB
           #
           # Create a cron map from a duration
           #
-          # @param [Java::JavaTime::Duration] duration
+          # @param [java.time.Duration] duration
           # @param [Object] at TimeOfDay or String representing time of day
           #
           # @return [Hash] map describing cron expression
@@ -124,7 +124,7 @@ module OpenHAB
           #
           # Create a cron map from a MonthDay
           #
-          # @param [Java::JavaTime::MonthDay] monthday a {MonthDay} object
+          # @param [java.time.MonthDay] monthday a {MonthDay} object
           # @param [Object] at TimeOfDay or String representing time of day
           #
           # @return [Hash] map describing cron expression
@@ -176,7 +176,7 @@ module OpenHAB
           #
           # Convert a Java Duration to a map for the map_to_cron method
           #
-          # @param duration [Java::JavaTime::Duration] The duration object
+          # @param duration [java.time.Duration] The duration object
           #
           # @return [Hash] a map suitable for map_to_cron
           #

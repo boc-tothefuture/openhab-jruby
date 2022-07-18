@@ -142,7 +142,7 @@ module OpenHAB
         #
         # Add a rule to the automation managed
         #
-        # @param [Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule] rule to add
+        # @param [org.openhab.core.automation.module.script.rulesupport.shared.simple.SimpleRule] rule to add
         #
         #
         def add_rule(rule)
