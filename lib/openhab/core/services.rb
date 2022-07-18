@@ -11,7 +11,6 @@ module OpenHAB
 
     # Get the OpenHAB automation manager
     # @return [AutomationManager] OpenHAB Automation manager
-    # rubocop:disable Style/GlobalVars
     def self.automation_manager
       $scriptExtension.get('automationManager')
     end
@@ -21,6 +20,5 @@ module OpenHAB
     def self.rule_registry
       $scriptExtension.get('ruleRegistry')
     end
-    # rubocop:enable Style/GlobalVars
   end
 end

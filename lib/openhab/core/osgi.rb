@@ -50,9 +50,7 @@ module OpenHAB
 
       # Get the OSGI Bundle for ScriptExtension Class
       def self.bundle
-        # rubocop: disable Style/GlobalVars
         @bundle ||= FrameworkUtil.getBundle($scriptExtension.class)
-        # rubocop: enable Style/GlobalVars
       end
       private_class_method :bundle
     end

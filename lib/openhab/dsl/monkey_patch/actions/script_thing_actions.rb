@@ -12,7 +12,7 @@ module OpenHAB
         #
         # MonkeyPatching ScriptThingActions
         #
-        class << $actions # rubocop:disable Style/GlobalVars
+        class << $actions
           field_reader :THING_ACTIONS_MAP
 
           #

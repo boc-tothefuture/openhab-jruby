@@ -46,7 +46,7 @@ module OpenHAB
 
         # explicit conversion to array
         def to_a
-          $ir.items.grep(org.openhab.core.items.GroupItem) # rubocop:disable Style/GlobalVars
+          $ir.items.grep(org.openhab.core.items.GroupItem)
         end
       end
     end

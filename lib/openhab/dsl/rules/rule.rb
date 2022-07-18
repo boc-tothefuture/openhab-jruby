@@ -148,7 +148,7 @@ module OpenHAB
         def add_rule(rule)
           base_uid = rule.uid
           duplicate_index = 1
-          while $rules.get(rule.uid) # rubocop:disable Style/GlobalVars
+          while $rules.get(rule.uid)
             duplicate_index += 1
             rule.uid = "#{base_uid} (#{duplicate_index})"
           end
