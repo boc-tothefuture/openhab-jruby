@@ -91,12 +91,12 @@ Feature: rule_language
     And a rule
       """
       changed TestSwitch do
-        logger.trace("switch changed")
+        logger.trace("Rule {#{OpenHAB::DSL::Rules::Rule.script_rules.first.name}}")
       end
       """
     When I deploy the rule
     And item "TestSwitch" state is changed to "ON"
-    Then It should log 'switch changed' within 5 seconds
+    Then It should log 'Rule {TestSwitch changed}' within 5 seconds
 
   Scenario Outline: Triggers return an OpenHAB TriggerImpl object
     Given items:

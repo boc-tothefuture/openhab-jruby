@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'method_source'
+
 require 'openhab/core/thread_local'
 require 'openhab/core/services'
 require 'openhab/log/logger'
@@ -32,6 +34,12 @@ module OpenHAB
 
         module_function
 
+        # get the block's source location, and simplify to a simple filename
+        def self.infer_rule_id_from_block(block)
+          file = File.basename(block.source_location.first)
+          "#{file}:#{block.source_location.last}"
+        end
+
         #
         # Create a new rule
         #
@@ -39,21 +47,25 @@ module OpenHAB
         # @yield [] Block executed in context of a RuleConfig
         #
         #
-        # rubocop:disable Metrics/MethodLength
-        def rule(rule_name, &block)
+        def rule(rule_name = nil, id: nil, script: nil, &block) # rubocop:disable Metrics
+          id ||= Rule.infer_rule_id_from_block(block)
+          rule_name ||= id
+          script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
+
           OpenHAB::Core::ThreadLocal.thread_local(RULE_NAME: rule_name) do
             @rule_name = rule_name
+
             config = RuleConfig.new(rule_name, block.binding)
+            config.uid(id)
             config.instance_exec(config, &block)
             config.guard = Guard::Guard.new(run_context: config.caller, only_if: config.only_if,
                                             not_if: config.not_if)
             logger.trace { config.inspect }
-            process_rule_config(config)
+            process_rule_config(config, script)
           end
         rescue StandardError => e
           logger.log_exception(e, @rule_name)
         end
-        # rubocop:enable Metrics/MethodLength
 
         #
         # Cleanup rules in this script file
@@ -71,12 +83,15 @@ module OpenHAB
         # @param [RuleConfig] config for rule
         #
         #
-        def process_rule_config(config)
+        def process_rule_config(config, script) # rubocop:disable Metrics
           return unless create_rule?(config)
 
           rule = AutomationRule.new(config: config)
           Rule.script_rules << rule
           added_rule = add_rule(rule)
+          added_rule.actions.first.id = 'script'
+          added_rule.actions.first.configuration.put('type', 'application/x-ruby')
+          added_rule.actions.first.configuration.put('script', script)
 
           rule.execute(nil, { 'event' => Struct.new(:attachment).new(config.start_attachment) }) if config.on_start?
           added_rule
@@ -131,6 +146,12 @@ module OpenHAB
         #
         #
         def add_rule(rule)
+          base_uid = rule.uid
+          duplicate_index = 1
+          while $rules.get(rule.uid) # rubocop:disable Style/GlobalVars
+            duplicate_index += 1
+            rule.uid = "#{base_uid} (#{duplicate_index})"
+          end
           logger.trace("Adding rule: #{rule.inspect}")
           Rule.automation_manager.addRule(rule)
         end

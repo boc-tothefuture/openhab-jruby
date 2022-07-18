@@ -61,6 +61,7 @@ module OpenHAB
         prop_array :delay, :array_name => :run_queue, :wrapper => Delay
         prop_array :otherwise, :array_name => :run_queue, :wrapper => Otherwise
 
+        prop :uid
         prop :name
         prop :description
         prop :enabled

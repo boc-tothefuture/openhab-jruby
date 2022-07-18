@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'bundler', '~> 2.2'
   spec.add_runtime_dependency 'marcel', '~> 1.0'
+  spec.add_runtime_dependency 'method_source', '~> 1.0'
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
