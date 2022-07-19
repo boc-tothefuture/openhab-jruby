@@ -271,7 +271,7 @@ module OpenHAB
         # @example
         #   to_string_set("tag1", Semantics::LivingRoom)
         #
-        # @param [Array] *tags An array of strings or Semantics classes
+        # @param tags [Array] An array of strings or Semantics classes
         #
         # @return [Set] A set of strings
         #

@@ -3,7 +3,7 @@
 require 'openhab/dsl/monkey_patch/events/item_command'
 require 'openhab/dsl/types/types'
 
-require_relative 'item_registry'
+require_relative 'registry'
 
 require_relative 'generic_item'
 require_relative 'switch_item'

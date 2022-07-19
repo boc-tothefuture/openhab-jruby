@@ -16,7 +16,7 @@ module OpenHAB
         extend Forwardable
         include ComparableItem
 
-        # !@visibility private
+        # @!visibility private
         def ==(other)
           # need to check if we're referring to the same item before
           # forwarding to <=> (and thus checking equality with state)

@@ -4,25 +4,23 @@ require 'singleton'
 
 require 'openhab/core/entity_lookup'
 require 'openhab/dsl/lazy_array'
+require 'openhab/dsl/items/builder'
 
 module OpenHAB
   module DSL
     module Items
       module_function
 
-      # Fetches all non-group items from the item registry
-      # @return [ItemRegistry]
+      # Fetches all items from the item registry
+      # @return [Registry]
       def items
-        OpenHAB::DSL::Support::ItemRegistry.instance
+        Registry.instance
       end
-    end
 
-    # Provide supporting objects for DSL functions
-    module Support
       #
       # Provides access to all OpenHAB items, and acts like an array.
       #
-      class ItemRegistry
+      class Registry
         include LazyArray
         include Singleton
 
@@ -47,6 +45,27 @@ module OpenHAB
         # @return [Array]
         def to_a
           $ir.items.map { |item| OpenHAB::Core::ItemProxy.new(item) }
+        end
+
+        # Enter the Item Builder DSL.
+        # @yield [Builder] Builder object.
+        def build(&block)
+          BaseBuilderDSL.new.instance_eval(&block)
+        end
+
+        # Remove an item.
+        #
+        # The item must have either been created by this script, or be a
+        # managed item (typically created in the UI).
+        #
+        # @param recursive [true, false] Remove the item's members if it's a group
+        # @return [GenericItem, nil] The removed item, if found.
+        def remove(item_name, recursive: false)
+          item_name = item_name.name if item_name.is_a?(GenericItem)
+          result = ItemProvider.instance.remove(item_name, recursive: recursive)
+          return result if result
+
+          $ir.remove(item_name, recursive)
         end
       end
     end

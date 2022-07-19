@@ -16,7 +16,7 @@ namespace :lint do
 
   desc 'YARD Docs'
   task :yard do
-    sh 'yard stats --private'
+    sh 'yard stats'
   end
 
   desc 'Execute all lint tests'

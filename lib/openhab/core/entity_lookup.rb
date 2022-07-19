@@ -49,6 +49,8 @@ module OpenHAB
       # Looks up an OpenHAB entity
       #  items are checked first, then things
       #
+      # @!visibility private
+      #
       # @param [String] name of entity to lookup in item or thing registry
       #
       # @return [Thing,Item] if found, nil otherwise
@@ -59,6 +61,8 @@ module OpenHAB
 
       #
       # Looks up a Thing in the OpenHAB registry replacing '_' with ':'
+      #
+      # @!visibility private
       #
       # @param [String] name of Thing to lookup in Thing registry
       #
@@ -78,6 +82,8 @@ module OpenHAB
 
       #
       # Lookup OpenHAB items in item registry
+      #
+      # @!visibility private
       #
       # @param [String] name of item to lookup
       #

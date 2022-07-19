@@ -56,8 +56,8 @@ jobs:
           bundler-cache: true
       - name: Yard Coverage
         run: |
-          bundle exec yard stats --list-undoc --private
-          bundle exec yard stats --private | grep "100.00% documented"
+          bundle exec yard stats --list-undoc
+          bundle exec yard stats | grep "100.00% documented"
 
   openhab-matrix:
     runs-on: ubuntu-latest
