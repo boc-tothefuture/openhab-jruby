@@ -1,9 +1,10 @@
 PATH
   remote: .
   specs:
-    openhab-scripting (4.42.2)
+    openhab-scripting (4.43.1)
       bundler (~> 2.2)
       marcel (~> 1.0)
+      method_source (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -266,4 +267,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.30
+   2.3.3

@@ -22,7 +22,7 @@ module OpenHAB
       # Lookup item from item registry
       #
       def __getobj__
-        $ir.get(@item_name) # rubocop:disable Style/GlobalVars
+        $ir.get(@item_name)
       end
     end
   end

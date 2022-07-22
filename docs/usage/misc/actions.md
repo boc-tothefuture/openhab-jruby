@@ -25,11 +25,12 @@ From add-ons, e.g.:
 
 For convenience, the following methods are implemented:
 
-| Method     | Parameters                                                    | Description                                                                                                                          |
-|------------|---------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| notify     | msg, email: (optional)                                        | When an email is specified, calls NotificationAction.sendNotification. Otherwise, calls NotificationAction.sendBroadcastNotification |
-| say        | text, volume: (optional), voice: (optional), sink: (optional) | Calls Voice.say()                                                                                                                    |
-| play_sound | filename, volume: (optional), sink: (optional)                | Calls Audio.playSound()                                                                                                              |
+| Method      | Parameters                                                    | Description                                                                                                                          |
+| ----------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| notify      | msg, email: (optional)                                        | When an email is specified, calls NotificationAction.sendNotification. Otherwise, calls NotificationAction.sendBroadcastNotification |
+| say         | text, volume: (optional), voice: (optional), sink: (optional) | Calls Voice.say()                                                                                                                    |
+| play_sound  | filename, volume: (optional), sink: (optional)                | Calls Audio.playSound()                                                                                                              |
+| play_stream | url, sink: (optional)                                         | Calls Audio.playStream()                                                                                                             |
 
 ## Accessing thing-related actions
 There are two methods to access thing related actions. 
@@ -53,7 +54,7 @@ mail.sendEmail('me@example.com', 'subject', 'message')
 
 | Method | Parameters | Description                                               |
 | ------ | ---------- | --------------------------------------------------------- |
-| varies | varies     | Action methods delegated from thing to associated actions | 
+| varies | varies     | Action methods delegated from thing to associated actions |
 
 
 ```ruby
@@ -76,6 +77,10 @@ rule 'Play an audio file' do
   every :hour
   run { play_sound "beep.mp3", volume: 100 }
 end
+```
+
+```ruby
+play_stream 'example.com'
 ```
 
 Send a broadcast notification via the OpenHAB Cloud

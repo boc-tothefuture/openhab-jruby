@@ -108,7 +108,7 @@ module OpenHAB
         # @return Thing specified by name/UID or nil if name/UID does not exist in thing registry
         def [](uid)
           uid = generate_thing_uid(uid) unless uid.is_a?(org.openhab.core.thing.ThingUID)
-          thing = $things.get(uid) # rubocop: disable Style/GlobalVars
+          thing = $things.get(uid)
           return unless thing
 
           logger.trace("Retrieved Thing(#{thing}) from registry for uid: #{uid}")
@@ -119,7 +119,7 @@ module OpenHAB
 
         # explicit conversion to array
         def to_a
-          $things.getAll.map { |thing| Thing.new(thing) } # rubocop: disable Style/GlobalVars
+          $things.getAll.map { |thing| Thing.new(thing) }
         end
 
         private

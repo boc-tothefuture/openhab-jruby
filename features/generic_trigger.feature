@@ -11,20 +11,6 @@ Feature:  generic_trigger
     And a deployed rule:
       """
       rule 'Execute rule when item is updated to any value' do
-        trigger 'core.ItemStateUpdateTrigger', { itemName: 'Switch1'}
-        run { logger.info("Switch1 Updated") }
-      end
-      """
-    When item "Switch1" state is changed to "ON"
-    Then It should log 'Switch1 Updated' within 5 seconds
-
-  Scenario: Use keyword arguments with trigger
-    Given items:
-      | type   | name    |
-      | Switch | Switch1 |
-    And a deployed rule:
-      """
-      rule 'Execute rule when item is updated to any value' do
         trigger 'core.ItemStateUpdateTrigger', itemName: 'Switch1'
         run { logger.info("Switch1 Updated") }
       end

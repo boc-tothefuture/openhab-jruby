@@ -73,9 +73,7 @@ module OpenHAB
         return if name.count('_') < 3
 
         name = name.tr('_', ':')
-        # rubocop: disable Style/GlobalVars
         $things.get(Java::OrgOpenhabCoreThing::ThingUID.new(name))
-        # rubocop: enable Style/GlobalVars
       end
 
       #
@@ -88,7 +86,7 @@ module OpenHAB
       def self.lookup_item(name)
         logger.trace("Looking up item(#{name})")
         name = name.to_s if name.is_a? Symbol
-        item = $ir.get(name) # rubocop: disable Style/GlobalVars
+        item = $ir.get(name)
         ItemProxy.new(item) unless item.nil?
       end
     end

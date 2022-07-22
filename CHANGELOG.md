@@ -1,5 +1,44 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.43.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.0...4.43.1) (2022-07-18)
+
+
+### Bug Fixes
+
+* **ensure:** with QuantityType and plain number ([83036b8](https://github.com/boc-tothefuture/openhab-jruby/commit/83036b84aee376b8e6565d11a9e563d7024ad924))
+* **terse:** improve automatic naming of terse rules ([9683845](https://github.com/boc-tothefuture/openhab-jruby/commit/9683845aea9bec223bcf8c592e16d2344ac1b7c2))
+* **ui:** attach rule source to rule ([940780f](https://github.com/boc-tothefuture/openhab-jruby/commit/940780fd903891fe3c0e6e28be310c2345cf031b))
+* **ui:** improve rule UIDs ([f41f5c5](https://github.com/boc-tothefuture/openhab-jruby/commit/f41f5c5159567b6deedd271325439c8767e66917))
+
+## [4.43.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.42.2...4.43.0) (2022-07-11)
+
+
+### Features
+
+* add play_stream action method ([f3ab3ae](https://github.com/boc-tothefuture/openhab-jruby/commit/f3ab3ae4dca88db880e6b488ad765267253bc4d5))
+* make the code base compatible with JRuby 9.4 (Ruby 3.x) ([77cae44](https://github.com/boc-tothefuture/openhab-jruby/commit/77cae44a4f115b5c9ca7c3f44099109ebd587c4e))
+
+
+### Bug Fixes
+
+* **ruby:** fix another minor ruby warnings ([77899c9](https://github.com/boc-tothefuture/openhab-jruby/commit/77899c9267cf6db299b04d9d60b6322bbd6f1a86))
+
+
+### Documentation
+
+* **generic_trigger:** config kwargs is not a hash in Ruby 3.x ([528994a](https://github.com/boc-tothefuture/openhab-jruby/commit/528994a3dfdb2a98399f88023e658451b3d3fafe))
+
+
+### Tests
+
+* **persistence:** change top-level class variable to instance var ([95babba](https://github.com/boc-tothefuture/openhab-jruby/commit/95babba1a9d8f534fe2a345a0a4a3bf6e837f047))
+
+
+### Continuous Integration
+
+* update test matrix to openhab 3.3 ([c9e8f1c](https://github.com/boc-tothefuture/openhab-jruby/commit/c9e8f1c84c1cb865bc097526cd1ff9d5cbb010f7))
+* **atomic_rule_write:** create temp file in userdata/tmp ([1cfec6b](https://github.com/boc-tothefuture/openhab-jruby/commit/1cfec6bc93df1fb0214715f9f23132330c9a3e4d))
+
 ### [4.42.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.42.1...4.42.2) (2022-06-29)
 
 

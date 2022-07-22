@@ -39,14 +39,14 @@ module OpenHAB
         # @param name [String] Item name to check
         # @return [Boolean] true if the item exists, false otherwise
         def include?(name)
-          !$ir.getItems(name).empty? # rubocop: disable Style/GlobalVars
+          !$ir.getItems(name).empty?
         end
         alias key? include?
 
         # Explicit conversion to array
         # @return [Array]
         def to_a
-          $ir.items.to_a # rubocop:disable Style/GlobalVars
+          $ir.items.to_a
         end
       end
     end
