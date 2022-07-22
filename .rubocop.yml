@@ -18,6 +18,15 @@ Style/Documentation:
   Enabled: false
 Style/HashSyntax:
   UseHashRocketsWithSymbolValues: true
+Style/GlobalVars:
+  AllowedVariables: # these globals are set by OpenHAB, and we can't change their name
+   - $actions
+   - $ir
+   - $rules
+   - $se
+   - $scriptExtension
+   - $things
+
 Gemspec/RequireMFA:
   Enabled: false
 
