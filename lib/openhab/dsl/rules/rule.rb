@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'method_source'
+require 'securerandom'
 
 require 'openhab/core/thread_local'
 require 'openhab/core/services'
@@ -37,7 +38,7 @@ module OpenHAB
         # get the block's source location, and simplify to a simple filename
         def self.infer_rule_id_from_block(block)
           file = File.basename(block.source_location.first)
-          "#{file}:#{block.source_location.last}"
+          "#{file}:#{block.source_location.last}:#{SecureRandom.uuid}"
         end
 
         #
