@@ -89,7 +89,7 @@ module OpenHAB
           rule = AutomationRule.new(config: config)
           Rule.script_rules << rule
           added_rule = add_rule(rule)
-          added_rule.actions.first.id = 'script'
+          # add config so that MainUI can show the script
           added_rule.actions.first.configuration.put('type', 'application/x-ruby')
           added_rule.actions.first.configuration.put('script', script)
 
