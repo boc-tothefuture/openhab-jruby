@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.43.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.1...4.43.2) (2022-07-25)
+
+
+### Bug Fixes
+
+* **rules:** fix reloading of rules ([06cb928](https://github.com/boc-tothefuture/openhab-jruby/commit/06cb9288b9a2f618bfc37b76dc5e60ba39de3e15)), closes [#620](https://github.com/boc-tothefuture/openhab-jruby/issues/620)
+
+
+### Build System
+
+* **rubocop:** explicitly allow openhab globals ([2baf772](https://github.com/boc-tothefuture/openhab-jruby/commit/2baf77268656d5c0e3ed22001da5e9374ec49790))
+
 ### [4.43.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.0...4.43.1) (2022-07-18)
 
 
