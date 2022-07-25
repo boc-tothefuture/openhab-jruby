@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.43.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.2...4.43.3) (2022-07-25)
+
+
+### Bug Fixes
+
+* **actions:** don't use a singleton method for monkeypatching ScriptThingActions ([e330a0f](https://github.com/boc-tothefuture/openhab-jruby/commit/e330a0fe0ebee31d7790b6941afabde0dcf891b1)), closes [#596](https://github.com/boc-tothefuture/openhab-jruby/issues/596)
+
 ### [4.43.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.1...4.43.2) (2022-07-25)
 
 
