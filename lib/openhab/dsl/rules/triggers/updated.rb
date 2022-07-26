@@ -23,7 +23,9 @@ module OpenHAB
         #
         def updated(*items, to: nil, attach: nil)
           updated = Updated.new(rule_triggers: @rule_triggers)
-          Updated.flatten_items(items).map do |item|
+          flattened_items = Updated.flatten_items(items)
+          @ruby_triggers << [:updated, flattened_items, { to: to }]
+          flattened_items.map do |item|
             logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
             [to].flatten.map do |to_state|
               updated.trigger(item: item, to: to_state, attach: attach)

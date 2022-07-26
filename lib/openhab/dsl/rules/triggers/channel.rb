@@ -26,8 +26,11 @@ module OpenHAB
         #
         def channel(*channels, thing: nil, triggered: nil, attach: nil)
           channel_trigger = Channel.new(rule_triggers: @rule_triggers)
-          Channel.channels(channels: channels, thing: thing).each do |channel|
-            [triggered].flatten.each do |trigger|
+          flattened_channels = Channel.channels(channels: channels, thing: thing)
+          triggers = [triggered].flatten
+          @ruby_triggers << [:channel, flattened_channels, { triggers: triggers }]
+          flattened_channels.each do |channel|
+            triggers.each do |trigger|
               channel_trigger.trigger(channel: channel, trigger: trigger, attach: attach)
             end
           end

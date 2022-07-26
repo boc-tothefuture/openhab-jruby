@@ -8,6 +8,7 @@ require 'openhab/log/logger'
 require_relative 'rule_config'
 require_relative 'automation_rule'
 require_relative 'guard'
+require_relative 'name_inference'
 
 module OpenHAB
   #
@@ -34,12 +35,6 @@ module OpenHAB
 
         module_function
 
-        # get the block's source location, and simplify to a simple filename
-        def self.infer_rule_id_from_block(block)
-          file = File.basename(block.source_location.first)
-          "#{file}:#{block.source_location.last}"
-        end
-
         #
         # Create a new rule
         #
@@ -48,18 +43,22 @@ module OpenHAB
         #
         #
         def rule(rule_name = nil, id: nil, script: nil, &block) # rubocop:disable Metrics
-          id ||= Rule.infer_rule_id_from_block(block)
-          rule_name ||= id
+          id ||= NameInference.infer_rule_id_from_block(block)
           script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
           OpenHAB::Core::ThreadLocal.thread_local(RULE_NAME: rule_name) do
             @rule_name = rule_name
 
-            config = RuleConfig.new(rule_name, block.binding)
+            config = RuleConfig.new(block.binding)
             config.uid(id)
             config.instance_exec(config, &block)
             config.guard = Guard::Guard.new(run_context: config.caller, only_if: config.only_if,
                                             not_if: config.not_if)
+
+            rule_name ||= NameInference.infer_rule_name(config)
+            rule_name ||= id
+
+            config.name(rule_name)
             logger.trace { config.inspect }
             process_rule_config(config, script)
           end

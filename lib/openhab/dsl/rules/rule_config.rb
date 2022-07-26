@@ -36,6 +36,9 @@ module OpenHAB
         # @return [Object] object that invoked rule method
         attr_accessor :caller
 
+        # @return [Array] Of trigger definitions as passed in Ruby
+        attr_reader :ruby_triggers
+
         #
         # Struct holding a run block
         #
@@ -73,10 +76,10 @@ module OpenHAB
         # @param [Object] caller_binding The object initializing this configuration.
         #   Used to execute within the object's context
         #
-        def initialize(rule_name, caller_binding)
+        def initialize(caller_binding)
           @rule_triggers = RuleTriggers.new
           @caller = caller_binding.eval 'self'
-          name(rule_name)
+          @ruby_triggers = []
           enabled(true)
           on_start(false)
         end
