@@ -37,6 +37,7 @@ module OpenHAB
           super()
           set_name(config.name)
           set_description(config.description)
+          set_tags(to_string_set(config.tags))
           set_triggers(config.triggers)
           self.uid = config.uid
           @run_context = config.caller
@@ -261,6 +262,28 @@ module OpenHAB
         def process_run_task(event, task)
           logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
           @run_context.instance_exec(event, &task.block)
+        end
+
+        #
+        # Convert the given array to a set of strings.
+        # Convert Semantics classes to their simple name
+        #
+        # @example
+        #   to_string_set("tag1", Semantics::LivingRoom)
+        #
+        # @param [Array] *tags An array of strings or Semantics classes
+        #
+        # @return [Set] A set of strings
+        #
+        def to_string_set(*tags)
+          tags = tags.flatten.map do |tag|
+            if tag.respond_to?(:java_class) && tag < org.openhab.core.semantics.Tag
+              tag.java_class.simple_name
+            else
+              tag.to_s
+            end
+          end
+          Set.new(tags)
         end
 
         #

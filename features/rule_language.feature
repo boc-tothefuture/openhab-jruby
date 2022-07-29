@@ -4,6 +4,32 @@ Feature: rule_language
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
+  Scenario: Rules support description
+    Given a rule:
+      """
+      rule 'Test rule' do
+        description 'This is the rule description'
+        on_start
+        run {}
+      end
+      """
+    When I deploy the rule
+    Then The rule 'Test rule' should have 'This is the rule description' as its description
+
+  Scenario: Rules support tags
+    Given a rule:
+      """
+      myrule = rule 'Test rule' do
+        tags "tag1", "tag2", Semantics::LivingRoom
+        on_start
+        run {}
+      end
+
+      logger.info myrule.tags.to_a.sort
+      """
+    When I deploy the rule
+    Then It should log '["LivingRoom", "tag1", "tag2"]' within 5 seconds
+
   Scenario: Call function from rule
     Given code in a rules file
       """

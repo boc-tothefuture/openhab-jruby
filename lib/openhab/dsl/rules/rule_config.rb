@@ -64,6 +64,7 @@ module OpenHAB
         prop :uid
         prop :name
         prop :description
+        prop :tags
         prop :enabled
         prop :between
 
@@ -79,6 +80,7 @@ module OpenHAB
           name(rule_name)
           enabled(true)
           on_start(false)
+          tags([])
         end
 
         #
