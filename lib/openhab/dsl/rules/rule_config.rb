@@ -67,6 +67,7 @@ module OpenHAB
         prop :uid
         prop :name
         prop :description
+        prop :tags
         prop :enabled
         prop :between
 
@@ -82,6 +83,7 @@ module OpenHAB
           @ruby_triggers = []
           enabled(true)
           on_start(false)
+          tags([])
         end
 
         #

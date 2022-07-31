@@ -38,7 +38,7 @@ module OpenHAB
         #
         # Create a new rule
         #
-        # @param [String] rule_name <description>
+        # @param [String] rule_name The rule name
         # @yield [] Block executed in context of a RuleConfig
         #
         #
