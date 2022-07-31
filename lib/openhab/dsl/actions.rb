@@ -35,7 +35,7 @@ module OpenHAB
       #
       # Gets the list of action objects associated with a specific ThingUID
       #
-      # @param [Java::org::openhab::core::thing::ThingUID] thing_uid to get associated actions for
+      # @param [org.openhab.core.thing.ThingUID] thing_uid to get associated actions for
       #
       # @return [Array] of action objects associated with thing_uid, may be empty
       #

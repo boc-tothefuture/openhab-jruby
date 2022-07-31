@@ -86,7 +86,7 @@ module OpenHAB
             #
             # Converts a ThingStatus object to a ruby Symbol
             #
-            # @param [Java::OrgOpenhabCoreThing::ThingStatus] status A ThingStatus instance
+            # @param [org.openhab.core.thing.ThingStatus] status A ThingStatus instance
             #
             # @return [Symbol] A corresponding symbol, in lower case
             #

@@ -73,7 +73,7 @@ module OpenHAB
         return if name.count('_') < 3
 
         name = name.tr('_', ':')
-        $things.get(Java::OrgOpenhabCoreThing::ThingUID.new(name))
+        $things.get(org.openhab.core.thing.ThingUID.new(name))
       end
 
       #

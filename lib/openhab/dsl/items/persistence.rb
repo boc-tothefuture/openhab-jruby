@@ -10,7 +10,7 @@ module OpenHAB
       #       When given a positive Duration, the timestamp will be calculated as ++now-Duration++
       #
       module Persistence
-        java_import Java::OrgOpenhabCoreTypesUtil::UnitUtils
+        java_import org.openhab.core.types.util.UnitUtils
 
         # A state class with an added timestamp attribute. This is used to hold OpenHAB's HistoricItem.
         class HistoricState < SimpleDelegator
@@ -253,7 +253,7 @@ module OpenHAB
         # @return [ZonedDateTime]
         #
         def to_zdt(timestamp)
-          timestamp = timestamp.negated if timestamp.is_a? Java::JavaTime::Duration
+          timestamp = timestamp.negated if timestamp.is_a? java.time.Duration
           OpenHAB::DSL.to_zdt(timestamp)
         end
 

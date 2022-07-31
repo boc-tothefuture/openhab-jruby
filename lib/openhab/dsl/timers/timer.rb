@@ -103,7 +103,7 @@ module OpenHAB
       return unless timestamp
 
       case timestamp
-      when Java::JavaTimeTemporal::TemporalAmount then ZonedDateTime.now.plus(timestamp)
+      when java.time.temporal.TemporalAmount then ZonedDateTime.now.plus(timestamp)
       when ZonedDateTime then timestamp
       when Time then timestamp.to_java(ZonedDateTime)
       else

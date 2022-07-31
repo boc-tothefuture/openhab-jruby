@@ -9,7 +9,7 @@ module OpenHAB
       HSBType = org.openhab.core.library.types.HSBType
 
       # global alias - required for jrubyscripting addon <= OH3.2.0
-      ::HSBType = HSBType if ::HSBType.is_a?(Java::JavaLang::Class)
+      ::HSBType = HSBType if ::HSBType.is_a?(java.lang.Class)
 
       # Adds methods to core OpenHAB HSBType to make it more natural in Ruby
       class HSBType < PercentType

@@ -9,8 +9,8 @@ module OpenHAB
       # Patches OpenHAB events
       #
       module Event
-        java_import Java::OrgOpenhabCoreThingEvents::ThingStatusInfoChangedEvent
-        java_import Java::OrgOpenhabCoreThingEvents::ThingStatusInfoEvent
+        java_import org.openhab.core.thing.events.ThingStatusInfoChangedEvent
+        java_import org.openhab.core.thing.events.ThingStatusInfoEvent
         #
         # Monkey patch with ruby style accessors
         #

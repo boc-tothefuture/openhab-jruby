@@ -10,7 +10,7 @@ module OpenHAB
       DateTimeType = org.openhab.core.library.types.DateTimeType
 
       # global alias - required for jrubyscripting addon <= OH3.2.0
-      ::DateTimeType = DateTimeType if ::DateTimeType.is_a?(Java::JavaLang::Class)
+      ::DateTimeType = DateTimeType if ::DateTimeType.is_a?(java.lang.Class)
 
       # @deprecated
       # Backwards-compatible alias

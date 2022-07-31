@@ -14,8 +14,8 @@ module OpenHAB
       module Metadata
         include OpenHAB::Log
 
-        java_import Java::OrgOpenhabCoreItems::Metadata
-        java_import Java::OrgOpenhabCoreItems::MetadataKey
+        java_import org.openhab.core.items.Metadata
+        java_import org.openhab.core.items.MetadataKey
 
         #
         # Provide the interface to access namespace's value and configuration
@@ -43,7 +43,7 @@ module OpenHAB
           #
           # Delete the configuration with the given key
           #
-          # @return [Java::Org::openhab::core::items::Metadata] the old metadata
+          # @return [org.openhab.core.items.Metadata] the old metadata
           #
           def delete(key)
             configuration = {}.merge(@metadata&.configuration || {})
@@ -55,7 +55,7 @@ module OpenHAB
           #
           # Set the metadata value
           #
-          # @return [Java::Org::openhab::core::items::Metadata] the old metadata
+          # @return [org.openhab.core.items.Metadata] the old metadata
           #
           def value=(value)
             metadata = Metadata.new(@metadata&.uID, value&.to_s, @metadata&.configuration)
@@ -65,7 +65,7 @@ module OpenHAB
           #
           # Set the entire configuration to a hash
           #
-          # @return [Java::Org::openhab::core::items::Metadata] the old metadata
+          # @return [org.openhab.core.items.Metadata] the old metadata
           #
           def config=(config)
             config = config.to_hash if config.respond_to?(:to_hash)
@@ -114,8 +114,8 @@ module OpenHAB
           # Convert the given object to Ruby equivalent
           def self.to_ruby(value)
             case value
-            when Hash, Java::JavaUtil::Map then to_ruby_hash(value)
-            when Array, Java::JavaUtil::List then to_ruby_array(value)
+            when Hash, java.util.Map then to_ruby_hash(value)
+            when Array, java.util.List then to_ruby_array(value)
             when String then String.new(value)
             else value
             end
@@ -147,7 +147,7 @@ module OpenHAB
           # Set the metadata namespace. If the namespace does not exist, it will be created
           #
           # @param value [Object] The assigned value can be a OpenHAB::DSL::Items::MetadataItem,
-          # Java::Org::openhab::core::items::Metadata, Array[2] of [value, configuration],
+          # org.openhab.core.items.Metadata, Array[2] of [value, configuration],
           # A String to set the value and clear the configuration,
           # or a Hash to set the configuration and set the value to nil
           #
@@ -246,7 +246,7 @@ module OpenHAB
           end
 
           #
-          # @return [Java::org::openhab::core::items::MetadataRegistry]
+          # @return [org.openhab.core.items.MetadataRegistry]
           #
           def self.registry
             @registry ||= OpenHAB::Core::OSGI.service('org.openhab.core.items.MetadataRegistry')
