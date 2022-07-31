@@ -1,5 +1,23 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.44.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.3...4.44.0) (2022-07-31)
+
+
+### Features
+
+* **rule:** add tags to rules ([d5c29de](https://github.com/boc-tothefuture/openhab-jruby/commit/d5c29deabb793d23880463f86285bf6764dfb5c7))
+* **rules:** improve rule name inference ([a0b30ec](https://github.com/boc-tothefuture/openhab-jruby/commit/a0b30ec3c3c254cb0e94aec33a048b8723021e60))
+
+
+### Code Refactoring
+
+* standardize on java format for java class references ([ae519bf](https://github.com/boc-tothefuture/openhab-jruby/commit/ae519bf1b5033a2d7588dd5e338e2e7eabbcb039))
+
+
+### Build System
+
+* change the default openhab version to 3.3.0 ([1fb42d0](https://github.com/boc-tothefuture/openhab-jruby/commit/1fb42d08566d75725654c864ac21bf597b9c8003))
+
 ### [4.43.3](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.2...4.43.3) (2022-07-25)
 
 
