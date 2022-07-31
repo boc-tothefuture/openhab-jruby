@@ -28,14 +28,16 @@ module OpenHAB
         #
         def changed(*items, to: nil, from: nil, for: nil, attach: nil)
           changed = Changed.new(rule_triggers: @rule_triggers)
-          Changed.flatten_items(items).map do |item|
+          # for is a reserved word in ruby, so use local_variable_get :for
+          duration = binding.local_variable_get(:for)
+
+          flattened_items = Changed.flatten_items(items)
+          @ruby_triggers << [:changed, flattened_items, { to: to, from: from, duration: duration }]
+          flattened_items.map do |item|
             logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
 
-            # for is a reserved word in ruby, so use local_variable_get :for
-            wait_duration = binding.local_variable_get(:for)
-
             Changed.each_state(from, to) do |from_state, to_state|
-              changed.trigger(item: item, from: from_state, to: to_state, duration: wait_duration, attach: attach)
+              changed.trigger(item: item, from: from_state, to: to_state, duration: duration, attach: attach)
             end
           end.flatten
         end

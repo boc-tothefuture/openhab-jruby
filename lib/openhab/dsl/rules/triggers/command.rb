@@ -28,8 +28,10 @@ module OpenHAB
 
           # Combine command and commands, doing union so only a single nil will be in the combined array.
           combined_commands = Command.combine_commands(command: command, commands: commands)
+          flattened_items = Command.flatten_items(items)
+          @ruby_triggers << [:received_command, flattened_items, { command: combined_commands }]
 
-          Command.flatten_items(items).map do |item|
+          flattened_items.map do |item|
             combined_commands.map do |cmd|
               logger.states 'Creating received command trigger', item: item, command: cmd
 

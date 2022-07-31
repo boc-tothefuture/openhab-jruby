@@ -21,6 +21,8 @@ module OpenHAB
         def every(value, at: nil, attach: nil)
           return every(MonthDay.parse(value), at: at, attach: attach) if value.is_a? String
 
+          @ruby_triggers << [:every, value, { at: at }]
+
           cron_expression = case value
                             when Symbol then Cron.from_symbol(value, at)
                             when Java::JavaTime::Duration then Cron.from_duration(value, at)
