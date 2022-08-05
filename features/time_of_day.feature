@@ -51,6 +51,8 @@ Feature:  time_of_day
     When I deploy the rule
     Then It should log "TimeOfDay is in the range: <result>" within 2 seconds
     Examples:
-      | from       | to         | result |
-      | '11:55:00' | '12:05:00' | true   |
-      | '12:05:00' | '12:10:00' | false  |
+      | from                            | to                             | result |
+      | '11:55:00'                      | '12:05:00'                     | true   |
+      | '12:05:00'                      | '12:10:00'                     | false  |
+      | LocalTime::NOON.minusMinutes(5) | LocalTime::NOON.plusMinutes(5) | true   |
+      | LocalTime::NOON.plusMinutes(3)  | LocalTime::NOON.plusMinutes(5) | false  |

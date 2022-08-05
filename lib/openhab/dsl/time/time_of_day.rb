@@ -155,6 +155,8 @@ module OpenHAB
           when String then TimeOfDay.parse(object)
           when Time, OpenHAB::DSL::Types::DateTimeType, OpenHAB::DSL::Items::DateTimeItem
             TimeOfDay.new(h: object.hour, m: object.min, s: object.sec)
+          when LocalTime
+            TimeOfDay.new(h: object.hour, m: object.minute, s: object.second)
           else object
           end
         end
