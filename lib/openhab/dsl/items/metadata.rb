@@ -93,9 +93,7 @@ module OpenHAB
           # @return [Hash] The converted hash
           #
           def self.to_ruby_hash(hash)
-            return unless hash.respond_to? :each_with_object
-
-            hash.each_with_object({}) { |(key, value), ruby_hash| ruby_hash[to_ruby(key)] = to_ruby(value) }
+            hash.to_a.to_h { |(key, value)| [to_ruby(key), to_ruby(value)] }
           end
 
           #
@@ -106,9 +104,7 @@ module OpenHAB
           # @return [Array] The converted array
           #
           def self.to_ruby_array(array)
-            return unless array.respond_to? :each_with_object
-
-            array.each_with_object([]) { |value, ruby_array| ruby_array << to_ruby(value) }
+            array.to_a.map { |value| to_ruby(value) }
           end
 
           # Convert the given object to Ruby equivalent
