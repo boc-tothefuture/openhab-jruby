@@ -7,14 +7,16 @@ OpenHAB::DSL.import_presets
 require 'openhab/log/logger'
 
 # the order of these is important
-require 'openhab/dsl/types/types'
-require 'openhab/dsl/items/items'
-require 'openhab/dsl/monkey_patch/ruby/ruby'
+require_relative 'types/types'
+require_relative 'items/items'
 
-require 'openhab/dsl/monkey_patch/events/events'
-require 'openhab/dsl/monkey_patch/actions/actions'
-require 'openhab/dsl/rules/rule'
-require 'openhab/dsl/rules/terse'
+require_relative 'monkey_patch/ruby/ruby'
+require_relative 'monkey_patch/java/java'
+require_relative 'monkey_patch/events/events'
+require_relative 'monkey_patch/actions/actions'
+
+require_relative 'rules/rule'
+require_relative 'rules/terse'
 require_relative 'actions'
 require_relative 'channel'
 require_relative 'timers'

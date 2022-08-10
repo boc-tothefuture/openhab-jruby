@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'openhab/dsl/time/time_of_day'
+
 module OpenHAB
   module DSL
     # monkey patches
@@ -16,7 +18,8 @@ module OpenHAB
             when Types::QuantityType,
               Types::DateTimeType,
               Items::DateTimeItem,
-              Items::NumericItem
+              Items::NumericItem,
+              Between::TimeOfDay
               other == self
             else
               super

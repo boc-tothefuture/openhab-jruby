@@ -24,7 +24,7 @@ TimeOfDay class can be used in rules for time related logic. Methods:
 | between?    | Range     | Returns true if it falls within the given time range. Supports a range of TimeOfDay, Ruby Time, string, DateTimeItem, DateTimeType, and LocalTime       | TimeOfDay.now.between? '3pm'..'7pm'                                                                                                                          |
 
 
-A TimeOfDay object can be compared against another TimeOfDay object or a parseable string representation of time.
+A TimeOfDay object can be compared against another TimeOfDay object, a Java LocalTime object or a parseable string representation of time.
 
 Note: the following global constants are available:
 
@@ -48,13 +48,30 @@ end
 four_pm = TimeOfDay.parse '16:00'
 ```
 
+```ruby
+#Trigger security light between sunset and sunrise when motion is detected
+rule 'Outside Light Motion' do
+  updated Motion_Sensor, to: OPEN
+  run do
+    astro = things['astro:sun:home']
+    sunrise = astro.getEventTime('SUN_RISE', nil, nil).to_local_time
+    sunset = astro.getEventTime('SUN_SET', nil, nil).to_local_time
+    next if TimeOfDay.now.between(sunrise..sunset)
+
+    Security_Light.on for: 10.minutes
+  end
+end
+```
+
 ## between
- 
- `between` creates a TimeOfDay range that can be used to check if another Time, TimeOfDay, or [TimeOfDay parsable string](#TimeOfDay) is within that range. 
- 
- ```ruby
+
+`between` creates a TimeOfDay range that can be used to check if another Time, TimeOfDay, LocalTime, or
+[TimeOfDay parsable string](#TimeOfDay) is within that range.
+
+```ruby
  logger.info("Within time range") if between('10:00'..'14:00').cover? Time.now
  logger.info("Within time range") if between('10:00'..'14:00').include? TimeOfDay.now
+ logger.info("Within time range") if between('10:00'..'14:00').include? LocalTime.now
  
 case Time.now
 
@@ -65,6 +82,4 @@ when between('12:00'..'15:00')
 else
   logger.info("Not in time range")
 end  
- ```
- 
- 
+```

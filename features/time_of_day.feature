@@ -30,18 +30,29 @@ Feature:  time_of_day
       | '17:00am'     | Error parsing time    |
 
 
-  Scenario Outline: TimeOfDay object can be compared against a string
+  Scenario Outline: TimeOfDay object can be compared against other objects
     Given a rule:
       """
-      logger.info("Time of day compare result: #{TimeOfDay.noon < <time>}")
+      logger.info("Time of day compare result: #{<comparison>}")
       """
     When I deploy the rule
     Then It should log "Time of day compare result: <result>" within 5 seconds
-    Examples:
-      | time       | result |
-      | '12:05:00' | true   |
-      | '11:55:00' | false  |
-
+    Examples: Comparison against String
+      | comparison                  | result |
+      | TimeOfDay.noon < '12:05:00' | true   |
+      | TimeOfDay.noon < '11:55:00' | false  |
+      | '12:05:00' > TimeOfDay.noon | true   |
+      | '12:05:00' < TimeOfDay.noon | false  |
+      | '12pm' == TimeOfDay.noon    | true   |
+      | TimeOfDay.noon == '12pm'    | true   |
+    Examples: Comparison against LocalTime
+      | comparison                                       | result |
+      | TimeOfDay.noon < LocalTime::NOON.plusMinutes(5)  | true   |
+      | TimeOfDay.noon < LocalTime::NOON.minusMinutes(5) | false  |
+      | LocalTime::NOON.minusMinutes(5) < TimeOfDay.noon | true   |
+      | LocalTime::NOON.minusMinutes(5) > TimeOfDay.noon | false  |
+      | TimeOfDay.noon == LocalTime::NOON                | true   |
+      | LocalTime::NOON == TimeOfDay.noon                | true   |
 
   Scenario Outline: TimeOfDay object between? method
     Given a rule:

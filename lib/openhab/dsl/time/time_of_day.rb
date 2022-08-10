@@ -20,6 +20,7 @@ module OpenHAB
       # @since 0.0.1
       class TimeOfDay
         include Comparable
+        include OpenHAB::Log
 
         # Immutable Java object containing Time Of Day
         # @return [Java.Time.LocalTime] reprsenting the Time Of Day
@@ -114,11 +115,11 @@ module OpenHAB
         # @return [Number, nil] -1,0,1 if other TimeOfDay is less than, equal to, or greater than this TimeOfDay
         #   or nil if an object other than TimeOfDay is provided
         def <=>(other)
+          logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           case other
-          when TimeOfDay
-            @local_time.compare_to(other.local_time)
-          when String
-            @local_time.compare_to(TimeOfDay.parse(other).local_time)
+          when TimeOfDay then @local_time.compare_to(other.local_time)
+          when String then @local_time.compare_to(TimeOfDay.parse(other).local_time)
+          when LocalTime then @local_time.compare_to(other)
           else
             -(other <=> self)
           end
@@ -146,7 +147,7 @@ module OpenHAB
         #
         # Convert object to TimeOfDay object
         #
-        # @param [Object] object TimeOfDay or String to be converted
+        # @param [Object] object TimeOfDay, String, or LocalTime to be converted
         #
         # @return [TimeOfDay] TimeOfDay created from supplied object
         #
