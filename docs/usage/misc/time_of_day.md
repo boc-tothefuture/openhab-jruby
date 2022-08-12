@@ -1,7 +1,6 @@
 ---
 layout: default
 title: TimeOfDay
-nav_order: 5
 has_children: false
 parent: Misc
 grand_parent: Usage

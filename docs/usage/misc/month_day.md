@@ -1,7 +1,6 @@
 ---
 layout: default
 title: MonthDay
-nav_order: 6
 has_children: false
 parent: Misc
 grand_parent: Usage
@@ -13,7 +12,7 @@ MonthDay class from [java.time.MonthDay](https://docs.oracle.com/en/java/javase/
 
 | Method       | Parameter  | Description                                                                                                                                                                  |
 | ------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| constructor  | m, d       | Creates a MonthDay object with the given m and d keywords                                                                                                              |
+| constructor  | m, d       | Creates a MonthDay object with the given m and d keywords                                                                                                                    |
 | parse        | String     | Creates a MonthDay object with a given time string. The format is `[--]M-d`. Both the month and the date can be a one or two digit number, and optionally prefixed with `--` |
 | now          |            | Creates a MonthDay object that represents the current month-day                                                                                                              |
 | of           | month, day | Creates a MonthDay with the given month and day                                                                                                                              |

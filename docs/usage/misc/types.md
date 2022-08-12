@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Types
-nav_order: 4
 has_children: false
 parent: Misc
 grand_parent: Usage
@@ -17,10 +16,10 @@ additional useful methods.
 
 `OnOffType` is the data type used by `SwitchItem`.
 
-| Method | Description  |
-| ------ | ------------ |
-| on?    | If it's ON   |
-| off?   | If it's OFF  |
+| Method | Description |
+| ------ | ----------- |
+| on?    | If it's ON  |
+| off?   | If it's OFF |
 
 ## UpDownType
 

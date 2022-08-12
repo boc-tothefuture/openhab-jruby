@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Store States
-nav_order: 6
 has_children: false
 parent: Misc
 grand_parent: Usage

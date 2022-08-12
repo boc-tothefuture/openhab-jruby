@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Comparisons
-nav_order: 12
 has_children: false
 parent: Misc
 grand_parent: Usage

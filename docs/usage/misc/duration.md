@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Duration
-nav_order: 3
 has_children: false
 parent: Misc
 grand_parent: Usage
