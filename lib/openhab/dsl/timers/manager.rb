@@ -70,9 +70,9 @@ module OpenHAB
         def delete(timer)
           logger.trace("Removing #{timer} from timers")
           @timers.delete(timer)
-          if timer.respond_to? :id
-            @timer_ids[timer.id]&.delete(timer)
-            @timer_ids.delete(timer.id) unless @timer_ids[timer.id].any?
+          if timer.respond_to?(:id) && (timers = @timer_ids[timer.id])
+            timers.delete(timer)
+            @timer_ids.delete(timer.id) if timers.empty?
           end
           @reentrant_timers.delete(timer.reentrant_id) if timer.respond_to? :reentrant_id
         end
