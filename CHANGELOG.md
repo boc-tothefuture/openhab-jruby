@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.44.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.44.0...4.44.1) (2022-08-20)
+
+
+### Bug Fixes
+
+* **ruby:** fix error with jruby 9.3.7 ([82dced4](https://github.com/boc-tothefuture/openhab-jruby/commit/82dced4e2bfea835bb655094e7cd9f42a967a143))
+
 ## [4.44.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.43.3...4.44.0) (2022-07-31)
 
 
