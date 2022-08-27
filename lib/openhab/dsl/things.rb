@@ -45,6 +45,13 @@ module OpenHAB
         end
 
         #
+        # Case equality
+        #
+        # @return [Boolean] if the values are of the same thing
+        #
+        def ===(other) = other.eql?(self)
+
+        #
         # Defines boolean thing status methods
         #   uninitialized?
         #   initializing?
@@ -78,7 +85,7 @@ module OpenHAB
           actions_for_thing(uid).each do |action|
             methods = action.java_class.declared_instance_methods
             methods.select { |method| method.annotation_present?(RuleAction.java_class) }
-                   .each { |method| define_action_method(action: action, method: method.name) }
+                   .each { |method| define_action_method(action:, method: method.name) }
           end
         end
 

@@ -23,7 +23,7 @@ module OpenHAB
         def update_from_file(file, mime_type: nil)
           file_data = File.binread(file)
           mime_type ||= Marcel::MimeType.for(Pathname.new(file)) || Marcel::MimeType.for(file_data)
-          update_from_bytes(file_data, mime_type: mime_type)
+          update_from_bytes(file_data, mime_type:)
         end
 
         #
@@ -37,8 +37,8 @@ module OpenHAB
           response = Net::HTTP.get_response(URI(uri))
           mime_type = response['content-type']
           bytes = response.body
-          mime_type ||= detect_mime_from_bytes(bytes: bytes)
-          update_from_bytes(bytes, mime_type: mime_type)
+          mime_type ||= detect_mime_from_bytes(bytes:)
+          update_from_bytes(bytes, mime_type:)
         end
 
         #
@@ -49,8 +49,8 @@ module OpenHAB
         #
         #
         def update_from_bytes(bytes, mime_type: nil)
-          mime_type ||= detect_mime_from_bytes(bytes: bytes)
-          base_64_image = encode_image(mime_type: mime_type, bytes: bytes)
+          mime_type ||= detect_mime_from_bytes(bytes:)
+          base_64_image = encode_image(mime_type:, bytes:)
           update(base_64_image)
         end
 
@@ -70,6 +70,13 @@ module OpenHAB
         #
         def bytes
           state&.get_bytes
+        end
+
+        #
+        # Adds image specific keys to GenericItem keys for use in pattern matching
+        #
+        def deconstruct_keys(keys)
+          super.deconstruct_keys(keys).merge({ mime_type: })
         end
 
         private

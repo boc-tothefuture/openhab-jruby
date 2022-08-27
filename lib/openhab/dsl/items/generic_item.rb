@@ -45,7 +45,7 @@ module OpenHAB
           # Override to support ItemProxy
           #
           def ===(other)
-            other.instance_of?(self)
+            other.eql?(self) || other.instance_of?(self)
           end
         end
         # rubocop:enable Naming/MethodName
@@ -203,6 +203,19 @@ module OpenHAB
           return command if command.is_a?(Types::Type)
 
           command.to_s
+        end
+
+        #
+        # Converts properties of an item to a hash such that an item can be used with pattern matching
+        #
+        def deconstruct_keys(_keys)
+          { category:, groups:, label:, name:, state:,
+            tags: tags.to_a.map(&:to_sym).product([true]).to_h,
+            type: self.class,
+            location:, location_type:, equipment:, equipment_type:, point_type:, property_type:, semantic_type:,
+            type_name: type, id:, thing:, things:, meta: }.tap do |decon|
+              logger.trace "Deconstructed (#{name}): #{decon}"
+            end
         end
 
         private

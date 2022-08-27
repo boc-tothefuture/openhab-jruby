@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'openhab/log/logger'
 require_relative 'semantics/enumerable'
 
 module OpenHAB
@@ -17,6 +18,7 @@ module OpenHAB
       #
       # See https://github.com/openhab/openhab-core/blob/main/bundles/org.openhab.core.semantics/model/SemanticTags.csv
       module Semantics
+        include Log
         # @!visibility private
         # import the actual semantics action
         SemanticsAction = org.openhab.core.model.script.actions.Semantics
@@ -29,6 +31,8 @@ module OpenHAB
          org.openhab.core.semantics.model.location.Locations].each do |parent_tag|
           parent_tag.stream.for_each do |tag|
             const_set(tag.simple_name.to_sym, tag.ruby_class)
+            # Set === so that semantic classes work in case statements
+            tag.ruby_class.define_singleton_method(:===) { |other| eql?(other) }
           end
         end
 

@@ -15,6 +15,7 @@ module OpenHAB
       class ColorItem < DimmerItem
         extend Forwardable
         include ComparableItem
+        include Log
 
         # !@visibility private
         def ==(other)
@@ -23,6 +24,15 @@ module OpenHAB
           return true if equal?(other) || eql?(other)
 
           super
+        end
+
+        #
+        # Adds Color specific keys to GenericItem keys for use in pattern matching
+        #
+        def deconstruct_keys(keys)
+          logger.debug('Deconstructing a color item')
+          super.deconstruct_keys(keys).merge({ hue: state&.hue, saturation: state&.saturation, brightness: state&.brightness, hex: state&.to_hex, hsb: state&.to_h,
+                                               rgb: state&.to_h(:rgb) })
         end
 
         #
@@ -43,6 +53,10 @@ module OpenHAB
 
         # any method that exists on {Types::HSBType} gets forwarded to +state+
         delegate (Types::HSBType.instance_methods - instance_methods) => :state
+
+        def to_h
+          logger.debug('to_h called')
+        end
 
         # string commands aren't allowed on ColorItems, so try to implicitly
         # convert it to an HSBType
