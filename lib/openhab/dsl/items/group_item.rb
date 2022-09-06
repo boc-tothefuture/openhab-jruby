@@ -29,7 +29,7 @@ module OpenHAB
           #
           # @return [Array]
           def to_a
-            group.get_members.to_a
+            group.get_members.map { |i| ::OpenHAB::Core::ItemProxy.new(i) }
           end
 
           # Name of the group
