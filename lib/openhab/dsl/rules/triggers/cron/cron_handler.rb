@@ -62,6 +62,7 @@ module OpenHAB
             def initialize(trigger)
               @trigger = trigger
               @scheduler = OpenHAB::Core::OSGI.service('org.openhab.core.scheduler.CronScheduler')
+              @schedule = nil
               @expression = trigger.configuration.get('cronExpression')
               super(trigger)
             end
@@ -73,7 +74,7 @@ module OpenHAB
             def setCallback(callback) # rubocop:disable Naming/MethodName
               synchronized do
                 super(callback)
-                @scheduler.schedule(self, @expression)
+                @schedule = @scheduler.schedule(self, @expression)
                 logger.trace("Scheduled cron job '#{@expression}' for trigger '#{@trigger.id}'.")
               end
             end
@@ -102,7 +103,8 @@ module OpenHAB
                 super
                 return unless @schedule
 
-                @schedule&.cancel(true)
+                @schedule.cancel(true)
+                @schedule = nil
               end
               logger.trace("cancelled job for trigger '#{@trigger.id}'.")
             end
