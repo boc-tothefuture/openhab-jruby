@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.44.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.44.1...4.44.2) (2022-09-06)
+
+
+### Bug Fixes
+
+* **cron:** fix clean up of cron handler ([4190255](https://github.com/boc-tothefuture/openhab-jruby/commit/41902553270a7cc9871b132586936d2d66f4bdc7))
+* **items:** ensure items coming from group members are wrapped in ItemProxy ([19bd416](https://github.com/boc-tothefuture/openhab-jruby/commit/19bd4165342152f58380cbaa4dd794f9fcd5a627))
+
 ### [4.44.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.44.0...4.44.1) (2022-08-20)
 
 
