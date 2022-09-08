@@ -152,4 +152,58 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
     items.build { date_time_item 'DateTimeItem1', state: '1970-01-01T00:00:00+00:00' }
     expect(DateTimeItem1.state).to eq '1970-01-01T00:00:00+00:00'
   end
+
+  context 'with a thing' do
+    before do
+      install_addon 'binding-astro'
+      things.build do
+        thing 'astro:sun:home', 'Astro Sun Data', config: { 'geolocation' => '0,0' }
+      end
+    end
+
+    it 'can link an item to a channel' do
+      items.build { string_item 'StringItem1', channel: 'astro:sun:home:season#name' }
+      expect(StringItem1.thing).to be things['astro:sun:home']
+    end
+
+    it "implicitly assumes a group's thing (string) for channels" do
+      items.build do
+        group_item 'MyGroup', thing: 'astro:sun:home' do
+          string_item 'StringItem1', channel: 'season#name'
+        end
+      end
+      expect(StringItem1.thing).to be things['astro:sun:home']
+    end
+
+    it "implicitly assumes a group's thing for channels" do
+      items.build do
+        group_item 'MyGroup', thing: things['astro:sun:home'] do
+          string_item 'StringItem1', channel: 'season#name'
+        end
+      end
+      expect(StringItem1.thing).to be things['astro:sun:home']
+    end
+
+    it "implicitly assumes a group's thing (string) for channels with multiple groups" do
+      items.build do
+        group_item 'OtherGroup'
+        group_item 'MyGroup', thing: 'astro:sun:home' do
+          string_item 'StringItem1', channel: 'season#name', groups: ['OtherGroup']
+        end
+      end
+      expect(StringItem1.thing).to be things['astro:sun:home']
+    end
+
+    it "implicitly assumes a group's thing (string) for channels with a latent added group" do
+      items.build do
+        group_item 'OtherGroup'
+        group_item 'MyGroup', thing: 'astro:sun:home' do
+          string_item 'StringItem1', channel: 'season#name' do
+            group 'OtherGroup'
+          end
+        end
+      end
+      expect(StringItem1.thing).to be things['astro:sun:home']
+    end
+  end
 end

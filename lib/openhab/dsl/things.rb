@@ -7,6 +7,7 @@ require 'singleton'
 require 'openhab/log/logger'
 require 'openhab/dsl/actions'
 require 'openhab/dsl/lazy_array'
+require 'openhab/dsl/things/builder'
 
 module OpenHAB
   module DSL
@@ -120,6 +121,12 @@ module OpenHAB
         # explicit conversion to array
         def to_a
           $things.getAll.map { |thing| Thing.new(thing) }
+        end
+
+        # Enter the Thing Builder DSL.
+        # @yield [Builder] Builder object.
+        def build(&block)
+          Builder.new.instance_eval(&block)
         end
 
         private
