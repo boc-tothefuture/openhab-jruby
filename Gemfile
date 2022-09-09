@@ -6,28 +6,32 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
-  gem 'cucumber'
-  gem 'cuke_linter', '~> 1.2'
+  gem 'cucumber', require: false
+  gem 'cuke_linter', '~> 1.2', require: false
   gem 'httparty'
   gem 'persistent_httparty'
-  gem 'yaml-lint'
+  gem 'rspec', '~> 3.11', require: false
+  gem 'rspec-openhab-scripting', '~> 1.1', require: false
+  gem 'yaml-lint', require: false
 end
 
 group :development do
-  gem 'guard-rubocop'
-  gem 'guard-shell'
-  gem 'guard-yard'
+  gem 'guard-rubocop', require: false
+  gem 'guard-shell', require: false
+  gem 'guard-yard', require: false
+  gem 'irb', '~> 1.4', require: false
   gem 'jekyll', '~> 3.9.0', require: false
-  gem 'just-the-docs', '~> 0.3'
-  gem 'kramdown-parser-gfm'
+  gem 'just-the-docs', '~> 0.3', require: false
+  gem 'kramdown-parser-gfm', require: false
   gem 'process_exists'
-  gem 'rake', '~> 12.0'
+  gem 'rake', '~> 12.0', require: false
   gem 'rubocop', '~> 1.8', require: false
   gem 'rubocop-performance', '~> 1.11', require: false
   gem 'rubocop-rake', '~> 0.6', require: false
+  gem 'rubocop-rspec', '~> 2.11', require: false
   gem 'solargraph'
   gem 'tty-command'
-  gem 'yard'
+  gem 'yard', require: false
 end
 
 group :jekyll_plugins do
