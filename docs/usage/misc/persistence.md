@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Persistence
-nav_order: 2
+nav_order: 4
 has_children: false
 parent: Misc
 grand_parent: Usage

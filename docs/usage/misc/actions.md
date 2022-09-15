@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Actions
-nav_order: 2
 has_children: false
 parent: Misc
 grand_parent: Usage

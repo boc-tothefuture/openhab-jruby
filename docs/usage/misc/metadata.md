@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Item Metadata
-nav_order: 1
+title: Metadata
+nav_order: 2
 has_children: false
 parent: Misc
 grand_parent: Usage
