@@ -1,5 +1,18 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.45.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.44.2...4.45.0) (2022-09-18)
+
+
+### Features
+
+* **time:** support arithmetic and comparison operators ([e3466db](https://github.com/boc-tothefuture/openhab-jruby/commit/e3466dbf67f49ce4cecae127968848f8c7708879))
+* **time_of_day:** support a range of LocalTime for TimeOfDay#between? ([fd12e3d](https://github.com/boc-tothefuture/openhab-jruby/commit/fd12e3db18b0cb75a7a8824baa45909284896499))
+
+
+### Documentation
+
+* clean up ordering in Misc section ([a6a0beb](https://github.com/boc-tothefuture/openhab-jruby/commit/a6a0bebd1708cee94908e4cbfb804ff5f235bd3d))
+
 ### [4.44.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.44.1...4.44.2) (2022-09-06)
 
 
