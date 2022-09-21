@@ -150,14 +150,12 @@ namespace :openhab do
     state(task.name) do
       openhab_zip = "openhab-#{@openhab_version}.zip"
       download_url = case @openhab_version
-                     when /.*\.(M\d)|(RC\d)/
-                       'https://openhab.jfrog.io/openhab/libs-milestone-local/org/openhab/distro/openhab/'\
-                       "#{@openhab_version}/#{openhab_zip}"
                      when /.*-SNAPSHOT/
                        'https://ci.openhab.org/job/openHAB3-Distribution/lastSuccessfulBuild/artifact/'\
                        "distributions/openhab/target/#{openhab_zip}"
                      else
-                       'https://openhab.jfrog.io/openhab/libs-release/org/openhab/distro/openhab/'\
+                       # The same for releases and milestones
+                       'https://github.com/openhab/openhab-distro/releases/download/'\
                        "#{@openhab_version}/#{openhab_zip}"
                      end
       Dir.chdir(OPENHAB_DIR) do
