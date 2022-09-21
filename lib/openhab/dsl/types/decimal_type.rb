@@ -159,9 +159,9 @@ module OpenHAB
             <<~RUBY, __FILE__, __LINE__ + 1
               def #{ruby_op}(other)
                 if other.is_a?(DecimalType)
-                  self.class.new(to_big_decimal.#{java_op}(other.to_big_decimal))
+                  self.class.new(to_big_decimal.#{java_op}(other.to_big_decimal, java.math.MathContext::DECIMAL128))
                 elsif other.is_a?(java.math.BigDecimal)
-                  self.class.new(to_big_decimal.#{java_op}(other))
+                  self.class.new(to_big_decimal.#{java_op}(other, java.math.MathContext::DECIMAL128))
                 elsif other.respond_to?(:to_d)
                   result = to_d #{ruby_op} other
                   # result could already be a QuantityType
