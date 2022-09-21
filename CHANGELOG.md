@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.45.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.0...4.45.1) (2022-09-21)
+
+
+### Bug Fixes
+
+* **math:** configure rounding params when doing BigDecimal division ([e1cee18](https://github.com/boc-tothefuture/openhab-jruby/commit/e1cee18ea264901f07024ff0b26c8cb2b88ba85f)), closes [#640](https://github.com/boc-tothefuture/openhab-jruby/issues/640)
+
+
+### Continuous Integration
+
+* update openhab source url to github ([792015e](https://github.com/boc-tothefuture/openhab-jruby/commit/792015e88e3715d0608c43c44a8995edfb7d8192))
+
 ## [4.45.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.44.2...4.45.0) (2022-09-18)
 
 
