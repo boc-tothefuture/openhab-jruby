@@ -37,6 +37,13 @@ module OpenHAB
           end
         end
 
+        class << self
+          # @!visibility private
+          def thing_manager
+            @thing_manager ||= ::OpenHAB::Core::OSGI.service('org.openhab.core.thing.ThingManager')
+          end
+        end
+
         include OpenHAB::DSL::Actions
         include OpenHAB::Log
 
@@ -65,6 +72,16 @@ module OpenHAB
         # @return [Array] channels
         def channels
           ChannelsArray.new(super.to_a)
+        end
+
+        # Enable the Thing
+        def enable(enabled: true)
+          self.class.thing_manager.set_enabled(uid, enabled)
+        end
+
+        # Disable the Thing
+        def disable
+          enable(enabled: false)
         end
 
         private

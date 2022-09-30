@@ -86,6 +86,9 @@ module OpenHAB
         # The config for this thing
         # @return [Hash, nil]
         attr_reader :config
+        # If the thing should be enabled after it is created
+        # @return [true, false, nil]
+        attr_reader :enabled
         # Explicitly configured channels on this thing
         # @return [Array<ChannelBuilder>]
         attr_reader :channels
@@ -113,7 +116,7 @@ module OpenHAB
           end
         end
 
-        def initialize(uid, label = nil, binding: nil, type: nil, bridge: nil, location: nil, config: {}) # rubocop:disable Metrics
+        def initialize(uid, label = nil, binding: nil, type: nil, bridge: nil, location: nil, config: {}, enabled: nil) # rubocop:disable Metrics
           @channels = []
           uid = uid.to_s
           uid_segments = uid.split(org.openhab.core.common.AbstractUID::SEPARATOR)
@@ -141,6 +144,7 @@ module OpenHAB
           @location = location
           @location = location.label if location.is_a?(GenericItem)
           @config = config
+          @enabled = enabled
         end
 
         # Add an explicitly configured channel to this item
@@ -176,7 +180,9 @@ module OpenHAB
             builder.with_properties(thing_type.properties)
           end
 
-          builder.build
+          thing = builder.build
+          Thing.thing_manager.set_enabled(uid, enabled) unless enabled.nil?
+          thing
         end
 
         private

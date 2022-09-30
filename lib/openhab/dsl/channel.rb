@@ -36,7 +36,7 @@ module OpenHAB
       # @return [Array<GenericItem>] An array of things or an empty array
       def items
         registry = OpenHAB::Core::OSGI.service('org.openhab.core.thing.link.ItemChannelLinkRegistry')
-        registry.get_linked_items(self).to_a
+        registry.get_linked_items(self).map { |i| OpenHAB::Core::ItemProxy.new(i) }
       end
     end
   end
