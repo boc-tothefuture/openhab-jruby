@@ -45,7 +45,7 @@ module OpenHAB
         def eql?(other)
           return false unless other.instance_of?(self.class)
 
-          equals(other.to_s).zero?
+          equals(other)
         end
 
         #
@@ -58,8 +58,10 @@ module OpenHAB
         #
         def ==(other) # rubocop:disable Metrics
           logger.trace { "(#{self.class}) #{self} == #{other} (#{other.class})" }
-          if other.is_a?(Items::LocationItem) ||
-             (other.is_a?(Items::GroupItem) && other.base_item.is_a?(LocationItem))
+          if other.instance_of?(self.class)
+            equals(other)
+          elsif other.is_a?(Items::LocationItem) ||
+                (other.is_a?(Items::GroupItem) && other.base_item.is_a?(LocationItem))
             return false unless other.state?
 
             self == other.state

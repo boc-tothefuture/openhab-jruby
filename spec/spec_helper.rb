@@ -30,5 +30,13 @@ RSpec.configure do |config|
 
   config.order = :random
 
+  def fixture(filename)
+    File.expand_path("../features/assets/#{filename}", __dir__)
+  end
+
+  config.before(:suite) do
+    OpenHAB::Log.logger(OpenHAB::Configuration.log_prefix).level = :trace
+  end
+
   Kernel.srand config.seed
 end
