@@ -37,4 +37,26 @@ RSpec.describe OpenHAB::DSL::Types::PercentType do
   it 'handles #to_byte' do
     expect(PercentType.new(50).to_byte).to be 128
   end
+
+  describe 'case statements' do
+    specify { expect(OFF).not_to be === PercentType::ZERO }
+    specify { expect(ON).not_to be === PercentType::ZERO }
+    specify { expect(DECREASE).not_to be === PercentType::ZERO }
+    specify { expect(STOP).not_to be === PercentType::ZERO }
+    specify { expect(MOVE).not_to be === PercentType::ZERO }
+    specify { expect(UP).not_to be === PercentType::ZERO }
+    specify { expect(DOWN).not_to be === PercentType::ZERO }
+    specify { expect(0).to be === PercentType::ZERO }
+    specify { expect(0..50).to be === PercentType::ZERO }
+    specify { expect(ON).not_to be === PercentType.new(50) }
+    specify { expect(INCREASE).not_to be === PercentType.new(50) }
+    specify { expect(50).to be === PercentType.new(50) }
+    specify { expect(ON).not_to be === PercentType::HUNDRED }
+    specify { expect(STOP).not_to be === PercentType::HUNDRED }
+    specify { expect(MOVE).not_to be === PercentType::HUNDRED }
+    specify { expect(UP).not_to be === PercentType::HUNDRED }
+    specify { expect(DOWN).not_to be === PercentType::HUNDRED }
+    specify { expect(0..99).not_to be === PercentType::HUNDRED }
+    specify { expect(100).to be === PercentType::HUNDRED }
+  end
 end

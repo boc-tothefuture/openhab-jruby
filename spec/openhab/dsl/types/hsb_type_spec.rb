@@ -19,4 +19,13 @@ RSpec.describe OpenHAB::DSL::Types::HSBType do
     expect(HSBType.new(0, 0, 5)).to be_on
     expect(HSBType.new(0, 0, 5)).not_to be_off
   end
+
+  describe 'case statements' do
+    specify { expect(HSBType.new('0,0,0')).to be === HSBType.new('0,0,0') }
+    specify { expect(HSBType.new('1,2,3')).not_to be === HSBType.new('0,0,0') }
+    specify { expect(ON).not_to be === HSBType.new('0,0,0') }
+    specify { expect(OFF).not_to be === HSBType.new('0,0,0') }
+    specify { expect(DECREASE).not_to be === HSBType.new('0,0,0') }
+    specify { expect(INCREASE).not_to be === HSBType.new('0,0,0') }
+  end
 end

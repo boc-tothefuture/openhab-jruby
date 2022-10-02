@@ -12,14 +12,17 @@ RSpec.describe OpenHAB::DSL::Types::OnOffType do
     expect(OFF).not_to be_on
   end
 
-  it 'can be used in case statements' do
-    [ON, OFF].each do |state|
-      result = case state
-               when ON then ON
-               when OFF then OFF
-               end
-      expect(result).to be state
-    end
+  describe 'case statements' do
+    specify { expect(ON).to be === ON }
+    specify { expect(ON).not_to be === OFF }
+    specify { expect(OFF).to be === OFF }
+    specify { expect(OFF).not_to be === ON }
+    specify { expect(0..99).not_to be === ON }
+    specify { expect(100).not_to be === ON }
+    specify { expect(INCREASE).not_to be === OFF }
+    specify { expect(DECREASE).not_to be === OFF }
+    specify { expect(0).not_to be === OFF }
+    specify { expect(1..100).not_to be === OFF }
   end
 
   it 'supports the ! operator' do
