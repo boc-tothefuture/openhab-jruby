@@ -208,8 +208,8 @@ module OpenHAB
       # @param [Object] object to derive class name for
       # @return [String] name of class for logging
       def klass_name(object)
-        object.then(&:class)
-              .then { |klass| java_klass(klass) }
+        object = object.class unless object.is_a?(Class)
+        object.then { |klass| java_klass(klass) }
               .then(&:name)
               .then { |name| filter_base_classes(name) }
               .then { |name| ".#{name}" unless name.nil? } # name is frozen in jruby 9.4
@@ -222,7 +222,8 @@ module OpenHAB
       def java_klass(klass)
         if klass.respond_to?(:java_class) &&
            klass.java_class &&
-           !klass.java_class.name.start_with?('org.jruby.Ruby')
+           !klass.java_class.name.start_with?('org.jruby.Ruby') &&
+           !klass.java_class.name.start_with?('org.jruby.gen')
           klass = klass.java_class
         end
         klass
