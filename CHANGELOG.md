@@ -1,5 +1,13 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.45.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.1...4.45.2) (2022-10-02)
+
+
+### Bug Fixes
+
+* **items:** ensure enumerable methods from `items` use ItemProxy ([a149f96](https://github.com/boc-tothefuture/openhab-jruby/commit/a149f96abd1e1d43c165c1a85591b5e39b4d43b0))
+* **logging:** use the class name for class loggers ([e87e03b](https://github.com/boc-tothefuture/openhab-jruby/commit/e87e03b715836f7d89fef1cdc37c339b4139d593))
+
 ### [4.45.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.0...4.45.1) (2022-09-21)
 
 
