@@ -46,7 +46,7 @@ module OpenHAB
         # Explicit conversion to array
         # @return [Array]
         def to_a
-          $ir.items.to_a
+          $ir.items.map { |item| OpenHAB::Core::ItemProxy.new(item) }
         end
       end
     end
