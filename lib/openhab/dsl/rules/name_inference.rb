@@ -8,6 +8,7 @@ module OpenHAB
         # Trigger Type UIDs that we know how to generate a name for
         KNOWN_TRIGGER_TYPES = [
           'core.ChannelEventTrigger',
+          'core.GenericEventTrigger',
           'core.GroupCommandTrigger',
           'core.GroupStateChangeTrigger',
           'core.GroupStateUpdateTrigger',
@@ -45,7 +46,7 @@ module OpenHAB
           private
 
           # formulate a readable rule name from a single trigger if possible
-          def infer_rule_name_from_trigger(trigger, items, kwargs)
+          def infer_rule_name_from_trigger(trigger, items = nil, kwargs = {})
             case trigger
             when :every
               infer_rule_name_from_every_trigger(items, **kwargs)
@@ -53,6 +54,8 @@ module OpenHAB
               infer_rule_name_from_channel_trigger(items, **kwargs)
             when :changed, :updated, :received_command
               infer_rule_name_from_item_trigger(trigger, items, kwargs)
+            when :channel_linked, :channel_unlinked
+              infer_rule_name_from_channel_link_trigger(trigger)
             end
           end
 
@@ -98,6 +101,11 @@ module OpenHAB
             name = "#{format_beginning_of_sentence_array(channels)} triggered"
             name += " #{format_inspected_array(triggers)}" unless triggers.empty?
             name
+          end
+
+          # formulate a readable rule name from a channel link trigger
+          def infer_rule_name_from_channel_link_trigger(trigger)
+            trigger == :channel_linked ? 'Channel linked to item' : 'Channel unlinked from item'
           end
 
           # format an array of words that will be the beginning of a sentence
