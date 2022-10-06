@@ -208,7 +208,7 @@ GEM
     rspec-mocks (3.11.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
-    rspec-openhab-scripting (1.1.0)
+    rspec-openhab-scripting (1.1.1)
       faraday (~> 2.3)
       net-http-persistent (~> 4.0)
       openhab-scripting (~> 4.42)

@@ -72,7 +72,7 @@ module OpenHAB
         # Cleanup any resources associated with automation rule
         #
         def cleanup
-          # No cleanup is necessary right now, trigger delays are tracked and cancelled by timers library
+          @trigger_conditions.each_value(&:cleanup)
         end
 
         private

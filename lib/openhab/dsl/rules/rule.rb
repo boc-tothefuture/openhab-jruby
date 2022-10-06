@@ -29,8 +29,11 @@ module OpenHAB
 
         @automation_manager = OpenHAB::Core.automation_manager
         @registry = OpenHAB::Core.rule_registry
+        @scripted_rule_provider = OpenHAB::Core::OSGI.service(
+          'org.openhab.core.automation.module.script.rulesupport.shared.ScriptedRuleProvider'
+        )
         class << self
-          attr_reader :script_rules, :automation_manager, :registry
+          attr_reader :script_rules, :automation_manager, :registry, :scripted_rule_provider
         end
 
         module_function
@@ -64,6 +67,19 @@ module OpenHAB
           end
         rescue StandardError => e
           logger.log_exception(e, @rule_name)
+        end
+
+        # Remove a rule
+        def remove_rule(rule_uid)
+          rule_uid = rule_uid.uid if rule_uid.respond_to?(:uid)
+          i = Rule.script_rules.index { |r| r.uid == rule_uid }
+          raise "Rule #{rule_uid} doesn't exist to remove" unless i
+
+          automation_rule = Rule.script_rules.delete_at(i)
+          automation_rule.cleanup
+          # automation_manager doesn't have a remove method, so just have to
+          # remove it directly from the provider
+          Rule.scripted_rule_provider.remove_rule(rule_uid)
         end
 
         #

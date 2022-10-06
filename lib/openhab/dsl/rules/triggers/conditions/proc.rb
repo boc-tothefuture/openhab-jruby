@@ -92,6 +92,9 @@ module OpenHAB
               yield if check_procs(inputs: inputs)
             end
 
+            # Cleanup any resources from the condition
+            def cleanup; end
+
             #
             # Check if command condition match the proc
             # @param [Hash] inputs from trigger must be supplied if state is not supplied

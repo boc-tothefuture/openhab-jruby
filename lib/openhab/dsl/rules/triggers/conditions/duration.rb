@@ -47,6 +47,13 @@ module OpenHAB
               process_trigger_delay(mod, inputs, &block)
             end
 
+            # Cleanup any resources from the condition
+            #
+            # Cancels the timer, if it's active
+            def cleanup
+              @timer&.cancel
+            end
+
             private
 
             #

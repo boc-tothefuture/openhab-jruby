@@ -87,6 +87,13 @@ module OpenHAB
           @reentrant_timers.clear
           @timers.clear
         end
+
+        #
+        # Counts how many timers are active
+        #
+        def active_timer_count
+          @timers.count(&:active?)
+        end
       end
 
       #
