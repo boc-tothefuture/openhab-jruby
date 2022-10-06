@@ -5,7 +5,17 @@ module OpenHAB
     module Rules
       # Module containing terse rule stubs
       module TerseRule
-        %i[changed channel channel_linked channel_unlinked cron every updated received_command].each do |trigger|
+        %i[changed
+           channel
+           channel_linked
+           channel_unlinked
+           cron
+           every
+           received_command
+           thing_added
+           thing_updated
+           thing_removed
+           updated].each do |trigger|
           class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
             def #{trigger}(*args, name: nil, id: nil, **kwargs, &block)   # def changed(*args, name: nil, id: nil, **kwargs, &block)
               id ||= NameInference.infer_rule_id_from_block(block)        #   id ||= NameInference.infer_rule_id_from_block(block)

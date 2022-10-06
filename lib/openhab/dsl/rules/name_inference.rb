@@ -4,7 +4,7 @@ module OpenHAB
   module DSL
     module Rules
       # Contains helper methods for inferring a rule name from its triggers
-      module NameInference
+      module NameInference # rubocop:disable Metrics
         # Trigger Type UIDs that we know how to generate a name for
         KNOWN_TRIGGER_TYPES = [
           'core.ChannelEventTrigger',
@@ -46,7 +46,7 @@ module OpenHAB
           private
 
           # formulate a readable rule name from a single trigger if possible
-          def infer_rule_name_from_trigger(trigger, items = nil, kwargs = {})
+          def infer_rule_name_from_trigger(trigger, items = nil, kwargs = {}) # rubocop:disable Metrics
             case trigger
             when :every
               infer_rule_name_from_every_trigger(items, **kwargs)
@@ -56,6 +56,8 @@ module OpenHAB
               infer_rule_name_from_item_trigger(trigger, items, kwargs)
             when :channel_linked, :channel_unlinked
               infer_rule_name_from_channel_link_trigger(trigger)
+            when :thing_added, :thing_removed, :thing_updated
+              infer_rule_name_from_thing_trigger(trigger)
             end
           end
 
@@ -106,6 +108,15 @@ module OpenHAB
           # formulate a readable rule name from a channel link trigger
           def infer_rule_name_from_channel_link_trigger(trigger)
             trigger == :channel_linked ? 'Channel linked to item' : 'Channel unlinked from item'
+          end
+
+          # formulate a readable rule name from a thing added/updated/remove trigger
+          def infer_rule_name_from_thing_trigger(trigger)
+            {
+              thing_added: 'Thing Added',
+              thing_updated: 'Thing updated',
+              thing_removed: 'Thing removed'
+            }[trigger]
           end
 
           # format an array of words that will be the beginning of a sentence
