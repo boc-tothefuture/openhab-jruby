@@ -18,6 +18,11 @@ module OpenHAB
           alias uid get_thing_uid
           alias last get_old_status_info
           alias status status_info
+
+          # Get the thing that triggered this event
+          def thing
+            things[uid]
+          end
         end
 
         #
@@ -26,6 +31,11 @@ module OpenHAB
         class ThingStatusInfoEvent
           alias uid get_thing_uid
           alias status status_info
+
+          # Get the thing that triggered this event
+          def thing
+            things[uid]
+          end
         end
       end
     end
