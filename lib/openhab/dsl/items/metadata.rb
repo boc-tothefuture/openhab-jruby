@@ -34,7 +34,8 @@ module OpenHAB
           #
           # Updates the metadata configuration associated with the key
           #
-          def []=(key, value)
+          def []=(key, value) # rubocop:disable Metrics
+            key = key.to_s if key.is_a?(Symbol)
             configuration = {}.merge(@metadata&.configuration || {}).merge({ key => value })
             metadata = Metadata.new(@metadata&.uID, @metadata&.value, configuration)
             NamespaceAccessor.registry.update(metadata) if @metadata&.uID
@@ -45,7 +46,8 @@ module OpenHAB
           #
           # @return [org.openhab.core.items.Metadata] the old metadata
           #
-          def delete(key)
+          def delete(key) # rubocop:disable Metrics
+            key = key.to_s if key.is_a?(Symbol)
             configuration = {}.merge(@metadata&.configuration || {})
             configuration.delete(key)
             metadata = Metadata.new(@metadata&.uID, @metadata&.value, configuration)
@@ -67,10 +69,11 @@ module OpenHAB
           #
           # @return [org.openhab.core.items.Metadata] the old metadata
           #
-          def config=(config)
+          def config=(config) # rubocop:disable Metrics
             config = config.to_hash if config.respond_to?(:to_hash)
             raise ArgumentError, 'Configuration must be a hash' unless config.is_a? Hash
 
+            config.transform_keys! { |k| k.is_a?(Symbol) ? k.to_s : k }
             metadata = Metadata.new(@metadata&.uID, @metadata&.value, config)
             NamespaceAccessor.registry.update(metadata) if @metadata&.uID
           end
@@ -157,7 +160,9 @@ module OpenHAB
             meta_value, configuration = update_from_value(value)
 
             key = MetadataKey.new(namespace, @item_name)
-            metadata = Metadata.new(key, meta_value&.to_s, configuration.to_h)
+            configuration = configuration.to_h
+            configuration.transform_keys! { |k| k.is_a?(Symbol) ? k.to_s : k }
+            metadata = Metadata.new(key, meta_value&.to_s, configuration)
             # registry.get can be omitted, but registry.update will log a warning for nonexistent metadata
             if NamespaceAccessor.registry.get(key)
               NamespaceAccessor.registry.update(metadata)
