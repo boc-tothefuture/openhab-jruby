@@ -15,10 +15,4 @@ namespace :docs do
       t.stats_options = ["--list-undoc"] # optional
     end
   end
-
-  desc "Start Jekyll Documentation Server"
-  task jekyll: :yard do
-    sh "bundle exec jekyll clean"
-    sh "bundle exec jekyll server --config docs/_config.yml"
-  end
 end
