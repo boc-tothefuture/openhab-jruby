@@ -67,48 +67,8 @@ RSpec.describe OpenHAB::DSL::Items::DimmerItem do
     end
   end
 
-  describe "math operations (+,-,/,*)" do
-    specify { expect(item + 2).to eq 52 }
-    specify { expect(2 + item).to eq 52 }
-    specify { expect(item - 2).to eq 48 }
-    specify { expect(98 - item).to eq 48 }
-    specify { expect(item / 2).to eq 25 }
-    specify { expect(100 / item).to eq 2 }
-    specify { expect(2 * item).to eq 100 }
-  end
-
   it "works with grep" do
     items.build { switch_item "Switch1" }
     expect(items.grep(DimmerItem)).to match_array [DimmerOne, DimmerTwo]
-  end
-
-  it "works with grep in ranges" do
-    DimmerOne.update(49)
-    DimmerTwo.update(51)
-    expect(items.grep(0...50)).to eq [DimmerOne]
-  end
-
-  it "works with states in cases" do
-    DimmerOne.update(49)
-    DimmerTwo.update(51)
-    expect(items.select do |item|
-      case item
-      when 0..50 then true
-      when 51..100 then false
-      end
-    end).to eq [DimmerOne]
-  end
-
-  describe "comparison to number" do
-    specify { expect(item > 50).to be false }
-    specify { expect(item == 50).to be true }
-    specify { expect(item < 60).to be true }
-    specify { expect(DimmerOne == DimmerTwo).to be true }
-  end
-
-  describe "#to_s" do
-    it "returns state of dimmer" do
-      expect(item.to_s).to eql "50%"
-    end
   end
 end

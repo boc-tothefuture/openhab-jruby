@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe OpenHAB::DSL::Types::PercentType do
+  let(:state) { PercentType.new(50) }
+
   it "is inspectable" do
     expect(PercentType.new(10).inspect).to eql "10%"
   end
@@ -58,5 +60,24 @@ RSpec.describe OpenHAB::DSL::Types::PercentType do
     specify { expect(DOWN).not_to be === PercentType::HUNDRED }
     specify { expect(0..99).not_to be === PercentType::HUNDRED }
     specify { expect(100).to be === PercentType::HUNDRED }
+  end
+
+  describe "comparison to number" do
+    specify { expect(state > 50).to be false }
+    specify { expect(state == 50).to be true }
+    specify { expect(state < 60).to be true }
+    specify { expect(state == PercentType.new(50)).to be true }
+  end
+
+  describe "math operations" do
+    specify { expect(state + 20).to eq 70 }
+    specify { expect(state - 20).to eq 30 }
+    specify { expect(state * 2).to eq 100 }
+    specify { expect(state / 2).to eq 25 }
+    specify { expect(20 + state).to eq 70 }
+    specify { expect(90 - state).to eq 40 }
+    specify { expect(2 * state).to eq 100 }
+    specify { expect(100 / state).to eq 2 }
+    specify { expect(70 % state).to eq 20 }
   end
 end

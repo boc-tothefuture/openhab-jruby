@@ -4,14 +4,8 @@ require_relative "numeric_item"
 
 module OpenHAB
   module DSL
-    #
-    # Patches OpenHAB items
-    #
     module Items
       java_import org.openhab.core.library.items.DimmerItem
-
-      # Alias class
-      ::Dimmer = DimmerItem
 
       # Adds methods to core OpenHAB DimmerItem type to make it more natural in
       # Ruby

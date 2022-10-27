@@ -34,26 +34,4 @@ RSpec.describe OpenHAB::DSL::Items::ColorItem do
       expect(item.state).to eq "0,100,100"
     end
   end
-
-  describe "conversion to hashes and arrays" do
-    before { item.update(HSBType::RED) }
-
-    specify do
-      expect(item.to_h).to eql({
-                                 hue: 0 | "°", saturation: PercentType::HUNDRED, brightness: PercentType::HUNDRED
-                               })
-    end
-
-    specify do
-      expect(item.to_h(:hsb)).to eql({
-                                       hue: 0 | "°", saturation: PercentType::HUNDRED,
-                                       brightness: PercentType::HUNDRED
-                                     })
-    end
-
-    specify { expect(item.to_h(:rgb)).to eql({ red: 255, green: 0, blue: 0 }) }
-    specify { expect(item.to_a).to eql [0 | "°", PercentType::HUNDRED, PercentType::HUNDRED] }
-    specify { expect(item.to_a(:hsb)).to eql [0 | "°", PercentType::HUNDRED, PercentType::HUNDRED] }
-    specify { expect(item.to_a(:rgb)).to eql [255, 0, 0] }
-  end
 end

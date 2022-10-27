@@ -55,10 +55,9 @@ module OpenHAB
           end
         end
 
-        # defined methods for commanding an item to one of the Enum states
+        # define methods for commanding an item to one of the Enum states
         # as well as predicates for if an ItemCommandEvent is one of those commands
         def def_command_methods(klass)
-          method has single purpose
           values_for_enums(klass.ACCEPTED_COMMAND_TYPES).each do |value|
             command = OpenHAB::DSL::COMMAND_ALIASES[value.to_s]
             next if klass.instance_methods.include?(command)

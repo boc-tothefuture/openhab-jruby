@@ -1,13 +1,8 @@
 # frozen_string_literal: true
 
-require "delegate"
-require "forwardable"
-
 require_relative "metadata"
 require_relative "persistence"
 require_relative "semantics"
-
-require_relative "item_equality"
 
 module OpenHAB
   module DSL
@@ -20,7 +15,6 @@ module OpenHAB
       # @see https://www.openhab.org/javadoc/latest/org/openhab/core/items/genericitem
       class GenericItem
         include Log
-        include ItemEquality
 
         prepend Metadata
         prepend Persistence
@@ -41,6 +35,7 @@ module OpenHAB
             [org.openhab.core.types.UnDefType.java_class].freeze
           end
 
+          # @!visibility private
           #
           # Override to support ItemProxy
           #
@@ -60,31 +55,35 @@ module OpenHAB
         #
         alias_method :raw_state, :state
 
-        remove_method(:==)
-
         #
         # Send a command to this item
         #
         # @param [Types::Type] command to send to object
-        #
+        # @return [self]
         #
         def command(command)
           command = format_type_pre(command)
-          logger.trace "Sending Command #{command} to #{id}"
+          logger.trace "Sending Command #{command} to #{name}"
           org.openhab.core.model.script.actions.BusEvent.sendCommand(self, command)
           self
         end
-        alias_method :<<, :command
+
+        # not an alias to allow easier stubbing and overriding
+        def <<(command)
+          command(command)
+        end
+
+        # @!parse alias_method :<<, :command
 
         #
         # Send an update to this item
         #
         # @param [Types::Type] update the item
-        #
+        # @return [self]
         #
         def update(update)
           update = format_type_pre(update)
-          logger.trace "Sending Update #{update} to #{id}"
+          logger.trace "Sending Update #{update} to #{name}"
           org.openhab.core.model.script.actions.BusEvent.postUpdate(self, update)
           self
         end
@@ -92,12 +91,11 @@ module OpenHAB
         #
         # Check if the item has a state (not +UNDEF+ or +NULL+)
         #
-        # @return [Boolean]
+        # @return [true, false]
         #
         def state?
           !raw_state.is_a?(Types::UnDefType)
         end
-        alias_method :truthy?, :state?
 
         #
         # Get the item state
@@ -109,23 +107,7 @@ module OpenHAB
           raw_state if state?
         end
 
-        #
-        # Get an ID for the item, using the item label if set, otherwise item name
-        #
-        # @return [String] label if set otherwise name
-        #
-        def id
-          label || name
-        end
-
-        #
-        # Get the string representation of the state of the item
-        #
-        # @return [String] State of the item as a string
-        #
-        def to_s
-          raw_state.to_s # call the super state to include UNDEF/NULL
-        end
+        alias_method :to_s, :name
 
         #
         # Inspect the item
@@ -156,33 +138,13 @@ module OpenHAB
 
         # Returns all of the item's linked things.
         #
-        # @return [Array] An array of things or an empty array
+        # @return [Array<Thing>] An array of things or an empty array
         def things
           registry = OpenHAB::Core::OSGI.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           channels = registry.get_bound_channels(name).to_a
           channels.map(&:thing_uid).uniq.map { |tuid| OpenHAB::DSL::Things.things[tuid] }.compact
         end
         alias_method :all_linked_things, :things
-
-        #
-        # Check equality without type conversion
-        #
-        # @return [Boolean] if the same Item is represented, without checking
-        #   state
-        def eql?(other)
-          other.instance_of?(self.class) && hash == other.hash
-        end
-
-        #
-        # A method to indicate that item comparison is requested instead of state comparison
-        #
-        # Example: Item1.item == items['Item1'].item should return true
-        #
-        # See ItemEquality#==
-        #
-        def item
-          @item ||= GenericItemObject.new(self)
-        end
 
         # @!method null?
         #   Check if the item state == +NULL+
@@ -214,16 +176,6 @@ module OpenHAB
           format_type(command)
         end
       end
-    end
-
-    # A helper class to flag that item comparison is wanted instead of state comparison
-    # It is used by ItemEquality#===
-    class GenericItemObject < SimpleDelegator
-      extend Forwardable
-      include Log
-      include OpenHAB::DSL::Items::ItemEquality
-
-      def_delegator :__getobj__, :instance_of? # instance_of? is used by GenericItem#eql? to check for item equality
     end
   end
 end

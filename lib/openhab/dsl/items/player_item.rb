@@ -8,8 +8,6 @@ module OpenHAB
       # Adds methods to core OpenHAB NumberItem type to make it more natural in
       # Ruby
       class PlayerItem < GenericItem
-        remove_method :==
-
         # @!method play?
         #   Check if the item state == +PLAYING+
         #   @return [Boolean]

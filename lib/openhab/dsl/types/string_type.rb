@@ -34,7 +34,7 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [StringType, Items::StringItem, String]
+        # @param [StringType, String]
         #   other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether +other+ is
@@ -44,12 +44,7 @@ module OpenHAB
         #
         def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
-          if other.is_a?(Items::StringItem) ||
-             (other.is_a?(Items::GroupItem) && other.base_item.is_a?(StringItem))
-            return nil unless other.state?
-
-            self <=> other.state
-          elsif other.respond_to?(:to_str)
+          if other.respond_to?(:to_str)
             to_str <=> other.to_str
           elsif other.respond_to?(:coerce)
             return nil unless (lhs, rhs = other.coerce(self))
@@ -63,20 +58,14 @@ module OpenHAB
         #
         # Coerce object to a StringType
         #
-        # @param [Items::StringItem, String] other object to coerce to a
+        # @param [String] other object to coerce to a
         #   DateTimeType
         #
         # @return [[StringType, StringType]]
         #
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
-          if other.is_a?(Items::StringItem)
-            return unless other.state?
-
-            [other.state, self]
-          elsif other.respond_to?(:to_str)
-            [String.new(other.to_str), self]
-          end
+          return [String.new(other.to_str), self] if other.respond_to?(:to_str)
         end
 
         # any method that exists on String gets forwarded to to_s

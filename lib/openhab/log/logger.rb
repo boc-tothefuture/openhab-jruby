@@ -39,7 +39,19 @@ module OpenHAB
       # @param [String] name of the logger
       #
       def initialize(name)
-        @sl4fj_logger = LoggerFactory.getLogger(name)
+        @slf4j_logger = LoggerFactory.getLogger(name)
+      end
+
+      def name
+        @slf4j_logger.name
+      end
+
+      def level
+        Log.log_service.get_level(name)[name]&.downcase&.to_sym
+      end
+
+      def level=(level)
+        Log.log_service.set_level(name, level.to_s)
       end
 
       # Dynamically define the methods for each level as identified by the levels constant
@@ -54,7 +66,7 @@ module OpenHAB
         define_method(level) do |msg = nil, &block|
           log(severity: level, msg: msg, &block)
         end
-        define_method("#{level}?") { @sl4fj_logger.send("is_#{level}_enabled") }
+        define_method("#{level}?") { @slf4j_logger.send("is_#{level}_enabled") }
         # @deprecated
         alias_method "#{level}_enabled?", "#{level}?"
       end
@@ -129,7 +141,7 @@ module OpenHAB
         # Process block if no message provided
         msg = yield if msg.nil? && block_given?
 
-        @sl4fj_logger.send(severity, msg.to_s)
+        @slf4j_logger.send(severity, msg.to_s)
       end
     end
   end
@@ -158,13 +170,20 @@ module OpenHAB
       end
     end
 
-    #
-    # Create a logger for the current class
-    #
-    # @return [Logger] for the current class
-    #
-    def logger
-      Log.logger(self)
+    def root
+      logger(org.slf4j.Logger::ROOT_LOGGER_NAME)
+    end
+
+    def events
+      logger("openhab.event")
+    end
+
+    def logger(object = nil)
+      return Log.logger(self) if object.nil?
+
+      logger_name = object if object.is_a?(String)
+      logger_name ||= logger_name(object)
+      @loggers[logger_name] ||= Core::Logger.new(logger_name)
     end
 
     class << self
@@ -181,6 +200,11 @@ module OpenHAB
         # names for some objects are specific to the class
         logger_name = logger_name(object)
         @loggers[logger_name] ||= Core::Logger.new(logger_name)
+      end
+
+      # @!visibility private
+      def log_service
+        @log_service = Core::OSGi.service("org.apache.karaf.log.core.LogService")
       end
 
       private

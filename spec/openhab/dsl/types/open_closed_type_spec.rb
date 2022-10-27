@@ -9,4 +9,14 @@ RSpec.describe OpenHAB::DSL::Types::OpenClosedType do
     expect(!OPEN).to eql CLOSED
     expect(!CLOSED).to eql OPEN
   end
+
+  it "supports contact states in case statements" do
+    [OPEN, CLOSED].each do |state|
+      new_state = case state
+                  when OPEN then OPEN
+                  when CLOSED then CLOSED
+                  end
+      expect(new_state).to be state
+    end
+  end
 end

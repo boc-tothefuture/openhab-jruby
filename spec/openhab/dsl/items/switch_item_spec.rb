@@ -10,7 +10,7 @@ RSpec.describe OpenHAB::DSL::Items::SwitchItem do
     specify { expect(item.off).to be_off }
   end
 
-  it "accepts booelan values" do
+  it "accepts boolean values" do
     expect((item << true).state).to be ON
     expect((item << false).state).to be OFF
   end
@@ -37,37 +37,8 @@ RSpec.describe OpenHAB::DSL::Items::SwitchItem do
     end
   end
 
-  describe "\#@!" do
-    specify { expect(!item.on).to be OFF }
-    specify { expect(!item.off).to be ON }
-    specify { expect(!item.update(UNDEF)).to be ON }
-    specify { expect(!item.update(NULL)).to be ON }
-  end
-
   it "works with grep" do
     items.build { string_item "StringOne" }
     expect(items.grep(SwitchItem)).to eql [item]
-  end
-
-  it "works with grep for states" do
-    items.build do
-      switch_item "SwitchTwo", state: OFF
-      string_item "StringOne"
-    end
-    SwitchOne.on
-    expect(items.grep(ON)).to eql [SwitchOne]
-    expect(items.grep(OFF)).to eql [SwitchTwo]
-  end
-
-  it "works with states in cases" do
-    items.build {            switch_item "SwitchTwo", state: OFF }
-    SwitchOne.on
-
-    expect([SwitchOne, SwitchTwo].map do |switch|
-      case switch
-      when ON then ON
-      when OFF then OFF
-      end
-    end).to eql [ON, OFF]
   end
 end

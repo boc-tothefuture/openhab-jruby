@@ -12,8 +12,6 @@ module OpenHAB
       class RollershutterItem < GenericItem
         include NumericItem
 
-        alias_method :position, :state
-
         # @!method up?
         #   Check if the item state == +UP+
         #   @return [Boolean]

@@ -97,7 +97,7 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [NumericType, Items::NumericItem, Items::ColorItem, Numeric, String]
+        # @param [NumericType, Numeric, String]
         #   other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether +other+ is
@@ -107,12 +107,7 @@ module OpenHAB
         #
         def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
-          if other.is_a?(Items::ColorItem) ||
-             (other.is_a?(Items::GroupItem) && other.base_item.is_a?(ColorItem))
-            return nil unless other.state?
-
-            self <=> other.state
-          elsif other.is_a?(HSBType)
+          if other.is_a?(HSBType)
             to_a <=> other.to_a
           elsif other.respond_to?(:to_str)
             self <=> HSBType.new(other)
@@ -126,19 +121,14 @@ module OpenHAB
         #
         # Coerce object to a HSBType
         #
-        # @param [NumericType, Items::NumericItem, Items::ColorItem, Numeric, String]
+        # @param [NumericType, Numeric, String]
         #   other object to coerce to a HSBType
         #
         # @return [[HSBType, HSBType]]
         #
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
-          if other.is_a?(Items::NumericItem) ||
-             (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-            return unless other.state?
-
-            [other.state, self]
-          elsif other.respond_to?(:to_str)
+          if other.respond_to?(:to_str)
             [HSBType.new(other.to_str), self]
           else
             super
@@ -181,7 +171,7 @@ module OpenHAB
         end
 
         #
-        # Convert the ColorItem to a hash
+        # Convert the HSBType to a hash
         # @param [:hsb, :rgb] format for hash
         # @return [Hash] in requested format
         def to_h(format = :hsb)
@@ -191,9 +181,9 @@ module OpenHAB
         end
 
         #
-        # Convert the ColorItem to an array of values
+        # Convert the HSBType to an array of values
         # @param [:hsb, :rgb] format for elements in the array
-        # @return [Array] of ColorItem components in requested format
+        # @return [Array] of HSBType components in requested format
         def to_a(format = :hsb)
           case format
           when :hsb then [hue, saturation, brightness]

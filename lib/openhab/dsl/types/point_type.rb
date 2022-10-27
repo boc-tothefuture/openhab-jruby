@@ -51,7 +51,7 @@ module OpenHAB
         #
         # Check equality with type conversion
         #
-        # @param [PointType, Items::LocationItem, String]
+        # @param [PointType, String]
         #   other object to compare to
         #
         # @return [Boolean]
@@ -60,11 +60,6 @@ module OpenHAB
           logger.trace { "(#{self.class}) #{self} == #{other} (#{other.class})" }
           if other.instance_of?(self.class)
             equals(other)
-          elsif other.is_a?(Items::LocationItem) ||
-                (other.is_a?(Items::GroupItem) && other.base_item.is_a?(LocationItem))
-            return false unless other.state?
-
-            self == other.state
           elsif other.respond_to?(:to_str)
             self == PointType.new(other)
           elsif other.respond_to?(:coerce)
@@ -79,7 +74,7 @@ module OpenHAB
         #
         # Coerce object to a PointType
         #
-        # @param [Items::LocationItem, String] other object to coerce to a
+        # @param [String] other object to coerce to a
         #   PointType
         #
         # @return [[PointType, PointType]]
@@ -153,10 +148,6 @@ module OpenHAB
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(PointType)
             other
-          elsif other.is_a?(Items::LocationItem)
-            return unless other.state?
-
-            other.state
           elsif other.respond_to?(:to_str)
             PointType.new(other.to_str)
           elsif other.respond_to?(:to_hash)

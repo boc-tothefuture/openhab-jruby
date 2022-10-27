@@ -134,8 +134,7 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [DateTimeType, Items::DateTimeItem, Time,
-        #         String] other object to compare to
+        # @param [DateTimeType, Time, String] other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether +other+ is
         #   less than, equal to, or greater than self
@@ -146,11 +145,6 @@ module OpenHAB
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(self.class)
             zoned_date_time.to_instant.compare_to(other.zoned_date_time.to_instant)
-          elsif other.is_a?(Items::DateTimeItem) ||
-                (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::DateTimeItem))
-            return nil unless other.state?
-
-            zoned_date_time.to_instant.compare_to(other.state.zoned_date_time.to_instant)
           elsif other.is_a?(TimeOfDay::TimeOfDay) || other.is_a?(TimeOfDay::TimeOfDayRangeElement)
             to_tod <=> other
           elsif other.respond_to?(:to_time)
@@ -171,20 +165,14 @@ module OpenHAB
         #
         # Coerce object to a DateTimeType
         #
-        # @param [Items::DateTimeItem, Time] other object to coerce to a
+        # @param [Time] other object to coerce to a
         #   DateTimeType
         #
         # @return [[DateTimeType, DateTimeType]]
         #
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
-          if other.is_a?(Items::DateTimeItem)
-            return unless other.state?
-
-            [other.state, self]
-          elsif other.respond_to?(:to_time)
-            [DateTimeType.new(other), self]
-          end
+          return [DateTimeType.new(other), self] if other.respond_to?(:to_time)
         end
 
         #

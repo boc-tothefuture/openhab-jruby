@@ -8,18 +8,9 @@ module OpenHAB
     module Items
       java_import org.openhab.core.library.items.SwitchItem
 
-      # Alias class names for easy is_a? comparisons
-      ::Switch = SwitchItem
-
       # Adds methods to core OpenHAB SwitchItem type to make it more natural in
       # Ruby
       class SwitchItem < GenericItem
-        remove_method :==
-
-        def truthy?
-          on?
-        end
-
         # Convert boolean commands to ON/OFF
         # @!visibility private
         def format_type(command)
@@ -31,22 +22,12 @@ module OpenHAB
         #
         # Send a command to invert the state of the switch
         #
-        # @return [Types::OnOffType] Inverted state
+        # @return [self]
         #
         def toggle
-          command(!self)
-        end
+          return on unless state?
 
-        #
-        # Return the inverted state of the switch: +ON+ if the switch is +OFF+,
-        # +UNDEF+ or +NULL+; +OFF+ if the switch is +ON+
-        #
-        # @return [Types::OnOffType] Inverted state
-        #
-        def !
-          return !state if state?
-
-          ON
+          command(!state)
         end
 
         # @!method on?

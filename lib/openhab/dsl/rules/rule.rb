@@ -63,8 +63,8 @@ module OpenHAB
           id ||= NameInference.infer_rule_id_from_block(block)
           script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
-          OpenHAB::Core::ThreadLocal.thread_local(RULE_NAME: rule) do
-            @rule_name = rule
+          OpenHAB::Core::ThreadLocal.thread_local(RULE_NAME: name) do
+            @rule_name = name
 
             config = RuleConfig.new(block.binding)
             config.uid(id)

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "comparable_item"
 require "openhab/dsl/lazy_array"
 
 module OpenHAB
@@ -38,15 +37,10 @@ module OpenHAB
           def name
             group.name
           end
-
-          alias_method :<<, :command
         end
 
         include Enumerable
-        include ComparableItem
         prepend Semantics # make Semantics#points take precedence over Enumerable#points for GroupItem
-
-        remove_method :==
 
         # Override Enumerable because we want to send them to the base item if possible
         #
@@ -67,9 +61,6 @@ module OpenHAB
         def members
           GroupMembers.new(self)
         end
-
-        # @deprecated
-        alias_method :items, :members
 
         #
         # Iterates through the direct members of the Group

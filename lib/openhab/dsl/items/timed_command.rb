@@ -65,7 +65,6 @@ module OpenHAB
 
             self
           end
-          alias_method :<<, :command
 
           private
 

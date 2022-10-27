@@ -24,7 +24,7 @@ module OpenHAB
         #
         # Create a new instance of DecimalType
         #
-        # @param [java.math.BigDecimal, Items::NumericItem, Numeric] args Create a DecimalType from the given value
+        # @param [java.math.BigDecimal, Numeric] args Create a DecimalType from the given value
         #
         def initialize(*args)
           unless args.length == 1
@@ -39,9 +39,6 @@ module OpenHAB
             super(value.to_java.strip_trailing_zeros)
           elsif value.is_a?(DecimalType)
             super(value.to_big_decimal)
-          elsif value.is_a?(Items::NumericItem) ||
-                (value.is_a?(Items::GroupItem) && value.base_item.is_a?(Items::NumericItem))
-            super(value.state)
           elsif value.respond_to?(:to_d)
             super(value.to_d.to_java.strip_trailing_zeros)
           else # rubocop:disable Lint/DuplicateBranch
@@ -66,7 +63,7 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [NumericType, Items::NumericItem, Numeric]
+        # @param [NumericType, Numeric]
         #   other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether +other+ is
@@ -80,11 +77,6 @@ module OpenHAB
             (other <=> self)&.-@
           elsif other.is_a?(self.class)
             compare_to(other)
-          elsif other.is_a?(Items::NumericItem) ||
-                (other.is_a?(Items::GroupItem) && other.base_item.is_a?(NumericItem))
-            return nil unless other.state?
-
-            self <=> other.state
           elsif other.respond_to?(:to_d)
             to_d <=> other.to_d
           elsif other.respond_to?(:coerce)
@@ -99,7 +91,7 @@ module OpenHAB
         #
         # Coerce object to a DecimalType
         #
-        # @param [Items::NumericItem, Numeric, Type] other object to
+        # @param [Numeric, Type] other object to
         #   coerce to a {DecimalType}
         #
         #   if +other+ is a {Type}, +self+ will instead be coerced
@@ -109,12 +101,7 @@ module OpenHAB
         #
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
-          if other.is_a?(Items::NumericItem) ||
-             (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-            return unless other.state?
-
-            [other.state, self]
-          elsif other.is_a?(Type)
+          if other.is_a?(Type)
             [other, as(other.class)]
           elsif other.respond_to?(:to_d)
             [self.class.new(other.to_d), self]

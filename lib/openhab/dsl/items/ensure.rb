@@ -62,7 +62,6 @@ module OpenHAB
             super(command)
           end
         end
-        alias_method :<<, :command
       end
 
       # "anonymous" class that wraps any method call in +ensure_states+

@@ -31,7 +31,7 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [NumericType, Items::NumericItem, Numeric, String]
+        # @param [NumericType, Numeric, String]
         #   other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether +other+ is
@@ -46,11 +46,6 @@ module OpenHAB
             return compare_to(other.unitize(unit)) if other.unit == ONE_UNIT
 
             compare_to(other)
-          elsif other.is_a?(Items::NumericItem) ||
-                (other.is_a?(Items::GroupItem) && other.base_item.is_a?(NumericItem))
-            return nil unless other.state?
-
-            self <=> other.state
           elsif other.respond_to?(:to_str)
             compare_to(QuantityType.new(other.to_str))
           elsif other.respond_to?(:to_d)
@@ -67,7 +62,7 @@ module OpenHAB
         #
         # Coerce object to a QuantityType
         #
-        # @param [Items::NumericItem, Numeric, Type, String] other object to
+        # @param [Numeric, Type, String] other object to
         #   coerce to a {QuantityType}
         #
         #   if +other+ is a {Type}, +self+ will instead be coerced
@@ -76,12 +71,7 @@ module OpenHAB
         # @return [[QuantityType, QuantityType]]
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
-          if other.is_a?(Items::NumericItem) ||
-             (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-            return unless other.state?
-
-            [other.state, self]
-          elsif other.is_a?(Type)
+          if other.is_a?(Type)
             [other, as(other.class)]
           elsif other.respond_to?(:to_d)
             [QuantityType.new(other.to_d.to_java, ONE_UNIT), self]
@@ -102,10 +92,7 @@ module OpenHAB
           class_eval( # rubocop:disable Style/DocumentDynamicEvalDefinition https://github.com/rubocop/rubocop/issues/10179
             # def +(other)
             #   logger.trace("#{self} + #{other} (#{other.class})")
-            #   if other.is_a?(Items::NumericItem) ||
-            #     (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-            #     self + other.state
-            #   elsif other.is_a?(QuantityType)
+            #   if other.is_a?(QuantityType)
             #     add_quantity(other)
             #   elsif other.is_a?(DecimalType)
             #     other = other.to_big_decimal
@@ -126,10 +113,7 @@ module OpenHAB
             <<~RUBY, __FILE__, __LINE__ + 1
               def #{ruby_op}(other)
                 logger.trace("\#{self} #{ruby_op} \#{other} (\#{other.class})")
-                if other.is_a?(Items::NumericItem) ||
-                  (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-                  self #{ruby_op} other.state
-                elsif other.is_a?(QuantityType)
+                if other.is_a?(QuantityType)
                   #{java_op}_quantity(other)
                 elsif other.is_a?(DecimalType)
                   other = other.to_big_decimal
@@ -158,10 +142,7 @@ module OpenHAB
           class_eval( # rubocop:disable Style/DocumentDynamicEvalDefinition https://github.com/rubocop/rubocop/issues/10179
             # def *(other)
             #   logger.trace("#{self} * #{other} (#{other.class})")
-            #   if other.is_a?(Items::NumericItem) ||
-            #       (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-            #     self * other.state
-            #   elsif other.is_a?(QuantityType)
+            #   if other.is_a?(QuantityType)
             #     multiply_quantity(other)
             #   elsif other.is_a?(DecimalType)
             #     multiply(other.to_big_decimal)
@@ -180,10 +161,7 @@ module OpenHAB
             <<~RUBY, __FILE__, __LINE__ + 1
               def #{ruby_op}(other)
                 logger.trace("\#{self} #{ruby_op} \#{other} (\#{other.class})")
-                if other.is_a?(Items::NumericItem) ||
-                   (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
-                  self #{ruby_op} other.state
-                elsif other.is_a?(QuantityType)
+                if other.is_a?(QuantityType)
                   #{java_op}_quantity(other)
                 elsif other.is_a?(DecimalType)
                   #{java_op}(other.to_big_decimal)

@@ -104,7 +104,7 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
     end
 
     expect(MySwitch1.meta["homekit"]&.value).to eql "Switchable"
-    expect(MySwitch1.meta["homekit"].to_h).to eql({ somethingElse: "more" })
+    expect(MySwitch1.meta["homekit"].to_h).to eql({ "somethingElse" => "more" })
   end
 
   it "prefixes group members" do

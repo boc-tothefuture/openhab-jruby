@@ -54,24 +54,6 @@ module OpenHAB
           update(base_64_image)
         end
 
-        #
-        # Get the mime type for the image item
-        #
-        # @return [String] mime type for image, e.g. image/png
-        #
-        def mime_type
-          state&.mime_type
-        end
-
-        #
-        # Get the bytes of the image
-        #
-        # @return [Array] Bytes that comprise the image
-        #
-        def bytes
-          state&.get_bytes
-        end
-
         private
 
         #

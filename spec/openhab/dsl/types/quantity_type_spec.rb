@@ -7,18 +7,6 @@ RSpec.describe OpenHAB::DSL::Types::QuantityType do
     expect(50.to_d | "°F").to eql QuantityType.new("50.0 °F") # rubocop:disable Performance/BigDecimalWithNumericArgument
   end
 
-  it "triggers NoMethodError when | is applied to a NULL item" do
-    items.build do
-      number_item "NumberItem1", state: NULL
-      number_item "NumberItem2", state: UNDEF
-      number_item "NumberItem3", state: 10
-    end
-
-    expect { NumberItem1 | "W" }.to raise_error(NoMethodError)
-    expect { NumberItem2 | "W" }.to raise_error(NoMethodError)
-    expect((NumberItem3 | "W").to_s).to eq "10 W"
-  end
-
   it "responds to math operations" do
     # quantity type operand
     expect(QuantityType.new("50 °F") + QuantityType.new("50 °F")).to eql QuantityType.new("100.0 °F")
@@ -35,16 +23,6 @@ RSpec.describe OpenHAB::DSL::Types::QuantityType do
     expect(QuantityType.new("100 °F") / 2).to eql QuantityType.new("50.0 °F")
     expect(QuantityType.new("50 °F") * 2.0).to eql QuantityType.new("100.0 °F")
     expect(QuantityType.new("100 °F") / 2.0).to eql QuantityType.new("50.0 °F")
-
-    # NumberItem operand
-    items.build do
-      number_item "NumberF", dimension: "Temperature", format: "%.5f °F", state: 2
-      number_item "Dimensionless", state: 2
-    end
-
-    expect(QuantityType.new("50 °F") + NumberF).to eql QuantityType.new("52.0 °F")
-    expect(QuantityType.new("50 °F") * Dimensionless).to eql QuantityType.new("100.0 °F")
-    expect(QuantityType.new("50 °F") / Dimensionless).to eql QuantityType.new("25.0 °F")
 
     # DecimalType operand
     expect(QuantityType.new("50 °F") * DecimalType.new(2)).to eql QuantityType.new("100.0 °F")

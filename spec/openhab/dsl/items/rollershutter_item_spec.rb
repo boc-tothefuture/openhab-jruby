@@ -43,33 +43,4 @@ RSpec.describe OpenHAB::DSL::Items::RollershutterItem do
     specify { expect(item.update(100)).not_to be_up }
     specify { expect(item.update(100)).to be_down }
   end
-
-  describe "math operations" do
-    specify { expect(item + 20).to eq 70 }
-    specify { expect(item - 20).to eq 30 }
-    specify { expect(item * 2).to eq 100 }
-    specify { expect(item / 2).to eq 25 }
-    specify { expect(20 + item).to eq 70 }
-    specify { expect(90 - item).to eq 40 }
-    specify { expect(2 * item).to eq 100 }
-    specify { expect(100 / item).to eq 2 }
-    specify { expect(70 % item).to eq 20 }
-  end
-
-  it "works in case statements" do
-    { 0 => UP,
-      100 => DOWN,
-      25 => "1..50",
-      NULL => NULL }.each do |initial, result|
-        item.update(initial)
-        expect(case item
-               when 0 then UP
-               when 100 then DOWN
-               when 51...100 then "51...100"
-               when 1..50 then "1..50"
-               else
-                 NULL
-               end).to eql result
-      end
-  end
 end

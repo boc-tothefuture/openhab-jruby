@@ -49,7 +49,6 @@ module OpenHAB
         #
         def ===(other)
           logger.trace { "Type (#{self.class}) #{self} === #{other} (#{other.class})" }
-          other = other.state if other.respond_to?(:state) && !other.is_a?(OpenHAB::DSL::GenericItemObject)
           return false unless instance_of?(other.class)
 
           eql?(other)
@@ -68,9 +67,6 @@ module OpenHAB
           # i.e. ON == OFF, REFRESH == ON, ON == REFRESH
           # (RefreshType isn't really coercible)
           return equals(other) if other.instance_of?(self.class) || is_a?(RefreshType) || other.is_a?(RefreshType)
-
-          # i.e. ON == DimmerItem (also case statements)
-          return self == other.raw_state if other.is_a?(Items::GenericItem)
 
           if other.respond_to?(:coerce)
             begin
