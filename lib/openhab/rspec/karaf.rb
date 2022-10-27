@@ -539,7 +539,7 @@ module OpenHAB
         Core::OSGi.instance_variable_set(:@bundle, @framework) if require "openhab/core/osgi"
       end
 
-      # import global variables and constants that openhab-scripting gem expects,
+      # import global variables and constants that the DSL expects,
       # since we're going to be running it in this same VM
       def set_jruby_script_presets
         wait_for_service("org.openhab.core.automation.module.script.ScriptEngineFactory",

@@ -30,7 +30,7 @@ insert the `require` statement at the beginning of your scripts (_optional_).
    # org.openhab.automation.jrubyscripting:require=openhab
    ```
 
-   This configuration with the openhab-jrubyscripting gem specified with [pessimistic versioning](https://thoughtbot.com/blog/rubys-pessimistic-operator) will install any version of openhab-scripting greater than or equal to 4.0 but less than 5.0. On system restart if any (non-breaking) new versions of the library are available they will automatically be installed.
+   This configuration with the openhab-jrubyscripting gem specified with [pessimistic versioning](https://thoughtbot.com/blog/rubys-pessimistic-operator) will install any version of openhab-jrubyscripting greater than or equal to 4.0 but less than 5.0. On system restart if any (non-breaking) new versions of the library are available they will automatically be installed.
 2. Edit `<OPENHAB_CONF>/services/addons.cfg` and ensure that `jrubyscripting` is included in an uncommented `automation=` list of automations to install.  
 
 ## Upgrading

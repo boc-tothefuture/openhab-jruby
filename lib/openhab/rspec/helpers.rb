@@ -107,7 +107,7 @@ module OpenHAB
 
         require_relative "mocks/persistence_service"
 
-        # override several openhab-scripting methods
+        # override several DSL methods
         require_relative "actions"
         require_relative "openhab/core/item_proxy"
         require_relative "openhab/dsl/timers/timer"

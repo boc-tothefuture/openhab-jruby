@@ -18,7 +18,7 @@ module OpenHAB
       #
       # Regex for matching internal calls in a stack trace
       #
-      INTERNAL_CALL_REGEX = %r{(openhab-scripting-.*/lib)|org[./]jruby}.freeze
+      INTERNAL_CALL_REGEX = %r{(openhab-jrubyscripting-.*/lib)|org[./]jruby}.freeze
       private_constant :INTERNAL_CALL_REGEX
 
       #
@@ -275,7 +275,7 @@ module OpenHAB
       #
       def log_caller
         caller_locations.map(&:path)
-                        .grep_v(/rubygems|openhab-scripting|<script>/)
+                        .grep_v(/rubygems|openhab-jrubyscripting|<script>/)
                         .first
                         .then { |caller| File.basename(caller, ".*") if caller }
       end
