@@ -23,7 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "marcel", "~> 1.0"
   spec.add_runtime_dependency "method_source", "~> 1.0"
 
-  spec.add_development_dependency "commonmarker"
   spec.add_development_dependency "cucumber"
   spec.add_development_dependency "cuke_linter", "~> 1.2"
   spec.add_development_dependency "guard-rubocop"
@@ -35,15 +34,13 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "process_exists"
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rspec", "~> 3.11"
-  # spec.add_development_dependency 'rspec-openhab-scripting', '~> 1.1'
   spec.add_development_dependency "rubocop", "~> 1.8"
   spec.add_development_dependency "rubocop-performance", "~> 1.11"
   spec.add_development_dependency "rubocop-rake", "~> 0.6"
   spec.add_development_dependency "rubocop-rspec", "~> 2.11"
+  spec.add_development_dependency "timecop", "~> 0.9"
   spec.add_development_dependency "tty-command"
   spec.add_development_dependency "yaml-lint"
-  spec.add_development_dependency "yard"
-  spec.add_development_dependency "yard-coderay"
 
   # Specify which files should be added to the spec.add_development_dependency when it is released.
   # The `git ls-files -z` loads the files in the Rubyspec.add_development_dependency that have been added into git.

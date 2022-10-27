@@ -2,14 +2,14 @@
 
 Bundler.require(:default, :test)
 
-require "rspec/openhab/configuration"
-RSpec::OpenHAB::Configuration.use_root_instance = true
+require "openhab/rspec/configuration"
+OpenHAB::RSpec::Configuration.use_root_instance = true
 
 # clean any external OPENHAB or KARAF references; we want to use our private install
 ENV.delete_if { |k| k.match?(/^(?:OPENHAB|KARAF)_/) }
 ENV["OPENHAB_HOME"] = "#{Dir.pwd}/tmp/openhab"
 
-require "rspec-openhab-scripting"
+require "openhab/rspec"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -35,7 +35,7 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    OpenHAB::Log.logger(OpenHAB::Configuration.log_prefix).level = :trace
+    OpenHAB::Log.logger(OpenHAB::Log::Configuration.log_prefix).level = :trace
   end
 
   Kernel.srand config.seed

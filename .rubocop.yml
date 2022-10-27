@@ -19,6 +19,9 @@ Bundler/GemFilename:
   Exclude:
     - lib/openhab/dsl/gems.rb
 
+Lint/RescueException:
+  Enabled: false # we need to rescue Java exceptions quite a bit
+
 Metrics:
   Enabled: false
 

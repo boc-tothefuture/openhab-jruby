@@ -160,6 +160,7 @@ GEM
     sys-uname (1.2.2)
       ffi (~> 1.1)
     thor (1.2.1)
+    timecop (0.9.5)
     tty-color (0.6.0)
     tty-command (0.10.1)
       pastel (~> 0.8)
@@ -196,6 +197,7 @@ DEPENDENCIES
   rubocop-performance (~> 1.11)
   rubocop-rake (~> 0.6)
   rubocop-rspec (~> 2.11)
+  timecop (~> 0.9)
   tty-command
   yaml-lint
   yard

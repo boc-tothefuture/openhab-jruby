@@ -3,7 +3,7 @@
 require "rubygems"
 require "bundler"
 
-Bundler.require(:default, :development, :test)
+Bundler.require
 
 # it's useless with so many java objects
 IRB.conf[:USE_AUTOCOMPLETE] = false
@@ -12,6 +12,6 @@ IRB.conf[:USE_AUTOCOMPLETE] = false
 ENV.delete_if { |k| k.match?(/^(?:OPENHAB|KARAF)_/) }
 ENV["OPENHAB_HOME"] = "#{Dir.pwd}/tmp/openhab"
 
-require "rspec/openhab/configuration"
-RSpec::OpenHAB::Configuration.use_root_instance = true
-require "rspec-openhab-scripting"
+require "openhab/rspec/configuration"
+OpenHAB::RSpec::Configuration.use_root_instance = true
+require "openhab/rspec"
