@@ -2,7 +2,6 @@
 
 require "forwardable"
 require "time"
-require "java"
 
 module OpenHAB
   module DSL

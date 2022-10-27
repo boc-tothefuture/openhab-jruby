@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "time"
-require "java"
 
 module OpenHAB
   module DSL

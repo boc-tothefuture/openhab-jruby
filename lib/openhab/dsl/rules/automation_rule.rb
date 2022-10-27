@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "java"
 require "openhab/core/thread_local"
 require "openhab/log/logger"
 require "openhab/dsl/between"

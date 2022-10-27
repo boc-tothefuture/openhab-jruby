@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "delegate"
-require "java"
+
 require "singleton"
 
 require "openhab/log/logger"

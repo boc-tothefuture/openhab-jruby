@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "java"
 require "openhab/dsl/rules/triggers/trigger"
 
 module OpenHAB

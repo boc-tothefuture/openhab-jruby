@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "forwardable"
-require "java"
+
 require "securerandom"
 require "openhab/log/logger"
 require_relative "triggers/conditions/proc"

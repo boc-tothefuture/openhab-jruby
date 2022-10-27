@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "java"
 require "forwardable"
 require_relative "property"
 require_relative "triggers/triggers"

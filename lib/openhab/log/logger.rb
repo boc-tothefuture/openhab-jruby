@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "openhab/log/configuration"
-require "java"
 
 module OpenHAB
   module Core

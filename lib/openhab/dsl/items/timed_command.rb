@@ -4,7 +4,6 @@ require "openhab/dsl/timers"
 require "openhab/dsl/rules/rule_triggers"
 require "openhab/dsl/rules/triggers/triggers"
 require "openhab/log/logger"
-require "java"
 
 require_relative "generic_item"
 

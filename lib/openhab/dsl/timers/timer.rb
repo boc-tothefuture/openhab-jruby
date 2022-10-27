@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "java"
 require "delegate"
 require "forwardable"
 require "openhab/log/logger"

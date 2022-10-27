@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "java"
 require "openhab/core/osgi"
 
 module OpenHAB

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "java"
 require_relative "percent_type"
 
 module OpenHAB
