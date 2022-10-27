@@ -51,7 +51,7 @@ module OpenHAB
         # @return [void]
         #
         # @example
-        #   require "openhab"
+        #   require "openhab/dsl"
         #
         #   rule "name" do
         #     <zero or more triggers>

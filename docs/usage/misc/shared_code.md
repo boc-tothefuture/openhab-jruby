@@ -11,7 +11,7 @@ loaded individually by OpenHAB, only when you `require` them.
 
 `automation/jsr223/ruby/personal/myrule.rb`
 ```ruby
-require "openhab"
+require "openhab/dsl"
 require "my_lib"
 
 logger.info(my_lib_version)

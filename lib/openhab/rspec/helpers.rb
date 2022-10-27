@@ -103,7 +103,7 @@ module OpenHAB
         ENV["RUBYLIB"] ||= ""
         ENV["RUBYLIB"] += ":" unless ENV["RUBYLIB"].empty?
         ENV["RUBYLIB"] += rubylib_dir
-        require "openhab"
+        require "openhab/dsl"
 
         require_relative "mocks/persistence_service"
 

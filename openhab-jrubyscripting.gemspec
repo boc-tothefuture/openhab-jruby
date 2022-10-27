@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/openhab/version"
+require_relative "lib/openhab/dsl/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "openhab-jrubyscripting"
-  spec.version       = OpenHAB::VERSION
+  spec.version       = OpenHAB::DSL::VERSION
   spec.authors       = ["Cody Cutrer"]
   spec.email         = ["cody@cutrer.us"]
 

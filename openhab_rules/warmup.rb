@@ -2,6 +2,6 @@
 
 puts "Starting Warmup"
 
-require "openhab"
+require "openhab/dsl"
 
 logger.info("OpenHAB warmup complete")

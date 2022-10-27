@@ -21,7 +21,7 @@ def identifying_log_line(uid)
 end
 
 def prepend_identifying_log_line_to_rule(code, uid)
-  pattern = require_openhab.gsub %(['"]), %(['"]) # allow raw rules with `require "openhab"` and `require 'openhab'`
+  pattern = require_openhab.gsub %(['"]), %(['"]) # allow raw rules with `require "openhab/dsl"` and `require 'openhab/dsl'`
   code.sub!(/#{pattern}/, %[#{require_openhab}\n\nlogger.info("#{identifying_started_log_line(uid)}")\n\n])
 end
 
