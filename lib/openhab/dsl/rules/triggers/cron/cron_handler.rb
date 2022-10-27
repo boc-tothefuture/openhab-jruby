@@ -17,7 +17,6 @@ module OpenHAB
           # Creates trigger types and trigger type factories for OpenHAB
           #
           def self.add_script_cron_handler
-            java_import org.openhab.core.automation.type.TriggerType
             OpenHAB::Core.automation_manager.add_trigger_handler(
               OpenHAB::DSL::Rules::Triggers::Cron::CRON_TRIGGER_MODULE_ID,
               OpenHAB::DSL::Rules::Triggers::CronHandler::CronTriggerHandlerFactory.new
@@ -31,7 +30,7 @@ module OpenHAB
           # Creates trigger types and trigger type factories for OpenHAB
           #
           private_class_method def self.cron_trigger_type
-            TriggerType.new(
+            org.openhab.core.automation.type.TriggerType.new(
               OpenHAB::DSL::Rules::Triggers::Cron::CRON_TRIGGER_MODULE_ID,
               nil,
               "A specific instant occurs",

@@ -8,8 +8,6 @@ module OpenHAB
     # Ruby Logger that forwards messages at appropriate levels to OpenHAB Logger
     #
     class Logger
-      java_import org.slf4j.LoggerFactory
-
       # @return [Array] Supported logging levels
       LEVELS = %i[trace debug warn info error].freeze
       private_constant :LEVELS
@@ -38,7 +36,7 @@ module OpenHAB
       # @param [String] name of the logger
       #
       def initialize(name)
-        @slf4j_logger = LoggerFactory.getLogger(name)
+        @slf4j_logger = org.slf4j.LoggerFactory.getLogger(name)
       end
 
       def name

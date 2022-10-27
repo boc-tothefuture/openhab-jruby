@@ -7,8 +7,6 @@ require "openhab/core/thread_local"
 
 module OpenHAB
   module DSL
-    java_import org.openhab.core.model.script.actions.ScriptExecution
-
     # Ruby wrapper for OpenHAB Timer
     # This class implements delegator to delegate methods to the OpenHAB timer
     #
@@ -36,7 +34,8 @@ module OpenHAB
         semaphore = Mutex.new
 
         semaphore.synchronize do
-          @timer = ScriptExecution.createTimer(OpenHAB::DSL.to_zdt(@duration), timer_block(semaphore, &block))
+          @timer = org.openhab.core.model.script.actions.ScriptExecution.createTimer(OpenHAB::DSL.to_zdt(@duration),
+                                                                                     timer_block(semaphore, &block))
           @rule_timers = Thread.current[:rule_timers]
           super(@timer)
           Timers.timer_manager.add(self)

@@ -40,10 +40,6 @@ Feature: comparisons
   Scenario: Comparisons can be done against different types
     Given code in a rules file
       """
-      java_import org.openhab.core.library.types.DateTimeType
-      java_import org.openhab.core.library.types.DecimalType
-      java_import org.openhab.core.library.types.PercentType
-
       #comparison pairs
       tests = [
         # NumberItem vs NumberItem

@@ -10,8 +10,6 @@ module OpenHAB
       #       When given a positive Duration, the timestamp will be calculated as ++now-Duration++
       #
       module Persistence
-        java_import org.openhab.core.types.util.UnitUtils
-
         # A state class with an added timestamp attribute. This is used to hold OpenHAB's HistoricItem.
         class HistoricState < SimpleDelegator
           attr_reader :timestamp, :state
@@ -265,7 +263,8 @@ module OpenHAB
         # @return [Object] QuantityType or the original value
         #
         def quantify(value)
-          if value.is_a?(Types::DecimalType) && (item_unit = UnitUtils.parse_unit(state_description&.pattern))
+          if value.is_a?(Types::DecimalType) &&
+             (item_unit = org.openhab.core.types.util.UnitUtils.parse_unit(state_description&.pattern))
             logger.trace("Unitizing #{value} with unit #{item_unit}")
             Types::QuantityType.new(value.to_big_decimal, item_unit)
           else

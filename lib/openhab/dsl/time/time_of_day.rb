@@ -12,8 +12,6 @@ module OpenHAB
     # @since 0.0.1
     module Between
       java_import java.time.LocalTime
-      java_import java.time.format.DateTimeFormatterBuilder
-      java_import java.util.Locale
 
       # Class that encapsulates a Time of Day, often viewed as hour-minute-second
       # @author Brian O'Connell
@@ -55,8 +53,8 @@ module OpenHAB
         # @return [TimeOfDay] object created by parsing supplied string
         def self.parse(string)
           format = /(am|pm)$/i.match?(string) ? "h[:mm[:ss]][ ]a" : "H[:mm[:ss]]"
-          local_time = LocalTime.parse(string, DateTimeFormatterBuilder.new
-            .parseCaseInsensitive.appendPattern(format).toFormatter(Locale::ENGLISH))
+          local_time = LocalTime.parse(string, java.time.format.DateTimeFormatterBuilder.new
+            .parseCaseInsensitive.appendPattern(format).toFormatter(java.util.Locale::ENGLISH))
           TimeOfDay.new(h: local_time.hour, m: local_time.minute, s: local_time.second)
         rescue java.time.format.DateTimeParseException => e
           raise ArgumentError, e.message

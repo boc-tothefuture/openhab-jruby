@@ -6,7 +6,6 @@ module OpenHAB
   module DSL
     module Items
       java_import org.openhab.core.library.items.DateTimeItem
-      java_import java.time.format.DateTimeFormatter
 
       # Adds methods to core OpenHAB DateTimeItem type to make it more natural
       # in Ruby
@@ -15,7 +14,9 @@ module OpenHAB
         # @!visibility private
         def format_type(command)
           return command.iso8601 if command.respond_to?(:iso8601)
-          return DateTimeFormatter::ISO_OFFSET_DATE_TIME.format(command) if command.is_a? java.time.ZonedDateTime
+          if command.is_a? java.time.ZonedDateTime
+            return java.time.format.DateTimeFormatter::ISO_OFFSET_DATE_TIME.format(command)
+          end
 
           super
         end

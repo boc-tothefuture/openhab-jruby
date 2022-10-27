@@ -18,9 +18,6 @@ module OpenHAB
       class RuleTriggers
         include OpenHAB::Log
 
-        java_import org.openhab.core.automation.util.TriggerBuilder
-        java_import org.openhab.core.config.core.Configuration
-
         # @return [Array] Of triggers
         attr_accessor :triggers
 
@@ -68,11 +65,11 @@ module OpenHAB
         #
         def self.trigger(type:, config:)
           logger.trace("Creating trigger of type '#{type}' config: #{config}")
-          TriggerBuilder.create
-                        .with_id(uuid)
-                        .with_type_uid(type)
-                        .with_configuration(Configuration.new(config))
-                        .build
+          org.openhab.core.automation.util.TriggerBuilder.create
+             .with_id(uuid)
+             .with_type_uid(type)
+             .with_configuration(org.openhab.core.config.core.Configuration.new(config))
+             .build
         end
 
         #

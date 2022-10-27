@@ -86,8 +86,6 @@ module OpenHAB
 
         private
 
-        java_import org.openhab.core.automation.annotation.RuleAction
-
         #
         # Define methods from actions mapped to this thing
         #
@@ -95,8 +93,11 @@ module OpenHAB
         def define_action_methods
           actions_for_thing(uid).each do |action|
             methods = action.java_class.declared_instance_methods
-            methods.select { |method| method.annotation_present?(RuleAction.java_class) }
-                   .each { |method| define_action_method(action: action, method: method.name) }
+            methods.each do |method|
+              if method.annotation_present?(org.openhab.core.automation.annotation.RuleAction.java_class)
+                define_action_method(action: action, method: method.name)
+              end
+            end
           end
         end
 

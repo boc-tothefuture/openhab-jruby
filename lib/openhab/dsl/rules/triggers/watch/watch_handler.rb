@@ -18,7 +18,7 @@ module OpenHAB
           # Creates trigger types and trigger type factories for OpenHAB
           #
           private_class_method def self.watch_trigger_type
-            TriggerType.new(
+            org.openhab.core.automation.type.TriggerType.new(
               WATCH_TRIGGER_MODULE_ID,
               nil,
               "A path change event is detected",
@@ -148,7 +148,6 @@ module OpenHAB
           # Creates trigger types and trigger type factories for OpenHAB
           #
           def self.add_watch_handler
-            java_import org.openhab.core.automation.type.TriggerType
             OpenHAB::Core.automation_manager.add_trigger_handler(
               WATCH_TRIGGER_MODULE_ID,
               WatchTriggerHandlerFactory.new
