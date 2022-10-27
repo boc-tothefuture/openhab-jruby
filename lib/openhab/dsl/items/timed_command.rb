@@ -167,7 +167,6 @@ module OpenHAB
                   logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\
                                "#{@timed_command_details.item.id}  because received event #{inputs}"
                   @timed_command_details.timer.cancel
-                  # Disabled due to OpenHAB design
                   $scriptExtension.get("ruleRegistry").remove(@timed_command_details.rule_uid)
                   TimedCommand.timed_commands.delete(@timed_command_details.item)
                   if @block

@@ -16,8 +16,6 @@ module OpenHAB
       #
       # JRuby extension to OpenHAB Rule
       #
-      # Disabled because this class has a single responsibility, there does not appear a logical
-      # way of breaking it up into multiple classes
       class AutomationRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
         include OpenHAB::Log
         include OpenHAB::Core::ThreadLocal

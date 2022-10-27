@@ -93,7 +93,6 @@ module OpenHAB
         # @param [Object] attach object to be attached to the trigger
         #
         # rubocop: disable Style/OptionalBooleanParameter
-        # Disabled cop due to use in a DSL
         def on_start(run_on_start = true, attach: nil)
           @on_start = Struct.new(:enabled, :attach).new(run_on_start, attach)
         end

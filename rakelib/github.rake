@@ -21,7 +21,6 @@ def features
     end
   end
 end
-# Disabled due to part of buid / potentially refactor into classes
 namespace :github do
   desc "Release JRuby Binding"
   task :release, [:file] do |_, args|
