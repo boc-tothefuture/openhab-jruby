@@ -559,7 +559,7 @@ things['lgwebos:WebOSTV:main-tv'].status == ThingStatus::ONLINE
 ### Enable/Disable a Thing
 
 ```ruby
-thing_manager = OpenHAB::Core::OSGI.service('org.openhab.core.thing.ThingManager')
+thing_manager = OpenHAB::Core::OSGi.service('org.openhab.core.thing.ThingManager')
 
 thing = things['lgwebos:WebOSTV:main-tv']
 
@@ -832,7 +832,7 @@ rule_uid = OpenHAB::Core.rule_registry.all.select { |rule| rule.name == 'This is
 ### Enable or Disable a Rule by UID
 
 ```ruby
-rule_manager = OpenHAB::Core::OSGI.service('org.openhab.core.automation.RuleManager')
+rule_manager = OpenHAB::Core::OSGi.service('org.openhab.core.automation.RuleManager')
 rule_manager.set_enabled(rule_uid, true) # enable rule
 rule_manager.set_enabled(rule_uid, false) # disable rule
 ```
@@ -840,7 +840,7 @@ rule_manager.set_enabled(rule_uid, false) # disable rule
 ### Run a rule by UID
 
 ```ruby
-rule_manager = OpenHAB::Core::OSGI.service('org.openhab.core.automation.RuleManager')
+rule_manager = OpenHAB::Core::OSGi.service('org.openhab.core.automation.RuleManager')
 rule_manager.run_now(rule_uid)
 ```
 

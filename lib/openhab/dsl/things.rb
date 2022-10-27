@@ -40,7 +40,7 @@ module OpenHAB
         class << self
           # @!visibility private
           def thing_manager
-            @thing_manager ||= ::OpenHAB::Core::OSGI.service("org.openhab.core.thing.ThingManager")
+            @thing_manager ||= ::OpenHAB::Core::OSGi.service("org.openhab.core.thing.ThingManager")
           end
         end
 

@@ -96,13 +96,13 @@ module OpenHAB
         class << self
           # @!visibility private
           def thing_type_registry
-            @thing_type_registry ||= ::OpenHAB::Core::OSGI.service("org.openhab.core.thing.type.ThingTypeRegistry")
+            @thing_type_registry ||= ::OpenHAB::Core::OSGi.service("org.openhab.core.thing.type.ThingTypeRegistry")
           end
 
           # @!visibility private
           def config_description_registry
             @config_description_registry ||=
-              ::OpenHAB::Core::OSGI.service("org.openhab.core.config.core.ConfigDescriptionRegistry")
+              ::OpenHAB::Core::OSGi.service("org.openhab.core.config.core.ConfigDescriptionRegistry")
           end
 
           # @!visibility private

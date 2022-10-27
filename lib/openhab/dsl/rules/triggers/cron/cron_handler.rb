@@ -59,7 +59,7 @@ module OpenHAB
             #
             def initialize(trigger)
               @trigger = trigger
-              @scheduler = OpenHAB::Core::OSGI.service("org.openhab.core.scheduler.CronScheduler")
+              @scheduler = OpenHAB::Core::OSGi.service("org.openhab.core.scheduler.CronScheduler")
               @schedule = nil
               @expression = trigger.configuration.get("cronExpression")
               super(trigger)

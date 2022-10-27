@@ -11,7 +11,7 @@ module OpenHAB
     module Actions
       include OpenHAB::Log
 
-      OpenHAB::Core::OSGI.services("org.openhab.core.model.script.engine.action.ActionService")&.each do |service|
+      OpenHAB::Core::OSGi.services("org.openhab.core.model.script.engine.action.ActionService")&.each do |service|
         java_import service.actionClass.to_s
         logger.trace("Loaded ACTION: #{service.actionClass}")
       end

@@ -6,9 +6,9 @@ require "openhab/log/logger"
 module OpenHAB
   module Core
     #
-    # OSGI services interface
+    # OSGi services interface
     #
-    class OSGI
+    class OSGi
       include OpenHAB::Log
 
       java_import org.osgi.framework.FrameworkUtil
@@ -21,7 +21,7 @@ module OpenHAB
       def self.service(name)
         ref = bundle_context.getServiceReference(name)
         service = bundle_context.getService(ref) if ref
-        logger.trace "OSGI service(#{service}) found for '#{name}' using OSGI Service Reference #{ref}"
+        logger.trace "OSGi service(#{service}) found for '#{name}' using OSGi Service Reference #{ref}"
 
         service
       end
@@ -41,14 +41,14 @@ module OpenHAB
       #
       # Get the bundle context
       #
-      # @return [java::org::osgi::framework::BundleContext] OSGI bundle context
+      # @return [java::org::osgi::framework::BundleContext] OSGi bundle context
       #
       def self.bundle_context
         @bundle_context ||= bundle.getBundleContext
       end
       private_class_method :bundle_context
 
-      # Get the OSGI Bundle for ScriptExtension Class
+      # Get the OSGi Bundle for ScriptExtension Class
       def self.bundle
         @bundle ||= FrameworkUtil.getBundle($scriptExtension.class)
       end

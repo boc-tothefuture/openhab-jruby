@@ -29,7 +29,7 @@ module OpenHAB
 
         @automation_manager = OpenHAB::Core.automation_manager
         @registry = OpenHAB::Core.rule_registry
-        @scripted_rule_provider = OpenHAB::Core::OSGI.service(
+        @scripted_rule_provider = OpenHAB::Core::OSGi.service(
           "org.openhab.core.automation.module.script.rulesupport.shared.ScriptedRuleProvider"
         )
         class << self

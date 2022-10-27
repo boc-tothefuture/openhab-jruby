@@ -72,7 +72,7 @@ module OpenHAB
           super
 
           @links = Hash.new { |h, k| h[k] = Set.new }
-          registry = OpenHAB::Core::OSGI.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
+          registry = OpenHAB::Core::OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           registry.add_provider(self)
           OpenHAB::Core::ScriptHandling.script_unloaded { registry.remove_provider(self) }
         end

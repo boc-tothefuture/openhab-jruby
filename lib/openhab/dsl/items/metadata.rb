@@ -254,7 +254,7 @@ module OpenHAB
           # @return [org.openhab.core.items.MetadataRegistry]
           #
           def self.registry
-            @registry ||= OpenHAB::Core::OSGI.service("org.openhab.core.items.MetadataRegistry")
+            @registry ||= OpenHAB::Core::OSGi.service("org.openhab.core.items.MetadataRegistry")
           end
 
           private
