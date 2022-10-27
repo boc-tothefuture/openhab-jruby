@@ -3,10 +3,10 @@
 require_relative 'lib/openhab/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'openhab-scripting'
+  spec.name          = 'openhab-jrubyscripting'
   spec.version       = OpenHAB::VERSION
-  spec.authors       = ["Brian O'Connell"]
-  spec.email         = ['broconne@gmail.com']
+  spec.authors       = ["Cody Cutrer"]
+  spec.email         = ['cody@cutrer.us']
 
   spec.summary       = 'JRuby Helper Libraries for OpenHAB Scripting'
   spec.description   = 'JRuby Helper Libraries for OpenHAB Scripting'
@@ -16,8 +16,8 @@ Gem::Specification.new do |spec|
   #  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = 'https://github.com/boc-tothefuture/openhab-jruby'
-  spec.metadata['changelog_uri'] = 'https://github.com/boc-tothefuture/openhab-jruby/blob/main/CHANGELOG.md'
+  spec.metadata['source_code_uri'] = 'https://github.com/ccutrer/openhab-jrubyscripting'
+  spec.metadata['changelog_uri'] = 'https://github.com/ccutrer/openhab-jrubyscripting/blob/main/CHANGELOG.md'
 
   spec.add_runtime_dependency 'bundler', '~> 2.2'
   spec.add_runtime_dependency 'marcel', '~> 1.0'
