@@ -267,7 +267,7 @@ Feature: rule_language
       """
       original_methods = Class.methods
 
-      require 'openhab'
+      require 'openhab/dsl'
 
       leaked_methods = (Class.methods - original_methods).sort
       logger.info "Leaked methods: #{leaked_methods}"
@@ -285,7 +285,7 @@ Feature: rule_language
 
       original_constants = all_constants
 
-      require 'openhab'
+      require 'openhab/dsl'
 
       added_constants = (all_constants - original_constants).sort
 

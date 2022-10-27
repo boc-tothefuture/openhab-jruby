@@ -5,7 +5,7 @@ require "fileutils"
 require "securerandom"
 
 def require_openhab
-  "require 'openhab'"
+  "require 'openhab/dsl'"
 end
 
 def doc_string_to_rule(doc_string)
@@ -77,7 +77,7 @@ def deploy_ruby_file(code:, directory:, filename: "", check_position: :end, chec
   wait_for_rule(log_line) if check
 end
 
-# A raw rule is one where we don't automatically insert `require 'openhab'`
+# A raw rule is one where we don't automatically insert `require 'openhab/dsl'`
 # It must be inserted manually in the code doc_string by the test author.
 # This gives the author control over what goes before the require line.
 Given("a raw rule(:)") do |doc_string|

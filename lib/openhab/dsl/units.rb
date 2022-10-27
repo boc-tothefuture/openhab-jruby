@@ -2,15 +2,6 @@
 
 require "java"
 
-# Import Imperial and SI Units overriding provided values
-%i[Units ImperialUnits SIUnits].each do |type|
-  Object.send(:remove_const, type)
-  java_import "org.openhab.core.library.unit.#{type}"
-end
-
-Object.send(:remove_const, :QuantityType)
-java_import org.openhab.core.library.types.QuantityType
-
 module OpenHAB
   module DSL
     #

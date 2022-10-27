@@ -26,7 +26,7 @@ insert the `require` statement at the beginning of your scripts (_optional_).
    ```
    org.openhab.automation.jrubyscripting:gems=openhab-jrubyscripting=~>4.0
    # optional: uncomment the following line if you prefer not having to 
-   # insert require 'openhab' at the top of your scripts.
+   # insert require 'openhab/dsl' at the top of your scripts.
    # org.openhab.automation.jrubyscripting:require=openhab
    ```
 
