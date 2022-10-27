@@ -11,7 +11,7 @@ group :test do
   gem "httparty"
   gem "persistent_httparty"
   gem "rspec", "~> 3.11", require: false
-  gem 'rspec-openhab-scripting', '~> 1.1', require: false
+  # gem 'rspec-openhab-scripting', '~> 1.1', require: false
   gem "yaml-lint", require: false
 end
 
