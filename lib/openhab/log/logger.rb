@@ -123,34 +123,13 @@ module OpenHAB
 
         raise ArgumentError, "Unknown Severity #{severity}" unless LEVELS.include? severity
 
-        # Dynamically check enablement of underlying logger, this expands to "is_<level>_enabled"
+        # Dynamically check enablement of underlying logger
         return unless send("#{severity}?")
 
         # Process block if no message provided
         msg = yield if msg.nil? && block_given?
 
-        msg = message_to_string(msg: msg)
-
-        # Dynamically invoke underlying logger, this expands to "<level>(message)"
-        @sl4fj_logger.send(severity, msg)
-      end
-
-      #
-      # Conver the supplied message object to a String
-      #
-      # @param [object] msg object to convert
-      #
-      # @return [String] Msg object as a string
-      #
-      def message_to_string(msg:)
-        case msg
-        when ::String
-          msg
-        when ::Exception
-          "#{msg.message} (#{msg.class})\n#{msg.backtrace&.join("\n")}"
-        else
-          msg.inspect
-        end
+        @sl4fj_logger.send(severity, msg.to_s)
       end
     end
   end
