@@ -6,9 +6,7 @@ module OpenHAB
   module DSL
     module Rules
       module Triggers
-        #
-        # Module for conditions for triggers
-        #
+        # @!visibility private
         module Conditions
           include OpenHAB::Log
           #

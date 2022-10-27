@@ -1,11 +1,4 @@
----
-layout: default
-title: Metadata
-nav_order: 2
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Metadata
 
 # Item Metadata
 

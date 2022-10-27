@@ -20,7 +20,7 @@ module OpenHAB
     #
     module Rules
       #
-      # The main rule DSL method
+      # The main {rule} DSL method.
       #
       module Rule
         include OpenHAB::Log
@@ -33,6 +33,7 @@ module OpenHAB
           "org.openhab.core.automation.module.script.rulesupport.shared.ScriptedRuleProvider"
         )
         class << self
+          # @!visibility private
           attr_reader :script_rules, :automation_manager, :registry, :scripted_rule_provider
         end
 
@@ -41,16 +42,29 @@ module OpenHAB
         #
         # Create a new rule
         #
-        # @param [String] rule_name The rule name
-        # @yield [] Block executed in context of a RuleConfig
+        # @see Terse
         #
+        # @param [String] name The rule name
+        # @yield Block executed in context of a {RuleConfig}
+        # @yieldparam [RuleConfig] rule
+        #   Optional parameter to access the rule configuration from within execution blocks and guards.
+        # @return [void]
         #
-        def rule(rule_name = nil, id: nil, script: nil, &block)
+        # @example
+        #   require "openhab"
+        #
+        #   rule "name" do
+        #     <zero or more triggers>
+        #     <zero or more execution blocks>
+        #     <zero or more guards>
+        #   end
+        #
+        def rule(name = nil, id: nil, script: nil, &block)
           id ||= NameInference.infer_rule_id_from_block(block)
           script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
-          OpenHAB::Core::ThreadLocal.thread_local(RULE_NAME: rule_name) do
-            @rule_name = rule_name
+          OpenHAB::Core::ThreadLocal.thread_local(RULE_NAME: rule) do
+            @rule_name = rule
 
             config = RuleConfig.new(block.binding)
             config.uid(id)
@@ -58,10 +72,10 @@ module OpenHAB
             config.guard = Guard::Guard.new(run_context: config.caller, only_if: config.only_if,
                                             not_if: config.not_if)
 
-            rule_name ||= NameInference.infer_rule_name(config)
-            rule_name ||= id
+            name ||= NameInference.infer_rule_name(config)
+            name ||= id
 
-            config.name(rule_name)
+            config.name(name)
             logger.trace { config.inspect }
             process_rule_config(config, script)
           end
@@ -69,7 +83,11 @@ module OpenHAB
           logger.log_exception(e, @rule_name)
         end
 
+        #
         # Remove a rule
+        #
+        # @return [void]
+        #
         def remove_rule(rule_uid)
           rule_uid = rule_uid.uid if rule_uid.respond_to?(:uid)
           i = Rule.script_rules.index { |r| r.uid == rule_uid }
@@ -85,6 +103,8 @@ module OpenHAB
         #
         # Cleanup rules in this script file
         #
+        # @return [void]
+        #
         def self.cleanup_rules
           @script_rules.each(&:cleanup)
         end
@@ -96,7 +116,6 @@ module OpenHAB
         # Process a rule based on the supplied configuration
         #
         # @param [RuleConfig] config for rule
-        #
         #
         def process_rule_config(config, script)
           return unless create_rule?(config)

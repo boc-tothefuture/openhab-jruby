@@ -1,12 +1,4 @@
----
-layout: default
-title: Delay
-nav_order: 3
-has_children: false
-parent: Execution Blocks
-grand_parent: Usage
----
-
+# @title Delay
 
 # Delay
 The delay property is a non thread-blocking element that is executed after, before, or between run blocks. 

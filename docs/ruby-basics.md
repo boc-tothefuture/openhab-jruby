@@ -1,9 +1,4 @@
----
-layout: default
-title: Ruby Basics
-nav_order: 4
-has_children: false
----
+# @title Ruby Basics
 
 # Ruby Basics
 
@@ -135,7 +130,7 @@ end
 
 ### Block arguments
 
-Blocks can receive arguments which are passed by its caller. We will often encounter this in a [run]({{ site.baseurl }}{% link usage/execution/run.md %}) and [triggered]({{ site.baseurl }}{% link usage/execution/triggered.md %}) blocks.
+Blocks can receive arguments which are passed by its caller. We will often encounter this in a [run](docs/usage/execution/run.md) and [triggered](docs/usage/execution/triggered.md) blocks.
 
 ```ruby
 rule 'name' do

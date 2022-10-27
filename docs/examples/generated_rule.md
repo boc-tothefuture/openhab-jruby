@@ -1,9 +1,4 @@
----
-layout: default
-title: Generated Rule
-has_children: false
-parent: Examples
----
+# @title Generated Rules
 
 # Dynamic Generation of Rules
 

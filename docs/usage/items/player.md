@@ -1,10 +1,4 @@
----
-layout: default
-title: PlayerItem
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title PlayerItem
 
 
 # PlayerItem

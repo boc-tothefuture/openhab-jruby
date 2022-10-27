@@ -1,10 +1,4 @@
----
-layout: default
-title: ContactItem
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title ContactItem
 
 # ContactItem
 

@@ -1,11 +1,4 @@
----
-layout: default
-title: Only If
-nav_order: 1
-has_children: false
-parent: Guards
-grand_parent: Usage
----
+# @title Only If
 
 # only_if
  only_if allows rule execution when result is true and prevents when false.

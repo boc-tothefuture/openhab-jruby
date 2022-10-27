@@ -1,10 +1,4 @@
----
-layout: default
-title: Store States
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Store States
 
 # store_states
 

@@ -1,21 +1,15 @@
----
-layout: default
-title: OpenHAB JRuby Scripting
-nav_order: 1
-has_children: false
----
+# @title Examples
 
-# OpenHAB JRuby Scripting
+## Detailed Examples
 
-The OpenHAB JRuby scripting helpers bring the power of the Ruby language to OpenHAB. Rather than being a pure pass-through to OpenHAB, they provide a Ruby-like experience when building automation rules within OpenHAB.
-
-## Discussion
-
-Please see [this thread](https://community.openhab.org/t/jruby-openhab-rules-system/110598) on the OpenHAB forum for further discussion.  Ideas and suggestions are welcome.
+ * [Rule Conversions](examples/conversions.md)
+ * [Gem Cleanup](examples/gem_cleanup.md)
+ * [Generated Rules](examples/generated_rule.md)
+ * [How Do I...?](examples/how_do_i.md)
 
 ## Quick Examples
 
-The following examples are for file-based rules but most of them are applicable to [GUI rules]({{ site.baseurl }}{% link usage/ui-rules.md %}) as well.
+The following examples are for file-based rules but most of them are applicable to [GUI rules](usage.md#creating-rules-in-main-ui) as well.
 
 ### Trigger when an item changed state
 
@@ -105,7 +99,7 @@ end
 
 ### Use timers
 
-[Timers]({{ site.baseurl }}{% link usage/misc/timers.md %}) are created using `after` with an easier way to specify when it should execute, based on [duration]({{ site.baseurl }}{% link usage/misc/duration.md %}) syntax, e.g. `10.minutes` instead of using ZonedDateTime.
+[Timers](docs/usage/misc/timers.md) are created using `after` with an easier way to specify when it should execute, based on [duration](docs/usage/misc/duration.md) syntax, e.g. `10.minutes` instead of using ZonedDateTime.
 
 ```ruby
 rule 'simple timer' do
@@ -165,7 +159,7 @@ end
 #### Or use the timed command feature to achieve the same thing
 
 The two timer examples above required an extra rule to keep track of the Light_Item state, so when it's turned off, 
-the timer is cancelled. However, the [timed command]({{ site.baseurl }}{% link usage/items/index.md %}#timed-commands) 
+the timer is cancelled. However, the [timed command](docs/usage/items/index.md#timed-commands) 
 feature in the next example handles that automatically for you.
 
 ```ruby
@@ -177,8 +171,8 @@ end
 
 ### Automatic activation of exhaust fan based on humidity sensor
 
-This uses the `evolution_rate` [persistence]({{ site.baseurl }}{% link usage/misc/persistence.md %}) feature, 
-coupled with an easy way to specify [duration]({{ site.baseurl }}{% link usage/misc/duration.md %}).
+This uses the `evolution_rate` [persistence](docs/usage/misc/persistence.md) feature, 
+coupled with an easy way to specify [duration](docs/usage/misc/duration.md).
 It is accessed simply through `ItemName.persistence_function`.
 
 ```ruby
@@ -197,4 +191,42 @@ rule 'Humidity: Control ExhaustFan' do
     end
   end
 end
+```
+
+### Reset the switch that triggered the rule after 5 seconds
+
+Trigger defined as:
+
+- When: a member of an item group receives a command
+- Group: Reset_5Seconds
+- Command: ON
+
+```ruby
+logger.info("#{event.item.id} Triggered the rule")
+after 5.seconds do
+  event.item << OFF
+end
+```
+
+### Update a DateTime Item with the current time when a motion sensor is triggered
+
+Given the following group and items:
+```
+Group MotionSensors
+Switch Sensor1 (MotionSensors)
+Switch Sensor2 (MotionSensors)
+
+DateTime Sensor1_LastMotion
+DateTime Sensor2_LastMotion
+```
+
+Trigger defined as:
+
+- When: the state of a member of an item group is updated
+- Group: MotionSensors
+- State: ON
+
+```ruby
+logger.info("#{event.item.id} Triggered")
+items["#{event.item_name}_LastMotion"].update Time.now
 ```

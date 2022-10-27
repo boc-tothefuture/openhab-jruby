@@ -1,10 +1,4 @@
----
-layout: default
-title: Comparisons
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Comparisons
 
 # Item and State Type Comparisons
 

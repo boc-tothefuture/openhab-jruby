@@ -1,11 +1,4 @@
----
-layout: default
-title: Received Command
-nav_order: 3
-has_children: false
-parent: Triggers
-grand_parent: Usage
----
+# @title Received Command
 
 # received_command
 

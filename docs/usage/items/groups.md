@@ -1,10 +1,4 @@
----
-layout: default
-title: Groups
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title Groups
 
 # Groups
 

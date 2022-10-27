@@ -1,10 +1,4 @@
----
-layout: default
-title: Actions
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Actions
 
 # Actions
 

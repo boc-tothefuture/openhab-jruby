@@ -1,16 +1,10 @@
----
-layout: default
-title: Rule Conversions
-has_children: false
-parent: Examples
----
-
+# @title Rule Conversions
 
 ## Conversion Examples
 
 DSL
 
-```ruby
+```xtend
 rule 'Snap Fan to preset percentages'
 when Member of CeilingFans changed
 then

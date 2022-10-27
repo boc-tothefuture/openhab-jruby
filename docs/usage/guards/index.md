@@ -1,10 +1,4 @@
----
-layout: default
-title: Guards
-nav_order: 4
-has_children: true
-parent: Usage
----
+# @title Guards
 
 # Guards
 

@@ -11,6 +11,7 @@ module OpenHAB
       module Property
         include OpenHAB::Log
 
+        # @!visibility private
         #
         # Extend the calling object with the property methods
         #

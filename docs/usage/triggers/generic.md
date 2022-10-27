@@ -1,11 +1,4 @@
----
-layout: default
-title: Generic Trigger
-nav_order: 9
-has_children: false
-parent: Triggers
-grand_parent: Usage
----
+# @title Generic Trigger
 
 # trigger
 

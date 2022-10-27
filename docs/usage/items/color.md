@@ -1,10 +1,4 @@
----
-layout: default
-title: ColorItem
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title ColorItem
 
 
 # ColorItem

@@ -1,11 +1,4 @@
----
-layout: default
-title: Updated
-nav_order: 2
-has_children: false
-parent: Triggers
-grand_parent: Usage
----
+# @title Updated
 
 # updated 
 

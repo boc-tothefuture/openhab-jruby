@@ -1,11 +1,4 @@
----
-layout: default
-title: Cron
-nav_order: 4
-has_children: false
-parent: Triggers
-grand_parent: Usage
----
+# @title Cron
 
 # cron
 
@@ -13,7 +6,7 @@ There are three ways of creating a cron trigger:
 
 * Using an [OpenHAB style cron expression](https://www.openhab.org/docs/configuration/rules-dsl.html#time-based-triggers) 
 * Specifying each cron field as named arguments
-* Using a simpler [every]({{ site.baseurl }}{% link usage/triggers/every.md %}) syntax
+* Using a simpler [every](docs/usage/triggers/every.md) syntax
 
 ## Using a cron expression
 
@@ -54,4 +47,4 @@ end
 
 ## Using Every syntax
 
-See: [every]({{ site.baseurl }}{% link usage/triggers/every.md %})
+See: [every](docs/usage/triggers/every.md)

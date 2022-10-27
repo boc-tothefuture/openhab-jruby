@@ -1,10 +1,4 @@
----
-layout: default
-title: StringItem
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title StringItem
 
 # StringItem
 

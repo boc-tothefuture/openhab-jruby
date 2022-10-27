@@ -1,11 +1,4 @@
----
-layout: default
-title: Timers
-nav_order: 5
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Timers
 
 # Timers
 
@@ -13,7 +6,7 @@ Timers are created using the `after` method. Its parameters are:
 
 | Parameter | Description                                                                                                                                                          |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| time      | Accepts a [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %}), Ruby [Time](https://ruby-doc.org/core-2.6.3/Time.html), or Java `ZonedDateTime` for timer |
+| time      | Accepts a [Duration](docs/usage/misc/duration.md), Ruby [Time](https://ruby-doc.org/core-2.6.3/Time.html), or Java `ZonedDateTime` for timer |
 | id        | Optional object that is used to identify the timer which also makes the timer [reentrant](#reentrant-timers).                                                        |
 | block     | Block to execute after duration, block will be passed timer object                                                                                                   |
 
@@ -144,4 +137,4 @@ if !timers[:foo]
 end
 ```
 
-See also: [Changed Duration]({{ site.baseurl }}{% link usage/triggers/changed.md %}#changed-duration), [Timed Commands]({{ site.baseurl }}{% link usage/items/index.md %}#timed-commands)
+See also: [Changed Duration](docs/usage/triggers/changed.md#changed-duration), [Timed Commands](docs/usage/items/index.md#timed-commands)

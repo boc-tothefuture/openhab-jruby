@@ -1,10 +1,4 @@
----
-layout: default
-title: Loaded / Unloaded Hooks
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Loaded / Unloaded Hooks
 
 # Loaded / Unloaded Hooks
 

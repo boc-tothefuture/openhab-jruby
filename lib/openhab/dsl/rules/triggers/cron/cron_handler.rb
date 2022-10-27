@@ -6,10 +6,8 @@ require_relative "cron"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Cron type rules
-      #
       module Triggers
+        # @!visibility private
         #
         # Cron trigger handler that provides trigger ID
         #

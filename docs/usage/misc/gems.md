@@ -1,10 +1,4 @@
----
-layout: default
-title: Ruby Gems
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Ruby Gems
 
 # Ruby Gems
 

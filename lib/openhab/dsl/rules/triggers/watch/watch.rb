@@ -6,9 +6,6 @@ require "openhab/dsl/rules/triggers/trigger"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Module holds rule triggers
-      #
       module Triggers
         #
         # Module for watching directories/files
@@ -33,6 +30,7 @@ module OpenHAB
           Watch.new(rule_triggers: @rule_triggers).trigger(config: config, attach: attach)
         end
 
+        # @!visibility private
         #
         # Creates watch triggers
         #

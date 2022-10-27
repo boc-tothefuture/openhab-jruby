@@ -1,11 +1,4 @@
----
-layout: default
-title: Triggered
-nav_order: 2
-has_children: false
-parent: Execution Blocks
-grand_parent: Usage
----
+# @title Triggered
 
 # Triggered
 This property is the same as the run property except rather than passing an event object to the automation block the triggered item is passed. This enables optimizations for simple cases and supports ruby's [pretzel colon `&:` operator.](https://medium.com/@dcjones/the-pretzel-colon-75df46dde0c7) 

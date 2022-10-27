@@ -1,11 +1,4 @@
----
-layout: default
-title: Between
-nav_order: 3
-has_children: false
-parent: Guards
-grand_parent: Usage
----
+# @title Between
 
 # between
 Only runs the rule if the current time is in the provided range, between supports both time of day checks and month day checks.

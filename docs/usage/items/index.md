@@ -1,10 +1,4 @@
----
-layout: default
-title: Items
-nav_order: 5
-has_children: true
-parent: Usage
----
+# @title Items
 
 # Items
 
@@ -26,11 +20,11 @@ Item types have methods added to them to make it flow naturally within the a rub
 | `state?`  | Returns true if the state is not UNDEF or NULL                                                                        | `logger.info("SwitchTest has a state") if SwitchTest.state?` |
 | `state`   | Returns state of the item or nil if UNDEF or NULL                                                                     | `logger.info("SwitchTest state #{SwitchTest.state}")`        |
 | `to_s`    | Returns state in string format                                                                                        | `logger.info(#{item.id}: #{item})`                           |
-| `meta[]`  | Item [metadata]({{ site.baseurl }}{% link usage/misc/metadata.md %})                                                  | `Item1.meta['namespace'].value`                              |
+| `meta[]`  | Item [metadata](docs/usage/misc/metadata.md)                                                  | `Item1.meta['namespace'].value`                              |
 
 `state` returns `nil` instead of `UNDEF` or `NULL` so that it can be used with with [Ruby safe navigation operator](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html) `&.`  Use `undef?` or `null?` to check for those states.
 
-Items also support [Persistence]({{ site.baseurl }}{% link usage/misc/persistence.md %}) and [Semantics]({{ site.baseurl }}{% link usage/misc/semantics.md %}) methods.
+Items also support [Persistence](docs/usage/misc/persistence.md) and [Semantics](docs/usage/misc/semantics.md) methods.
 
 To operate across an arbitrary collection of items you can place them in an [array](https://ruby-doc.org/core-2.6.8/Array.html) and execute methods against the array.
 

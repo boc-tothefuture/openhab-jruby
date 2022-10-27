@@ -1,10 +1,4 @@
----
-layout: default
-title: Duration
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Duration
 
 # Duration
 
@@ -12,9 +6,9 @@ Ruby [integers](https://ruby-doc.org/core-2.6.8/Integer.html) and
 [floats](https://ruby-doc.org/core-2.6.8/Float.html) are extended with several
 methods to support durations. These methods create a new
 [java.time.Duration](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html)
-object that is used by the [Every trigger]({{ site.baseurl }}{% link usage/triggers/every.md %}),
-[delay]({%link usage/execution/delay.md %}), the [for option]({{ site.baseurl }}{% link usage/triggers/changed.md %}) and
-[timers]({{ site.baseurl }}{% link usage/misc/timers.md %}). 
+object that is used by the [Every trigger](docs/usage/triggers/every.md),
+[delay](../execution/delay.md), the [for option](docs/usage/triggers/changed.md) and
+[timers](docs/usage/misc/timers.md). 
 
 ## Extended Methods
 

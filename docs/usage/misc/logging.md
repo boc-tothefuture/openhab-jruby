@@ -1,11 +1,4 @@
----
-layout: default
-title: Logging
-nav_order: 1
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Logging
 
 # Logging
 

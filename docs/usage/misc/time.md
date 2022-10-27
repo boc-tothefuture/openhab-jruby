@@ -1,10 +1,4 @@
----
-layout: default
-title: Time
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Time
 
 # Working With Time
 
@@ -13,8 +7,8 @@ Several options are available for time related code, including but not limited t
 * Ruby [Time](https://ruby-doc.org/core/Time.html) class
 * Java [ZonedDateTime](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZonedDateTime.html)
 * Java [LocalTime](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalTime.html)
-* [TimeOfDay]({{ site.baseurl }}{% link usage/misc/time_of_day.md %})
-* Java [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %})
+* [TimeOfDay](time_of_day.md)
+* Java [Duration](docs/usage/misc/duration.md)
 
 ## Ruby Time
 

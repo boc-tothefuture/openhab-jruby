@@ -1,10 +1,4 @@
----
-layout: default
-title: TimeOfDay
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title TimeOfDay
 
 # TimeOfDay
 

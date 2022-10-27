@@ -1,10 +1,4 @@
----
-layout: default
-title: LocationItem
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title LocationItem
 
 
 # Location Item

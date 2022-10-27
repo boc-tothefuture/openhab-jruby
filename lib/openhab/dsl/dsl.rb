@@ -45,7 +45,7 @@ module OpenHAB
       base.send :include, OpenHAB::DSL::Items
       base.send :include, OpenHAB::DSL::Persistence
       base.send :include, OpenHAB::DSL::Rules::Rule
-      base.send :include, OpenHAB::DSL::Rules::TerseRule
+      base.send :include, OpenHAB::DSL::Rules::Terse
       base.send :include, OpenHAB::DSL::States
       base.send :include, OpenHAB::DSL::Things
       base.send :include, OpenHAB::DSL::Timers

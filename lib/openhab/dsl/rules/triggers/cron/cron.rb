@@ -6,17 +6,71 @@ require "openhab/dsl/rules/triggers/trigger"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Cron type rules
-      #
       module Triggers
         #
-        # Create a rule that executes at the specified interval
+        # Create a rule that executes at the specified interval.
         #
-        # @param [Object] value String, Symbol, Duration, or MonthDay to execute this rule
-        # @param [Object] at TimeOfDay or String representing TimeOfDay in which to execute rule
-        # @param [Object] attach object to be attached to the trigger
+        # @param [String,
+        #   Duration,
+        #   MonthDay,
+        #   :second,
+        #   :minute,
+        #   :hour,
+        #   :day,
+        #   :week,
+        #   :month,
+        #   :year,
+        #   :monday,
+        #   :tuesday,
+        #   :wednesday,
+        #   :thursday,
+        #   :friday,
+        #   :saturday,
+        #   :sunday] value
+        #   When to execute rule.
+        # @param [TimeOfDay, String] at What time of day to execute rule
+        # @param [Object] attach Object to be attached to the trigger
+        # @return [void]
         #
+        # @example
+        #   rule "Daily" do
+        #     every :day, at: '5:15'
+        #     run do
+        #       Light.on
+        #     end
+        #   end
+        #
+        # @example
+        #   rule "Weekly" do
+        #     every :monday, at: '5:15'
+        #     run do
+        #       Light.on
+        #     end
+        #   end
+        #
+        # @example
+        #   rule "Often" do
+        #     every :minute
+        #     run do
+        #       Light.on
+        #     end
+        #   end
+        #
+        # @example
+        #   rule "Hourly" do
+        #     every :hour
+        #     run do
+        #       Light.on
+        #     end
+        #   end
+        #
+        # @example
+        #   rule "Often" do
+        #     every 5.minutes
+        #     run do
+        #       Light.on
+        #     end
+        #   end
         #
         def every(value, at: nil, attach: nil)
           return every(MonthDay.parse(value), at: at, attach: attach) if value.is_a? String
@@ -38,6 +92,13 @@ module OpenHAB
         # @param [String] expression OpenHAB style cron expression
         # @param [Object] attach object to be attached to the trigger
         # @param [Hash] fields cron expression elements (second, minute, hour, dom, month, dow, year)
+        # @return [void]
+        #
+        # @example
+        #   rule "cron expression" do
+        #     cron "* * * * * * ?"
+        #     run { Light.on }
+        #   end
         #
         def cron(expression = nil, attach: nil, **fields)
           if fields.any?
@@ -53,6 +114,7 @@ module OpenHAB
           cron.trigger(config: { "cronExpression" => expression }, attach: attach)
         end
 
+        # @!visibility private
         #
         # Creates cron triggers
         #

@@ -8,24 +8,87 @@ require_relative "trigger"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Module for changed triggers
-      #
-
       module Triggers
         include OpenHAB::Log
 
         #
-        # Creates a trigger item, group and thing changed
+        # Creates a trigger when an item, member of a group, or a thing changed states.
         #
-        # @param [Object] items array of objects to create trigger for
-        # @param [to] to state for object to change for
-        # @param [from] from <description>
-        # @param [OpenHAB::Core::Duration] for Duration to delay trigger until to state is met
+        # When the changed element is a {Thing}, the `from` and `to` values will accept symbols and strings,
+        # where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html#thing-status).
+        #
+        # @param [Item, GroupItem::GroupMembers, Thing] items Objects to create trigger for.
+        # @param [State, Array<State>, Range, Proc] from
+        #   Only execute rule if previous state matches `from` state(s).
+        # @param [State, Array<State>, Range, Proc] to State(s) for
+        #   Only execute rule if new state matches `to` state(s).
+        # @param [OpenHAB::Core::Duration] for
+        #   Duration item must remain in the same state before executing the execution blocks.
         # @param [Object] attach object to be attached to the trigger
+        # @return [void]
         #
-        # @return [Trigger] OpenHAB trigger
+        # @example Multiple items can be separated with a comma:
+        #   rule "Execute rule when either sensor changed" do
+        #     changed FrontMotion_Sensor, RearMotion_Sensor
+        #     run { |event| logger.info("Motion detected by #{event.item.name}") }
+        #   end
         #
+        # @example Group member trigger
+        #   rule "Execute rule when member changed" do
+        #     changed Sensors.members
+        #     run { |event| logger.info("Motion detected by #{event.item.name}") }
+        #   end
+        #
+        # @example `for` parameter can be an Item too:
+        #   Alarm_Delay << 20
+        #
+        #   rule "Execute rule when item is changed for specified duration" do
+        #     changed Alarm_Mode, for: Alarm_Delay
+        #     run { logger.info("Alarm Mode Updated") }
+        #   end
+        #
+        # @example You can optionally provide `from` and `to` states to restrict the cases in which the rule executes:
+        #   rule "Execute rule when item is changed to specific number, from specific number, for specified duration" do
+        #     changed Alarm_Mode, from: 8, to: [14,12], for: 12.seconds
+        #     run { logger.info("Alarm Mode Updated") }
+        #   end
+        #
+        # @example Works with ranges:
+        #   rule "Execute when item changed to a range of numbers, from a range of numbers, for specified duration" do
+        #     changed Alarm_Mode, from: 8..10, to: 12..14, for: 12.seconds
+        #     run { logger.info("Alarm Mode Updated") }
+        #   end
+        #
+        # @example Works with endless ranges:
+        #   rule "Execute rule when item is changed to any number greater than 12"
+        #     changed Alarm_Mode, to: (12..)   # Parenthesis required for endless ranges
+        #     run { logger.info("Alarm Mode Updated") }
+        # end
+        #
+        # @example Works with procs:
+        #   rule "Execute when item state is changed from an odd number, to an even number, for specified duration" do
+        #     changed Alarm_Mode, from: proc { |from| from.odd? }, to: proc {|to| to.even? }, for: 12.seconds
+        #     run { logger.info("Alarm Mode Updated") }
+        #   end
+        #
+        # @example Works with lambdas:
+        #   rule "Execute when item state is changed from an odd number, to an even number, for specified duration" do
+        #     changed Alarm_Mode, from: -> from { from.odd? }, to: -> to { to.even? }, for: 12.seconds
+        #     run { logger.info("Alarm Mode Updated") }
+        #   end
+        #
+        # @example Works with Things:
+        #  rule "Execute rule when thing is changed" do
+        #    changed things["astro:sun:home"], :from => :online, :to => :uninitialized
+        #    run { |event| logger.info("Thing #{event.uid} status <trigger> to #{event.status}") }
+        #  end
+        #
+        # @example Real World Example
+        #   rule "Log (or notify) when an exterior door is left open for more than 5 minutes" do
+        #     changed ExteriorDoors.members, to: OPEN, for: 5.minutes
+        #     triggered {|door| logger.info("#{door.id} has been left open!") }
+        #   end
+
         def changed(*items, to: nil, from: nil, for: nil, attach: nil)
           changed = Changed.new(rule_triggers: @rule_triggers)
           # for is a reserved word in ruby, so use local_variable_get :for
@@ -42,6 +105,7 @@ module OpenHAB
           end.flatten
         end
 
+        # @!visibility private
         #
         # Creates changed triggers
         #

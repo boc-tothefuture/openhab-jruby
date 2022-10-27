@@ -1,10 +1,4 @@
----
-layout: default
-title: Valid State
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Valid State
 
 # state?
 

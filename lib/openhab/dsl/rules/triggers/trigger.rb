@@ -5,10 +5,8 @@ require "forwardable"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Module holds rule triggers
-      #
       module Triggers
+        # @!visibility private
         #
         # Class for creating and managing triggers
         #

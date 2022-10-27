@@ -6,9 +6,6 @@ require_relative "trigger"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Module holds rule triggers
-      #
       module Triggers
         include OpenHAB::Log
 
@@ -40,6 +37,7 @@ module OpenHAB
           end.flatten
         end
 
+        # @!visibility private
         #
         # Creates command triggers
         #

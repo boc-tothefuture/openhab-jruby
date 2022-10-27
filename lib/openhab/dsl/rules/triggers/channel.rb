@@ -7,22 +7,87 @@ require_relative "trigger"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Channel triggers
-      #
       module Triggers
         include OpenHAB::Log
 
         #
         # Creates a channel trigger
         #
-        # @param [String, Channel, ChannelUID, Array<String, Channel, ChannelUID>] channels
+        # The channel trigger executes rule when a specific channel is triggered. The syntax
+        # supports one or more channels with one or more triggers. `thing` is an optional
+        # parameter that makes it easier to set triggers on multiple channels on the same thing.
+        #
+        #
+        # @param [String, Channel, ChannelUID] channels
         #   channels to create triggers for in form of 'binding_id:type_id:thing_id#channel_id'
-        #   or 'channel_id' if thing is provided
-        # @param [String, Thing, ThingUID, Array<String, Thing, ThingUID>] thing
-        #   thing(s) to create trigger for if not specified with the channel
-        # @param [String, Array<String>] triggered specific triggering condition(s) to match for trigger
+        #   or 'channel_id' if thing is provided.
+        # @param [String, Thing, ThingUID] thing
+        #   Thing(s) to create trigger for if not specified with the channel.
+        # @param [String, Array<String>] triggered
+        #   Only execute rule if the event on the channel matches this/these event/events.
         # @param [Object] attach object to be attached to the trigger
+        # @return [void]
+        #
+        # @example
+        #   rule "Execute rule when channel is triggered" do
+        #     channel "astro:sun:home:rise#event"
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #   # The above is the same as each of the below
+        #
+        #   rule "Execute rule when channel is triggered" do
+        #     channel "rise#event", thing: "astro:sun:home"
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #
+        #   rule "Execute rule when channel is triggered" do
+        #     channel "rise#event", thing: things["astro:sun:home"]
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #
+        #   rule "Execute rule when channel is triggered" do
+        #     channel "rise#event", thing: things["astro:sun:home"].uid
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #
+        #   rule "Execute rule when channel is triggered" do
+        #     channel "rise#event", thing: ["astro:sun:home"]
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #
+        #   rule "Execute rule when channel is triggered" do
+        #     channel things["astro:sun:home"].channels["rise#event"]
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #
+        #   rule "Execute rule when channel is triggered" do
+        #     channel things["astro:sun:home"].channels["rise#event"].uid
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #
+        # @example
+        #   rule "Rule provides access to channel trigger events in run block" do
+        #     channel "astro:sun:home:rise#event", triggered: 'START'
+        #     run { |trigger| logger.info("Channel(#{trigger.channel}) triggered event: #{trigger.event}") }
+        #   end
+        #
+        # @example
+        #   rule "Rules support multiple channels" do
+        #     channel "rise#event", "set#event", thing: "astro:sun:home"
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #
+        # @example
+        #   rule "Rules support multiple channels and triggers" do
+        #     channel "rise#event", "set#event", thing: "astro:sun:home", triggered: ["START", "STOP"]
+        #     run { logger.info("Channel triggered") }
+        #   end
+        #
+        # @example
+        #   rule "Rules support multiple things" do
+        #     channel "keypad#code", thing: ["mqtt:homie300:keypad1", "mqtt:homie300:keypad2"]
+        #     run { logger.info("Channel triggered") }
+        #   end
         #
         def channel(*channels, thing: nil, triggered: nil, attach: nil)
           channel_trigger = Channel.new(rule_triggers: @rule_triggers)
@@ -36,6 +101,7 @@ module OpenHAB
           end
         end
 
+        # @!visibility private
         #
         # Creates channel triggers
         #

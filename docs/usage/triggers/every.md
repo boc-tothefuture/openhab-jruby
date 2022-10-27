@@ -1,15 +1,8 @@
----
-layout: default
-title: Every
-nav_order: 5
-has_children: false
-parent: Triggers
-grand_parent: Usage
----
+# @title Every
 
 # every
 
-A simplified [cron]({{ site.baseurl }}{% link usage/triggers/cron.md %}) trigger with human-readable syntax.
+A simplified [cron](docs/usage/triggers/cron.md) trigger with human-readable syntax.
 
 | Value               | Description                                                                                           | Example                        |
 | ------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------ |
@@ -35,9 +28,9 @@ A simplified [cron]({{ site.baseurl }}{% link usage/triggers/cron.md %}) trigger
 
 | Option | Description                                                                                                                                                    | Example                                        |
 | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `:at`  | Limit the execution to specific times of day. The value can either be a String or a [TimeOfDay]({{ site.baseurl }}{% link usage/misc/time_of_day.md %}) object | at: '16:45' or at: TimeOfDay.new(h: 16, m: 45) |
+| `:at`  | Limit the execution to specific times of day. The value can either be a String or a [TimeOfDay](../misc/time_of_day.md) object | at: '16:45' or at: TimeOfDay.new(h: 16, m: 45) |
 
-Note: The `[Numeric].seconds` specifies a [Duration]({{ site.baseurl }}{% link usage/misc/duration.md %}) / interval. 
+Note: The `[Numeric].seconds` specifies a [Duration](docs/usage/misc/duration.md) / interval. 
 A floating point can also be used to specify a fractional unit of time, e.g. `1.5.hours`
 
 ## Examples

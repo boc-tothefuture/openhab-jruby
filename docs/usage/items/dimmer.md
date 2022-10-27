@@ -1,10 +1,4 @@
----
-layout: default
-title: DimmerItem
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title DimmerItem
 
 # DimmerItem
 

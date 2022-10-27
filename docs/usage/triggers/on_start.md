@@ -1,11 +1,4 @@
----
-layout: default
-title: On Start
-nav_order: 7
-has_children: false
-parent: Triggers
-grand_parent: Usage
----
+# @title On Start
 
 # on_start
 

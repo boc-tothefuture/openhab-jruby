@@ -1,10 +1,4 @@
----
-layout: default
-title: NumberItem
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title NumberItem
 
 # NumberItem
 

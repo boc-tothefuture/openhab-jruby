@@ -1,11 +1,4 @@
----
-layout: default
-title: Watch Trigger
-nav_order: 8
-has_children: false
-parent: Triggers
-grand_parent: Usage
----
+# @title Watch Trigger
 
 # watch
 

@@ -7,10 +7,8 @@ require "openhab/core/services"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Module holds rule triggers
-      #
       module Triggers
+        # @!visibility private
         #
         # Module for watching directories/files
         #

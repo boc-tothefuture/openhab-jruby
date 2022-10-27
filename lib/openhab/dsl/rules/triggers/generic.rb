@@ -6,9 +6,6 @@ require_relative "trigger"
 module OpenHAB
   module DSL
     module Rules
-      #
-      # Module holds rule triggers
-      #
       module Triggers
         include OpenHAB::Log
 

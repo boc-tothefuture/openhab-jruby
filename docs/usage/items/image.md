@@ -1,10 +1,4 @@
----
-layout: default
-title: ImageItem
-has_children: false
-parent: Items
-grand_parent: Usage
----
+# @title ImageItem
 
 
 # ImageItem

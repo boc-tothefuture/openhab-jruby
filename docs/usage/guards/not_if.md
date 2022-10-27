@@ -1,11 +1,4 @@
----
-layout: default
-title: Not If
-nav_order: 2
-has_children: false
-parent: Guards
-grand_parent: Usage
----
+# @title Not If
 
 #### not_if
 

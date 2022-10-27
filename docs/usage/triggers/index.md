@@ -1,10 +1,4 @@
----
-layout: default
-title: Triggers
-nav_order: 2
-has_children: true
-parent: Usage
----
+# @title Triggers
 
 # Triggers
 

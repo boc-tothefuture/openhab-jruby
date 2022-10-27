@@ -1,10 +1,4 @@
----
-layout: default
-title: Types
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Types
 
 # Types
 Types are the specific data types that commands and states are. They can be 

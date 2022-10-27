@@ -1,15 +1,6 @@
----
-layout: default
-title: How Do I...?
-has_children: false
-parent: Examples
----
+# @title How Do I...?
 
 # How Do I...?
-{:.no_toc}
-
-* toc
-{:toc}
 
 ## Items
 
@@ -67,7 +58,7 @@ My_Item << ON
 ```
 
 Note: all possible commands are supported on the corresponding item types, e.g. `on`, `off`, `up`, `down`, `play`, `pause`, `stop`, etc. 
-For more details, see the individual item type sub-sections under [Items]({{ site.baseurl }}{% link usage/items/index.md %})
+For more details, see the individual item type sub-sections under [Items](docs/usage/items/index.md)
 
 ### Send a Command to an Item Only When Its State is Different
 
@@ -85,7 +76,7 @@ My_Item.ensure << ON
 
 ### Send a Timed Command
 
-A [Timed command]({{ site.baseurl }}{% link usage/items/index.md %}#timed-commands) is similar to the OpenHAB Item's [expire parameter](https://www.openhab.org/docs/configuration/items.html#parameter-expire)
+A [Timed command](docs/usage/items/index.md#timed-commands) is similar to the OpenHAB Item's [expire parameter](https://www.openhab.org/docs/configuration/items.html#parameter-expire)
 but it offers more flexibility. It removes the need to manually create a timer.
 
 ```ruby
@@ -271,7 +262,7 @@ rule 'my first rule' do
 end
 ```
 
-This applies to file-based rules. See [Rules]({{ site.baseurl }}{% link usage/rule.md %})
+This applies to file-based rules. See [Rules](docs/usage/rule.md)
 
 ### Create a Rule with One Line of Code
 
@@ -279,11 +270,11 @@ This applies to file-based rules. See [Rules]({{ site.baseurl }}{% link usage/ru
 received_command(My_Switch, to: ON) { My_Light.on }
 ```
 
-This applies to file-based rules. See [Terse Rules]({{ site.baseurl }}{% link usage/rule.md %}#terse-rules)
+This applies to file-based rules. See [Terse Rules](docs/usage/rule.md#terse-rules)
 
 ### Create a Rule in the Main UI
 
-See [Creating Rules in the UI]({{ site.baseurl }}{% link usage/ui-rules.md %})
+See [Creating Rules in the UI](docs/usage/ui-rules.md)
 
 ### Get the Triggering Item
 
@@ -435,7 +426,7 @@ rule 'Anniversary Reminder' do
 end
 ```
 
-See [Every]({{ site.baseurl }}{% link usage/triggers/every.md %})
+See [Every](docs/usage/triggers/every.md)
 
 ### Create a Complex Cron Rule
 
@@ -455,7 +446,7 @@ rule 'cron rule' do
 end
 ```
 
-See [Cron]({{ site.baseurl }}{% link usage/triggers/cron.md %})
+See [Cron](docs/usage/triggers/cron.md)
 
 ### Use Rule Guards
 
@@ -468,7 +459,7 @@ rule 'motion sensor' do
 end
 ```
 
-See [Guards]({{ site.baseurl }}{% link usage/guards/index.md %})
+See [Guards](docs/usage/guards/index.md)
 
 ### Restrict Rule Executions to Certain Time of Day
 
@@ -515,7 +506,7 @@ sleep 1.5 # sleep for 1.5 seconds
 
 See Ruby docs on [sleep](https://ruby-doc.org/core-2.6/Kernel.html#method-i-sleep)
 
-`sleep` should be avoided if possible. A [delay]({{ site.baseurl }}{% link usage/execution/delay.md %})
+`sleep` should be avoided if possible. A [delay](docs/usage/execution/delay.md)
 can be inserted in between two execution blocks to achieve the same result. This delay is implemented with a timer.
 This is available only on file-based rules.
 
@@ -528,7 +519,7 @@ rule 'delay something' do
 end
 ```
 
-Alternatively a [timer]({{ site.baseurl }}{% link usage/misc/timers.md %}) can be used in 
+Alternatively a [timer](docs/usage/misc/timers.md) can be used in 
 either a file-based rule or in a UI based rule:
 
 ```ruby
@@ -589,7 +580,7 @@ after 3.minutes do
 end
 ```
 
-See [Timers]({{ site.baseurl }}{% link usage/misc/timers.md %})
+See [Timers](docs/usage/misc/timers.md)
 
 ### Reschedule a Timer
 
@@ -643,7 +634,7 @@ rule 'a timer for each group member' do
 end
 ```
 
-However, [a built in mechanism]({{ site.baseurl }}{% link usage/misc/timers.md %}#reentrant-timers) is available to 
+However, [a built in mechanism](docs/usage/misc/timers.md#reentrant-timers) is available to 
 help manage multiple timers. This is done using timer IDs. The following rule automatically finds and reschedules 
 the timer matching the same ID, which corresponds to each group member.
 
@@ -691,7 +682,7 @@ end
 metadata = My_Item.meta['namespace'].value
 ```
 
-See [Metadata]({{ site.baseurl }}{% link usage/misc/metadata.md %})
+See [Metadata](docs/usage/misc/metadata.md)
 
 ## Use Persistence
 
@@ -699,7 +690,7 @@ See [Metadata]({{ site.baseurl }}{% link usage/misc/metadata.md %})
 daily_max = My_Item.maximum_since(24.hours)
 ```
 
-See [Persistence]({{ site.baseurl }}{% link usage/misc/persistence.md %})
+See [Persistence](docs/usage/misc/persistence.md)
 
 ## Use Semantic Model
 
@@ -712,7 +703,7 @@ light_switches = room_lights.members.points(Semantics::Switch)
 light_switches.ensure.on
 ```
 
-See [Semantics]({{ site.baseurl }}{% link usage/misc/semantics.md %})
+See [Semantics](docs/usage/misc/semantics.md)
 
 ## Use Logging
 
@@ -720,11 +711,11 @@ See [Semantics]({{ site.baseurl }}{% link usage/misc/semantics.md %})
 logger.info("My Item's state is: #{My_Item}")
 ```
 
-See [Logging]({{ site.baseurl }}{% link usage/misc/logging.md %})
+See [Logging](docs/usage/misc/logging.md)
 
 ## Use Actions
 
-See [Actions]({{ site.baseurl }}{% link usage/misc/actions.md %})
+See [Actions](docs/usage/misc/actions.md)
 
 ### Publish an MQTT Message
 
@@ -786,7 +777,7 @@ if TimeOfDay.now.between?('10pm'..'5am')
 end
 ```
 
-See [TimeOfDay]({{ site.baseurl }}{% link usage/misc/time_of_day.md %})
+See [TimeOfDay](../usage/misc/time_of_day.md)
 
 ### Work with MonthDay
 
@@ -796,7 +787,7 @@ if MonthDay.now == '02-14'
 end
 ```
 
-See [MonthDay]({{ site.baseurl }}{% link usage/misc/month_day.md %})
+See [MonthDay](../usage/misc/month_day.md)
 
 ## Ruby
 
@@ -809,11 +800,11 @@ gemfile do
 end
 ```
 
-See [Inline Bundler]({{ site.baseurl }}{% link usage/misc/gems.md %})
+See [Inline Bundler](docs/usage/misc/gems.md)
 
 ### Use Shared Library
 
-See [Shared Code]({{ site.baseurl }}{% link usage/misc/shared_code.md %})
+See [Shared Code](../usage/misc/shared_code.md)
 
 ## Miscellaneous
 

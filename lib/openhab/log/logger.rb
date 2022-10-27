@@ -143,7 +143,20 @@ module OpenHAB
     # Logger caches
     @loggers = {}
 
-    # Return a logger with the configured log prefix plus the calling scripts name
+    # @!visibility private
+    #
+    # Add logger method to the object that includes this module
+    #
+    # @param [Object] base Object to add method to
+    #
+    #
+    def self.included(base)
+      class << base
+        def logger
+          Log.logger(self)
+        end
+      end
+    end
 
     #
     # Create a logger for the current class
@@ -241,20 +254,6 @@ module OpenHAB
                         .grep_v(/rubygems|openhab-scripting|<script>/)
                         .first
                         .then { |caller| File.basename(caller, ".*") if caller }
-      end
-    end
-
-    #
-    # Add logger method to the object that includes this module
-    #
-    # @param [Object] base Object to add method to
-    #
-    #
-    def self.included(base)
-      class << base
-        def logger
-          Log.logger(self)
-        end
       end
     end
   end

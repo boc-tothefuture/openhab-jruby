@@ -1,11 +1,4 @@
----
-layout: default
-title: Semantics
-nav_order: 3
-has_children: false
-parent: Misc
-grand_parent: Usage
----
+# @title Semantics
 
 # Semantics
 
@@ -53,7 +46,7 @@ based on custom tags or group memberships that are outside the semantic model.
 | `not_member_of` | Selects elements that are not a member of any of the given groups                                                                                            |
 | `command`       | Send a command to every item in the collection                                                                                                               |
 | `update`        | Update the state of every item in the collection                                                                                                             |
-| `ensure`        | Apply [ensure state]({{ site.baseurl }}{% link usage/items/index.md %}#ensure_states) check on each member when `command` or `update` is chained afterwards. |
+| `ensure`        | Apply [ensure state](docs/usage/items/index.md#ensure_states) check on each member when `command` or `update` is chained afterwards. |
 | `members`       | Returns a new array that contains the group members of the elements. This is handy for finding Points in an array of Equipments or Locations.                |
 
 The Enumerable helper methods apply to:
