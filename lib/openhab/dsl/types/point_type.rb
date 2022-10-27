@@ -17,7 +17,7 @@ module OpenHAB
         #   @param [DecimalType, QuantityType, StringType, Numeric] latitude
         #   @param [DecimalType, QuantityType, StringType, Numeric] longitude
         #   @param [DecimalType, QuantityType, StringType, Numeric] altitude
-        def initialize(*args) # rubocop:disable Metrics
+        def initialize(*args)
           args = from_hash(args.first.to_hash) if args.first.respond_to? :to_hash
           if (2..3).cover?(args.length)
             args = args.each_with_index.map do |value, index|
@@ -56,7 +56,7 @@ module OpenHAB
         #
         # @return [Boolean]
         #
-        def ==(other) # rubocop:disable Metrics
+        def ==(other)
           logger.trace { "(#{self.class}) #{self} == #{other} (#{other.class})" }
           if other.instance_of?(self.class)
             equals(other)
@@ -93,16 +93,16 @@ module OpenHAB
 
         # rename raw methods so we can overwrite them
         # @!visibility private
-        alias raw_latitude latitude
+        alias_method :raw_latitude, :latitude
         # .
         # @!visibility private
-        alias raw_longitude longitude
+        alias_method :raw_longitude, :longitude
         # .
         # @!visibility private
-        alias raw_altitude altitude
+        alias_method :raw_altitude, :altitude
         # .
         # @!visibility private
-        alias raw_distance_from distance_from
+        alias_method :raw_distance_from, :distance_from
 
         # @!attribute [r] latitude
         # @return [QuantityType]
@@ -143,13 +143,13 @@ module OpenHAB
 
           QuantityType.new(raw_distance_from(other), SIUnits::METRE)
         end
-        alias - distance_from
+        alias_method :-, :distance_from
 
         private
 
         # coerce an object to a PointType
         # @return [PointType]
-        def coerce_single(other) # rubocop:disable Metrics
+        def coerce_single(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(PointType)
             other

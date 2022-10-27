@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require 'openhab/dsl/types/date_time_type'
-require 'openhab/dsl/items/items'
-require 'time'
+require "openhab/log/logger"
+require "openhab/dsl/types/date_time_type"
+require "openhab/dsl/items/items"
+require "time"
 
 module OpenHAB
   module DSL
@@ -54,7 +54,7 @@ module OpenHAB
         #   "H:MM", "HH", "H", "H:MM am"
         # @return [TimeOfDay] object created by parsing supplied string
         def self.parse(string)
-          format = /(am|pm)$/i.match?(string) ? 'h[:mm[:ss]][ ]a' : 'H[:mm[:ss]]'
+          format = /(am|pm)$/i.match?(string) ? "h[:mm[:ss]][ ]a" : "H[:mm[:ss]]"
           local_time = LocalTime.parse(string, DateTimeFormatterBuilder.new
             .parseCaseInsensitive.appendPattern(format).toFormatter(Locale::ENGLISH))
           TimeOfDay.new(h: local_time.hour, m: local_time.minute, s: local_time.second)
@@ -130,7 +130,7 @@ module OpenHAB
         # @since 2.4.0
         # @return Range object representing a TimeOfDay Range
         def self.between(range)
-          raise ArgumentError, 'Supplied object must be a range' unless range.is_a? Range
+          raise ArgumentError, "Supplied object must be a range" unless range.is_a? Range
 
           start = to_time_of_day(range.begin)
           ending = to_time_of_day(range.end)
@@ -206,7 +206,6 @@ module OpenHAB
         #
         # @return [Integer] seconds of day represented by supplied object
         #
-        # rubocop:disable Metrics/AbcSize
         # case statement needs to compare against multiple types
         def to_second_of_day(object)
           case object
@@ -219,7 +218,6 @@ module OpenHAB
           else raise ArgumentError, "Supplied argument #{object.class} cannot be converted into Time Of Day Object"
           end
         end
-        # rubocop:enable Metrics/AbcSize
 
         def adjust_second_of_day(second_of_day)
           second_of_day += NUM_SECONDS_IN_DAY if second_of_day < @range_begin

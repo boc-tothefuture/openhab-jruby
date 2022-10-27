@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/types/un_def_type'
+require "openhab/dsl/types/un_def_type"
 
 module OpenHAB
   module DSL

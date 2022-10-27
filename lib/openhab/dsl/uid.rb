@@ -8,9 +8,9 @@ module OpenHAB
     # Adds methods to core OpenHAB AbstractUID to make it more natural in Ruby
     class AbstractUID
       # implicit conversion to string
-      alias to_str to_s
+      alias_method :to_str, :to_s
       # inspect result is just the string representation
-      alias inspect to_s
+      alias_method :inspect, :to_s
 
       # compares if equal to `other`, including string conversion
       # @return [true, false]

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'time'
-require 'java'
+require "forwardable"
+require "time"
+require "java"
 
 module OpenHAB
   module DSL
@@ -15,8 +15,6 @@ module OpenHAB
       # @deprecated
       # Backwards-compatible alias
       DateTime = DateTimeType
-
-      # rubocop: disable Metrics/ClassLength class has a single responsibility
 
       #
       # Add methods to core OpenHAB DateTimeType to make it behave as a Ruby
@@ -91,18 +89,18 @@ module OpenHAB
         def_delegator :zoned_date_time, :nano, :nsec
         def_delegator :zoned_date_time, :to_epoch_second, :to_i
 
-        alias day mday
+        alias_method :day, :mday
 
         #
         # Create a new instance of DateTimeType
         #
         # @param value [ZonedDateTime, Time, String, Numeric]
         #
-        def initialize(value = nil) # rubocop:disable Metrics
+        def initialize(value = nil)
           if value.respond_to?(:to_time)
             time = value.to_time
             instant = java.time.Instant.ofEpochSecond(time.to_i, time.nsec)
-            zone_id = java.time.ZoneId.of_offset('UTC', java.time.ZoneOffset.of_total_seconds(time.utc_offset))
+            zone_id = java.time.ZoneId.of_offset("UTC", java.time.ZoneOffset.of_total_seconds(time.utc_offset))
             super(ZonedDateTime.ofInstant(instant, zone_id))
             return
           elsif value.respond_to?(:to_str)
@@ -144,7 +142,7 @@ module OpenHAB
         #
         #   nil is returned if the two values are incomparable
         #
-        def <=>(other) # rubocop:disable Metrics
+        def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(self.class)
             zoned_date_time.to_instant.compare_to(other.zoned_date_time.to_instant)
@@ -207,7 +205,7 @@ module OpenHAB
           TimeOfDay::TimeOfDay.new(h: hour, m: minute, s: second)
         end
 
-        alias to_tod to_time_of_day
+        alias_method :to_tod, :to_time_of_day
 
         #
         # Returns the value of time as a floating point number of seconds since the Epoch
@@ -278,7 +276,7 @@ module OpenHAB
         # @param other [java.time.Duration, String, Numeric]
         #
         # @return [DateTimeType]
-        def +(other) # rubocop:disable Metrics
+        def +(other)
           if other.is_a?(java.time.Duration)
             DateTimeType.new(zoned_date_time.plus(other))
           elsif other.respond_to?(:to_str)
@@ -304,7 +302,7 @@ module OpenHAB
         # @param other [java.time.Duration, Time, String, Numeric]
         #
         # @return [DateTimeType, java.Time.Duration]
-        def -(other) # rubocop:disable Metrics
+        def -(other)
           if other.is_a?(java.time.Duration)
             DateTimeType.new(zoned_date_time.minus(other))
           elsif other.respond_to?(:to_time)
@@ -326,7 +324,6 @@ module OpenHAB
           end
         end
       end
-      # rubocop: enable Metrics/ClassLength
     end
   end
 end

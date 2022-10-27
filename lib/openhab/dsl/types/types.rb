@@ -1,26 +1,26 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
+require "openhab/log/logger"
 
-require_relative 'type'
+require_relative "type"
 
-require_relative 'date_time_type'
-require_relative 'decimal_type'
-require_relative 'hsb_type'
-require_relative 'increase_decrease_type'
-require_relative 'next_previous_type'
-require_relative 'open_closed_type'
-require_relative 'on_off_type'
-require_relative 'percent_type'
-require_relative 'play_pause_type'
-require_relative 'point_type'
-require_relative 'quantity_type'
-require_relative 'refresh_type'
-require_relative 'rewind_fastforward_type'
-require_relative 'stop_move_type'
-require_relative 'string_type'
-require_relative 'up_down_type'
-require_relative 'un_def_type'
+require_relative "date_time_type"
+require_relative "decimal_type"
+require_relative "hsb_type"
+require_relative "increase_decrease_type"
+require_relative "next_previous_type"
+require_relative "open_closed_type"
+require_relative "on_off_type"
+require_relative "percent_type"
+require_relative "play_pause_type"
+require_relative "point_type"
+require_relative "quantity_type"
+require_relative "refresh_type"
+require_relative "rewind_fastforward_type"
+require_relative "stop_move_type"
+require_relative "string_type"
+require_relative "up_down_type"
+require_relative "un_def_type"
 
 module OpenHAB
   module DSL
@@ -32,10 +32,10 @@ module OpenHAB
     # @!visibility private
     PREDICATE_ALIASES = Hash.new { |_h, k| [:"#{k.downcase}?"] * 2 }
                             .merge({
-                                     'PLAY' => %i[play? playing?],
-                                     'PAUSE' => %i[pause? paused?],
-                                     'REWIND' => %i[rewind? rewinding?],
-                                     'FASTFORWARD' => %i[fast_forward? fast_forwarding?]
+                                     "PLAY" => %i[play? playing?],
+                                     "PAUSE" => %i[pause? paused?],
+                                     "REWIND" => %i[rewind? rewinding?],
+                                     "FASTFORWARD" => %i[fast_forward? fast_forwarding?]
                                    }).freeze
 
     # Hash taking a Enum value, and returning an array of symbols
@@ -43,7 +43,7 @@ module OpenHAB
     # @!visibility private
     COMMAND_ALIASES = Hash.new { |_h, k| k.downcase.to_sym }
                           .merge({
-                                   'FASTFORWARD' => :fast_forward
+                                   "FASTFORWARD" => :fast_forward
                                  }).freeze
 
     #

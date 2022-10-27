@@ -12,13 +12,13 @@ module OpenHAB
     # Get the OpenHAB automation manager
     # @return [AutomationManager] OpenHAB Automation manager
     def self.automation_manager
-      $scriptExtension.get('automationManager')
+      $scriptExtension.get("automationManager")
     end
 
     # Get the OpenHAB rule registry
     # @return [Registory] OpenHAB rule registry
     def self.rule_registry
-      $scriptExtension.get('ruleRegistry')
+      $scriptExtension.get("ruleRegistry")
     end
   end
 end

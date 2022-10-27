@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require_relative 'timer'
+require "openhab/log/logger"
+require_relative "timer"
 
 module OpenHAB
   module DSL
@@ -22,7 +22,7 @@ module OpenHAB
       # @param [Block] block Block to execute when timer fires
       #
       def initialize(duration:, id:, thread_locals: {}, &block)
-        raise 'Reentrant timers do not work in dynamically generated code' unless block.source_location
+        raise "Reentrant timers do not work in dynamically generated code" unless block.source_location
 
         @id = id
         @reentrant_id = self.class.reentrant_id(id: id, &block)

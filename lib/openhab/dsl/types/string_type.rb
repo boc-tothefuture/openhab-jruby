@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
-require_relative 'comparable_type'
+require_relative "comparable_type"
 
 module OpenHAB
   module DSL
@@ -42,7 +42,7 @@ module OpenHAB
         #
         #   nil is returned if the two values are incomparable
         #
-        def <=>(other) # rubocop:disable Metrics
+        def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(Items::StringItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(StringItem))

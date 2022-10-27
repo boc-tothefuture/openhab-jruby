@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'generic_item'
+require_relative "generic_item"
 
 module OpenHAB
   module DSL
@@ -62,7 +62,7 @@ module OpenHAB
             super(command)
           end
         end
-        alias << command
+        alias_method :<<, :command
       end
 
       # "anonymous" class that wraps any method call in +ensure_states+

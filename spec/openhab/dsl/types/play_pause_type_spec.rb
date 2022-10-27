@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe OpenHAB::DSL::Types::PlayPauseType do
-  it 'is inspectable' do
-    expect(PLAY.inspect).to eql 'PLAY'
+  it "is inspectable" do
+    expect(PLAY.inspect).to eql "PLAY"
   end
 
-  describe 'case statements' do
+  describe "case statements" do
     specify { expect(PLAY).to be === PLAY }
     specify { expect(1..100).not_to be === PLAY }
     specify { expect(ON).not_to be === PLAY }

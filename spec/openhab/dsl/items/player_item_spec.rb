@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe OpenHAB::DSL::Items::PlayerItem do
-  subject(:item) { items.build { player_item 'PlayerOne' } }
+  subject(:item) { items.build { player_item "PlayerOne" } }
 
-  describe 'sending commands' do
+  describe "sending commands" do
     specify { expect((item << PLAY).state).to be PLAY }
     specify { expect((item << PAUSE).state).to be PAUSE }
     specify { expect((item << REWIND).state).to be REWIND }
@@ -34,14 +34,14 @@ RSpec.describe OpenHAB::DSL::Items::PlayerItem do
     end
   end
 
-  describe 'command methods' do
+  describe "command methods" do
     specify { expect(item.play.state).to be PLAY }
     specify { expect(item.pause.state).to be PAUSE }
     specify { expect(item.rewind.state).to be REWIND }
     specify { expect(item.fast_forward.state).to be FASTFORWARD }
   end
 
-  describe 'state methods' do
+  describe "state methods" do
     specify { expect(item.update(PLAY)).to be_playing }
     specify { expect(item.update(PAUSE)).to be_paused }
     specify { expect(item.update(REWIND)).to be_rewinding }

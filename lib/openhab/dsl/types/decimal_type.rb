@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'comparable_type'
-require_relative 'numeric_type'
+require_relative "comparable_type"
+require_relative "numeric_type"
 
 module OpenHAB
   module DSL
@@ -26,7 +26,7 @@ module OpenHAB
         #
         # @param [java.math.BigDecimal, Items::NumericItem, Numeric] args Create a DecimalType from the given value
         #
-        def initialize(*args) # rubocop:disable Metrics
+        def initialize(*args)
           unless args.length == 1
             super
             return
@@ -74,7 +74,7 @@ module OpenHAB
         #
         #   nil is returned if the two values are incomparable
         #
-        def <=>(other) # rubocop:disable Metrics
+        def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(QuantityType)
             (other <=> self)&.-@
@@ -107,7 +107,7 @@ module OpenHAB
         #
         # @return [[DecimalType, DecimalType]]
         #
-        def coerce(other) # rubocop:disable Metrics
+        def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(Items::NumericItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
@@ -132,12 +132,12 @@ module OpenHAB
         end
 
         {
-          :add => :+,
-          :subtract => :-,
-          :multiply => :*,
-          :divide => :/,
-          :remainder => :%,
-          :pow => :**
+          add: :+,
+          subtract: :-,
+          multiply: :*,
+          divide: :/,
+          remainder: :%,
+          pow: :**
         }.each do |java_op, ruby_op|
           class_eval( # rubocop:disable Style/DocumentDynamicEvalDefinition https://github.com/rubocop/rubocop/issues/10179
             # def +(other)

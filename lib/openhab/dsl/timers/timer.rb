@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'delegate'
-require 'forwardable'
-require 'openhab/log/logger'
-require 'openhab/core/thread_local'
+require "java"
+require "delegate"
+require "forwardable"
+require "openhab/log/logger"
+require "openhab/core/thread_local"
 
 module OpenHAB
   module DSL
@@ -108,7 +108,7 @@ module OpenHAB
       when Time then timestamp.to_java(ZonedDateTime)
       else
         to_zdt(seconds_to_duration(timestamp)) ||
-          raise(ArgumentError, 'Timestamp must be a ZonedDateTime, a Duration, a Numeric, or a Time object')
+          raise(ArgumentError, "Timestamp must be a ZonedDateTime, a Duration, a Numeric, or a Time object")
       end
     end
 

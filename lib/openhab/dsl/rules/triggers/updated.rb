@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require_relative 'trigger'
+require "openhab/log/logger"
+require_relative "trigger"
 
 module OpenHAB
   module DSL
@@ -59,13 +59,13 @@ module OpenHAB
           private
 
           # @return [String] A thing status update trigger
-          THING_UPDATE = 'core.ThingStatusUpdateTrigger'
+          THING_UPDATE = "core.ThingStatusUpdateTrigger"
 
           # @return [String] An item state update trigger
-          ITEM_STATE_UPDATE = 'core.ItemStateUpdateTrigger'
+          ITEM_STATE_UPDATE = "core.ItemStateUpdateTrigger"
 
           # @return [String] A group state update trigger for items in the group
-          GROUP_STATE_UPDATE = 'core.GroupStateUpdateTrigger'
+          GROUP_STATE_UPDATE = "core.GroupStateUpdateTrigger"
 
           #
           # Creates a trigger with a range condition on the 'to' field
@@ -119,8 +119,8 @@ module OpenHAB
           #  second element is a Hash configuring trigger
           #
           def item_update(item:, to:)
-            config = { 'itemName' => item.name }
-            config['state'] = to.to_s unless to.nil?
+            config = { "itemName" => item.name }
+            config["state"] = to.to_s unless to.nil?
             [ITEM_STATE_UPDATE, config]
           end
 
@@ -134,8 +134,8 @@ module OpenHAB
           #  second element is a Hash configuring trigger
           #
           def group_update(item:, to:)
-            config = { 'groupName' => item.group.name }
-            config['state'] = to.to_s unless to.nil?
+            config = { "groupName" => item.group.name }
+            config["state"] = to.to_s unless to.nil?
             [GROUP_STATE_UPDATE, config]
           end
 

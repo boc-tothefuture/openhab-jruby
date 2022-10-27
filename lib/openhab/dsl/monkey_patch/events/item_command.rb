@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'item_event'
+require_relative "item_event"
 
 module OpenHAB
   module DSL
@@ -14,7 +14,7 @@ module OpenHAB
         # Adds methods to core OpenHAB ItemCommandEvent to make it more natural in Ruby
         class ItemCommandEvent < ItemEvent
           # @return [Type]
-          alias command item_command
+          alias_method :command, :item_command
 
           # @!method refresh?
           #   Check if == +REFRESH+

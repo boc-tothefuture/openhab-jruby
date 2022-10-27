@@ -13,17 +13,17 @@ module OpenHAB
           # @!method uid
           #   The thing's UID
           #   @return [String]
-          alias uid UID
+          alias_method :uid, :UID
 
           # @!method thing_type_uid
           #   The thing type's UID
           #   @return [String]
-          alias thing_type_uid thingTypeUID
+          alias_method :thing_type_uid, :thingTypeUID
 
           # @!method bridge_uid
           #   The bridge's UID
           #   @return [String]
-          alias bridge_uid bridgeUID
+          alias_method :bridge_uid, :bridgeUID
         end
       end
     end

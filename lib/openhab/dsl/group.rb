@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'singleton'
+require "singleton"
 
-require 'openhab/core/entity_lookup'
-require 'openhab/dsl/lazy_array'
+require "openhab/core/entity_lookup"
+require "openhab/dsl/lazy_array"
 
 module OpenHAB
   module DSL
@@ -41,8 +41,8 @@ module OpenHAB
           group = OpenHAB::Core::EntityLookup.lookup_item(name)
           group.is_a?(OpenHAB::DSL::Items::GroupItem) ? group : nil
         end
-        alias include? []
-        alias key? include?
+        alias_method :include?, :[]
+        alias_method :key?, :include?
 
         # explicit conversion to array
         def to_a

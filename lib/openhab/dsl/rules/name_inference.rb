@@ -4,17 +4,17 @@ module OpenHAB
   module DSL
     module Rules
       # Contains helper methods for inferring a rule name from its triggers
-      module NameInference # rubocop:disable Metrics
+      module NameInference
         # Trigger Type UIDs that we know how to generate a name for
         KNOWN_TRIGGER_TYPES = [
-          'core.ChannelEventTrigger',
-          'core.GenericEventTrigger',
-          'core.GroupCommandTrigger',
-          'core.GroupStateChangeTrigger',
-          'core.GroupStateUpdateTrigger',
-          'core.ItemCommandTrigger',
-          'core.ItemStateChangeTrigger',
-          'core.ItemStateUpdateTrigger',
+          "core.ChannelEventTrigger",
+          "core.GenericEventTrigger",
+          "core.GroupCommandTrigger",
+          "core.GroupStateChangeTrigger",
+          "core.GroupStateUpdateTrigger",
+          "core.ItemCommandTrigger",
+          "core.ItemStateChangeTrigger",
+          "core.ItemStateUpdateTrigger",
           Triggers::Cron::CRON_TRIGGER_MODULE_ID
         ].freeze
         private_constant :KNOWN_TRIGGER_TYPES
@@ -27,13 +27,13 @@ module OpenHAB
           end
 
           # formulate a readable rule name such as "TestSwitch received command ON" if possible
-          def infer_rule_name(config) # rubocop:disable Metrics
+          def infer_rule_name(config)
             known_triggers, unknown_triggers = config.triggers.partition do |t|
               KNOWN_TRIGGER_TYPES.include?(t.type_uid)
             end
             return nil unless unknown_triggers.empty?
 
-            cron_triggers = known_triggers.select { |t| t.type_uid == 'jsr223.jruby.CronTrigger' }
+            cron_triggers = known_triggers.select { |t| t.type_uid == "jsr223.jruby.CronTrigger" }
             ruby_every_triggers = config.ruby_triggers.select { |t| t.first == :every }
 
             # makes sure there aren't any true cron triggers cause we can't format them
@@ -46,7 +46,7 @@ module OpenHAB
           private
 
           # formulate a readable rule name from a single trigger if possible
-          def infer_rule_name_from_trigger(trigger, items = nil, kwargs = {}) # rubocop:disable Metrics
+          def infer_rule_name_from_trigger(trigger, items = nil, kwargs = {})
             case trigger
             when :every
               infer_rule_name_from_every_trigger(items, **kwargs)
@@ -62,7 +62,7 @@ module OpenHAB
           end
 
           # formulate a readable rule name from an item-type trigger
-          def infer_rule_name_from_item_trigger(trigger, items, kwargs) # rubocop:disable Metrics
+          def infer_rule_name_from_item_trigger(trigger, items, kwargs)
             kwargs.delete(:command) if kwargs[:command] == [nil]
             return unless items.length <= 3 &&
                           (kwargs.keys - %i[from to command duration]).empty?
@@ -73,7 +73,7 @@ module OpenHAB
               v.is_a?(Proc) || v.is_a?(Enumerable)
             end
 
-            trigger_name = trigger.to_s.tr('_', ' ')
+            trigger_name = trigger.to_s.tr("_", " ")
             item_names = items.map do |item|
               if item.is_a?(GroupItem::GroupMembers)
                 "#{item.group.name}.members"
@@ -107,15 +107,15 @@ module OpenHAB
 
           # formulate a readable rule name from a channel link trigger
           def infer_rule_name_from_channel_link_trigger(trigger)
-            trigger == :channel_linked ? 'Channel linked to item' : 'Channel unlinked from item'
+            trigger == :channel_linked ? "Channel linked to item" : "Channel unlinked from item"
           end
 
           # formulate a readable rule name from a thing added/updated/remove trigger
           def infer_rule_name_from_thing_trigger(trigger)
             {
-              thing_added: 'Thing Added',
-              thing_updated: 'Thing updated',
-              thing_removed: 'Thing removed'
+              thing_added: "Thing Added",
+              thing_updated: "Thing updated",
+              thing_removed: "Thing removed"
             }[trigger]
           end
 
@@ -124,7 +124,7 @@ module OpenHAB
             result = format_array(array)
             if array.length > 2
               result = result.dup
-              result[0] = 'A'
+              result[0] = "A"
               result.freeze
             end
             result
@@ -143,7 +143,7 @@ module OpenHAB
             return array[0] if array.length == 1
             return "#{array[0]} or #{array[1]}" if array.length == 2
 
-            "any of #{array.join(', ')}"
+            "any of #{array.join(", ")}"
           end
         end
       end

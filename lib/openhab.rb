@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'openhab/core/load_path'
-require 'openhab/core/entity_lookup'
-require 'openhab/core/script_handling'
-require 'openhab/core/openhab_setup'
-require 'openhab/log/logger'
-require 'openhab/dsl/dsl'
-require 'openhab/version'
+require "java"
+require "openhab/core/load_path"
+require "openhab/core/entity_lookup"
+require "openhab/core/script_handling"
+require "openhab/core/openhab_setup"
+require "openhab/log/logger"
+require "openhab/dsl/dsl"
+require "openhab/version"
 
 #
 # Module used to extend base object with OpenHAB Library functionality

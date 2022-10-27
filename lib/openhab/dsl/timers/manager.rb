@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'set'
-require 'openhab/log/logger'
-require_relative 'reentrant_timer'
+require "set"
+require "openhab/log/logger"
+require_relative "reentrant_timer"
 
 module OpenHAB
   module DSL
@@ -32,7 +32,6 @@ module OpenHAB
         #
         # Adds the current timer to the set of rule timers if being tracked
         #
-        # rubocop: disable Metrics/AbcSize
         # It does not make sense to break this up into seperate components
         def add(timer)
           logger.trace("Adding #{timer} to timers")
@@ -49,7 +48,6 @@ module OpenHAB
           logger.trace("Adding reeentrant #{timer} with reentrant id #{timer.reentrant_id} timer ids")
           @reentrant_timers[timer.reentrant_id] = timer
         end
-        # rubocop: enable Metrics/AbcSize
 
         # Fetches the reentrant timer that matches the supplied id and block if it exists
         #
@@ -108,7 +106,7 @@ module OpenHAB
           each(&:cancel)
         end
         # @deprecated Please use {cancel} instead
-        alias cancel_all cancel
+        alias_method :cancel_all, :cancel
 
         #
         # A shorthand to reschedule all the timer objects held within the set

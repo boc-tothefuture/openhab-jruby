@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'base64'
-require 'pathname'
-require 'net/http'
-require 'marcel'
+require "base64"
+require "pathname"
+require "net/http"
+require "marcel"
 
 module OpenHAB
   module DSL
@@ -35,7 +35,7 @@ module OpenHAB
         def update_from_url(uri)
           logger.trace("Downloading image from #{uri}")
           response = Net::HTTP.get_response(URI(uri))
-          mime_type = response['content-type']
+          mime_type = response["content-type"]
           bytes = response.body
           mime_type ||= detect_mime_from_bytes(bytes: bytes)
           update_from_bytes(bytes, mime_type: mime_type)
@@ -94,7 +94,7 @@ module OpenHAB
         # @return [String] mime type if it can be detected, nil otherwise
         #
         def detect_mime_from_bytes(bytes:)
-          logger.trace('Detecting mime type from file image contents')
+          logger.trace("Detecting mime type from file image contents")
           Marcel::MimeType.for(bytes)
         end
       end

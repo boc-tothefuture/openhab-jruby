@@ -96,13 +96,13 @@ module OpenHAB
         class << self
           # @!visibility private
           def thing_type_registry
-            @thing_type_registry ||= ::OpenHAB::Core::OSGI.service('org.openhab.core.thing.type.ThingTypeRegistry')
+            @thing_type_registry ||= ::OpenHAB::Core::OSGI.service("org.openhab.core.thing.type.ThingTypeRegistry")
           end
 
           # @!visibility private
           def config_description_registry
             @config_description_registry ||=
-              ::OpenHAB::Core::OSGI.service('org.openhab.core.config.core.ConfigDescriptionRegistry')
+              ::OpenHAB::Core::OSGI.service("org.openhab.core.config.core.ConfigDescriptionRegistry")
           end
 
           # @!visibility private
@@ -111,12 +111,12 @@ module OpenHAB
               # this is an internal class, so OSGi doesn't put it on the main class path,
               # so we have to go find it ourselves manually
               bundle = org.osgi.framework.FrameworkUtil.get_bundle(org.openhab.core.thing.Thing)
-              bundle.load_class('org.openhab.core.thing.internal.ThingFactoryHelper').ruby_class
+              bundle.load_class("org.openhab.core.thing.internal.ThingFactoryHelper").ruby_class
             end
           end
         end
 
-        def initialize(uid, label = nil, binding: nil, type: nil, bridge: nil, location: nil, config: {}, enabled: nil) # rubocop:disable Metrics
+        def initialize(uid, label = nil, binding: nil, type: nil, bridge: nil, location: nil, config: {}, enabled: nil)
           @channels = []
           uid = uid.to_s
           uid_segments = uid.split(org.openhab.core.common.AbstractUID::SEPARATOR)
@@ -156,7 +156,7 @@ module OpenHAB
         end
 
         # @!visibility private
-        def build # rubocop:disable Metrics
+        def build
           configuration = org.openhab.core.config.core.Configuration.new(config)
           if thing_type
             self.class.thing_factory_helper.apply_default_configuration(
@@ -212,7 +212,7 @@ module OpenHAB
         attr_accessor :label
         attr_reader :uid, :parameters
 
-        def initialize(uid, type, label, thing:, group: nil, **parameters) # rubocop:disable Metrics
+        def initialize(uid, type, label, thing:, group: nil, **parameters)
           @thing = thing
 
           uid = uid.to_s
@@ -237,7 +237,7 @@ module OpenHAB
         end
 
         # @!visibility private
-        def build # rubocop:disable Metrics
+        def build
           org.openhab.core.thing.binding.builder.ChannelBuilder.create(uid)
              .with_kind(kind)
              .with_type(type)

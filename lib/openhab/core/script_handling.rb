@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
+require "openhab/log/logger"
 
 # OpenHAB main module
 module OpenHAB
@@ -51,10 +51,10 @@ module OpenHAB
       #
       # @!visibility private
       def scriptUnloaded # rubocop:disable Naming/MethodName method name dictated by OpenHAB
-        logger.trace('Script unloaded')
+        logger.trace("Script unloaded")
         ScriptHandlingCallbacks.script_unloaded_hooks.each do |hook|
           hook.call
-        rescue StandardError => e
+        rescue => e
           logger.error("Failed to call script_unloaded hook #{hook}: #{e}")
         end
       end
@@ -67,7 +67,7 @@ module OpenHAB
         logger.trace("Script loaded: #{filename}")
         ScriptHandlingCallbacks.script_loaded_hooks.each do |hook|
           hook.call
-        rescue StandardError => e
+        rescue => e
           logger.error("Failed to call script_loaded hook #{hook}: #{e}")
         end
       end

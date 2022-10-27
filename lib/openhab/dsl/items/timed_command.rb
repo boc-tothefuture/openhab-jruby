@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/timers'
-require 'openhab/dsl/rules/rule_triggers'
-require 'openhab/dsl/rules/triggers/triggers'
-require 'openhab/log/logger'
-require 'java'
+require "openhab/dsl/timers"
+require "openhab/dsl/rules/rule_triggers"
+require "openhab/dsl/rules/triggers/triggers"
+require "openhab/log/logger"
+require "java"
 
-require_relative 'generic_item'
+require_relative "generic_item"
 
 module OpenHAB
   module DSL
@@ -42,7 +42,6 @@ module OpenHAB
           # @param [Types::Type] on_expire Command to send when duration expires
           #
           #
-          # rubocop: disable Metrics/MethodLength
           # The mutex makes this over 10 lines, but there is usable way to break this method up
           def command(command, for: nil, on_expire: nil, &block)
             duration = binding.local_variable_get(:for)
@@ -66,14 +65,11 @@ module OpenHAB
 
             self
           end
-          # rubocop: enable Metrics/MethodLength
-          alias << command
+          alias_method :<<, :command
 
           private
 
           # Creates a new timed command and places it in the TimedCommand hash
-          # rubocop: disable Metrics/AbcSize
-          # rubocop: disable Metrics/MethodLength
           # There is no feasible way to break this method into smaller components
           def create_timed_command(command:, duration:, semaphore:, on_expire:, &block)
             on_expire ||= default_on_expire(command)
@@ -92,14 +88,11 @@ module OpenHAB
             logger.trace "Created Timed Command #{timed_command_details}"
             TimedCommand.timed_commands[self] = timed_command_details
           end
-          # rubocop: enable Metrics/AbcSize
-          # rubocop: enable Metrics/MethodLength
 
           # Creates the timer to handle changing the item state when timer expires or invoking user supplied block
           # @param [TimedCommandDetailes] timed_command_details details about the timed command
           # @param [Mutex] semaphore Semaphore to lock on to prevent race condition between rule and timer
           # @return [Timer] Timer
-          # rubocop: disable Metrics/MethodLength
           # There is no feasible way to break this method into smaller components
           def timed_command_timer(timed_command_details, semaphore, &block)
             after(timed_command_details.duration, id: self) do
@@ -118,7 +111,6 @@ module OpenHAB
               end
             end
           end
-          # rubocop: enable Metrics/MethodLength
 
           # Cancels timed command rule
           # @param [TimedCommandDetailed] timed_command_details details about the timed command
@@ -145,7 +137,7 @@ module OpenHAB
             include OpenHAB::Log
             include OpenHAB::Core::ThreadLocal
 
-            def initialize(timed_command_details, semaphore, &block) # rubocop:disable Metrics/MethodLength
+            def initialize(timed_command_details, semaphore, &block)
               super()
               @semaphore = semaphore
               @timed_command_details = timed_command_details
@@ -155,8 +147,8 @@ module OpenHAB
               set_name("Cancels implicit timer for #{timed_command_details.item.id}")
               set_triggers([OpenHAB::DSL::Rules::RuleTriggers.trigger(
                 type: OpenHAB::DSL::Rules::Triggers::Changed::ITEM_STATE_CHANGE,
-                config: { 'itemName' => timed_command_details.item.name,
-                          'previousState' => timed_command_details.command.to_s }
+                config: { "itemName" => timed_command_details.item.name,
+                          "previousState" => timed_command_details.command.to_s }
               )])
             end
 
@@ -167,8 +159,6 @@ module OpenHAB
             # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
             #
             #
-            # rubocop: disable Metrics/MethodLength
-            # rubocop: disable Metrics/AbcSize
             # There is no feasible way to break this method into smaller components
             def execute(_mod = nil, inputs = nil)
               OpenHAB::DSL.import_presets
@@ -178,17 +168,15 @@ module OpenHAB
                                "#{@timed_command_details.item.id}  because received event #{inputs}"
                   @timed_command_details.timer.cancel
                   # Disabled due to OpenHAB design
-                  $scriptExtension.get('ruleRegistry').remove(@timed_command_details.rule_uid)
+                  $scriptExtension.get("ruleRegistry").remove(@timed_command_details.rule_uid)
                   TimedCommand.timed_commands.delete(@timed_command_details.item)
                   if @block
-                    logger.trace 'Executing user supplied block on timed command cancelation'
+                    logger.trace "Executing user supplied block on timed command cancelation"
                     @block&.call(@timed_command_details)
                   end
                 end
               end
             end
-            # rubocop: enable Metrics/MethodLength
-            # rubocop: enable Metrics/AbcSize
           end
         end
       end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
+require "openhab/log/logger"
 
 module OpenHAB
   module DSL
@@ -32,10 +32,6 @@ module OpenHAB
           # @param [String] name of the property
           #
           #
-          # rubocop:disable Metrics/MethodLength
-          # rubocop:disable Metrics/AbcSize
-          # rubocop:disable Metrics/CyclomaticComplexity
-          # rubocop:disable Metrics/PerceivedComplexity
           def prop(name)
             # rubocop rules are disabled because this method is dynamically defined on the calling
             #   object making calls to other methods in this module impossible, or if done on methods
@@ -92,10 +88,6 @@ module OpenHAB
             end
           end
         end
-        # rubocop:enable Metrics/MethodLength
-        # rubocop:enable Metrics/AbcSize
-        # rubocop:enable Metrics/CyclomaticComplexity
-        # rubocop:enable Metrics/PerceivedComplexity
       end
     end
   end

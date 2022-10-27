@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'openhab/dsl/rules/triggers/trigger'
+require "java"
+require "openhab/dsl/rules/triggers/trigger"
 
 module OpenHAB
   module DSL
@@ -27,7 +27,7 @@ module OpenHAB
                             when Symbol then Cron.from_symbol(value, at)
                             when java.time.Duration then Cron.from_duration(value, at)
                             when java.time.MonthDay then Cron.from_monthday(value, at)
-                            else raise ArgumentError, 'Unknown interval'
+                            else raise ArgumentError, "Unknown interval"
                             end
           cron(cron_expression, attach: attach)
         end
@@ -41,16 +41,16 @@ module OpenHAB
         #
         def cron(expression = nil, attach: nil, **fields)
           if fields.any?
-            raise ArgumentError, 'Cron elements cannot be used with a cron expression' if expression
+            raise ArgumentError, "Cron elements cannot be used with a cron expression" if expression
 
             cron_expression = Cron.from_fields(fields)
             return cron(cron_expression, attach: attach)
           end
 
-          raise ArgumentError, 'Missing cron expression or elements' unless expression
+          raise ArgumentError, "Missing cron expression or elements" unless expression
 
           cron = Cron.new(rule_triggers: @rule_triggers)
-          cron.trigger(config: { 'cronExpression' => expression }, attach: attach)
+          cron.trigger(config: { "cronExpression" => expression }, attach: attach)
         end
 
         #
@@ -58,7 +58,7 @@ module OpenHAB
         #
         class Cron < Trigger
           # Trigger ID for Watch Triggers
-          CRON_TRIGGER_MODULE_ID = 'jsr223.jruby.CronTrigger'
+          CRON_TRIGGER_MODULE_ID = "jsr223.jruby.CronTrigger"
 
           #
           # Returns a default map for cron expressions that fires every second
@@ -69,25 +69,25 @@ module OpenHAB
           #
           CRON_EXPRESSION_MAP =
             {
-              second: '*',
-              minute: '*',
-              hour: '*',
-              dom: '?',
-              month: '*',
-              dow: '?',
-              year: '*'
+              second: "*",
+              minute: "*",
+              hour: "*",
+              dom: "?",
+              month: "*",
+              dow: "?",
+              year: "*"
             }.freeze
           private_constant :CRON_EXPRESSION_MAP
 
           # @return [Hash] Map of days of the week from symbols to to OpenHAB cron strings
           DAY_OF_WEEK_MAP = {
-            monday: 'MON',
-            tuesday: 'TUE',
-            wednesday: 'WED',
-            thursday: 'THU',
-            friday: 'FRI',
-            saturday: 'SAT',
-            sunday: 'SUN'
+            monday: "MON",
+            tuesday: "TUE",
+            wednesday: "WED",
+            thursday: "THU",
+            friday: "FRI",
+            saturday: "SAT",
+            sunday: "SUN"
           }.freeze
           private_constant :DAY_OF_WEEK_MAP
 
@@ -99,12 +99,12 @@ module OpenHAB
           # @return [Hash] Create a set of cron expressions based on different time intervals
           EXPRESSION_MAP = {
             second: CRON_EXPRESSION_MAP,
-            minute: CRON_EXPRESSION_MAP.merge(second: '0'),
-            hour: CRON_EXPRESSION_MAP.merge(second: '0', minute: '0'),
-            day: CRON_EXPRESSION_MAP.merge(second: '0', minute: '0', hour: '0'),
-            week: CRON_EXPRESSION_MAP.merge(second: '0', minute: '0', hour: '0', dow: 'MON'),
-            month: CRON_EXPRESSION_MAP.merge(second: '0', minute: '0', hour: '0', dom: '1'),
-            year: CRON_EXPRESSION_MAP.merge(second: '0', minute: '0', hour: '0', dom: '1', month: '1')
+            minute: CRON_EXPRESSION_MAP.merge(second: "0"),
+            hour: CRON_EXPRESSION_MAP.merge(second: "0", minute: "0"),
+            day: CRON_EXPRESSION_MAP.merge(second: "0", minute: "0", hour: "0"),
+            week: CRON_EXPRESSION_MAP.merge(second: "0", minute: "0", hour: "0", dow: "MON"),
+            month: CRON_EXPRESSION_MAP.merge(second: "0", minute: "0", hour: "0", dom: "1"),
+            year: CRON_EXPRESSION_MAP.merge(second: "0", minute: "0", hour: "0", dom: "1", month: "1")
           }.merge(DAY_OF_WEEK_EXPRESSION_MAP).freeze
 
           private_constant :EXPRESSION_MAP
@@ -159,7 +159,7 @@ module OpenHAB
           # @return [Hash] map describing cron expression
           #
           def self.from_fields(fields)
-            fields = fields.transform_values { |value| value.to_s.gsub(/\s+/, '') }
+            fields = fields.transform_values { |value| value.to_s.gsub(/\s+/, "") }
             expression_map = CRON_EXPRESSION_MAP.merge(fields)
             map_to_cron(expression_map)
           end
@@ -172,7 +172,7 @@ module OpenHAB
           # @return [String] OpenHAB cron string
           #
           def self.map_to_cron(map)
-            %i[second minute hour dom month dow year].map { |field| map.fetch(field) }.join(' ')
+            %i[second minute hour dom month dow year].map { |field| map.fetch(field) }.join(" ")
           end
 
           #

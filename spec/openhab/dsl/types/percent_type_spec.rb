@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe OpenHAB::DSL::Types::PercentType do
-  it 'is inspectable' do
-    expect(PercentType.new(10).inspect).to eql '10%'
+  it "is inspectable" do
+    expect(PercentType.new(10).inspect).to eql "10%"
   end
 
-  it 'responds to on?, off?, up?, and down?' do
+  it "responds to on?, off?, up?, and down?" do
     state = PercentType.new(0)
     expect(state).to be_up
     expect(state).not_to be_down
@@ -23,7 +23,7 @@ RSpec.describe OpenHAB::DSL::Types::PercentType do
     expect(state).not_to be_off
   end
 
-  it 'can scale' do
+  it "can scale" do
     expect(PercentType.new(0).scale(0..255)).to be 0
     expect(PercentType.new(100).scale(0..255)).to be 255
     expect(PercentType.new(100).scale(0...256)).to be 255
@@ -34,11 +34,11 @@ RSpec.describe OpenHAB::DSL::Types::PercentType do
     expect(PercentType.new(100).scale(-50..10.0)).to be 10.0
   end
 
-  it 'handles #to_byte' do
+  it "handles #to_byte" do
     expect(PercentType.new(50).to_byte).to be 128
   end
 
-  describe 'case statements' do
+  describe "case statements" do
     specify { expect(OFF).not_to be === PercentType::ZERO }
     specify { expect(ON).not_to be === PercentType::ZERO }
     specify { expect(DECREASE).not_to be === PercentType::ZERO }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'pathname'
+require "pathname"
 
 module OpenHAB
   #
@@ -9,7 +9,7 @@ module OpenHAB
   # @return [Pathname] OpenHAB conf path
   #
   def self.conf_root
-    Pathname.new(ENV['OPENHAB_CONF'])
+    Pathname.new(ENV["OPENHAB_CONF"])
   end
 
   module DSL

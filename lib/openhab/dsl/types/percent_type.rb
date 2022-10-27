@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'decimal_type'
+require_relative "decimal_type"
 
 module OpenHAB
   module DSL
@@ -71,9 +71,9 @@ module OpenHAB
         # @param range [Range] the range as a numeric
         # @return [Numeric] the value as a percentage of the range
         #
-        def scale(range) # rubocop:disable Metrics/AbcSize
+        def scale(range)
           unless range.is_a?(Range) && range.min.is_a?(Numeric) && range.max.is_a?(Numeric)
-            raise ArgumentError, 'range must be a Range of Numerics'
+            raise ArgumentError, "range must be a Range of Numerics"
           end
 
           result = (to_d * (range.max - range.min) / 100) + range.min

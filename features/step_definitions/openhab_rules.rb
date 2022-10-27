@@ -1,8 +1,8 @@
 # frozen_string_literal: false
 
-require 'tempfile'
-require 'fileutils'
-require 'securerandom'
+require "tempfile"
+require "fileutils"
+require "securerandom"
 
 def require_openhab
   "require 'openhab'"
@@ -30,7 +30,7 @@ def append_identifying_log_line_to_rule(code, uid)
 end
 
 def atomic_rule_write(rule_content, deploy_path)
-  temp_file = Tempfile.create(['cucumber_test', '.rb'], File.join(openhab_dir, 'userdata/tmp'))
+  temp_file = Tempfile.create(["cucumber_test", ".rb"], File.join(openhab_dir, "userdata/tmp"))
   temp_file.write(rule_content)
   temp_file.close
 
@@ -53,23 +53,23 @@ def deploy_rule(**kwargs)
 end
 
 def wait_for_rule(log_line)
-  if ENV['RELOAD_SCRIPTS_BUNDLE']
+  if ENV["RELOAD_SCRIPTS_BUNDLE"]
     # force the bundle for ScriptFileWatcher to re-scan immediately; otherwise
     # it can take up to 20s to notice the new rule file when Java's
     # WatchService doesn't support actively watching, and only polls (i.e. on
     # MacOS)
-    openhab_client('bundle:restart org.openhab.core.automation.module.script.rulesupport')
+    openhab_client("bundle:restart org.openhab.core.automation.module.script.rulesupport")
   end
-  wait_until(seconds: 60, msg: 'Rule not added') { check_log(log_line) }
+  wait_until(seconds: 60, msg: "Rule not added") { check_log(log_line) }
 end
 
-def deploy_ruby_file(code:, directory:, filename: '', check_position: :end, check: true)
+def deploy_ruby_file(code:, directory:, filename: "", check_position: :end, check: true)
   uid = SecureRandom.uuid
 
   log_line = case check_position
              when :start then identifying_started_log_line(uid)
              when :end then identifying_log_line(uid)
-             else raise ArgumentError, 'log_line can either be :start or :end'
+             else raise ArgumentError, "log_line can either be :start or :end"
              end
 
   create_log_markers(code, uid) if check
@@ -80,57 +80,57 @@ end
 # A raw rule is one where we don't automatically insert `require 'openhab'`
 # It must be inserted manually in the code doc_string by the test author.
 # This gives the author control over what goes before the require line.
-Given('a raw rule(:)') do |doc_string|
+Given("a raw rule(:)") do |doc_string|
   @rule = doc_string
 end
 
-Given('a rule(:)') do |doc_string|
+Given("a rule(:)") do |doc_string|
   @rule = doc_string_to_rule(doc_string)
 end
 
-Given('a rule template(:)') do |doc_string|
+Given("a rule template(:)") do |doc_string|
   @rule = doc_string_to_rule(ERB.new(doc_string).result)
 end
 
-Given('a deployed rule(:)') do |doc_string|
+Given("a deployed rule(:)") do |doc_string|
   @rule = doc_string_to_rule(doc_string)
   deploy_rule
 end
 
-When('I deploy the rule(:)') do
+When("I deploy the rule(:)") do
   deploy_rule
 end
 
-When('I deploy a rule with an error') do
+When("I deploy a rule with an error") do
   deploy_rule(check: false)
 end
 
-When('I start deploying the rule') do
-  deploy_rule(:check_position => :start)
+When("I start deploying the rule") do
+  deploy_rule(check_position: :start)
 end
 
-Given('code in a rules file(:)') do |doc_string|
+Given("code in a rules file(:)") do |doc_string|
   @rule = doc_string_to_rule(doc_string)
 end
 
-Given('code in a deployed rules file(:)') do |doc_string|
+Given("code in a deployed rules file(:)") do |doc_string|
   @rule = doc_string_to_rule(doc_string)
   deploy_rule
 end
 
-Given('code in a shared file named {string}(:)') do |file, doc_string|
+Given("code in a shared file named {string}(:)") do |file, doc_string|
   code = doc_string_to_rule(doc_string)
   deploy_shared_file(filename: file, code: code)
 end
 
-When('I deploy the rules file') do
+When("I deploy the rules file") do
   deploy_rule
 end
 
-When('I deploy the rules file named {string}') do |file|
+When("I deploy the rules file named {string}") do |file|
   deploy_rule(filename: file)
 end
 
-When('I remove the rules file') do
+When("I remove the rules file") do
   delete_rules
 end

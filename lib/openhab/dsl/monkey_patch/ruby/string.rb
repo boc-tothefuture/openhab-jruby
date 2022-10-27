@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/time/time_of_day'
+require "openhab/dsl/time/time_of_day"
 
 module OpenHAB
   module DSL

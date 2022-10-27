@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'java'
+require "java"
 
 # Import Imperial and SI Units overriding provided values
 %i[Units ImperialUnits SIUnits].each do |type|

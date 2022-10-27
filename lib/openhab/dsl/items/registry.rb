@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'singleton'
+require "singleton"
 
-require 'openhab/core/entity_lookup'
-require 'openhab/dsl/lazy_array'
-require 'openhab/dsl/items/builder'
+require "openhab/core/entity_lookup"
+require "openhab/dsl/lazy_array"
+require "openhab/dsl/items/builder"
 
 module OpenHAB
   module DSL
@@ -39,7 +39,7 @@ module OpenHAB
         def include?(name)
           !$ir.getItems(name).empty?
         end
-        alias key? include?
+        alias_method :key?, :include?
 
         # Explicit conversion to array
         # @return [Array]

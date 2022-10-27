@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
+require "openhab/log/logger"
 
 module OpenHAB
   module DSL
@@ -101,7 +101,7 @@ module OpenHAB
             # @return [true/false] depending on if from is set and matches supplied conditions
             #
             def check_command(inputs: nil)
-              command = input_state(inputs, 'command')
+              command = input_state(inputs, "command")
               logger.trace "Checking command(#{@command}) against command(#{command})"
               check_proc(proc: @command, value: command)
             end
@@ -113,7 +113,7 @@ module OpenHAB
             # @return [true/false] depending on if from is set and matches supplied conditions
             #
             def check_from(inputs: nil, state: nil)
-              state ||= input_state(inputs, 'oldState')
+              state ||= input_state(inputs, "oldState")
               logger.trace "Checking from(#{@from}) against state(#{state})"
               check_proc(proc: @from, value: state)
             end
@@ -125,7 +125,7 @@ module OpenHAB
             # @return [true/false] depending on if from is set and matches supplied conditions
             #
             def check_to(inputs: nil, state: nil)
-              state ||= input_state(inputs, 'newState', 'state')
+              state ||= input_state(inputs, "newState", "state")
               logger.trace "Checking to(#{@to}) against state(#{state})"
               check_proc(proc: @to, value: state)
             end

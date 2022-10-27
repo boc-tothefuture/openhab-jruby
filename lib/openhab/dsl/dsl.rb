@@ -1,34 +1,34 @@
 # frozen_string_literal: true
 
-require_relative 'imports'
+require_relative "imports"
 
 OpenHAB::DSL.import_presets
 
-require 'openhab/log/logger'
+require "openhab/log/logger"
 
 # the order of these is important
-require_relative 'types/types'
-require_relative 'items/items'
+require_relative "types/types"
+require_relative "items/items"
 
-require_relative 'monkey_patch/ruby/ruby'
-require_relative 'monkey_patch/java/java'
-require_relative 'monkey_patch/events/events'
-require_relative 'monkey_patch/actions/actions'
+require_relative "monkey_patch/ruby/ruby"
+require_relative "monkey_patch/java/java"
+require_relative "monkey_patch/events/events"
+require_relative "monkey_patch/actions/actions"
 
-require_relative 'rules/rule'
-require_relative 'rules/terse'
-require_relative 'actions'
-require_relative 'channel'
-require_relative 'timers'
-require_relative 'group'
-require_relative 'things'
-require_relative 'between'
-require_relative 'gems'
-require_relative 'persistence'
-require_relative 'uid'
-require_relative 'units'
-require_relative 'states'
-require_relative 'openhab'
+require_relative "rules/rule"
+require_relative "rules/terse"
+require_relative "actions"
+require_relative "channel"
+require_relative "timers"
+require_relative "group"
+require_relative "things"
+require_relative "between"
+require_relative "gems"
+require_relative "persistence"
+require_relative "uid"
+require_relative "units"
+require_relative "states"
+require_relative "openhab"
 
 module OpenHAB
   #
@@ -37,7 +37,6 @@ module OpenHAB
   module DSL
     # Extend the calling module/class with the DSL
     # Disabling method length because they are all includes
-    # rubocop:disable Metrics/MethodLength
     def self.extended(base)
       base.send :include, OpenHAB::DSL::Actions
       base.send :include, OpenHAB::DSL::Between
@@ -54,6 +53,5 @@ module OpenHAB
       base.send :include, OpenHAB::DSL::Types
       base.send :include, OpenHAB::DSL::Units
     end
-    # rubocop:enable Metrics/MethodLength
   end
 end

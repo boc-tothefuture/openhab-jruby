@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require 'openhab/dsl/things'
-require_relative 'trigger'
+require "openhab/log/logger"
+require "openhab/dsl/things"
+require_relative "trigger"
 
 module OpenHAB
   module DSL
@@ -24,8 +24,8 @@ module OpenHAB
         #    end
         def thing_added(attach: nil)
           @ruby_triggers << [:thing_added]
-          trigger('core.GenericEventTrigger', eventTopic: 'openhab/things/*/added',
-                                              eventTypes: 'ThingAddedEvent', attach: attach)
+          trigger("core.GenericEventTrigger", eventTopic: "openhab/things/*/added",
+                                              eventTypes: "ThingAddedEvent", attach: attach)
         end
 
         #
@@ -42,8 +42,8 @@ module OpenHAB
         #    end
         def thing_removed(attach: nil)
           @ruby_triggers << [:thing_removed]
-          trigger('core.GenericEventTrigger', eventTopic: 'openhab/things/*/removed',
-                                              eventTypes: 'ThingRemovedEvent', attach: attach)
+          trigger("core.GenericEventTrigger", eventTopic: "openhab/things/*/removed",
+                                              eventTypes: "ThingRemovedEvent", attach: attach)
         end
 
         #
@@ -60,8 +60,8 @@ module OpenHAB
         #    end
         def thing_updated(attach: nil)
           @ruby_triggers << [:thing_removed]
-          trigger('core.GenericEventTrigger', eventTopic: 'openhab/things/*/updated',
-                                              eventTypes: 'ThingUpdatedEvent', attach: attach)
+          trigger("core.GenericEventTrigger", eventTopic: "openhab/things/*/updated",
+                                              eventTypes: "ThingUpdatedEvent", attach: attach)
         end
       end
     end

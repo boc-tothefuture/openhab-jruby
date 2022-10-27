@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'time'
-require 'java'
+require "forwardable"
+require "time"
+require "java"
 
-require 'openhab/dsl/items/comparable_item'
+require "openhab/dsl/items/comparable_item"
 
 module OpenHAB
   module DSL

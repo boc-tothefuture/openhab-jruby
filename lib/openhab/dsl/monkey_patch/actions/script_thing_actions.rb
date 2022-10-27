@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'java'
+require "java"
 
 module OpenHAB
   module DSL

@@ -61,7 +61,7 @@ module OpenHAB
         # @return [Boolean] if the same value is represented, including
         #   type conversions
         #
-        def ==(other) # rubocop:disable Metrics
+        def ==(other)
           logger.trace { "(#{self.class}) #{self} == #{other} (#{other.class})" }
           return true if equal?(other)
 

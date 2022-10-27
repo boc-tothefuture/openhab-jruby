@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'pp'
-require 'httparty'
-require 'persistent_httparty'
+require "pp"
+require "httparty"
+require "persistent_httparty"
 
 #
 # Rest interface for OpenHAB
@@ -12,15 +12,15 @@ class Rest
   persistent_connection_adapter
 
   def self.openhab_port
-    @openhab_port ||= ENV['OPENHAB_HTTP_PORT'] || 8080
+    @openhab_port ||= ENV["OPENHAB_HTTP_PORT"] || 8080
   end
 
   format :json
   base_uri "http://127.0.0.1:#{openhab_port}"
-  basic_auth 'foo', 'foo'
+  basic_auth "foo", "foo"
 
   def self.rules
-    get('/rest/rules')
+    get("/rest/rules")
   end
 
   def self.rule(rule:)
@@ -28,7 +28,7 @@ class Rest
   end
 
   def self.items
-    get('/rest/items')
+    get("/rest/items")
   end
 
   def self.set_item_state(name, state)
@@ -36,7 +36,7 @@ class Rest
   end
 
   def self.item_state(name)
-    (get "/rest/items/#{name}/state", :headers => text, :format => :text).chomp
+    (get "/rest/items/#{name}/state", headers: text, format: :text).chomp
   end
 
   def self.delete_item(name)
@@ -52,22 +52,22 @@ class Rest
   end
 
   def self.json
-    { 'Content-Type' => 'application/json' }
+    { "Content-Type" => "application/json" }
   end
 
   def self.text
-    { 'Content-Type' => 'text/plain' }
+    { "Content-Type" => "text/plain" }
   end
 
   def self.add_thing(id:, uid:, thing_type_uid:, label:, config: nil)
     body = {}
-    body['ID'] = id
-    body['UID'] = uid
-    body['thingTypeUID'] = thing_type_uid
+    body["ID"] = id
+    body["UID"] = uid
+    body["thingTypeUID"] = thing_type_uid
     body[:channels] = []
     body[:label] = label
     body[:configuration] = config if config
-    post('/rest/things', headers: json, body: body.to_json)
+    post("/rest/things", headers: json, body: body.to_json)
   end
 
   def self.add_item(item:)
@@ -75,7 +75,7 @@ class Rest
     item_function(body, item)
     put("/rest/items/#{item.name}", headers: json, body: body.to_json)
     item_pattern(item)
-    state = item.state || 'UNDEF'
+    state = item.state || "UNDEF"
     set_item_state(item.name, state)
   end
 
@@ -83,7 +83,7 @@ class Rest
     body = {}
     body[:type] = item.type
     body[:name] = item.name
-    body[:label] = item.label if item.label && item.label.strip != ''
+    body[:label] = item.label if item.label && item.label.strip != ""
     item_tags(body, item)
     item_groups(body, item)
     body
@@ -93,7 +93,7 @@ class Rest
     return unless item.pattern
 
     pattern_body = {}
-    pattern_body[:value] = ' '
+    pattern_body[:value] = " "
     pattern_body[:config] = { pattern: item.pattern }
     put("/rest/items/#{item.name}/metadata/stateDescription", headers: json, body: pattern_body.to_json)
   end
@@ -112,7 +112,7 @@ class Rest
   end
 
   def self.item_groups(body, item)
-    groups = [*item.groups].compact.map(&:strip).grep_v('')
+    groups = [*item.groups].compact.map(&:strip).grep_v("")
     body[:groupNames] = groups unless groups.empty?
     body[:groupType] = item.group_type unless item.group_type.to_s.empty?
   end

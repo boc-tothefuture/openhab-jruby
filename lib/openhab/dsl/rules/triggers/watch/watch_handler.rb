@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'openhab/log/logger'
-require 'openhab/core/services'
+require "java"
+require "openhab/log/logger"
+require "openhab/core/services"
 
 module OpenHAB
   module DSL
@@ -24,8 +24,8 @@ module OpenHAB
             TriggerType.new(
               WATCH_TRIGGER_MODULE_ID,
               nil,
-              'A path change event is detected',
-              'Triggers when a path change event is detected',
+              "A path change event is detected",
+              "Triggers when a path change event is detected",
               nil,
               org.openhab.core.automation.Visibility::VISIBLE,
               nil
@@ -36,7 +36,7 @@ module OpenHAB
           WatchEvent = Struct.new(:type, :path, :attachment)
 
           # Trigger ID for Watch Triggers
-          WATCH_TRIGGER_MODULE_ID = 'jsr223.jruby.WatchTrigger'
+          WATCH_TRIGGER_MODULE_ID = "jsr223.jruby.WatchTrigger"
 
           # Extends the OpenHAB watch service to watch directories
           #
@@ -112,7 +112,7 @@ module OpenHAB
               lambda { |watch_event|
                 logger.trace("Received event(#{watch_event})")
                 if watch_event.path.fnmatch?(glob)
-                  @rule_engine_callback&.triggered(@trigger, { 'event' => watch_event })
+                  @rule_engine_callback&.triggered(@trigger, { "event" => watch_event })
                 else
                   logger.trace("Event #{watch_event} did not match glob(#{glob})")
                 end
@@ -158,7 +158,7 @@ module OpenHAB
             )
 
             OpenHAB::Core.automation_manager.add_trigger_type(watch_trigger_type)
-            OpenHAB::Log.logger(self).trace('Added watch trigger handler')
+            OpenHAB::Log.logger(self).trace("Added watch trigger handler")
           end
         end
       end

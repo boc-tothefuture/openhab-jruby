@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
+require "openhab/log/logger"
 
 module OpenHAB
   module DSL
@@ -84,8 +84,8 @@ module OpenHAB
             # @return [Array] An array of the values for [newState, oldState] or [newStatus, oldStatus]
             #
             def retrieve_states(inputs)
-              new_state = inputs['newState'] || thing_status_to_sym(inputs['newStatus'])
-              old_state = inputs['oldState'] || thing_status_to_sym(inputs['oldStatus'])
+              new_state = inputs["newState"] || thing_status_to_sym(inputs["newStatus"])
+              old_state = inputs["oldState"] || thing_status_to_sym(inputs["oldStatus"])
 
               [new_state, old_state]
             end

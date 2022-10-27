@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'delegate'
-require 'forwardable'
-require 'openhab/core/osgi'
-require 'openhab/log/logger'
+require "delegate"
+require "forwardable"
+require "openhab/core/osgi"
+require "openhab/log/logger"
 
 module OpenHAB
   module DSL
@@ -27,14 +27,14 @@ module OpenHAB
           def_delegator :__getobj__, :to_h, :to_hash
 
           def initialize(metadata: nil, key: nil, value: nil, config: nil)
-            @metadata = metadata || Metadata.new(key || MetadataKey.new('', ''), value&.to_s, config)
+            @metadata = metadata || Metadata.new(key || MetadataKey.new("", ""), value&.to_s, config)
             super(MetadataItem.to_ruby(@metadata&.configuration))
           end
 
           #
           # Updates the metadata configuration associated with the key
           #
-          def []=(key, value) # rubocop:disable Metrics
+          def []=(key, value)
             key = key.to_s if key.is_a?(Symbol)
             configuration = {}.merge(@metadata&.configuration || {}).merge({ key => value })
             metadata = Metadata.new(@metadata&.uID, @metadata&.value, configuration)
@@ -46,7 +46,7 @@ module OpenHAB
           #
           # @return [org.openhab.core.items.Metadata] the old metadata
           #
-          def delete(key) # rubocop:disable Metrics
+          def delete(key)
             key = key.to_s if key.is_a?(Symbol)
             configuration = {}.merge(@metadata&.configuration || {})
             configuration.delete(key)
@@ -69,15 +69,15 @@ module OpenHAB
           #
           # @return [org.openhab.core.items.Metadata] the old metadata
           #
-          def config=(config) # rubocop:disable Metrics
+          def config=(config)
             config = config.to_hash if config.respond_to?(:to_hash)
-            raise ArgumentError, 'Configuration must be a hash' unless config.is_a? Hash
+            raise ArgumentError, "Configuration must be a hash" unless config.is_a? Hash
 
             config.transform_keys! { |k| k.is_a?(Symbol) ? k.to_s : k }
             metadata = Metadata.new(@metadata&.uID, @metadata&.value, config)
             NamespaceAccessor.registry.update(metadata) if @metadata&.uID
           end
-          alias configuration= config=
+          alias_method :configuration=, :config=
 
           #
           # Convert the metadata to an array
@@ -212,7 +212,7 @@ module OpenHAB
             NamespaceAccessor.registry.remove(MetadataKey.new(namespace, @item_name))
           end
 
-          alias delete_all clear
+          alias_method :delete_all, :clear
 
           #
           # @return [Boolean] True if the given namespace exists, false otherwise
@@ -221,8 +221,8 @@ module OpenHAB
             !NamespaceAccessor.registry.get(MetadataKey.new(namespace, @item_name)).nil?
           end
 
-          alias has_key? key?
-          alias include? key?
+          alias_method :has_key?, :key?
+          alias_method :include?, :key?
 
           #
           # Merge the given hash with the current metadata. Existing namespace that matches the name
@@ -247,14 +247,14 @@ module OpenHAB
           def to_s
             namespaces = []
             each { |ns, value, config| namespaces << "\"#{ns}\"=>[\"#{value}\",#{config}]" }
-            "{#{namespaces.join(',')}}"
+            "{#{namespaces.join(",")}}"
           end
 
           #
           # @return [org.openhab.core.items.MetadataRegistry]
           #
           def self.registry
-            @registry ||= OpenHAB::Core::OSGI.service('org.openhab.core.items.MetadataRegistry')
+            @registry ||= OpenHAB::Core::OSGI.service("org.openhab.core.items.MetadataRegistry")
           end
 
           private
@@ -272,7 +272,7 @@ module OpenHAB
             when MetadataItem then [value.value, value.__getobj__]
             when Metadata then [value.value, value.configuration]
             when Array
-              raise ArgumentError, 'Array must contain 2 elements: value, config' if value.length != 2
+              raise ArgumentError, "Array must contain 2 elements: value, config" if value.length != 2
 
               value
             when Hash then [nil, value]
@@ -324,7 +324,7 @@ module OpenHAB
         def meta
           @meta ||= NamespaceAccessor.new(item_name: name)
         end
-        alias metadata meta
+        alias_method :metadata, :meta
       end
     end
   end

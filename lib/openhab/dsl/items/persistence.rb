@@ -222,26 +222,26 @@ module OpenHAB
         PERSISTENCE_METHODS.each do |method|
           define_method(method) do |timestamp, service = nil|
             service ||= persistence_service
-            result = PersistenceExtensions.public_send(method.to_s.delete_suffix('?'), self, to_zdt(timestamp),
+            result = PersistenceExtensions.public_send(method.to_s.delete_suffix("?"), self, to_zdt(timestamp),
                                                        service&.to_s)
             wrap_result(result, method)
           end
 
           next unless /_since\??$/.match?(method.to_s)
 
-          between_method = method.to_s.sub('_since', '_between').to_sym
+          between_method = method.to_s.sub("_since", "_between").to_sym
           define_method(between_method) do |start, finish, service = nil|
             service ||= persistence_service
-            result = PersistenceExtensions.public_send(between_method.to_s.delete_suffix('?'), self, to_zdt(start),
+            result = PersistenceExtensions.public_send(between_method.to_s.delete_suffix("?"), self, to_zdt(start),
                                                        to_zdt(finish), service&.to_s)
             wrap_result(result, method)
           end
         end
 
-        alias changed_since changed_since?
-        alias changed_between changed_between?
-        alias updated_since updated_since?
-        alias updated_between updated_between?
+        alias_method :changed_since, :changed_since?
+        alias_method :changed_between, :changed_between?
+        alias_method :updated_since, :updated_since?
+        alias_method :updated_between, :updated_between?
 
         private
 

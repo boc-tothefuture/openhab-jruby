@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'java'
+require "java"
 
 module OpenHAB
   module DSL
@@ -14,7 +14,7 @@ module OpenHAB
         # or anything responding to 'to_date' to see if they are within the range
         # @return Range object representing a MonthDay Range
         def self.range(range)
-          raise ArgumentError, 'Supplied object must be a range' unless range.is_a? Range
+          raise ArgumentError, "Supplied object must be a range" unless range.is_a? Range
 
           start = MonthDay.parse(range.begin)
           ending = MonthDay.parse(range.end)
@@ -86,7 +86,7 @@ module OpenHAB
           end
 
           # Compare MonthDayRangeElement to other objects as required by Range class
-          def <=>(other) # rubocop:disable Metrics/AbcSize
+          def <=>(other)
             case other
             when DayOfYear then day_in_range.<=>(other.day_in_range)
             when MonthDay then self.<=>(DayOfYear.new(month_day: other, range: @range))
@@ -136,7 +136,7 @@ module OpenHAB
           logger.trace("#{self.class}.parse #{string} (#{string.class})")
           java_send :parse, [java.lang.CharSequence, java.time.format.DateTimeFormatter],
                     string.to_s,
-                    DateTimeFormatter.ofPattern('[--]M-d')
+                    DateTimeFormatter.ofPattern("[--]M-d")
         end
 
         # Can the supplied object be parsed into a MonthDay
@@ -151,7 +151,7 @@ module OpenHAB
 
         # Remove -- from MonthDay string representation
         def to_s
-          to_string.delete_prefix('--')
+          to_string.delete_prefix("--")
         end
 
         # Checks if MonthDay is between the dates of the supplied range

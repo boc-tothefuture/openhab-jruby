@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/types/un_def_type'
+require "openhab/dsl/types/un_def_type"
 
 module OpenHAB
   module DSL
@@ -52,7 +52,7 @@ module OpenHAB
             old_item_state if was?
           end
           # @deprecated
-          alias last was
+          alias_method :last, :was
         end
       end
     end

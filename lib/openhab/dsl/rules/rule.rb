@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'method_source'
+require "method_source"
 
-require 'openhab/core/thread_local'
-require 'openhab/core/services'
-require 'openhab/log/logger'
-require_relative 'rule_config'
-require_relative 'automation_rule'
-require_relative 'guard'
-require_relative 'name_inference'
+require "openhab/core/thread_local"
+require "openhab/core/services"
+require "openhab/log/logger"
+require_relative "rule_config"
+require_relative "automation_rule"
+require_relative "guard"
+require_relative "name_inference"
 
 module OpenHAB
   #
@@ -30,7 +30,7 @@ module OpenHAB
         @automation_manager = OpenHAB::Core.automation_manager
         @registry = OpenHAB::Core.rule_registry
         @scripted_rule_provider = OpenHAB::Core::OSGI.service(
-          'org.openhab.core.automation.module.script.rulesupport.shared.ScriptedRuleProvider'
+          "org.openhab.core.automation.module.script.rulesupport.shared.ScriptedRuleProvider"
         )
         class << self
           attr_reader :script_rules, :automation_manager, :registry, :scripted_rule_provider
@@ -45,7 +45,7 @@ module OpenHAB
         # @yield [] Block executed in context of a RuleConfig
         #
         #
-        def rule(rule_name = nil, id: nil, script: nil, &block) # rubocop:disable Metrics
+        def rule(rule_name = nil, id: nil, script: nil, &block)
           id ||= NameInference.infer_rule_id_from_block(block)
           script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
@@ -65,7 +65,7 @@ module OpenHAB
             logger.trace { config.inspect }
             process_rule_config(config, script)
           end
-        rescue StandardError => e
+        rescue => e
           logger.log_exception(e, @rule_name)
         end
 
@@ -98,17 +98,17 @@ module OpenHAB
         # @param [RuleConfig] config for rule
         #
         #
-        def process_rule_config(config, script) # rubocop:disable Metrics
+        def process_rule_config(config, script)
           return unless create_rule?(config)
 
           rule = AutomationRule.new(config: config)
           Rule.script_rules << rule
           added_rule = add_rule(rule)
           # add config so that MainUI can show the script
-          added_rule.actions.first.configuration.put('type', 'application/x-ruby')
-          added_rule.actions.first.configuration.put('script', script)
+          added_rule.actions.first.configuration.put("type", "application/x-ruby")
+          added_rule.actions.first.configuration.put("script", script)
 
-          rule.execute(nil, { 'event' => Struct.new(:attachment).new(config.start_attachment) }) if config.on_start?
+          rule.execute(nil, { "event" => Struct.new(:attachment).new(config.start_attachment) }) if config.on_start?
           added_rule
         end
 

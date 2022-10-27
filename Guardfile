@@ -18,7 +18,7 @@
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
 group :docs do
-  guard 'yard' do
+  guard "yard" do
     watch(%r{app/.+\.rb})
     watch(%r{lib/.+\.rb})
     watch(%r{ext/.+\.c})
@@ -34,7 +34,7 @@ group :docs do
   end
 end
 
-guard :rubocop, all_on_start: false, cli: ['-A'] do
+guard :rubocop, all_on_start: false, cli: ["-A"] do
   watch(/.+\.rb$/)
   watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
 end

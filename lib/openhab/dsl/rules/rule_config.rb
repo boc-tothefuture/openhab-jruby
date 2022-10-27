@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'forwardable'
-require_relative 'property'
-require_relative 'triggers/triggers'
-require_relative 'guard'
-require_relative 'rule_triggers'
-require 'openhab/core/entity_lookup'
-require 'openhab/dsl/between'
-require 'openhab/dsl/timers'
+require "java"
+require "forwardable"
+require_relative "property"
+require_relative "triggers/triggers"
+require_relative "guard"
+require_relative "rule_triggers"
+require "openhab/core/entity_lookup"
+require "openhab/dsl/between"
+require "openhab/dsl/timers"
 
 module OpenHAB
   module DSL
@@ -59,10 +59,10 @@ module OpenHAB
         #
         Delay = Struct.new(:duration)
 
-        prop_array :run, :array_name => :run_queue, :wrapper => Run
-        prop_array :triggered, :array_name => :run_queue, :wrapper => Trigger
-        prop_array :delay, :array_name => :run_queue, :wrapper => Delay
-        prop_array :otherwise, :array_name => :run_queue, :wrapper => Otherwise
+        prop_array :run, array_name: :run_queue, wrapper: Run
+        prop_array :triggered, array_name: :run_queue, wrapper: Trigger
+        prop_array :delay, array_name: :run_queue, wrapper: Delay
+        prop_array :otherwise, array_name: :run_queue, wrapper: Otherwise
 
         prop :uid
         prop :name
@@ -79,7 +79,7 @@ module OpenHAB
         #
         def initialize(caller_binding)
           @rule_triggers = RuleTriggers.new
-          @caller = caller_binding.eval 'self'
+          @caller = caller_binding.eval "self"
           @ruby_triggers = []
           enabled(true)
           on_start(false)
@@ -138,7 +138,7 @@ module OpenHAB
             "Run blocks: (#{run}) " \
             "on_start: (#{on_start?}) " \
             "Trigger Conditions: #{trigger_conditions} " \
-            "Trigger UIDs: #{triggers.map(&:id).join(', ')} " \
+            "Trigger UIDs: #{triggers.map(&:id).join(", ")} " \
             "Attachments: #{attachments}"
         end
       end

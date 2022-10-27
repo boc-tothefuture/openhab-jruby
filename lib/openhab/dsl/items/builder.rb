@@ -20,7 +20,7 @@ module OpenHAB
         end
 
         # Add an item to this provider
-        def add(builder) # rubocop:disable Metrics
+        def add(builder)
           item = builder.build
           raise "Item #{item.name} already exists" if @items.key?(item.name)
 
@@ -30,7 +30,7 @@ module OpenHAB
           # make sure to add the item to the registry before linking it
           if builder.channel
             channel = builder.channel
-            if !channel.include?(':') &&
+            if !channel.include?(":") &&
                (group = builder.groups.find { |g| g.is_a?(GroupItemBuilder) && g.thing })
               thing = group.thing
               thing = thing.uid if thing.is_a?(Things::Thing)
@@ -72,12 +72,12 @@ module OpenHAB
           super
 
           @links = Hash.new { |h, k| h[k] = Set.new }
-          registry = OpenHAB::Core::OSGI.service('org.openhab.core.thing.link.ItemChannelLinkRegistry')
+          registry = OpenHAB::Core::OSGI.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           registry.add_provider(self)
           OpenHAB::Core::ScriptHandling.script_unloaded { registry.remove_provider(self) }
         end
 
-        def link(item, channel, config = {}) # rubocop:disable Metrics
+        def link(item, channel, config = {})
           config = org.openhab.core.config.core.Configuration.new(config)
           channel = org.openhab.core.thing.ChannelUID.new(channel) if channel.is_a?(String)
           channel = channel.uid if channel.is_a?(org.openhab.core.thing.Channel)
@@ -188,7 +188,7 @@ module OpenHAB
       end
 
       # The ItemBuilder DSL allows you to customize an Item
-      class ItemBuilder # rubocop:disable Metrics
+      class ItemBuilder
         # The type of this item
         # @example
         #   type #=> :switch
@@ -245,7 +245,7 @@ module OpenHAB
         # @param homekit [String, Array, nil] Homekit metadata (see {#alexa})
         # @param metadata [Hash{String=>Hash}] Generic metadata (see {#metadata})
         # @param state [Types::State] Initial state
-        def initialize(type, name = nil, label = nil, # rubocop:disable Metrics
+        def initialize(type, name = nil, label = nil,
                        provider:,
                        dimension: nil,
                        format: nil,
@@ -259,7 +259,7 @@ module OpenHAB
                        homekit: nil,
                        metadata: nil,
                        state: nil)
-          raise ArgumentError, 'Dimension can only be specified with NumberItem' if dimension && type != :number
+          raise ArgumentError, "Dimension can only be specified with NumberItem" if dimension && type != :number
 
           if provider.is_a?(GroupItemBuilder)
             name = "#{provider.name_base}#{name}"
@@ -276,11 +276,11 @@ module OpenHAB
           @tags = []
           @metadata = metadata || {}
           @autoupdate = autoupdate
-          metadata('alexa', alexa) if alexa
+          metadata("alexa", alexa) if alexa
           @channel = channel
           @expire = nil
           self.expire(*Array(expire)) if expire
-          metadata('homekit', homekit) if homekit
+          metadata("homekit", homekit) if homekit
           @state = state
 
           (tags || []).each do |tag|
@@ -291,7 +291,7 @@ module OpenHAB
         # Tag item
         # @param tag [String, org.openhab.core.semantics.Tag]
         def tag(tag)
-          tag = tag.name.split('::').last if tag.is_a?(Module) && tag < org.openhab.core.semantics.Tag
+          tag = tag.name.split("::").last if tag.is_a?(Module) && tag < org.openhab.core.semantics.Tag
           @tags << tag.to_s
         end
 
@@ -308,7 +308,7 @@ module OpenHAB
         # @param value [String] Type of Homekit accessory or characteristic
         # @param config [Hash] Additional Homekit configuration
         def homekit(value = nil, config = nil)
-          metadata('homekit', value, config)
+          metadata("homekit", value, config)
         end
 
         # Shortcut for adding Alexa metadata
@@ -318,7 +318,7 @@ module OpenHAB
         # @param value [String] Type of Alexa endpoint
         # @param config [Hash] Additional Alexa configuration
         def alexa(value = nil, config = nil)
-          metadata('alexa', value, config)
+          metadata("alexa", value, config)
         end
 
         # Add or metadata
@@ -326,7 +326,7 @@ module OpenHAB
         #    metadata # => { "homekit" => "Switchable" }
         # @example Retrieve the metadata for a specific key
         #    metadata["homekit"] # => "Switchable"
-        def metadata(*args) # rubocop:disable Metrics
+        def metadata(*args)
           unless (0..3).cover?(args.length)
             raise ArgumentError,
                   "wrong number of arguments (given #{args.length}, expected 0..3)"
@@ -360,7 +360,7 @@ module OpenHAB
         #   expire 5.minutes, state: NULL
         # @example Send a command on expiration
         #   expire 5.minutes, command: OFF
-        def expire(*args, command: nil, state: nil) # rubocop:disable Metrics
+        def expire(*args, command: nil, state: nil)
           unless (0..2).cover?(args.length)
             raise ArgumentError,
                   "wrong number of arguments (given #{args.length}, expected 0..2)"
@@ -368,7 +368,7 @@ module OpenHAB
           return @expire if args.empty?
 
           state = args.last if args.length == 2
-          raise ArgumentError, 'cannot provide both command and state' if command && state
+          raise ArgumentError, "cannot provide both command and state" if command && state
 
           duration = args.first
           return @expire = nil if duration.nil?
@@ -381,7 +381,7 @@ module OpenHAB
         end
 
         # @!visibility private
-        def build # rubocop:disable Metrics
+        def build
           item = create_item
           item.label = label
           item.category = icon.to_s if icon
@@ -398,9 +398,9 @@ module OpenHAB
           metadata.each do |namespace, data|
             process_meta(item, namespace, data)
           end
-          item.meta['autoupdate'] = autoupdate.to_s unless autoupdate.nil?
-          item.meta['expire'] = expire if expire
-          item.meta['stateDescription'] = { 'pattern' => format } if format
+          item.meta["autoupdate"] = autoupdate.to_s unless autoupdate.nil?
+          item.meta["expire"] = expire if expire
+          item.meta["stateDescription"] = { "pattern" => format } if format
           unless state.nil?
             state = self.state
             state = item.__send__(:format_type_pre, state) unless state.is_a?(org.openhab.core.types.State)
@@ -420,7 +420,7 @@ module OpenHAB
           self.class.item_factory.create_item(type, name)
         end
 
-        def process_meta(item, namespace, data) # rubocop:disable Metrics
+        def process_meta(item, namespace, data)
           case data
           when String
             value = data
@@ -431,12 +431,12 @@ module OpenHAB
             config = data.last
             unless data.length == 2
               raise ArgumentError,
-                    'Metadata array must be a string, a hash, or an array of a string and hash'
+                    "Metadata array must be a string, a hash, or an array of a string and hash"
             end
           else
             unless data.length == 2
               raise ArgumentError,
-                    'Metadata array must be a string, a hash, or an array of a string and hash'
+                    "Metadata array must be a string, a hash, or an array of a string and hash"
             end
           end
           config ||= {}
@@ -486,7 +486,7 @@ module OpenHAB
         # @see ItemBuilder#initialize
         def initialize(*args, type: nil, function: nil, thing: nil, **kwargs)
           raise ArgumentError, "invalid function #{function}" if function && !function.match?(FUNCTION_REGEX)
-          raise ArgumentError, 'state cannot be set on GroupItems' if kwargs[:state]
+          raise ArgumentError, "state cannot be set on GroupItems" if kwargs[:state]
 
           super(type, *args, **kwargs)
           @function = function
@@ -495,7 +495,7 @@ module OpenHAB
         end
 
         # @!visibility private
-        def create_item # rubocop:disable Metrics
+        def create_item
           base_item = super if type
           if function
             match = function.match(FUNCTION_REGEX)

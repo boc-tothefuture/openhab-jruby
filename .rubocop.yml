@@ -13,6 +13,18 @@ AllCops:
   Exclude:
     - bin/*
 
+# The following is excluded because it is within the shipped Gem
+# the cop is searching for the gem itself, so exclude this file
+Bundler/GemFilename:
+  Exclude:
+    - lib/openhab/dsl/gems.rb
+
+Metrics:
+  Enabled: false
+
+Performance/Casecmp:
+  AutoCorrect: false
+
 RSpec/DescribeClass:
   Enabled: false
 RSpec/ExampleLength:
@@ -25,6 +37,8 @@ RSpec/MessageSpies:
 RSpec/MultipleExpectations:
   Enabled: false
 
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
 Style/CaseEquality:
   Exclude: # we're explicitly testing this operator
   - spec/openhab/dsl/types/*_spec.rb
@@ -32,8 +46,6 @@ Style/CaseEquality:
 # RuboCop doesn't know if a module is documented in a different file
 Style/Documentation:
   Enabled: false
-Style/HashSyntax:
-  UseHashRocketsWithSymbolValues: true
 Style/GlobalVars:
   AllowedVariables: # these globals are set by OpenHAB, and we can't change their name
    - $actions
@@ -42,12 +54,19 @@ Style/GlobalVars:
    - $se
    - $scriptExtension
    - $things
-
-Gemspec/RequireMFA:
+Style/HashSyntax:
+  EnforcedStyle: ruby19_no_mixed_keys
+Style/PercentQLiterals:
+  EnforcedStyle: upper_case_q
+Style/PerlBackrefs:
   Enabled: false
-
-# The following is excluded because it is within the shipped Gem
-# the cop is searching for the gem itself, so exclude this file
-Bundler/GemFilename:
-  Exclude:
-    - lib/openhab/dsl/gems.rb
+Style/RescueStandardError:
+  EnforcedStyle: implicit
+Style/SpecialGlobalVars:
+  Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+Style/TernaryParentheses:
+  EnforcedStyle: require_parentheses_when_complex

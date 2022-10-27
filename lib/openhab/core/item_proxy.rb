@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'delegate'
-require 'forwardable'
+require "delegate"
+require "forwardable"
 
 module OpenHAB
   module Core

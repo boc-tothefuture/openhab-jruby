@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
+require "openhab/log/logger"
 
 # OpenHAB main module
 module OpenHAB

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'numeric_type'
+require_relative "numeric_type"
 
 module OpenHAB
   module DSL
@@ -15,7 +15,7 @@ module OpenHAB
       Quantity = QuantityType
 
       # Adds methods to core OpenHAB QuantityType to make it more natural in Ruby
-      class QuantityType # rubocop:disable Metrics/ClassLength
+      class QuantityType
         # @!parse include Type
         include NumericType
 
@@ -26,7 +26,7 @@ module OpenHAB
         #
         # Convert this quantity into a another unit
         #
-        alias | to_unit
+        alias_method :|, :to_unit
 
         #
         # Comparison
@@ -39,7 +39,7 @@ module OpenHAB
         #
         #   nil is returned if the two values are incomparable
         #
-        def <=>(other) # rubocop:disable Metrics
+        def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(self.class)
             return unitize(other.unit).compare_to(other) if unit == ONE_UNIT
@@ -74,7 +74,7 @@ module OpenHAB
         #   to that type to accomodate comparison with things such as {OnOffType}
         #
         # @return [[QuantityType, QuantityType]]
-        def coerce(other) # rubocop:disable Metrics
+        def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(Items::NumericItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(Items::NumericItem))
@@ -91,13 +91,13 @@ module OpenHAB
         end
 
         # arithmetic operators
-        alias -@ negate
+        alias_method :-@, :negate
 
         {
-          :add => :+,
-          :subtract => :-
+          add: :+,
+          subtract: :-
         }.each do |java_op, ruby_op|
-          convert = 'self.class.new(other, Units.unit || unit)'
+          convert = "self.class.new(other, Units.unit || unit)"
 
           class_eval( # rubocop:disable Style/DocumentDynamicEvalDefinition https://github.com/rubocop/rubocop/issues/10179
             # def +(other)
@@ -152,8 +152,8 @@ module OpenHAB
         end
 
         {
-          :multiply => :*,
-          :divide => :/
+          multiply: :*,
+          divide: :/
         }.each do |java_op, ruby_op|
           class_eval( # rubocop:disable Style/DocumentDynamicEvalDefinition https://github.com/rubocop/rubocop/issues/10179
             # def *(other)
@@ -258,7 +258,7 @@ module OpenHAB
           lhs.multiply(rhs)
         end
 
-        alias divide_quantity divide
+        alias_method :divide_quantity, :divide
       end
     end
   end

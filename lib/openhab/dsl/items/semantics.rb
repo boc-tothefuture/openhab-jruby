@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'semantics/enumerable'
+require_relative "semantics/enumerable"
 
 module OpenHAB
   module DSL
@@ -173,7 +173,7 @@ module Enumerable
   # Returns a new array of items that are a semantics Location (optionally of the given type)
   def locations(type = nil)
     if type && !(type < OpenHAB::DSL::Items::Semantics::Location)
-      raise ArgumentError, 'type must be a subclass of Location'
+      raise ArgumentError, "type must be a subclass of Location"
     end
 
     result = select(&:location?)
@@ -182,7 +182,7 @@ module Enumerable
     result
   end
   # @deprecated Please use {#locations}
-  alias sublocations locations
+  alias_method :sublocations, :locations
 
   # Returns a new array of items that are a semantics equipment (optionally of the given type)
   #
@@ -190,7 +190,7 @@ module Enumerable
   #   lGreatRoom.equipments(Semantics::Screen)
   def equipments(type = nil)
     if type && !(type < OpenHAB::DSL::Items::Semantics::Equipment)
-      raise ArgumentError, 'type must be a subclass of Equipment'
+      raise ArgumentError, "type must be a subclass of Equipment"
     end
 
     result = select(&:equipment?)
@@ -203,18 +203,18 @@ module Enumerable
   #
   # @example Get all the power switch items for every equipment in a room
   #   lGreatRoom.equipments.points(Semantics::Switch)
-  def points(*point_or_property_types) # rubocop:disable Metrics
+  def points(*point_or_property_types)
     unless (0..2).cover?(point_or_property_types.length)
       raise ArgumentError, "wrong number of arguments (given #{point_or_property_types.length}, expected 0..2)"
     end
     unless point_or_property_types.all? do |tag|
              tag < OpenHAB::DSL::Items::Semantics::Point || tag < OpenHAB::DSL::Items::Semantics::Property
            end
-      raise ArgumentError, 'point_or_property_types must all be a subclass of Point or Property'
+      raise ArgumentError, "point_or_property_types must all be a subclass of Point or Property"
     end
     if point_or_property_types.count { |tag| tag < OpenHAB::DSL::Items::Semantics::Point } > 1 ||
        point_or_property_types.count { |tag| tag < OpenHAB::DSL::Items::Semantics::Property } > 1
-      raise ArgumentError, 'point_or_property_types cannot both be a subclass of Point or Property'
+      raise ArgumentError, "point_or_property_types cannot both be a subclass of Point or Property"
     end
 
     select do |point|

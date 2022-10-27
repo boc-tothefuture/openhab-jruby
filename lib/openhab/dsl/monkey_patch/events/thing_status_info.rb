@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'java'
+require "java"
 
 module OpenHAB
   module DSL
@@ -15,9 +15,9 @@ module OpenHAB
         # Monkey patch with ruby style accessors
         #
         class ThingStatusInfoChangedEvent
-          alias uid get_thing_uid
-          alias last get_old_status_info
-          alias status status_info
+          alias_method :uid, :get_thing_uid
+          alias_method :last, :get_old_status_info
+          alias_method :status, :status_info
 
           # Get the thing that triggered this event
           def thing
@@ -29,8 +29,8 @@ module OpenHAB
         # Monkey patch with ruby style accessors
         #
         class ThingStatusInfoEvent
-          alias uid get_thing_uid
-          alias status status_info
+          alias_method :uid, :get_thing_uid
+          alias_method :status, :status_info
 
           # Get the thing that triggered this event
           def thing

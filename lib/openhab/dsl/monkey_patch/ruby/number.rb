@@ -17,12 +17,12 @@ module OpenHAB
             define_method(unit) { java.time.Duration.public_send("of_#{unit}", self) }
           end
 
-          alias second seconds
-          alias millisecond millis
-          alias milliseconds millis
-          alias ms millis
-          alias minute minutes
-          alias hour hours
+          alias_method :second, :seconds
+          alias_method :millisecond, :millis
+          alias_method :milliseconds, :millis
+          alias_method :ms, :millis
+          alias_method :minute, :minutes
+          alias_method :hour, :hours
         end
 
         #
@@ -65,12 +65,12 @@ module OpenHAB
             (self * 60).minutes
           end
 
-          alias second seconds
-          alias millisecond millis
-          alias milliseconds millis
-          alias ms millis
-          alias minute minutes
-          alias hour hours
+          alias_method :second, :seconds
+          alias_method :millisecond, :millis
+          alias_method :milliseconds, :millis
+          alias_method :ms, :millis
+          alias_method :minute, :minutes
+          alias_method :hour, :hours
         end
 
         #

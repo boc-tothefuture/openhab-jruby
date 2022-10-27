@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'delegate'
-require 'forwardable'
+require "delegate"
+require "forwardable"
 
-require_relative 'metadata'
-require_relative 'persistence'
-require_relative 'semantics'
+require_relative "metadata"
+require_relative "persistence"
+require_relative "semantics"
 
-require_relative 'item_equality'
+require_relative "item_equality"
 
 module OpenHAB
   module DSL
@@ -50,7 +50,7 @@ module OpenHAB
         end
         # rubocop:enable Naming/MethodName
 
-        alias hash hash_code
+        alias_method :hash, :hash_code
 
         # Get the raw item state.
         #
@@ -58,7 +58,7 @@ module OpenHAB
         #
         # @return [Types::Type]
         #
-        alias raw_state state
+        alias_method :raw_state, :state
 
         remove_method(:==)
 
@@ -74,7 +74,7 @@ module OpenHAB
           org.openhab.core.model.script.actions.BusEvent.sendCommand(self, command)
           self
         end
-        alias << command
+        alias_method :<<, :command
 
         #
         # Send an update to this item
@@ -97,7 +97,7 @@ module OpenHAB
         def state?
           !raw_state.is_a?(Types::UnDefType)
         end
-        alias truthy? state?
+        alias_method :truthy?, :state?
 
         #
         # Get the item state
@@ -152,17 +152,17 @@ module OpenHAB
         def thing
           all_linked_things.first
         end
-        alias linked_thing thing
+        alias_method :linked_thing, :thing
 
         # Returns all of the item's linked things.
         #
         # @return [Array] An array of things or an empty array
         def things
-          registry = OpenHAB::Core::OSGI.service('org.openhab.core.thing.link.ItemChannelLinkRegistry')
+          registry = OpenHAB::Core::OSGI.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           channels = registry.get_bound_channels(name).to_a
           channels.map(&:thing_uid).uniq.map { |tuid| OpenHAB::DSL::Things.things[tuid] }.compact
         end
-        alias all_linked_things things
+        alias_method :all_linked_things, :things
 
         #
         # Check equality without type conversion

@@ -6,7 +6,7 @@ module OpenHAB
     #
     # Import required java classes
     #
-    def self.import_presets # rubocop:disable Metrics/AbcSize
+    def self.import_presets
       return if Object.const_get(:ZonedDateTime).is_a?(Class)
 
       # Fix the import problem in OpenHAB 3.2 addon. Not required in 3.3+

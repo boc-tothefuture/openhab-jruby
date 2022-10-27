@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'bigdecimal'
-require 'forwardable'
+require "bigdecimal"
+require "forwardable"
 
 module OpenHAB
   module DSL

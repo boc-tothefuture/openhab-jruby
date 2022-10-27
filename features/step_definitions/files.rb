@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'securerandom'
+require "securerandom"
 
 def create_sub_file(dir, file)
   conf_sub_dir = File.join(conf_dir, dir)
@@ -11,22 +11,22 @@ def create_sub_file(dir, file)
   temp_conf_file(conf_file)
 end
 
-Given('a file in subdirectory {string} of conf named {string}') do |dir, file|
+Given("a file in subdirectory {string} of conf named {string}") do |dir, file|
   create_sub_file(dir, file)
 end
 
-When('I create a file in subdirectory {string} of conf named {string}') do |dir, file|
+When("I create a file in subdirectory {string} of conf named {string}") do |dir, file|
   create_sub_file(dir, file)
 end
 
-When('I delete a file in subdirectory {string} of conf named {string}') do |dir, file|
+When("I delete a file in subdirectory {string} of conf named {string}") do |dir, file|
   File.delete File.join(conf_dir, dir, file)
 end
 
-When('I modify a file in subdirectory {string} of conf named {string}') do |dir, file|
+When("I modify a file in subdirectory {string} of conf named {string}") do |dir, file|
   File.write(File.join(conf_dir, dir, file), SecureRandom.hex)
 end
 
-Given('a subdirectory {string} of conf') do |sub_dir|
+Given("a subdirectory {string} of conf") do |sub_dir|
   Dir.mkdir File.join(conf_dir, sub_dir)
 end

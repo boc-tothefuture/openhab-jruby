@@ -13,7 +13,7 @@ module OpenHAB
           # @!method item_name
           #   Gets the name of the item that was linked or unlinked.
           #   @return [String]
-          alias item_name itemName
+          alias_method :item_name, :itemName
 
           # Gets the item that was linked or unlinked
           # @return [GenericItem]

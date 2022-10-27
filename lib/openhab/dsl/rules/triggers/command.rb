@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require_relative 'trigger'
+require "openhab/log/logger"
+require_relative "trigger"
 
 module OpenHAB
   module DSL
@@ -33,7 +33,7 @@ module OpenHAB
 
           flattened_items.map do |item|
             combined_commands.map do |cmd|
-              logger.states 'Creating received command trigger', item: item, command: cmd
+              logger.states "Creating received command trigger", item: item, command: cmd
 
               command_trigger.trigger(item: item, command: cmd, attach: attach)
             end
@@ -115,17 +115,17 @@ module OpenHAB
                            else
                              item(item: item)
                            end
-            config['command'] = command.to_s unless command.nil?
+            config["command"] = command.to_s unless command.nil?
             append_trigger(type: type, config: config, attach: attach, conditions: conditions)
           end
 
           private
 
           # @return [String] item command trigger
-          ITEM_COMMAND = 'core.ItemCommandTrigger'
+          ITEM_COMMAND = "core.ItemCommandTrigger"
 
           # @return [String] A group command trigger for items in the group
-          GROUP_COMMAND = 'core.GroupCommandTrigger'
+          GROUP_COMMAND = "core.GroupCommandTrigger"
 
           #
           # Create trigger for item commands
@@ -136,7 +136,7 @@ module OpenHAB
           #   second element is trigger type
           #
           def item(item:)
-            [ITEM_COMMAND, { 'itemName' => item.name }]
+            [ITEM_COMMAND, { "itemName" => item.name }]
           end
 
           #
@@ -148,7 +148,7 @@ module OpenHAB
           #   second element is trigger type
           #
           def group(group:)
-            [GROUP_COMMAND, { 'groupName' => group.group.name }]
+            [GROUP_COMMAND, { "groupName" => group.group.name }]
           end
         end
       end

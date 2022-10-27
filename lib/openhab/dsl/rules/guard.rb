@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/rules/property'
-require 'openhab/log/logger'
+require "openhab/dsl/rules/property"
+require "openhab/log/logger"
 
 module OpenHAB
   module DSL
@@ -60,8 +60,8 @@ module OpenHAB
           #
           def should_run?(event)
             logger.trace("Checking guards #{self}")
-            check(@only_if, :check_type => :only_if,
-                            :event => event) && check(@not_if, :check_type => :not_if, :event => event)
+            check(@only_if, check_type: :only_if,
+                            event: event) && check(@not_if, check_type: :not_if, event: event)
           end
 
           private

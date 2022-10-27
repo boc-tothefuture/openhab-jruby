@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require 'openhab/dsl/rules/triggers/trigger'
+require "openhab/log/logger"
+require "openhab/dsl/rules/triggers/trigger"
 
 module OpenHAB
   module DSL
@@ -24,12 +24,12 @@ module OpenHAB
         #
         # @return [Trigger] Trigger object
         #
-        def watch(path, glob: '*', for: %i[created deleted modified], attach: nil)
+        def watch(path, glob: "*", for: %i[created deleted modified], attach: nil)
           glob, path = Watch.glob_for_path(Pathname.new(path), glob)
           types = [binding.local_variable_get(:for)].flatten
           config = { path: path.to_s, types: types.map(&:to_s), glob: glob.to_s }
 
-          logger.state 'Creating a watch trigger', path: path, glob: glob, types: types
+          logger.state "Creating a watch trigger", path: path, glob: glob, types: types
           Watch.new(rule_triggers: @rule_triggers).trigger(config: config, attach: attach)
         end
 
@@ -38,7 +38,7 @@ module OpenHAB
         #
         class Watch < Trigger
           # Characters in an fnmatch compatible glob
-          GLOB_CHARS = ['**', '*', '?', '[', ']', '{', '}'].freeze
+          GLOB_CHARS = ["**", "*", "?", "[", "]", "{", "}"].freeze
           private_constant :GLOB_CHARS
 
           #

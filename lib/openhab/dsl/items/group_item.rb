@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'comparable_item'
-require 'openhab/dsl/lazy_array'
+require_relative "comparable_item"
+require "openhab/dsl/lazy_array"
 
 module OpenHAB
   module DSL
@@ -39,7 +39,7 @@ module OpenHAB
             group.name
           end
 
-          alias << command
+          alias_method :<<, :command
         end
 
         include Enumerable
@@ -69,7 +69,7 @@ module OpenHAB
         end
 
         # @deprecated
-        alias items members
+        alias_method :items, :members
 
         #
         # Iterates through the direct members of the Group
@@ -88,7 +88,7 @@ module OpenHAB
         #
         def all_members(filter = nil, &block)
           filter = nil if filter == :items
-          raise ArgumentError, 'filter must be :groups or :items' unless [:groups, nil].include?(filter)
+          raise ArgumentError, "filter must be :groups or :items" unless [:groups, nil].include?(filter)
 
           block = ->(i) { i.is_a?(GroupItem) } if filter
 

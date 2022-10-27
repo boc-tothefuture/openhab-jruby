@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require 'openhab/dsl/things'
-require_relative 'trigger'
+require "openhab/log/logger"
+require "openhab/dsl/things"
+require_relative "trigger"
 
 module OpenHAB
   module DSL
@@ -24,8 +24,8 @@ module OpenHAB
         #    end
         def channel_linked(attach: nil)
           @ruby_triggers << [:channel_linked]
-          trigger('core.GenericEventTrigger', eventTopic: 'openhab/links/*/added',
-                                              eventTypes: 'ItemChannelLinkAddedEvent', attach: attach)
+          trigger("core.GenericEventTrigger", eventTopic: "openhab/links/*/added",
+                                              eventTypes: "ItemChannelLinkAddedEvent", attach: attach)
         end
 
         #
@@ -45,8 +45,8 @@ module OpenHAB
         #    end
         def channel_unlinked(attach: nil)
           @ruby_triggers << [:channel_linked]
-          trigger('core.GenericEventTrigger', eventTopic: 'openhab/links/*/removed',
-                                              eventTypes: 'ItemChannelLinkRemovedEvent', attach: attach)
+          trigger("core.GenericEventTrigger", eventTopic: "openhab/links/*/removed",
+                                              eventTypes: "ItemChannelLinkRemovedEvent", attach: attach)
         end
       end
     end

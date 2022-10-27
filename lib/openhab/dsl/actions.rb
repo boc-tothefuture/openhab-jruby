@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'openhab/core/osgi'
+require "java"
+require "openhab/core/osgi"
 
 module OpenHAB
   module DSL
@@ -11,7 +11,7 @@ module OpenHAB
     module Actions
       include OpenHAB::Log
 
-      OpenHAB::Core::OSGI.services('org.openhab.core.model.script.engine.action.ActionService')&.each do |service|
+      OpenHAB::Core::OSGI.services("org.openhab.core.model.script.engine.action.ActionService")&.each do |service|
         java_import service.actionClass.to_s
         logger.trace("Loaded ACTION: #{service.actionClass}")
       end
@@ -43,7 +43,7 @@ module OpenHAB
         thing_uid = thing_uid.to_s
         action_keys = $actions.action_keys
         logger.trace("Registered actions: '#{action_keys}' for thing '#{thing_uid}'")
-        action_keys.map { |action_key| action_key.split('-', 2) }
+        action_keys.map { |action_key| action_key.split("-", 2) }
                    .select { |action_pair| action_pair.last == thing_uid }
                    .map(&:first)
                    .map { |scope| actions(scope, thing_uid) }
@@ -59,7 +59,7 @@ module OpenHAB
       #
       def notify(msg, email: nil)
         unless defined? NotificationAction
-          raise NoMethodError, 'NotificationAction is not available. Please install the OpenHAB cloud addon'
+          raise NoMethodError, "NotificationAction is not available. Please install the OpenHAB cloud addon"
         end
 
         if email

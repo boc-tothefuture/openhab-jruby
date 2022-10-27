@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openhab/log/configuration'
-require 'java'
+require "openhab/log/configuration"
+require "java"
 
 module OpenHAB
   module Core
@@ -63,17 +63,17 @@ module OpenHAB
       # Logs a map of key(value) with an optional preamble at trace level
       # @param [String] preamble to put at start of log message
       # @param [Hash] kwargs key and values to log
-      def state(preamble = 'State:', **kwargs)
+      def state(preamble = "State:", **kwargs)
         return unless trace?
 
         states = kwargs.transform_keys(&:to_s)
                        .transform_keys(&:capitalize)
-                       .transform_values { |v| v.nil? ? 'nil' : v }
+                       .transform_values { |v| v.nil? ? "nil" : v }
                        .map { |k, v| "#{k}(#{v})" }
-                       .join(' ')
+                       .join(" ")
         trace "#{preamble} #{states}"
       end
-      alias states state
+      alias_method :states, :state
 
       #
       # Cleans the backtrace of an error to remove internal calls. If logging is set
@@ -198,10 +198,10 @@ module OpenHAB
       # @return name for logger based on object
       def logger_name(object)
         name = Configuration.log_prefix
-        name += rules_file || ''
-        name += rule_name  || ''
-        name += klass_name(object) || ''
-        name.tr_s(' ', '_').gsub('::', '.')
+        name += rules_file || ""
+        name += rule_name  || ""
+        name += klass_name(object) || ""
+        name.tr_s(" ", "_").gsub("::", ".")
       end
 
       # Get the class name for the supplied object
@@ -222,8 +222,8 @@ module OpenHAB
       def java_klass(klass)
         if klass.respond_to?(:java_class) &&
            klass.java_class &&
-           !klass.java_class.name.start_with?('org.jruby.Ruby') &&
-           !klass.java_class.name.start_with?('org.jruby.gen')
+           !klass.java_class.name.start_with?("org.jruby.Ruby") &&
+           !klass.java_class.name.start_with?("org.jruby.gen")
           klass = klass.java_class
         end
         klass
@@ -237,12 +237,12 @@ module OpenHAB
         # Set it once as a class value so that threads not
         # tied to a rules file pick up the rules file they
         # were spawned from
-        @rules_file ||= log_caller&.downcase&.prepend('.')
+        @rules_file ||= log_caller&.downcase&.prepend(".")
       end
 
       # Get the name of the rule from the thread context
       def rule_name
-        Thread.current[:RULE_NAME]&.downcase&.prepend('.')
+        Thread.current[:RULE_NAME]&.downcase&.prepend(".")
       end
 
       # Filter out the base classes of Object and Module from the log name
@@ -261,7 +261,7 @@ module OpenHAB
         caller_locations.map(&:path)
                         .grep_v(/rubygems|openhab-scripting|<script>/)
                         .first
-                        .then { |caller| File.basename(caller, '.*') if caller }
+                        .then { |caller| File.basename(caller, ".*") if caller }
       end
     end
 

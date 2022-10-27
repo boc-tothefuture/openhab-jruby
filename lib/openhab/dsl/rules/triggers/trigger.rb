@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
 module OpenHAB
   module DSL
@@ -16,7 +16,7 @@ module OpenHAB
           extend Forwardable
 
           # Provide backwards compatibility for these fields
-          delegate :append_trigger => :@rule_triggers
+          delegate append_trigger: :@rule_triggers
 
           #
           # Separates groups from items, and flattens any nested arrays of items
@@ -54,9 +54,9 @@ module OpenHAB
           # @return [Array] Trigger and config for thing
           #
           def trigger_for_thing(thing:, type:, to: nil, from: nil)
-            config = { 'thingUID' => thing.uid.to_s }
-            config['status'] = trigger_state_from_symbol(to).to_s if to
-            config['previousStatus'] = trigger_state_from_symbol(from).to_s if from
+            config = { "thingUID" => thing.uid.to_s }
+            config["status"] = trigger_state_from_symbol(to).to_s if to
+            config["previousStatus"] = trigger_state_from_symbol(from).to_s if from
             [type, config]
           end
 

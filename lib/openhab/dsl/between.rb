@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'time/time_of_day'
-require_relative 'time/month_day'
+require_relative "time/time_of_day"
+require_relative "time/month_day"
 
 module OpenHAB
   module DSL
@@ -14,7 +14,7 @@ module OpenHAB
       # @since 2.4.0
       # @return Range object representing a TimeOfDay Range
       def between(range)
-        raise ArgumentError, 'Supplied object must be a range' unless range.is_a? Range
+        raise ArgumentError, "Supplied object must be a range" unless range.is_a? Range
 
         return OpenHAB::DSL::Between::MonthDayRange.range(range) if OpenHAB::DSL::Between::MonthDayRange.range?(range)
 

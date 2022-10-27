@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'java'
-require_relative 'cron'
+require "java"
+require_relative "cron"
 
 module OpenHAB
   module DSL
@@ -27,7 +27,7 @@ module OpenHAB
             )
 
             OpenHAB::Core.automation_manager.add_trigger_type(cron_trigger_type)
-            OpenHAB::Log.logger(self).trace('Added script cron trigger handler')
+            OpenHAB::Log.logger(self).trace("Added script cron trigger handler")
           end
 
           #
@@ -37,8 +37,8 @@ module OpenHAB
             TriggerType.new(
               OpenHAB::DSL::Rules::Triggers::Cron::CRON_TRIGGER_MODULE_ID,
               nil,
-              'A specific instant occurs',
-              'Triggers when the specified instant occurs',
+              "A specific instant occurs",
+              "Triggers when the specified instant occurs",
               nil,
               org.openhab.core.automation.Visibility::VISIBLE,
               nil
@@ -61,9 +61,9 @@ module OpenHAB
             #
             def initialize(trigger)
               @trigger = trigger
-              @scheduler = OpenHAB::Core::OSGI.service('org.openhab.core.scheduler.CronScheduler')
+              @scheduler = OpenHAB::Core::OSGI.service("org.openhab.core.scheduler.CronScheduler")
               @schedule = nil
-              @expression = trigger.configuration.get('cronExpression')
+              @expression = trigger.configuration.get("cronExpression")
               super(trigger)
             end
 
@@ -91,7 +91,7 @@ module OpenHAB
             # Execute the callback
             #
             def run
-              callback&.triggered(@trigger, { 'module' => @trigger.id })
+              callback&.triggered(@trigger, { "module" => @trigger.id })
             end
 
             #

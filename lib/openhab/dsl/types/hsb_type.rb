@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'java'
-require_relative 'percent_type'
+require "java"
+require_relative "percent_type"
 
 module OpenHAB
   module DSL
@@ -53,7 +53,7 @@ module OpenHAB
 
           # add additional "overloads" to the constructor
           # @!visibility private
-          def new(*args) # rubocop:disable Metrics
+          def new(*args)
             if args.length == 1 && args.first.respond_to?(:to_str)
               value = args.first.to_str
 
@@ -105,7 +105,7 @@ module OpenHAB
         #
         #   nil is returned if the two values are incomparable
         #
-        def <=>(other) # rubocop:disable Metrics
+        def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(Items::ColorItem) ||
              (other.is_a?(Items::GroupItem) && other.base_item.is_a?(ColorItem))
@@ -147,7 +147,7 @@ module OpenHAB
 
         # rename raw methods so we can overwrite them
         # @!visibility private
-        alias raw_hue hue
+        alias_method :raw_hue, :hue
 
         # @!attribute [r] hue
         # @return [QuantityType]
@@ -160,7 +160,7 @@ module OpenHAB
         # The alpha component is always 100%.
         #
         # @return [Integer]
-        alias argb rgb
+        alias_method :argb, :rgb
 
         # Convert to a packed 24-bit RGB value representing the color in the default sRGB color model.
         # @return [Integer]
@@ -171,7 +171,7 @@ module OpenHAB
         # Convert to an HTML-style string of 6 hex characters in the default sRGB color model.
         # @return [String] +'#xxxxxx'+
         def to_hex
-          Kernel.format('#%06x', rgb)
+          Kernel.format("#%06x", rgb)
         end
 
         # include units

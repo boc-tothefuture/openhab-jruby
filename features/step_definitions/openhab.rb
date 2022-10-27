@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'securerandom'
-require 'json'
+require "securerandom"
+require "json"
 
-Given('Clean OpenHAB with latest Ruby Libraries') do
+Given("Clean OpenHAB with latest Ruby Libraries") do
   attempt = 1
   begin
     delete_rules
@@ -12,7 +12,7 @@ Given('Clean OpenHAB with latest Ruby Libraries') do
     delete_things
     delete_conf_foo
     truncate_log
-  rescue StandardError => e
+  rescue => e
     raise if attempt > 2
 
     attempt += 1
@@ -44,7 +44,7 @@ Then(%r{^It should log /(.*)/ within (\d+) seconds$}) do |regex, seconds|
   end
 end
 
-Then('It should log a line matching regex {string} within {int} seconds') do |regex, seconds|
+Then("It should log a line matching regex {string} within {int} seconds") do |regex, seconds|
   wait_until(seconds: seconds.to_i,
              msg: "'#{regex}' not found in log file (#{openhab_log}) within #{seconds} seconds") do
     check_log_regexp(regex)
@@ -52,7 +52,7 @@ Then('It should log a line matching regex {string} within {int} seconds') do |re
 end
 
 # rubocop:disable Layout/LineLength
-Then('It should log only {string} at level {string} from {string} within {int} seconds') do |entry, level, logger, seconds|
+Then("It should log only {string} at level {string} from {string} within {int} seconds") do |entry, level, logger, seconds|
   # 2021-11-15 19:24:34.574 [INFO ] [org.openhab.automation.jruby.rules.log_test] - Log Test
   # Trim level to the right most 36 chars (per logging config)
   logger_length = 36
@@ -65,48 +65,48 @@ Then('It should log only {string} at level {string} from {string} within {int} s
 end
 # rubocop:enable Layout/LineLength
 
-Then('It should not log {string} within {int} seconds') do |string, seconds|
+Then("It should not log {string} within {int} seconds") do |string, seconds|
   not_for(seconds: seconds, msg: "'#{string}'' found in log file (#{openhab_log}) within #{seconds} seconds") do
     check_log(string)
   end
 end
 
-Given('OpenHAB is stopped') do
+Given("OpenHAB is stopped") do
   stop_openhab
 end
 
-When('I start OpenHAB') do
+When("I start OpenHAB") do
   start_openhab
 end
 
-Given('GEM_HOME is empty') do
+Given("GEM_HOME is empty") do
   clear_gem_path
 end
 
-Given('a services template filed named {string}') do |file, doc_string|
+Given("a services template filed named {string}") do |file, doc_string|
   File.write(File.join(services_dir, file), ERB.new(doc_string).result)
 end
 
-Given('group {string}') do |group|
+Given("group {string}") do |group|
   add_group(name: group)
 end
 
-Given('groups:') do |table|
+Given("groups:") do |table|
   table.hashes.each do |row|
-    item = item_from_row(row, type: 'Group', group_type: row['type'])
+    item = item_from_row(row, type: "Group", group_type: row["type"])
     add_item(item: item)
   end
 end
 
 def nil_if_blank(str)
-  str = nil if str&.strip == ''
+  str = nil if str&.strip == ""
   str
 end
 
 def check_items(added:)
   wait_until(seconds: 10, msg: "Not all #{added} items were added") do
-    (added.map(&:name) - (Rest.items.map { |item| item['name'] })).empty?
-  rescue StandardError
+    (added.map(&:name) - (Rest.items.map { |item| item["name"] })).empty?
+  rescue
     false
   end
 end
@@ -114,89 +114,89 @@ end
 Given(/(?: I add)?items:/) do |table|
   items = []
   table.hashes.each do |row|
-    item = item_from_row(row, type: row['type'])
+    item = item_from_row(row, type: row["type"])
     add_item(item: item)
     items << item
   end
   check_items(added: items)
 end
 
-Given('linked:') do |table|
+Given("linked:") do |table|
   table.hashes.each do |row|
-    link_item(item_name: row['item'], channel_uid: row['channel'])
+    link_item(item_name: row["item"], channel_uid: row["channel"])
   end
 end
 
-Given('things:') do |table|
+Given("things:") do |table|
   table.hashes.each do |row|
-    id = row['id']
-    thing_type_uid = row['thing_uid']
-    label = row['label']
-    uid = [thing_type_uid, id].join(':')
-    config = nil_if_blank(row['config'])
+    id = row["id"]
+    thing_type_uid = row["thing_uid"]
+    label = row["label"]
+    uid = [thing_type_uid, id].join(":")
+    config = nil_if_blank(row["config"])
     config = JSON.parse(config) if config
     Rest.add_thing(id: id, uid: uid, thing_type_uid: thing_type_uid, label: label, config: config)
-    status = nil_if_blank(row['status'])
+    status = nil_if_blank(row["status"])
     openhab_client("openhab:things #{status} #{uid}") if status
   end
 end
 
-When('thing {string} is disabled') do |thing|
+When("thing {string} is disabled") do |thing|
   openhab_client("openhab:things disable #{thing}")
 end
 
-When('thing {string} is enabled') do |thing|
+When("thing {string} is enabled") do |thing|
   openhab_client("openhab:things enable #{thing}")
 end
 
-Given('item states:') do |table|
+Given("item states:") do |table|
   table.hashes.each do |row|
-    item = row['item']
-    state = row['state']
+    item = row["item"]
+    state = row["state"]
     Rest.set_item_state(item, state)
   end
 end
 
-Then('The rule {string} should have {string} as its description') do |rule, description|
+Then("The rule {string} should have {string} as its description") do |rule, description|
   rule_details = Rest.rule(rule: rule)
-  unless rule_details['description']&.chomp == description.chomp
-    raise "Rule #{rule} has description '#{rule_details['description']}' instead of '#{description}'"
+  unless rule_details["description"]&.chomp == description.chomp
+    raise "Rule #{rule} has description '#{rule_details["description"]}' instead of '#{description}'"
   end
 end
 
-Given('item updates:') do |table|
+Given("item updates:") do |table|
   table.hashes.each do |row|
-    item = row['item']
-    state = row['state']
+    item = row["item"]
+    state = row["state"]
     openhab_client("openhab:update #{item} #{state}")
   end
 end
 
-When('item {string} state is changed to {string}') do |item, state|
+When("item {string} state is changed to {string}") do |item, state|
   openhab_client("openhab:send #{item} #{state}")
 end
 
-Then('If I send command {string} to item {string}') do |state, item|
+Then("If I send command {string} to item {string}") do |state, item|
   openhab_client("openhab:send #{item} #{state}")
 end
 
-When('update state for item {string} to {string}') do |item, state|
+When("update state for item {string} to {string}") do |item, state|
   openhab_client("openhab:update #{item} \"#{state}\"")
 end
 
-When('channel {string} is triggered') do |channel|
+When("channel {string} is triggered") do |channel|
   openhab_client("openhab:things trigger #{channel}")
 end
 
-Given('feature {string} installed') do |feature|
+Given("feature {string} installed") do |feature|
   install_feature(feature)
 end
 
-When('channel {string} is triggered with {string}') do |channel, event|
+When("channel {string} is triggered with {string}") do |channel, event|
   openhab_client("openhab:things trigger #{channel} #{event}")
 end
 
-Then('{string} should be in state {string} within {int} seconds') do |item, state, seconds|
+Then("{string} should be in state {string} within {int} seconds") do |item, state, seconds|
   msg = -> { "'#{item}' did not get set to (#{state}) was (#{Rest.item_state(item)}) within #{seconds} seconds" }
 
   wait_until(seconds: seconds, msg: msg) do
@@ -204,7 +204,7 @@ Then('{string} should be in state {string} within {int} seconds') do |item, stat
   end
 end
 
-Then('{string} should stay in state {string} for {int} seconds') do |item, state, seconds|
+Then("{string} should stay in state {string} for {int} seconds") do |item, state, seconds|
   elapsed = 0
   seconds.times do
     unless Rest.item_state(item) == state
@@ -217,18 +217,18 @@ Then('{string} should stay in state {string} for {int} seconds') do |item, state
   end
 end
 
-Given('metadata added to {string} in namespace {string}:') do |item, namespace, config|
+Given("metadata added to {string} in namespace {string}:") do |item, namespace, config|
   response = Rest.add_metadata(item: item, namespace: namespace, config: config)
   raise "Response #{response.pretty_inspect} Request #{response.request.pretty_inspect}" unless response.success?
 end
 
-Given('(set )log level (to ){word}') do |level|
-  set_log_level('org.openhab.automation.jruby', level)
-  set_log_level('org.openhab.automation.jrubyscripting', level)
-  set_log_level('org.openhab.core.automation', level)
+Given("(set )log level (to ){word}") do |level|
+  set_log_level("org.openhab.automation.jruby", level)
+  set_log_level("org.openhab.automation.jrubyscripting", level)
+  set_log_level("org.openhab.core.automation", level)
 end
 
-Given('log level for {word} is set to {word}') do |bundle, level|
+Given("log level for {word} is set to {word}") do |bundle, level|
   set_log_level(bundle, level)
 end
 
@@ -239,21 +239,21 @@ end
 #
 # @return [Item]
 #
-def item_from_row(row, type:, group_type: nil) # rubocop:disable Metrics/AbcSize
-  name = row['name']
-  label = nil_if_blank(row['label'])
-  pattern = nil_if_blank(row['pattern'])
-  function = nil_if_blank(row['function'])
-  state = nil_if_blank(row['state'])
+def item_from_row(row, type:, group_type: nil)
+  name = row["name"]
+  label = nil_if_blank(row["label"])
+  pattern = nil_if_blank(row["pattern"])
+  function = nil_if_blank(row["function"])
+  state = nil_if_blank(row["state"])
 
-  params = array_from_list(row['params'])
-  groups = array_from_list(row['group'], row['groups'])
-  tags = array_from_list(row['tag'], row['tags'])
+  params = array_from_list(row["params"])
+  groups = array_from_list(row["group"], row["groups"])
+  tags = array_from_list(row["tag"], row["tags"])
 
   Item.new(type: type, name: name, label: label, tags: tags, groups: groups, group_type: group_type,
            pattern: pattern, function: function, params: params, state: state)
 end
 
 def array_from_list(*list)
-  list.compact.flat_map { |data| data.split(',').map(&:strip) }
+  list.compact.flat_map { |data| data.split(",").map(&:strip) }
 end

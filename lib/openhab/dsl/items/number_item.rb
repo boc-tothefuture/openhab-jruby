@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/items/numeric_item'
+require "openhab/dsl/items/numeric_item"
 
 module OpenHAB
   module DSL

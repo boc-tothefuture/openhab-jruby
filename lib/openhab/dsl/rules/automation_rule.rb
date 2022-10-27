@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'java'
-require 'openhab/core/thread_local'
-require 'openhab/log/logger'
-require 'openhab/dsl/between'
+require "java"
+require "openhab/core/thread_local"
+require "openhab/log/logger"
+require "openhab/dsl/between"
 
-require_relative 'item_event'
+require_relative "item_event"
 
 module OpenHAB
   module DSL
@@ -16,7 +16,6 @@ module OpenHAB
       #
       # JRuby extension to OpenHAB Rule
       #
-      # rubocop: disable Metrics/ClassLength
       # Disabled because this class has a single responsibility, there does not appear a logical
       # way of breaking it up into multiple classes
       class AutomationRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
@@ -32,7 +31,7 @@ module OpenHAB
         # @param [Config] config Rule configuration
         #
         # Constructor sets a number of variables, no further decomposition necessary
-        def initialize(config:) # rubocop:disable Metrics
+        def initialize(config:)
           # Metrics disabled because only setters are called or defaults set.
           super()
           set_name(config.name)
@@ -61,7 +60,7 @@ module OpenHAB
           OpenHAB::DSL.import_presets
           thread_local(RULE_NAME: name) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
-            logger.trace { "Event details #{inputs['event'].inspect}" } if inputs&.key?('event')
+            logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
             trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
               process_queue(create_queue(inputs), mod, inputs)
             end
@@ -101,10 +100,10 @@ module OpenHAB
         # @return [Object] event object
         #
         def extract_event(inputs)
-          event = inputs&.dig('event')
+          event = inputs&.dig("event")
           unless event
             event = Struct.new(:event, :attachment, :command).new
-            event.command = inputs&.dig('command')
+            event.command = inputs&.dig("command")
           end
           add_attachment(event, inputs)
         end
@@ -115,7 +114,7 @@ module OpenHAB
         # @return [Hash] Input hash potentially containing trigger id
         #
         def trigger_id(inputs)
-          inputs&.dig('module')
+          inputs&.dig("module")
         end
 
         #
@@ -153,7 +152,6 @@ module OpenHAB
         #
         # @return [Boolean] True if guards says rule should execute, false otherwise
         #
-        # rubocop:disable Metrics/MethodLength
         # Loggging inflates method length
         def check_guards(event:)
           if @guard.should_run? event
@@ -168,10 +166,9 @@ module OpenHAB
             logger.trace("Skipped execution of rule '#{name}' because of guard #{@guard}")
           end
           false
-        rescue StandardError => e
+        rescue => e
           logger.log_exception(e, name)
         end
-        # rubocop:enable Metrics/MethodLength
 
         #
         # Process the run queue
@@ -192,7 +189,7 @@ module OpenHAB
               process_task(event, task)
             end
           end
-        rescue StandardError => e
+        rescue => e
           logger.log_exception(e, name)
         end
 
@@ -317,4 +314,3 @@ module OpenHAB
     end
   end
 end
-# rubocop: enable Metrics/ClassLength

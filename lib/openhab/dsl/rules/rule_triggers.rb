@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'java'
-require 'securerandom'
-require 'openhab/log/logger'
-require_relative 'triggers/conditions/proc'
+require "forwardable"
+require "java"
+require "securerandom"
+require "openhab/log/logger"
+require_relative "triggers/conditions/proc"
 
 module OpenHAB
   module DSL
@@ -92,7 +92,7 @@ module OpenHAB
         def inspect
           "Triggers: (#{triggers}) " \
             "Trigger Conditions: #{trigger_conditions} " \
-            "Trigger UIDs: #{triggers.map(&:id).join(', ')}" \
+            "Trigger UIDs: #{triggers.map(&:id).join(", ")}" \
             "Attachments: #{attachments} "
         end
       end

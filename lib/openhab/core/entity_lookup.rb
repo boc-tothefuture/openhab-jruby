@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require_relative 'item_proxy'
+require "openhab/log/logger"
+require_relative "item_proxy"
 
 # Automation lookup and injection of OpenHab entities
 
@@ -39,8 +39,8 @@ module OpenHAB
         logger.trace("Checking if OpenHAB entites exist for #{method_name}")
         method_name = method_name.to_s if method_name.is_a? Symbol
 
-        method_name == 'scriptLoaded' ||
-          method_name == 'scriptUnloaded' ||
+        method_name == "scriptLoaded" ||
+          method_name == "scriptUnloaded" ||
           EntityLookup.lookup_entity(method_name) ||
           super
       end
@@ -74,9 +74,9 @@ module OpenHAB
         name = name.to_s if name.is_a? Symbol
 
         # Thing UIDs have at least 3 segements
-        return if name.count('_') < 3
+        return if name.count("_") < 3
 
-        name = name.tr('_', ':')
+        name = name.tr("_", ":")
         result = $things.get(org.openhab.core.thing.ThingUID.new(name))
         result = Thing.new(result) if result
         result

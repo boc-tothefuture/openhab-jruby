@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'timers/timer'
-require_relative 'timers/manager'
-require_relative 'timers/reentrant_timer'
+require_relative "timers/timer"
+require_relative "timers/manager"
+require_relative "timers/reentrant_timer"
 
 module OpenHAB
   module DSL
@@ -39,7 +39,7 @@ module OpenHAB
         OpenHAB::DSL::Timer.new(duration: duration, thread_locals: thread_locals, &block)
       end
       # An alias for +after+
-      alias create_timer after
+      alias_method :create_timer, :after
 
       #
       # Provdes access to the hash for mapping timer ids to the set of active timers associated with that id
@@ -68,7 +68,7 @@ module OpenHAB
           logger.trace("Reentrant timer found - #{timer}")
           timer.cancel
         else
-          logger.trace('No reentrant timer found, creating new timer')
+          logger.trace("No reentrant timer found, creating new timer")
         end
         OpenHAB::DSL::ReentrantTimer.new(duration: duration, id: id, thread_locals: thread_locals, &block)
       end

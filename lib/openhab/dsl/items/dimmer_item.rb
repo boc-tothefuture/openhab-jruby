@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'numeric_item'
+require_relative "numeric_item"
 
 module OpenHAB
   module DSL

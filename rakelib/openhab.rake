@@ -1,29 +1,28 @@
 # frozen_string_literal: true
 
-require 'open-uri'
-require 'tty-command'
-require 'process_exists'
-require 'erb'
-require 'digest/md5'
-require 'net/http'
+require "open-uri"
+require "tty-command"
+require "process_exists"
+require "erb"
+require "digest/md5"
+require "net/http"
 
-# rubocop: disable Metrics/BlockLength
 # Disabled due to part of buid / potentially refactor into classes
 # rubocop: disable Rake/MethodDefinitionInTask Legacy code
 namespace :openhab do
-  @openhab_version = ENV['OPENHAB_VERSION'] || '3.3.0'
+  @openhab_version = ENV["OPENHAB_VERSION"] || "3.3.0"
   @port_numbers = {
-    ssh: { port: ENV['OPENHAB_SSH_PORT'] || 8101, config: 'org.apache.karaf.shell:sshPort' },
-    lsp: { port: ENV['OPENHAB_LSP_PORT'] || 5007, config: 'org.openhab.lsp:port' }
+    ssh: { port: ENV["OPENHAB_SSH_PORT"] || 8101, config: "org.apache.karaf.shell:sshPort" },
+    lsp: { port: ENV["OPENHAB_LSP_PORT"] || 5007, config: "org.openhab.lsp:port" }
   }
-  karaf_client_path = File.join(OPENHAB_DIR, 'runtime/bin/client')
-  karaf_client_args = [karaf_client_path, '-a', @port_numbers[:ssh][:port], '-p', 'habopen'].freeze
-  @karaf_client = karaf_client_args.join(' ')
-  @deploy_dir = File.join(OPENHAB_DIR, 'conf/automation/jsr223/ruby/personal')
-  @state_dir = File.join(OPENHAB_DIR, 'rake_state')
-  @services_config_file = File.join(OPENHAB_DIR, 'conf/services/jruby.cfg')
-  @addons_config_file = File.join(OPENHAB_DIR, 'conf/services/addons.cfg')
-  @port_config_file = File.join(OPENHAB_DIR, 'conf/services/port_config.cfg')
+  karaf_client_path = File.join(OPENHAB_DIR, "runtime/bin/client")
+  karaf_client_args = [karaf_client_path, "-a", @port_numbers[:ssh][:port], "-p", "habopen"].freeze
+  @karaf_client = karaf_client_args.join(" ")
+  @deploy_dir = File.join(OPENHAB_DIR, "conf/automation/jsr223/ruby/personal")
+  @state_dir = File.join(OPENHAB_DIR, "rake_state")
+  @services_config_file = File.join(OPENHAB_DIR, "conf/services/jruby.cfg")
+  @addons_config_file = File.join(OPENHAB_DIR, "conf/services/addons.cfg")
+  @port_config_file = File.join(OPENHAB_DIR, "conf/services/port_config.cfg")
 
   CLOBBER << OPENHAB_DIR
   CLOBBER << @services_config_file
@@ -32,12 +31,12 @@ namespace :openhab do
   CLEAN << @deploy_dir
 
   def command_success?(command)
-    cmd = TTY::Command.new(:printer => :null)
+    cmd = TTY::Command.new(printer: :null)
     cmd.run!(command).success?
   end
 
   def running?(fail_on_error: false)
-    karaf_status = File.join(OPENHAB_DIR, 'runtime/bin/status')
+    karaf_status = File.join(OPENHAB_DIR, "runtime/bin/status")
 
     return false unless File.exist? karaf_status
 
@@ -53,13 +52,13 @@ namespace :openhab do
   def openhab_port
     command = "#{@karaf_client} 'system:property org.osgi.service.http.port'"
 
-    cmd = TTY::Command.new(:printer => :null)
+    cmd = TTY::Command.new(printer: :null)
     cmd.run!(command).out.chomp
   end
 
   # Check if openhab is listening on port 8080
   def http_ready?
-    uri = URI('http://127.0.0.1/')
+    uri = URI("http://127.0.0.1/")
     uri.port = openhab_port
     Net::HTTP.start(uri.host, uri.port) do |http|
       request = Net::HTTP::Get.new uri
@@ -74,16 +73,16 @@ namespace :openhab do
 
     command = "#{@karaf_client} 'system:start-level'"
 
-    cmd = TTY::Command.new(:printer => :null)
-    ready = cmd.run!(command).out.chomp.casecmp?('Level 100')
+    cmd = TTY::Command.new(printer: :null)
+    ready = cmd.run!(command).out.chomp.casecmp?("Level 100")
     ready &&= http_ready?
-    raise 'OpenHAB is not ready' if !ready && fail_on_error
+    raise "OpenHAB is not ready" if !ready && fail_on_error
 
     ready
   end
 
   def ensure_openhab_running
-    abort('Openhab not running') unless running?
+    abort("Openhab not running") unless running?
   end
 
   def print_and_flush(string)
@@ -106,31 +105,31 @@ namespace :openhab do
     duration.times do
       return true if yield
 
-      print_and_flush '.'
+      print_and_flush "."
       sleep 1
     end
     false
   ensure
-    puts ''
+    puts ""
   end
 
   def gem_home
     full_path = File.realpath OPENHAB_DIR
-    File.join(full_path, '/conf/scripts/lib/ruby/gem_home')
+    File.join(full_path, "/conf/scripts/lib/ruby/gem_home")
   end
 
   def ruby_lib_dir
     full_path = File.realpath OPENHAB_DIR
-    File.join(full_path, '/conf/automation/lib/ruby/personal')
+    File.join(full_path, "/conf/automation/lib/ruby/personal")
   end
 
   def ruby_env
-    { 'GEM_HOME' => gem_home }
+    { "GEM_HOME" => gem_home }
   end
 
   def state(task, args = nil)
     Rake::Task[@state_dir.to_s].execute
-    task_file = File.join(@state_dir, task).tr(':', '_')
+    task_file = File.join(@state_dir, task).tr(":", "_")
     force = args&.key? :force
     if File.exist?(task_file) && !force
       puts "Skipping task(#{task}), task already up to date"
@@ -145,17 +144,17 @@ namespace :openhab do
   directory @state_dir
   directory CUCUMBER_LOGS
 
-  desc 'Download Openhab and unzip it'
+  desc "Download Openhab and unzip it"
   task download: [OPENHAB_DIR] do |task|
     state(task.name) do
       openhab_zip = "openhab-#{@openhab_version}.zip"
       download_url = case @openhab_version
                      when /.*-SNAPSHOT/
-                       'https://ci.openhab.org/job/openHAB3-Distribution/lastSuccessfulBuild/artifact/'\
+                       "https://ci.openhab.org/job/openHAB3-Distribution/lastSuccessfulBuild/artifact/"\
                        "distributions/openhab/target/#{openhab_zip}"
                      else
                        # The same for releases and milestones
-                       'https://github.com/openhab/openhab-distro/releases/download/'\
+                       "https://github.com/openhab/openhab-distro/releases/download/"\
                        "#{@openhab_version}/#{openhab_zip}"
                      end
       Dir.chdir(OPENHAB_DIR) do
@@ -169,7 +168,7 @@ namespace :openhab do
     end
   end
 
-  desc 'Setup services config'
+  desc "Setup services config"
   task :services, [:force] => [:download] do |task, args|
     state(task.name, args) do
       mkdir_p gem_home
@@ -183,20 +182,20 @@ namespace :openhab do
   end
 
   def bundle_id
-    karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').lines.last[/^\d\d\d/].chomp
+    karaf("bundle:list --no-format org.openhab.automation.jrubyscripting").lines.last[/^\d\d\d/].chomp
   end
 
-  desc 'Install JRuby Bundle'
+  desc "Install JRuby Bundle"
   task bundle: [:download, :services, @deploy_dir] do |task|
     state(task.name) do
-      File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: "a")
     end
   end
 
-  desc 'Upgrade JRuby Bundle'
+  desc "Upgrade JRuby Bundle"
   task :upgrade, [:file] do |_, args|
     start
-    if karaf('bundle:list --no-format org.openhab.automation.jrubyscripting').include?('Active')
+    if karaf("bundle:list --no-format org.openhab.automation.jrubyscripting").include?("Active")
       source = args[:file] ? "file://#{args[:file]}" : @jruby_bundle
       karaf("bundle:update #{bundle_id} #{source}")
     else
@@ -209,164 +208,163 @@ namespace :openhab do
     File.write(@port_config_file, port_config) unless port_config.empty?
   end
 
-  desc 'Configure'
+  desc "Configure"
   task configure: %i[download] do |task|
     # Set log levels
     state(task.name) do
       configure_ports
       start
-      karaf('log:set TRACE org.openhab.automation.jruby')
-      karaf('log:set TRACE org.openhab.core.automation')
-      karaf('log:set TRACE org.openhab.automation.jrubyscripting')
-      karaf('openhab:users add foo foo administrator')
-      karaf('config:property-set -p org.openhab.restauth allowBasicAuth true')
-      sh 'rsync', '-aih', 'config/userdata/', File.join(OPENHAB_DIR, 'userdata')
+      karaf("log:set TRACE org.openhab.automation.jruby")
+      karaf("log:set TRACE org.openhab.core.automation")
+      karaf("log:set TRACE org.openhab.automation.jrubyscripting")
+      karaf("openhab:users add foo foo administrator")
+      karaf("config:property-set -p org.openhab.restauth allowBasicAuth true")
+      sh "rsync", "-aih", "config/userdata/", File.join(OPENHAB_DIR, "userdata")
     end
   end
 
   def karaf_log
-    File.join(TMP_DIR, 'karaf.log')
+    File.join(TMP_DIR, "karaf.log")
   end
 
   def restart
-    puts 'Restarting OpenHAB'
+    puts "Restarting OpenHAB"
     stop
     start
-    puts 'OpenHAB Restarted'
+    puts "OpenHAB Restarted"
   end
 
   def wait_till_running
-    wait_for(20, 'OpenHAB to start') { running? }
-    abort 'Unable to start OpenHAB' unless running?(fail_on_error: true)
+    wait_for(20, "OpenHAB to start") { running? }
+    abort "Unable to start OpenHAB" unless running?(fail_on_error: true)
 
-    wait_for(20, 'OpenHAB to become ready') { ready? }
-    abort 'OpenHAB did not become ready' unless ready?(fail_on_error: true)
+    wait_for(20, "OpenHAB to become ready") { ready? }
+    abort "OpenHAB did not become ready" unless ready?(fail_on_error: true)
   end
 
   def openhab_env
     {
-      'LANG' => ENV['LANG'],
-      'JAVA_HOME' => ENV['JAVA_HOME'],
-      'KARAF_REDIRECT' => karaf_log,
-      'EXTRA_JAVA_OPTS' => '-Xmx4g',
-      'OPENHAB_HTTP_PORT' => ENV['OPENHAB_HTTP_PORT'] || '8080',
-      'OPENHAB_HTTPS_PORT' => ENV['OPENHAB_HTTPS_PORT'] || '8443'
+      "LANG" => ENV["LANG"],
+      "JAVA_HOME" => ENV["JAVA_HOME"],
+      "KARAF_REDIRECT" => karaf_log,
+      "EXTRA_JAVA_OPTS" => "-Xmx4g",
+      "OPENHAB_HTTP_PORT" => ENV["OPENHAB_HTTP_PORT"] || "8080",
+      "OPENHAB_HTTPS_PORT" => ENV["OPENHAB_HTTPS_PORT"] || "8443"
     }
   end
 
   def start
-    return puts 'OpenHAB already running' if running?
+    return puts "OpenHAB already running" if running?
 
     Dir.chdir(OPENHAB_DIR) do
-      puts 'Starting OpenHAB'
+      puts "Starting OpenHAB"
       # Running inside of bundler breaks GEM_HOME, so we run with a clean environment passing through
       # only specific variables
-      pid = spawn(openhab_env, 'runtime/bin/start', unsetenv_others: true)
+      pid = spawn(openhab_env, "runtime/bin/start", unsetenv_others: true)
       Process.detach(pid)
     end
     wait_till_running
-    puts 'OpenHAB started and ready'
+    puts "OpenHAB started and ready"
   end
 
-  desc 'Start OpenHAB'
+  desc "Start OpenHAB"
   task start: %i[download] do
     start
   end
 
-  desc 'Start OpenHAB Karaf Client'
+  desc "Start OpenHAB Karaf Client"
   task :client do
     exec(@karaf_client)
   end
 
   def stop
     if running?
-      pid = File.read(File.join(OPENHAB_DIR, 'userdata/tmp/karaf.pid')).chomp.to_i
+      pid = File.read(File.join(OPENHAB_DIR, "userdata/tmp/karaf.pid")).chomp.to_i
       Dir.chdir(OPENHAB_DIR) do
-        fail_on_error('runtime/bin/stop')
+        fail_on_error("runtime/bin/stop")
       end
-      stopped = wait_for(60, 'OpenHAB to stop') { Process.exists?(pid) == false }
-      abort 'Unable to stop OpenHAB' unless stopped
+      stopped = wait_for(60, "OpenHAB to stop") { Process.exists?(pid) == false }
+      abort "Unable to stop OpenHAB" unless stopped
     end
 
-    puts 'OpenHAB Stopped'
+    puts "OpenHAB Stopped"
   end
 
-  desc 'Stop OpenHAB'
+  desc "Stop OpenHAB"
   task :stop do
     stop
   end
 
-  desc 'Clobber local Openhab'
+  desc "Clobber local Openhab"
   task :clobber do
     stop if running?
 
     rm_rf OPENHAB_DIR
   end
 
-  desc 'Create a Dev Dump in OpenHAB and wait until its complete'
+  desc "Create a Dev Dump in OpenHAB and wait until its complete"
   task :dump do
-    dumps = File.join(OPENHAB_DIR, 'userdata', '*.zip')
+    dumps = File.join(OPENHAB_DIR, "userdata", "*.zip")
 
-    puts 'Deleting any existing dumps'
+    puts "Deleting any existing dumps"
     dump = Dir[dumps].each { |dump_file| rm dump_file }
 
-    karaf('dev:dump-create --no-heap-dump')
+    karaf("dev:dump-create --no-heap-dump")
 
-    wait_for(30, 'Dump to be created') do
+    wait_for(30, "Dump to be created") do
       Dir[dumps].any?
     end
     dump = Dir[dumps].first
     puts "Found dev dump #{dump}"
     dump_sizes = Array.new(10)
-    wait_for(120, 'Dump size to not increase for 10 seconds') do
+    wait_for(120, "Dump size to not increase for 10 seconds") do
       dump_sizes << File.size(dump)
       dump_sizes.last(10).uniq.length == 1
     end
   end
 
-  desc 'Warmup OpenHab environment'
+  desc "Warmup OpenHab environment"
   task warmup: [:prepare, @deploy_dir, CUCUMBER_LOGS] do
     start
-    openhab_log = File.join(OPENHAB_DIR, 'userdata/logs/openhab.log')
+    openhab_log = File.join(OPENHAB_DIR, "userdata/logs/openhab.log")
 
-    file = File.join('openhab_rules', 'warmup.rb')
-    dest_file = File.join(@deploy_dir, "#{File.basename(file, '.rb')}_#{Time.now.to_i}.rb")
+    file = File.join("openhab_rules", "warmup.rb")
+    dest_file = File.join(@deploy_dir, "#{File.basename(file, ".rb")}_#{Time.now.to_i}.rb")
     cp file, dest_file
-    wait_for(20, 'OpenHAB to warmup') do
+    wait_for(20, "OpenHAB to warmup") do
       File.foreach(openhab_log).grep(/OpenHAB warmup complete/).any?
     end
     rm dest_file
-    cp openhab_log, File.join(CUCUMBER_LOGS, 'warmup.log')
-    cp karaf_log, File.join(CUCUMBER_LOGS, 'karaf-warmup.log')
+    cp openhab_log, File.join(CUCUMBER_LOGS, "warmup.log")
+    cp karaf_log, File.join(CUCUMBER_LOGS, "karaf-warmup.log")
   end
 
-  desc 'Prepare local Openhab'
+  desc "Prepare local Openhab"
   task prepare: [:download, :configure, :bundle, :deploy, CUCUMBER_LOGS]
 
-  desc 'Setup local Openhab'
+  desc "Setup local Openhab"
   task setup: %i[prepare stop]
 
-  desc 'Deploy to local Openhab'
+  desc "Deploy to local Openhab"
   task deploy: %i[download build] do |_task|
     mkdir_p gem_home
     gem_file = File.join(PACKAGE_DIR, "openhab-scripting-#{OpenHAB::VERSION}.gem")
     fail_on_error("gem install #{gem_file} -i #{gem_home} --no-document")
   end
 
-  desc 'Clean up local gems'
+  desc "Clean up local gems"
   task :cleanupgems do
-    fail_on_error('gem uninstall openhab-scripting -a', ruby_env)
+    fail_on_error("gem uninstall openhab-scripting -a", ruby_env)
   end
 
-  desc 'Deploy adhoc test Openhab'
+  desc "Deploy adhoc test Openhab"
   task adhoc: [:deploy, @deploy_dir] do
-    Dir.glob(File.join(@deploy_dir, '*.rb')) { |file| rm file }
-    Dir.glob(File.join('test/', '*.rb')) do |file|
-      dest_name = "#{File.basename(file, '.rb')}_#{Time.now.to_i}.rb"
+    Dir.glob(File.join(@deploy_dir, "*.rb")) { |file| rm file }
+    Dir.glob(File.join("test/", "*.rb")) do |file|
+      dest_name = "#{File.basename(file, ".rb")}_#{Time.now.to_i}.rb"
       cp file, File.join(@deploy_dir, dest_name)
     end
   end
 end
 
-# rubocop: enable Metrics/BlockLength
 # rubocop: enable Rake/MethodDefinitionInTask

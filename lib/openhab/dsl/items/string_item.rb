@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
-require 'openhab/dsl/items/comparable_item'
+require "openhab/dsl/items/comparable_item"
 
 module OpenHAB
   module DSL

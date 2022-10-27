@@ -1,26 +1,26 @@
 # frozen_string_literal: true
 
-require 'openhab/dsl/monkey_patch/events/item_command'
-require 'openhab/dsl/types/types'
+require "openhab/dsl/monkey_patch/events/item_command"
+require "openhab/dsl/types/types"
 
-require_relative 'registry'
+require_relative "registry"
 
-require_relative 'generic_item'
-require_relative 'switch_item'
-require_relative 'date_time_item'
-require_relative 'dimmer_item'
-require_relative 'color_item'
-require_relative 'contact_item'
-require_relative 'group_item'
-require_relative 'image_item'
-require_relative 'location_item'
-require_relative 'number_item'
-require_relative 'player_item'
-require_relative 'rollershutter_item'
-require_relative 'string_item'
+require_relative "generic_item"
+require_relative "switch_item"
+require_relative "date_time_item"
+require_relative "dimmer_item"
+require_relative "color_item"
+require_relative "contact_item"
+require_relative "group_item"
+require_relative "image_item"
+require_relative "location_item"
+require_relative "number_item"
+require_relative "player_item"
+require_relative "rollershutter_item"
+require_relative "string_item"
 
-require_relative 'ensure'
-require_relative 'timed_command'
+require_relative "ensure"
+require_relative "timed_command"
 
 module OpenHAB
   module DSL
@@ -57,7 +57,8 @@ module OpenHAB
 
         # defined methods for commanding an item to one of the Enum states
         # as well as predicates for if an ItemCommandEvent is one of those commands
-        def def_command_methods(klass) # rubocop:disable Metrics method has single purpose
+        def def_command_methods(klass)
+          method has single purpose
           values_for_enums(klass.ACCEPTED_COMMAND_TYPES).each do |value|
             command = OpenHAB::DSL::COMMAND_ALIASES[value.to_s]
             next if klass.instance_methods.include?(command)

@@ -6,7 +6,7 @@ module OpenHAB
     # This module holds global configuration values
     module Configuration
       # -*- coding: utf-8 -*-
-      LOG_PREFIX = 'org.openhab.automation.jruby'
+      LOG_PREFIX = "org.openhab.automation.jruby"
 
       #
       # Gets the log prefix

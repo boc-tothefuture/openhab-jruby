@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
 module OpenHAB
   module DSL
@@ -35,7 +35,7 @@ module OpenHAB
       #
       # @return [Array<GenericItem>] An array of things or an empty array
       def items
-        registry = OpenHAB::Core::OSGI.service('org.openhab.core.thing.link.ItemChannelLinkRegistry')
+        registry = OpenHAB::Core::OSGI.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
         registry.get_linked_items(self).map { |i| OpenHAB::Core::ItemProxy.new(i) }
       end
     end

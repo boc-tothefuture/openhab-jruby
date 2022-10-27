@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require 'openhab/dsl/things'
-require_relative 'trigger'
+require "openhab/log/logger"
+require "openhab/dsl/things"
+require_relative "trigger"
 
 module OpenHAB
   module DSL
@@ -43,7 +43,7 @@ module OpenHAB
           include OpenHAB::Log
 
           # @return [String] A channel event trigger
-          CHANNEL_EVENT = 'core.ChannelEventTrigger'
+          CHANNEL_EVENT = "core.ChannelEventTrigger"
 
           #
           # Get an enumerator over the product of the channels and things and map them to a channel id
@@ -51,7 +51,7 @@ module OpenHAB
           # @param [Object] thing to combine with channels and iterate over
           # @return [Enumerable] enumerable channel ids to trigger on
           def self.channels(channels:, thing:)
-            logger.state 'Creating Channel/Thing Pairs', channels: channels, thing: thing
+            logger.state "Creating Channel/Thing Pairs", channels: channels, thing: thing
             channels.flatten.product([thing].flatten)
                     .map { |channel_thing| channel_id(*channel_thing) }
           end
@@ -64,7 +64,7 @@ module OpenHAB
           def self.channel_id(channel, thing)
             channel = channel.uid if channel.is_a?(org.openhab.core.thing.Channel)
             thing = thing.uid if thing.is_a?(Thing)
-            [thing, channel].compact.join(':')
+            [thing, channel].compact.join(":")
           end
 
           #
@@ -76,9 +76,9 @@ module OpenHAB
           #
           #
           def trigger(channel:, trigger:, attach:)
-            config = { 'channelUID' => channel }
-            config['event'] = trigger.to_s unless trigger.nil?
-            logger.state 'Creating Channel Trigger', channel: channel, config: config
+            config = { "channelUID" => channel }
+            config["event"] = trigger.to_s unless trigger.nil?
+            logger.state "Creating Channel Trigger", channel: channel, config: config
             append_trigger(type: CHANNEL_EVENT, config: config, attach: attach)
           end
         end

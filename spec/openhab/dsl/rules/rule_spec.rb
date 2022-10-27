@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe OpenHAB::DSL::Rules::Rule do
-  describe '#remove_rule' do
-    it 'works' do
+  describe "#remove_rule" do
+    it "works" do
       my_rule = rule do
         every :day
         run { nil }
@@ -14,27 +14,27 @@ RSpec.describe OpenHAB::DSL::Rules::Rule do
       expect($rules.get(my_rule.uid)).to be_nil
     end
 
-    it 'can re-add a rule with the same id after it has been removed' do
-      rule id: 'myid' do
+    it "can re-add a rule with the same id after it has been removed" do
+      rule id: "myid" do
         every :day
         run { nil }
       end
 
-      remove_rule('myid')
+      remove_rule("myid")
       expect(described_class.script_rules.map(&:uid)).to be_empty
-      expect($rules.get('myid')).to be_nil
+      expect($rules.get("myid")).to be_nil
 
-      rule id: 'myid' do
+      rule id: "myid" do
         every :day
         run { nil }
       end
 
-      expect(described_class.script_rules.map(&:uid)).to eql ['myid']
-      expect($rules.get('myid')).not_to be_nil
+      expect(described_class.script_rules.map(&:uid)).to eql ["myid"]
+      expect($rules.get("myid")).not_to be_nil
     end
 
-    it 'cleans up timers for a duration condition when the rule' do
-      items.build { switch_item 'Item1' }
+    it "cleans up timers for a duration condition when the rule" do
+      items.build { switch_item "Item1" }
       my_rule = rule do
         changed Item1, for: 5.minutes
         run { nil }

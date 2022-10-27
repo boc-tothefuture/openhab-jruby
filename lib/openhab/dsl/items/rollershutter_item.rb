@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'numeric_item'
+require_relative "numeric_item"
 
 module OpenHAB
   module DSL
@@ -12,7 +12,7 @@ module OpenHAB
       class RollershutterItem < GenericItem
         include NumericItem
 
-        alias position state
+        alias_method :position, :state
 
         # @!method up?
         #   Check if the item state == +UP+

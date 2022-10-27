@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
-require_relative 'comparable_item'
-require 'openhab/dsl/types/point_type'
+require_relative "comparable_item"
+require "openhab/dsl/types/point_type"
 
 module OpenHAB
   module DSL

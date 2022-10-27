@@ -40,7 +40,7 @@ module OpenHAB
           #
           def <=>(other)
             compare_to(other)
-          rescue StandardError
+          rescue
             nil
           end
         end

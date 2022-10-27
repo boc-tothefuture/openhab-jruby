@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'fileutils'
+require "fileutils"
 
-require_relative 'openhab'
+require_relative "openhab"
 
-CUCUMBER_LOG_DIR = 'tmp/cucumber_logs'
+CUCUMBER_LOG_DIR = "tmp/cucumber_logs"
 
 After do |scenario|
   FileUtils.mkdir_p CUCUMBER_LOG_DIR

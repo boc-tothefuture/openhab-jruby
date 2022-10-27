@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require_relative 'trigger'
+require "openhab/log/logger"
+require_relative "trigger"
 
 module OpenHAB
   module DSL

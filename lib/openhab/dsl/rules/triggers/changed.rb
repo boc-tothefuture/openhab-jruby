@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'openhab/log/logger'
-require_relative 'conditions/duration'
-require_relative 'conditions/proc'
-require_relative 'trigger'
+require "openhab/log/logger"
+require_relative "conditions/duration"
+require_relative "conditions/proc"
+require_relative "trigger"
 
 module OpenHAB
   module DSL
@@ -91,13 +91,13 @@ module OpenHAB
           private
 
           # @return [String] A thing status Change trigger
-          THING_CHANGE = 'core.ThingStatusChangeTrigger'
+          THING_CHANGE = "core.ThingStatusChangeTrigger"
 
           # @return [String] An item state change trigger
-          ITEM_STATE_CHANGE = 'core.ItemStateChangeTrigger'
+          ITEM_STATE_CHANGE = "core.ItemStateChangeTrigger"
 
           # @return [String] A group state change trigger for items in the group
-          GROUP_STATE_CHANGE = 'core.GroupStateChangeTrigger'
+          GROUP_STATE_CHANGE = "core.GroupStateChangeTrigger"
 
           #
           # Create a TriggerDelay for for an item or group that is changed for a specific duration
@@ -192,9 +192,9 @@ module OpenHAB
           #  second element is a Hash configuring trigger
           #
           def item(item:, from:, to:)
-            config = { 'itemName' => item.name }
-            config['state'] = to.to_s if to
-            config['previousState'] = from.to_s if from
+            config = { "itemName" => item.name }
+            config["state"] = to.to_s if to
+            config["previousState"] = from.to_s if from
             [ITEM_STATE_CHANGE, config]
           end
 
@@ -209,9 +209,9 @@ module OpenHAB
           #  second element is a Hash configuring trigger
           #
           def group(group:, from:, to:)
-            config = { 'groupName' => group.group.name }
-            config['state'] = to.to_s if to
-            config['previousState'] = from.to_s if from
+            config = { "groupName" => group.group.name }
+            config["state"] = to.to_s if to
+            config["previousState"] = from.to_s if from
             [GROUP_STATE_CHANGE, config]
           end
         end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
-require_relative 'comparable_item'
-require_relative 'item_equality'
+require_relative "comparable_item"
+require_relative "item_equality"
 
 module OpenHAB
   module DSL
@@ -34,7 +34,7 @@ module OpenHAB
         # @return [QuantityType] the QuantityType in the given unit
         #
         def |(other)
-          raise NoMethodError, 'State is nil' unless state?
+          raise NoMethodError, "State is nil" unless state?
 
           state.|(other)
         end
