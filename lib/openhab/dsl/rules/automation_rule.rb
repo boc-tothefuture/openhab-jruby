@@ -54,7 +54,6 @@ module OpenHAB
         #
         #
         def execute(mod = nil, inputs = nil)
-          OpenHAB::DSL.import_presets
           thread_local(OPENHAB_RULE_UID: uid) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")

@@ -77,7 +77,6 @@ module OpenHAB
       #
       def timer_block(semaphore)
         proc {
-          OpenHAB::DSL.import_presets
           semaphore.synchronize do
             Timers.timer_manager.delete(self)
             thread_local(**@thread_locals) do

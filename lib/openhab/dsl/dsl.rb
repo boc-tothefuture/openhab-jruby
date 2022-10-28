@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "imports"
-
-OpenHAB::DSL.import_presets
-
 # the order of these is important
 require_relative "types/types"
 require_relative "items/items"
@@ -38,7 +34,6 @@ module OpenHAB
     def self.extended(base)
       base.send :include, OpenHAB::DSL::Actions
       base.send :include, OpenHAB::DSL::Between
-      base.send :include, OpenHAB::DSL::Core
       base.send :include, OpenHAB::DSL::Groups
       base.send :include, OpenHAB::DSL::Items
       base.send :include, OpenHAB::DSL::Persistence
