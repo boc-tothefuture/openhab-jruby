@@ -5,6 +5,7 @@ require "timecop"
 module OpenHAB
   module DSL
     class Timer
+      # @!visibility private
       module MockedZonedDateTime
         def now
           mocked_time_stack_item = Timecop.top_stack_item
@@ -16,7 +17,10 @@ module OpenHAB
       end
       ZonedDateTime.singleton_class.prepend(MockedZonedDateTime)
 
+      # rubocop:disable Lint/UnusedMethodArgument
+
       # extend Timecop to support java time classes
+      # @!visibility private
       module TimeCopStackItem
         def parse_time(*args)
           if args.length == 1 && args.first.is_a?(Duration)
@@ -30,7 +34,7 @@ module OpenHAB
 
       attr_reader :execution_time
 
-      def initialize(duration:, thread_locals: {}, &block) # rubocop:disable Lint/UnusedMethodArgument
+      def initialize(duration:, thread_locals: {}, &block)
         @block = block
         reschedule(duration)
       end
@@ -84,5 +88,7 @@ module OpenHAB
         end
       end
     end
+
+    # rubocop:enable Lint/UnusedMethodArgument
   end
 end

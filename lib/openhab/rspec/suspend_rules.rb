@@ -2,6 +2,7 @@
 
 module OpenHAB
   module RSpec
+    # @!visibility private
     module SuspendRules
       # I'd prefer to prepend a module, but I can't because of
       # https://github.com/jruby/jruby/issues/6966#issuecomment-1172983776

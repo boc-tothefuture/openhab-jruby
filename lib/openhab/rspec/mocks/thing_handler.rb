@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+# rubocop:disable Naming have to follow java interface names
+
 require "singleton"
 
-# rubocop:disable Naming have to follow java interface names
 module OpenHAB
   module RSpec
     module Mocks

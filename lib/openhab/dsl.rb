@@ -19,6 +19,7 @@ module OpenHAB
   #
   # @param [Object] base Object to decorate with DSL and helper methods
   #
+  # @!visibility private
   def self.extended(base)
     OpenHAB::Core.wait_till_openhab_ready
     base.extend OpenHAB::Core::ScriptHandling

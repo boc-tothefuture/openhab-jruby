@@ -3,18 +3,24 @@
 module OpenHAB
   module DSL
     module Actions
+      # rubocop:disable Lint/UnusedMethodArgument
       # redefine these to do nothing so that rules won't fail
-      def notify(msg, email: nil) # rubocop:disable Lint/UnusedMethodArgument:
+
+      module_function
+
+      def notify(msg, email: nil)
         logger.debug("notify: #{msg}")
       end
 
-      def say(text, voice: nil, sink: nil, volume: nil) # rubocop:disable Lint/UnusedMethodArgument:
+      def say(text, voice: nil, sink: nil, volume: nil)
         logger.debug("say: #{text}")
       end
 
-      def play_sound(filename, sink: nil, volume: nil) # rubocop:disable Lint/UnusedMethodArgument:
+      def play_sound(filename, sink: nil, volume: nil)
         logger.debug("play_sound: #{filename}")
       end
+
+      # rubocop:enable Lint/UnusedMethodArgument
     end
   end
 end

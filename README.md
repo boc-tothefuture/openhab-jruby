@@ -26,6 +26,7 @@ Full documentation is available at [rubydoc.info](https://rubydoc.info/gems/open
  * [Usage](docs/usage.md)
  * [Examples](docs/examples.md)
    * [How Do I...?](docs/examples/how_do_i.md)
+ * [Testing Your Rules](docs/testing.md)
 
 <!-- -->
 

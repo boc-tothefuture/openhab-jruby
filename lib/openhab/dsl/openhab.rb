@@ -8,23 +8,8 @@ module OpenHAB
   #
   # @return [Pathname] OpenHAB conf path
   #
+  # @!visibility private
   def self.conf_root
     Pathname.new(ENV["OPENHAB_CONF"])
-  end
-
-  module DSL
-    #
-    # Provides access to OpenHAB attributes
-    #
-    module Core
-      include Log
-
-      module_function
-
-      # @deprecated Please use {OpenHAB.conf_root} instead
-      def __conf__
-        OpenHAB.conf_root
-      end
-    end
   end
 end

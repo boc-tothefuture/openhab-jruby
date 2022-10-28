@@ -10,6 +10,7 @@ require_relative "shell"
 
 module OpenHAB
   module RSpec
+    # @!visibility private
     class Karaf
       class ScriptExtensionManagerWrapper
         def initialize(manager)

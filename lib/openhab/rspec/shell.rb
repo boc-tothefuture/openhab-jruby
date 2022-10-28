@@ -3,6 +3,7 @@
 module OpenHAB
   module RSpec
     # based on https://stackoverflow.com/questions/1197224/source-shell-script-into-environment-within-a-ruby-script#19826329
+    # @!visibility private
     module Shell
       module_function
 

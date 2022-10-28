@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/lsegal/yard.git
+  revision: e167846322cacdcecb12cbd438aee9e78c6873a2
+  specs:
+    yard (0.9.28)
+      webrick (~> 1.7.0)
+
 PATH
   remote: .
   specs:
@@ -167,8 +174,6 @@ GEM
     unicode-display_width (2.1.0)
     webrick (1.7.0)
     yaml-lint (0.0.10)
-    yard (0.9.28)
-      webrick (~> 1.7.0)
     yard-coderay (0.1.0)
       coderay
       yard
@@ -200,7 +205,7 @@ DEPENDENCIES
   timecop (~> 0.9)
   tty-command
   yaml-lint
-  yard
+  yard!
   yard-coderay
 
 BUNDLED WITH

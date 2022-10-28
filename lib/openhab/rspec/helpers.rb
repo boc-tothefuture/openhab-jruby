@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
 module OpenHAB
+  #
+  # Contains loaded Ruby transformations as class methods
+  #
+  # Only during testing.
+  #
+  # @example Corresponds to `transform/compass.script`
+  #   OpenHAB::Transform.compass("59 °")
+  #
+  # @example Corresponds to `transform/compass.script`
+  #   OpenHAB::Transform.compass("30", param: "7")
+  #
+  # @example Corresponds to `transform/ruby/compass.script`
+  #   OpenHAB::Transform::Ruby.compass("59 °")
+
   module Transform
     class << self
+      # @!visibility private
       def add_script(modules, script)
         full_name = modules.join("/")
         name = modules.pop
@@ -36,6 +51,7 @@ end
 module OpenHAB
   module RSpec
     module Helpers
+      # @!visibility private
       module BindingHelper
         def add_kwargs_to_current_binding(binding, kwargs)
           kwargs.each { |(k, v)| binding.local_variable_set(k, v) }
@@ -44,11 +60,20 @@ module OpenHAB
 
       private_constant :BindingHelper
 
-      singleton_class.include(Helpers)
+      # Yard crashes on this; be tricky so it doesn't realize what's going on
+      s = singleton_class
+      s.include(Helpers)
 
+      #
+      # Reconfigure all items to autoupdate
+      #
+      # To bypass any items configured to not autoupdate, waiting for the binding to update them.
+      #
+      # @return [void]
+      #
       def autoupdate_all_items
         if instance_variable_defined?(:@autoupdated_items)
-          raise RuntimeError "you should only call `autoupdate_all_items` once per spec"
+          raise RuntimeError "You should only call `autoupdate_all_items` once per spec"
         end
 
         @autoupdated_items = []
@@ -61,20 +86,44 @@ module OpenHAB
         end
       end
 
+      #
+      # Execute all pending timers
+      #
+      # @return [void]
+      #
       def execute_timers
         DSL::Timers.timer_manager.execute_timers
       end
 
+      #
+      # Suspend rules for the duration of the block
+      #
+      # @return [Object] The return value from the block.
+      #
       def suspend_rules(&block)
         SuspendRules.suspend_rules(&block)
       end
 
-      def trigger_rule(rule_name, event = nil)
-        @rules ||= DSL::Rules::Rule.script_rules.each_with_object({}) { |r, obj| obj[r.name] = r }
+      #
+      # Manually trigger a rule by ID
+      #
+      # @param [String] uid The rule ID
+      # @param [Object, nil] event The event to pass to the rule's execution blocks.
+      # @return [void]
+      #
+      def trigger_rule(uid, event = nil)
+        @rules ||= DSL::Rules::Rule.script_rules.each_with_object({}) { |r, obj| obj[r.uid] = r }
 
-        @rules.fetch(rule_name).execute(nil, { "event" => event })
+        @rules.fetch(uid).execute(nil, { "event" => event })
       end
 
+      #
+      # Manually send an event to a trigger channel
+      #
+      # @param [String, Channel, ChannelUID] channel The channel to trigger.
+      # @param [String] event The event data to send to the channel.
+      # @return [void]
+      #
       def trigger_channel(channel, event = "")
         channel = org.openhab.core.thing.ChannelUID.new(channel) if channel.is_a?(String)
         channel = channel.uid if channel.is_a?(org.openhab.core.thing.Channel)
@@ -82,6 +131,13 @@ module OpenHAB
         thing.handler.callback.channel_triggered(nil, channel, event)
       end
 
+      #
+      # Require all files configured to be autorequired with the jrubyscripting addon in OpenHAB.
+      #
+      # This method is normally called by RSpec hooks.
+      #
+      # @return [void]
+      #
       def autorequires
         requires = jrubyscripting_config&.get("require") || ""
         requires.split(",").each do |f|
@@ -89,6 +145,14 @@ module OpenHAB
         end
       end
 
+      #
+      # Launch the karaf instance
+      #
+      # This method is normally called by RSpec hooks.
+      #
+      # @return [void]
+      # @see Configuration
+      #
       def launch_karaf(include_bindings: true,
                        include_jsondb: true,
                        private_confdir: false,
@@ -144,6 +208,13 @@ module OpenHAB
         raise
       end
 
+      #
+      # Load all Ruby rules in the config/automation directory
+      #
+      # This method is normally called by RSpec hooks.
+      #
+      # @return [void]
+      #
       def load_rules
         automation_path = "#{org.openhab.core.OpenHAB.config_folder}/automation/jsr223"
 
@@ -158,6 +229,17 @@ module OpenHAB
         end
       end
 
+      #
+      # Load all Ruby transformations in the config/transform directory
+      #
+      # Since Ruby transformations must end with the .script extension, you must include
+      # an Emacs modeline comment (`# -*- mode: ruby -*-`) in your script for it to be
+      # recognized.
+      #
+      # This method is normally called by RSpec hooks.
+      #
+      # @return [void]
+      #
       def load_transforms
         transform_path = "#{org.openhab.core.OpenHAB.config_folder}/transform"
         Dir["#{transform_path}/**/*.script"].each do |filename|
@@ -174,6 +256,13 @@ module OpenHAB
         end
       end
 
+      #
+      # Install an OpenHAB addon
+      #
+      # @param [String] addon_id The addon id, such as "binding-mqtt"
+      # @param [true,false] wait Wait until OSGi has confirmed the bundle is installed and running before returning.
+      # @return [void]
+      #
       def install_addon(addon_id, wait: true)
         addon_service = Core::OSGi.service("org.openhab.core.addon.AddonService")
         addon_service.install(addon_id)
@@ -205,6 +294,7 @@ module OpenHAB
       end
 
       EMACS_MODELINE_REGEXP = /# -\*-(.+)-\*-/.freeze
+      private_constant :EMACS_MODELINE_REGEXP
 
       def parse_emacs_modeline(line)
         line[EMACS_MODELINE_REGEXP, 1]

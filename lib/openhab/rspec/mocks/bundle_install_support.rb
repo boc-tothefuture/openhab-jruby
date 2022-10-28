@@ -4,6 +4,7 @@ require "delegate"
 
 module OpenHAB
   module RSpec
+    # @!visibility private
     module Mocks
       class BundleInstallSupport < SimpleDelegator
         include org.apache.karaf.features.internal.service.BundleInstallSupport

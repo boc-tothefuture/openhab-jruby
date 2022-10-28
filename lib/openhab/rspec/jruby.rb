@@ -2,6 +2,7 @@
 
 module OpenHAB
   module RSpec
+    # @!visibility private
     module JRuby
       # Basically org.jruby.embed.osgi.OSGiIsolatedScriptingContainer$BundleGetResources,
       # but implemented in Ruby so that it doesn't have a hard dependency on

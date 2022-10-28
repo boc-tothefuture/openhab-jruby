@@ -4,25 +4,42 @@ module OpenHAB
   module RSpec
     module Configuration
       class << self
-        # Copy binding configuration from the root OpenHAB instance
-        # Default `true`
+        #
+        # Copy binding configuration from the root OpenHAB instance.
+        #
+        # Default `true`.
         # @return [true, false]
+        #
         attr_accessor :include_bindings
+
+        #
         # Copy the JSONDB (managed thing and item configuration) from the root
-        # OpenHAB instance
-        # Default `true`
+        # OpenHAB instance.
+        #
+        # Default `true`.
+        #
         # @return [true, false]
+        #
         attr_accessor :include_jsondb
+
+        #
         # Use a private (empty) confdir (scripts, rules, items, and things
-        # # files), instead of sharing with the root OpenHAB
-        # instance.
-        # Default `false`
+        # files), instead of sharing with the root OpenHAB instance.
+        #
+        # Default `false`.
+        #
         # @return [true, false]
+        #
         attr_accessor :private_confdir
+
+        #
         # Use the root OpenHAB instance directly, rather than creating a
         # private (but linked) instance.
-        # @default `false`
+        #
+        # Default `false`.
+        #
         # @return [true, false]
+        #
         attr_accessor :use_root_instance
       end
 
