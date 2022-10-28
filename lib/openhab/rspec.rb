@@ -7,9 +7,6 @@ end
 
 require "jruby"
 
-# we completely override some files from the DSL
-$LOAD_PATH.unshift("#{__dir__}/rspec")
-
 require "diff/lcs"
 
 require "openhab/log"

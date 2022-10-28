@@ -8,16 +8,12 @@ require_relative "triggers/conditions/proc"
 
 module OpenHAB
   module DSL
-    #
-    # Creates and manages OpenHAB Rules
-    #
     module Rules
       #
       # Rule configuration for OpenHAB Rules engine
       #
+      # @!visibility private
       class RuleTriggers
-        include Log
-
         # @return [Array] Of triggers
         attr_accessor :triggers
 
@@ -32,7 +28,7 @@ module OpenHAB
         #
         def initialize
           @triggers = []
-          @trigger_conditions = Hash.new(OpenHAB::DSL::Rules::Triggers::Conditions::Proc::ANY)
+          @trigger_conditions = Hash.new(Triggers::Conditions::Proc::ANY)
           @attachments = {}
         end
 
@@ -87,10 +83,12 @@ module OpenHAB
         # @return [String] details of the config object
         #
         def inspect
-          "Triggers: (#{triggers}) " \
-            "Trigger Conditions: #{trigger_conditions} " \
-            "Trigger UIDs: #{triggers.map(&:id).join(", ")}" \
-            "Attachments: #{attachments} "
+          <<~TEXT.tr("\n", " ")
+            #<RuleTriggers #{triggers.inspect}
+            Conditions: #{trigger_conditions.inspect}
+            UIDs: #{triggers.map(&:id).inspect}
+            Attachments: #{attachments.inspect}>
+          TEXT
         end
       end
     end

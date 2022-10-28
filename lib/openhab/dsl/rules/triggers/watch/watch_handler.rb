@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/core/services"
-
 module OpenHAB
   module DSL
     module Rules
@@ -11,8 +9,6 @@ module OpenHAB
         # Module for watching directories/files
         #
         module WatchHandler
-          include Log
-
           #
           # Creates trigger types and trigger type factories for OpenHAB
           #
@@ -84,7 +80,6 @@ module OpenHAB
 
           # Implements the OpenHAB TriggerHandler interface to process Watch Triggers
           class WatchTriggerHandler
-            include Log
             include org.openhab.core.automation.handler.TriggerHandler
 
             # Creates a new WatchTriggerHandler
@@ -147,18 +142,17 @@ module OpenHAB
           # Creates trigger types and trigger type factories for OpenHAB
           #
           def self.add_watch_handler
-            OpenHAB::Core.automation_manager.add_trigger_handler(
+            Core.automation_manager.add_trigger_handler(
               WATCH_TRIGGER_MODULE_ID,
               WatchTriggerHandlerFactory.new
             )
 
-            OpenHAB::Core.automation_manager.add_trigger_type(watch_trigger_type)
-            OpenHAB::Log.logger(self).trace("Added watch trigger handler")
+            Core.automation_manager.add_trigger_type(watch_trigger_type)
+            logger.trace("Added watch trigger handler")
           end
+          add_watch_handler
         end
       end
     end
   end
 end
-# Add the watch handler to OpenHAB
-OpenHAB::DSL::Rules::Triggers::WatchHandler.add_watch_handler

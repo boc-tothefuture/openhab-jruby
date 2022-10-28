@@ -11,41 +11,10 @@ module OpenHAB
         # Cron trigger handler that provides trigger ID
         #
         module CronHandler
-          include Log
-
-          #
-          # Creates trigger types and trigger type factories for OpenHAB
-          #
-          def self.add_script_cron_handler
-            OpenHAB::Core.automation_manager.add_trigger_handler(
-              OpenHAB::DSL::Rules::Triggers::Cron::CRON_TRIGGER_MODULE_ID,
-              OpenHAB::DSL::Rules::Triggers::CronHandler::CronTriggerHandlerFactory.new
-            )
-
-            OpenHAB::Core.automation_manager.add_trigger_type(cron_trigger_type)
-            OpenHAB::Log.logger(self).trace("Added script cron trigger handler")
-          end
-
-          #
-          # Creates trigger types and trigger type factories for OpenHAB
-          #
-          private_class_method def self.cron_trigger_type
-            org.openhab.core.automation.type.TriggerType.new(
-              OpenHAB::DSL::Rules::Triggers::Cron::CRON_TRIGGER_MODULE_ID,
-              nil,
-              "A specific instant occurs",
-              "Triggers when the specified instant occurs",
-              nil,
-              org.openhab.core.automation.Visibility::VISIBLE,
-              nil
-            )
-          end
-
           # Cron Trigger Handler that provides trigger IDs
           # Unfortunatly because the CronTriggerHandler in OpenHAB core is marked internal
           # the entire thing must be recreated here
           class CronTriggerHandler < org.openhab.core.automation.handler.BaseTriggerModuleHandler
-            include Log
             include org.openhab.core.scheduler.SchedulerRunnable
             include org.openhab.core.automation.handler.TimeBasedTriggerHandler
 
@@ -57,7 +26,7 @@ module OpenHAB
             #
             def initialize(trigger)
               @trigger = trigger
-              @scheduler = OpenHAB::Core::OSGi.service("org.openhab.core.scheduler.CronScheduler")
+              @scheduler = OSGi.service("org.openhab.core.scheduler.CronScheduler")
               @schedule = nil
               @expression = trigger.configuration.get("cronExpression")
               super(trigger)
@@ -118,11 +87,41 @@ module OpenHAB
               CronTriggerHandler.new(trigger)
             end
           end
+
+          class << self
+            private
+
+            #
+            # Creates trigger types and trigger type factories for OpenHAB
+            #
+            def add_script_cron_handler
+              Core.automation_manager.add_trigger_handler(
+                Cron::CRON_TRIGGER_MODULE_ID,
+                CronTriggerHandlerFactory.new
+              )
+
+              Core.automation_manager.add_trigger_type(cron_trigger_type)
+              logger.trace("Added script cron trigger handler")
+            end
+
+            #
+            # Creates trigger types and trigger type factories for OpenHAB
+            #
+            def cron_trigger_type
+              org.openhab.core.automation.type.TriggerType.new(
+                Cron::CRON_TRIGGER_MODULE_ID,
+                nil,
+                "A specific instant occurs",
+                "Triggers when the specified instant occurs",
+                nil,
+                org.openhab.core.automation.Visibility::VISIBLE,
+                nil
+              )
+            end
+          end
+          add_script_cron_handler
         end
       end
     end
   end
 end
-
-# Add the cron handler to OpenHAB
-OpenHAB::DSL::Rules::Triggers::CronHandler.add_script_cron_handler

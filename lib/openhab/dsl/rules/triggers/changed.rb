@@ -8,8 +8,6 @@ module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include Log
-
         #
         # Creates a trigger when an item, member of a group, or a thing changed states.
         #
@@ -205,8 +203,8 @@ module OpenHAB
           def proc_trigger(item:, from:, to:, attach:)
             # swap from/to w/ nil if from/to is a proc
             # rubocop:disable Style/ParallelAssignment
-            from_proc, from = from, nil if from.is_a? Proc
-            to_proc, to = to, nil if to.is_a? Proc
+            from_proc, from = from, nil if from.is_a?(Proc)
+            to_proc, to = to, nil if to.is_a?(Proc)
             # rubocop:enable Style/ParallelAssignment
             conditions = Conditions::Proc.new(to: to_proc, from: from_proc)
             changed_trigger(item: item, from: from, to: to, attach: attach, conditions: conditions)
@@ -222,9 +220,9 @@ module OpenHAB
           #
           def changed_trigger(item:, from:, to:, attach: nil, conditions: nil)
             type, config = case item
-                           when OpenHAB::DSL::Items::GroupItem::GroupMembers then group(group: item, from: from,
-                                                                                        to: to)
-                           when Thing then thing(thing: item, from: from, to: to)
+                           when GroupItem::GroupMembers then group(group: item, from: from,
+                                                                   to: to)
+                           when Core::Things::Thing then thing(thing: item, from: from, to: to)
                            else item(item: item, from: from, to: to)
                            end
             append_trigger(type: type, config: config, attach: attach, conditions: conditions)

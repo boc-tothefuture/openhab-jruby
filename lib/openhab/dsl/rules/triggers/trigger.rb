@@ -13,7 +13,6 @@ module OpenHAB
         class Trigger
           extend Forwardable
 
-          # Provide backwards compatibility for these fields
           delegate append_trigger: :@rule_triggers
 
           #
@@ -30,7 +29,7 @@ module OpenHAB
             # Enumerables
             return item_array unless item_array.find { |item| item.respond_to?(:to_ary) }
 
-            groups, items = item_array.partition { |item| item.is_a?(OpenHAB::DSL::Items::GroupItem::GroupMembers) }
+            groups, items = item_array.partition { |item| item.is_a?(GroupItem::GroupMembers) }
             groups + flatten_items(items.flatten(1))
           end
 
@@ -66,7 +65,7 @@ module OpenHAB
           # @return [String] Upcased symbol as string
           #
           def trigger_state_from_symbol(sym)
-            sym.to_s.upcase if (sym.is_a? Symbol) || sym
+            sym.to_s.upcase if sym.is_a?(Symbol) || sym
           end
         end
       end

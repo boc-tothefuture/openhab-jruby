@@ -4,28 +4,10 @@
 module OpenHAB
   module Core
     #
-    # Provide callback mechanisms for script handling
-    #
-    module ScriptHandling
-      module_function
-
-      # Add a callback to be run when the script has been fully loaded
-      def script_loaded(&block)
-        ScriptHandlingCallbacks.script_loaded_hooks << block
-      end
-
-      # Add a callback to be run when the script is unloaded
-      def script_unloaded(&block)
-        ScriptHandlingCallbacks.script_unloaded_hooks << block
-      end
-    end
-
-    #
     # Manages script loading and unloading
     #
+    # @!visibility private
     module ScriptHandlingCallbacks
-      include Log
-
       class << self
         #
         # Return script_loaded_hooks
@@ -47,7 +29,6 @@ module OpenHAB
       #
       # Executed when OpenHAB unloads a script file
       #
-      # @!visibility private
       def scriptUnloaded # rubocop:disable Naming/MethodName method name dictated by OpenHAB
         logger.trace("Script unloaded")
         ScriptHandlingCallbacks.script_unloaded_hooks.each do |hook|
@@ -60,7 +41,6 @@ module OpenHAB
       #
       # Executed when OpenHAB loads a script file
       #
-      # @!visibility private
       def scriptLoaded(filename) # rubocop:disable Naming/MethodName method name dictated by OpenHAB
         logger.trace("Script loaded: #{filename}")
         ScriptHandlingCallbacks.script_loaded_hooks.each do |hook|
@@ -72,3 +52,5 @@ module OpenHAB
     end
   end
 end
+
+singleton_class.include(OpenHAB::Core::ScriptHandlingCallbacks)

@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-require "openhab/dsl/things"
 require_relative "trigger"
 
 module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include Log
-
         #
         # Creates a channel linked trigger
         #

@@ -92,7 +92,7 @@ module OpenHAB
       # @return [void]
       #
       def execute_timers
-        DSL::Timers.timer_manager.execute_timers
+        DSL::Timer::Manager.instance.execute_timers
       end
 
       #
@@ -112,9 +112,7 @@ module OpenHAB
       # @return [void]
       #
       def trigger_rule(uid, event = nil)
-        @rules ||= DSL::Rules::Rule.script_rules.each_with_object({}) { |r, obj| obj[r.uid] = r }
-
-        @rules.fetch(uid).execute(nil, { "event" => event })
+        DSL::Rules.script_rules.fetch(uid).execute(nil, { "event" => event })
       end
 
       #
@@ -172,19 +170,17 @@ module OpenHAB
         require_relative "mocks/persistence_service"
 
         # override several DSL methods
-        require_relative "actions"
-        require_relative "openhab/core/item_proxy"
-        require_relative "openhab/dsl/timers/timer"
-        require_relative "openhab/dsl/things/thing"
-        # TODO: still needed?
-        require_relative "openhab/dsl/rules/triggers/watch"
+        require_relative "openhab/core/items/proxy"
+        require_relative "openhab/core/things/thing"
+        require_relative "openhab/dsl/actions"
+        require_relative "openhab/dsl/timer"
 
         ps = Mocks::PersistenceService.instance
         bundle = org.osgi.framework.FrameworkUtil.get_bundle(org.openhab.core.persistence.PersistenceService)
         bundle.bundle_context.register_service(org.openhab.core.persistence.PersistenceService.java_class, ps, nil)
 
         # wait for the rule engine
-        rs = Core::OSGi.service("org.openhab.core.service.ReadyService")
+        rs = OSGi.service("org.openhab.core.service.ReadyService")
         filter = org.openhab.core.service.ReadyMarkerFilter.new
                     .with_type(org.openhab.core.service.StartLevelService::STARTLEVEL_MARKER_TYPE)
                     .with_identifier(org.openhab.core.service.StartLevelService::STARTLEVEL_RULEENGINE.to_s)
@@ -198,7 +194,7 @@ module OpenHAB
 
         if defined?(::RSpec)
           ::RSpec.configure do |config|
-            config.include OpenHAB::Core::EntityLookup
+            config.include OpenHAB::DSL
           end
         end
         main
@@ -264,7 +260,7 @@ module OpenHAB
       # @return [void]
       #
       def install_addon(addon_id, wait: true)
-        addon_service = Core::OSGi.service("org.openhab.core.addon.AddonService")
+        addon_service = OSGi.service("org.openhab.core.addon.AddonService")
         addon_service.install(addon_id)
         return unless wait
 
@@ -279,7 +275,7 @@ module OpenHAB
       private
 
       def jrubyscripting_config
-        ca = Core::OSGi.service("org.osgi.service.cm.ConfigurationAdmin")
+        ca = OSGi.service("org.osgi.service.cm.ConfigurationAdmin")
         ca.get_configuration("org.openhab.automation.jrubyscripting", nil)&.properties
       end
 
@@ -319,8 +315,8 @@ module OpenHAB
       # need to transfer autoupdate metadata from GenericMetadataProvider to ManagedMetadataProvider
       # so that we can mutate it in the future
       def set_up_autoupdates
-        gmp = Core::OSGi.service("org.openhab.core.model.item.internal.GenericMetadataProvider")
-        mr = Core::OSGi.service("org.openhab.core.items.MetadataRegistry")
+        gmp = OSGi.service("org.openhab.core.model.item.internal.GenericMetadataProvider")
+        mr = OSGi.service("org.openhab.core.items.MetadataRegistry")
         mmp = mr.managed_provider.get
         to_add = []
         gmp.all.each do |metadata|
@@ -349,7 +345,7 @@ module OpenHAB
       def restore_autoupdate_items
         return unless instance_variable_defined?(:@autoupdated_items)
 
-        mr = Core::OSGi.service("org.openhab.core.items.MetadataRegistry")
+        mr = OSGi.service("org.openhab.core.items.MetadataRegistry")
         @autoupdated_items&.each do |meta|
           mr.update(meta)
         end

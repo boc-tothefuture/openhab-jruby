@@ -99,7 +99,7 @@ module OpenHAB
           topics = Array(reference.get_property(org.osgi.service.event.EventConstants::EVENT_TOPIC))
           topics = nil if topics.empty? || topics.include?("*")
 
-          service = Core::OSGi.send(:bundle_context).get_service(reference)
+          service = OSGi.send(:bundle_context).get_service(reference)
 
           if reference.get_property("component.name") == "org.openhab.core.internal.events.OSGiEventManager"
             # OSGiEventManager will create a ThreadedEventHandler on OSGi activation;

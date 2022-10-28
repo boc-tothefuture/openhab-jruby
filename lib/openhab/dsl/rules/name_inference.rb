@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "triggers/cron/cron"
+
 module OpenHAB
   module DSL
     module Rules

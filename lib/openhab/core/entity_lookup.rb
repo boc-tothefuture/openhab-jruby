@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "item_proxy"
-
 # Automation lookup and injection of OpenHab entities
 
 module OpenHAB
@@ -10,8 +8,6 @@ module OpenHAB
     # Manages access to OpenHAB entities
     #
     module EntityLookup
-      include Log
-
       #
       # Automatically looks up OpenHAB items and things in appropriate registries
       #
@@ -30,13 +26,13 @@ module OpenHAB
       # Checks if this method responds to the missing method
       #
       # @param [String] method_name Name of the method to check
-      # @param [Boolean] _include_private boolean if private methods should be checked
+      # @param [true,false] _include_private boolean if private methods should be checked
       #
-      # @return [Boolean] true if this object will respond to the supplied method, false otherwise
+      # @return [true,false] true if this object will respond to the supplied method, false otherwise
       #
       def respond_to_missing?(method_name, _include_private = false)
-        logger.trace("Checking if OpenHAB entites exist for #{method_name}")
-        method_name = method_name.to_s if method_name.is_a? Symbol
+        logger.trace("Checking if OpenHAB entities exist for #{method_name}")
+        method_name = method_name.to_s if method_name.is_a?(Symbol)
 
         method_name == "scriptLoaded" ||
           method_name == "scriptUnloaded" ||
@@ -68,16 +64,20 @@ module OpenHAB
       # @return [Thing] if found, nil otherwise
       #
       def self.lookup_thing(name)
-        logger.trace("Looking up thing(#{name})")
-        # Convert from : syntax to underscore
-        name = name.to_s if name.is_a? Symbol
+        logger.trace("Looking up thing '#{name}'")
+        name = name.to_s if name.is_a?(Symbol)
 
-        # Thing UIDs have at least 3 segements
-        return if name.count("_") < 3
+        if name.is_a?(String)
+          # Thing UIDs have at least 3 segments
+          return if name.count("_") < 3
 
-        name = name.tr("_", ":")
-        result = $things.get(org.openhab.core.thing.ThingUID.new(name))
-        result = Thing.new(result) if result
+          # Convert from _ syntax to :
+          name = name.tr("_", ":")
+          name = org.openhab.core.thing.ThingUID.new(name)
+        end
+
+        result = $things.get(name)
+        result = Things::Thing.new(result) if result
         result
       end
 
@@ -91,10 +91,10 @@ module OpenHAB
       # @return [Item] OpenHAB item if registry contains a matching item, nil othewise
       #
       def self.lookup_item(name)
-        logger.trace("Looking up item(#{name})")
-        name = name.to_s if name.is_a? Symbol
+        logger.trace("Looking up item '#{name}'")
+        name = name.to_s if name.is_a?(Symbol)
         item = $ir.get(name)
-        ItemProxy.new(item) unless item.nil?
+        Items::Proxy.new(item) unless item.nil?
       end
     end
   end

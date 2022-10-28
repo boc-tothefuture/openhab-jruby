@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-require "openhab/dsl/things"
 require_relative "trigger"
 
 module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include Log
-
         #
         # Creates a channel trigger
         #
@@ -105,8 +102,6 @@ module OpenHAB
         # Creates channel triggers
         #
         class Channel < Trigger
-          include Log
-
           # @return [String] A channel event trigger
           CHANNEL_EVENT = "core.ChannelEventTrigger"
 
@@ -116,7 +111,7 @@ module OpenHAB
           # @param [Object] thing to combine with channels and iterate over
           # @return [Enumerable] enumerable channel ids to trigger on
           def self.channels(channels:, thing:)
-            logger.trace "Creating Channel/Thing Pairs for channels #{channels.inspect} and things #{things.inspect}"
+            logger.trace "Creating Channel/Thing Pairs for channels #{channels.inspect} and things #{thing.inspect}"
             channels.flatten.product([thing].flatten)
                     .map { |channel_thing| channel_id(*channel_thing) }
           end
@@ -128,7 +123,7 @@ module OpenHAB
           #
           def self.channel_id(channel, thing)
             channel = channel.uid if channel.is_a?(org.openhab.core.thing.Channel)
-            thing = thing.uid if thing.is_a?(Thing)
+            thing = thing.uid if thing.is_a?(Core::Things::Thing)
             [thing, channel].compact.join(":")
           end
 

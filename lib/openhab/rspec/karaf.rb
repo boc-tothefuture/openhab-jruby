@@ -484,8 +484,8 @@ module OpenHAB
       end
 
       def wait_for_service(service_name, filter: nil, &block)
-        if defined?(Core::OSGi) &&
-           (services = Core::OSGi.services(service_name, filter: filter))
+        if defined?(OSGi) &&
+           (services = OSGi.services(service_name, filter: filter))
           services.each(&block)
         end
 
@@ -537,7 +537,7 @@ module OpenHAB
       end
 
       def link_osgi
-        Core::OSGi.instance_variable_set(:@bundle, @framework) if require "openhab/core/osgi"
+        OSGi.instance_variable_set(:@bundle, @framework) if require "openhab/osgi"
       end
 
       # import global variables and constants that the DSL expects,
@@ -546,7 +546,7 @@ module OpenHAB
         wait_for_service("org.openhab.core.automation.module.script.ScriptEngineFactory",
                          filter: "(service.config.description.uri=automation:jruby)") do |jrubyscripting|
           # "org.openhab.core.automation.module.script.internal.ScriptExtensionManager") do |sem|
-          sem = Core::OSGi.service(
+          sem = OSGi.service(
             "org.openhab.core.automation.module.script.internal.ScriptExtensionManager"
           )
           # since we're not created by the ScriptEngineManager, this never gets set; manually set it
@@ -717,11 +717,11 @@ module OpenHAB
 
       # workaround for https://github.com/openhab/openhab-core/pull/3092
       def reset_start_level_service
-        sls = Core::OSGi.service("org.openhab.core.service.StartLevelService")
+        sls = OSGi.service("org.openhab.core.service.StartLevelService")
 
         unless sls
           # try a different (hacky!) way to get it, since in OpenHAB 3.2.0 it's not exposed as a service
-          scr = Core::OSGi.service("org.osgi.service.component.runtime.ServiceComponentRuntime")
+          scr = OSGi.service("org.osgi.service.component.runtime.ServiceComponentRuntime")
           scr.class.field_reader :componentRegistry
           cr = scr.componentRegistry
 
@@ -733,14 +733,14 @@ module OpenHAB
         # no SLS yet? then we couldn't have hit the bug
         return unless sls
 
-        rs = Core::OSGi.service("org.openhab.core.service.ReadyService")
+        rs = OSGi.service("org.openhab.core.service.ReadyService")
         sls.class.field_reader :trackers, :markers
         rs.class.field_reader :trackers
         return unless sls.markers.empty?
         # SLS thinks it has trackers that RS doesn't?! Yeah, we hit the bug
         return if (sls.trackers.values - rs.trackers.keys).empty?
 
-        ca = Core::OSGi.service("org.osgi.service.cm.ConfigurationAdmin")
+        ca = OSGi.service("org.osgi.service.cm.ConfigurationAdmin")
         cfg = ca.get_configuration("org.openhab.startlevel", nil)
         props = cfg.properties
         config = props.keys.to_h { |k| [k, props.get(k)] }

@@ -44,7 +44,7 @@ Style/Alias:
   EnforcedStyle: prefer_alias_method
 Style/CaseEquality:
   Exclude: # we're explicitly testing this operator
-  - spec/openhab/dsl/types/*_spec.rb
+  - spec/openhab/core/types/*_spec.rb
 # enforced by checking for 100% documented from `yard --stats`
 # RuboCop doesn't know if a module is documented in a different file
 Style/Documentation:

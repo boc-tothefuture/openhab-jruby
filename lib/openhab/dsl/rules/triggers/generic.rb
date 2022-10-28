@@ -6,8 +6,6 @@ module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include Log
-
         #
         # Create a generic trigger given the trigger type uid and a configuration hash
         #

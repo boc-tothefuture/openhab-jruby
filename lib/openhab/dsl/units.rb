@@ -23,7 +23,7 @@ module OpenHAB
       # @yield [] Block executed in context of the supplied unit
       #
       def with_unit(unit)
-        unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit) if unit.is_a? String
+        unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit) if unit.is_a?(String)
         Thread.current[:unit] = unit
         yield
       ensure

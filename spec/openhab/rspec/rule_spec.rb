@@ -14,7 +14,7 @@ RSpec.describe "rules" do
 
     after(:all) do
       expect($rules.get("out-of-spec-rule")).not_to be_nil
-      OpenHAB::Core.rule_registry.remove("out-of-spec-rule")
+      remove_rule("out-of-spec-rule")
       expect($rules.get("out-of-spec-rule")).to be_nil
       expect($rules.get("in-spec-rule")).to be_nil
     end

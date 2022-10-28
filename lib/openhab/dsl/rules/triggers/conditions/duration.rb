@@ -6,7 +6,6 @@ module OpenHAB
       module Triggers
         # @!visibility private
         module Conditions
-          include Log
           #
           # this is a no-op condition which simply executes the provided block
           #
@@ -64,7 +63,7 @@ module OpenHAB
             #
             # @param [Map] inputs OpenHAB map object describing rule trigger
             #
-            # @return [Boolean] True if the rule should execute, false if trigger guard prevents execution
+            # @return [true,false] True if the rule should execute, false if trigger guard prevents execution
             #
             def check_trigger_guards(inputs)
               new_state, old_state = retrieve_states(inputs)
@@ -127,7 +126,7 @@ module OpenHAB
             #
             def create_trigger_delay_timer(inputs, _mod)
               logger.trace("Creating timer for trigger delay #{self}")
-              @timer = after(@duration) do
+              @timer = DSL.after(@duration) do
                 logger.trace("Delay Complete for #{self}, executing rule")
                 @timer = nil
                 yield

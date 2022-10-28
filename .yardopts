@@ -1,1 +1,1 @@
---output-dir docs/yard --plugin coderay --markup markdown --markup-provider commonmarker - CHANGELOG.md docs/**/*.md
+--protected --output-dir docs/yard --plugin coderay --markup markdown --markup-provider commonmarker - CHANGELOG.md docs/**/*.md

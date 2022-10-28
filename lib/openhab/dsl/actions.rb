@@ -1,21 +1,9 @@
 # frozen_string_literal: true
 
-require "openhab/core/osgi"
-
 module OpenHAB
   module DSL
-    #
-    # Module to import and streamline access to OpenHAB actions
-    #
     module Actions
       include Log
-
-      OpenHAB::Core::OSGi.services("org.openhab.core.model.script.engine.action.ActionService")&.each do |service|
-        java_import service.actionClass.to_s
-        logger.trace("Loaded ACTION: #{service.actionClass}")
-      end
-      # Import common actions
-      %w[Exec HTTP Ping].each { |action| java_import "org.openhab.core.model.script.actions.#{action}" }
 
       module_function
 
@@ -62,9 +50,9 @@ module OpenHAB
         end
 
         if email
-          NotificationAction.sendNotification email.to_s, msg.to_s
+          Core::Actions::NotificationAction.sendNotification email.to_s, msg.to_s
         else
-          NotificationAction.sendBroadcastNotification msg.to_s
+          Core::Actions::NotificationAction.sendBroadcastNotification msg.to_s
         end
       end
 
@@ -79,8 +67,8 @@ module OpenHAB
       # @return [void]
       #
       def say(text, voice: nil, sink: nil, volume: nil)
-        volume = Types::PercentType.new(volume) unless volume.is_a?(Types::PercentType) || volume.nil?
-        Voice.say text.to_s, voice&.to_s, sink&.to_s, volume
+        volume = PercentType.new(volume) unless volume.is_a?(PercentType) || volume.nil?
+        Core::Actions::Voice.say text.to_s, voice&.to_s, sink&.to_s, volume
       end
 
       #
@@ -93,8 +81,8 @@ module OpenHAB
       # @return [void]
       #
       def play_sound(filename, sink: nil, volume: nil)
-        volume = Types::PercentType.new(volume) unless volume.is_a?(Types::PercentType) || volume.nil?
-        Audio.playSound sink&.to_s, filename.to_s, volume
+        volume = PercentType.new(volume) unless volume.is_a?(PercentType) || volume.nil?
+        Core::Actions::Audio.playSound sink&.to_s, filename.to_s, volume
       end
 
       #
@@ -106,7 +94,7 @@ module OpenHAB
       # @return [void]
       #
       def play_stream(url, sink: nil)
-        Audio.playStream sink&.to_s, url
+        Core::Actions::Audio.playStream sink&.to_s, url
       end
     end
   end

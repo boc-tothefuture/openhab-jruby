@@ -16,7 +16,7 @@ RSpec.describe OpenHAB::DSL::Rules::Triggers::Channel do # rubocop:disable RSpec
 
     channel ||= "astro:sun:home:rise#event"
     it description, caller: caller do
-      args = yield
+      args = instance_exec(&block)
       triggered = false
       trigger = nil
       rule "Execute rule when channel is triggered" do

@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/dsl/timers"
-require "openhab/dsl/rules/rule_triggers"
-require "openhab/dsl/rules/triggers/triggers"
-
-require_relative "generic_item"
-
 module OpenHAB
   module DSL
     module Items
@@ -29,8 +23,10 @@ module OpenHAB
           attr_reader :timed_commands
         end
 
-        # Extensions for {Items::GenericItem} to implement timed commands
+        # Extensions for {Core::Items::GenericItem} to implement timed commands
         module GenericItem
+          Core::Items::GenericItem.prepend(self)
+
           #
           #  Sends command to an item for specified duration, then on timer expiration sends
           #  the expiration command to the item
@@ -79,9 +75,9 @@ module OpenHAB
             timed_command_details.timer = timed_command_timer(timed_command_details, semaphore, &block)
             timed_command_details.cancel_rule = TimedCommandCancelRule.new(timed_command_details, semaphore,
                                                                            &block)
-            timed_command_details.rule_uid = OpenHAB::DSL::Rules::Rule.automation_manager
-                                                                      .addRule(timed_command_details.cancel_rule)
-                                                                      .getUID
+            timed_command_details.rule_uid = Core.automation_manager
+                                                 .add_rule(timed_command_details.cancel_rule)
+                                                 .uid
             logger.trace "Created Timed Command #{timed_command_details}"
             TimedCommand.timed_commands[self] = timed_command_details
           end
@@ -92,7 +88,7 @@ module OpenHAB
           # @return [Timer] Timer
           # There is no feasible way to break this method into smaller components
           def timed_command_timer(timed_command_details, semaphore, &block)
-            after(timed_command_details.duration, id: self) do
+            DSL.after(timed_command_details.duration, id: self) do
               semaphore.synchronize do
                 logger.trace "Timed command expired - #{timed_command_details}"
                 cancel_timed_command_rule(timed_command_details)
@@ -113,7 +109,7 @@ module OpenHAB
           # @param [TimedCommandDetailed] timed_command_details details about the timed command
           def cancel_timed_command_rule(timed_command_details)
             logger.trace "Removing rule: #{timed_command_details.rule_uid}"
-            OpenHAB::DSL::Rules::Rule.registry.remove(timed_command_details.rule_uid)
+            Rules::Rule.registry.remove(timed_command_details.rule_uid)
           end
 
           #
@@ -130,10 +126,7 @@ module OpenHAB
           #
           # Rule to cancel timed commands
           #
-          class TimedCommandCancelRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
-            include Log
-            include OpenHAB::Core::ThreadLocal
-
+          class TimedCommandCancelRule < org.openhab.core.automation.module.script.rulesupport.shared.simple.SimpleRule
             def initialize(timed_command_details, semaphore, &block)
               super()
               @semaphore = semaphore
@@ -146,8 +139,8 @@ module OpenHAB
                                  {}
                                end
               set_name("Cancels implicit timer for #{timed_command_details.item.id}")
-              set_triggers([OpenHAB::DSL::Rules::RuleTriggers.trigger(
-                type: OpenHAB::DSL::Rules::Triggers::Changed::ITEM_STATE_CHANGE,
+              set_triggers([Rules::RuleTriggers.trigger(
+                type: Rules::Triggers::Changed::ITEM_STATE_CHANGE,
                 config: { "itemName" => timed_command_details.item.name,
                           "previousState" => timed_command_details.command.to_s }
               )])
@@ -163,7 +156,7 @@ module OpenHAB
             # There is no feasible way to break this method into smaller components
             def execute(_mod = nil, inputs = nil)
               @semaphore.synchronize do
-                thread_local(**@thread_locals) do
+                ThreadLocal.thread_local(**@thread_locals) do
                   logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\
                                "#{@timed_command_details.item.id}  because received event #{inputs}"
                   @timed_command_details.timer.cancel
@@ -179,7 +172,6 @@ module OpenHAB
           end
         end
       end
-      GenericItem.prepend(TimedCommand::GenericItem)
     end
   end
 end

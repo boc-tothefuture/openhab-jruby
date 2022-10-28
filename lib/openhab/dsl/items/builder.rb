@@ -16,7 +16,7 @@ module OpenHAB
           @items = {}
 
           $ir.add_provider(self)
-          OpenHAB::Core::ScriptHandling.script_unloaded { $ir.remove_provider(self) }
+          ScriptHandling.script_unloaded { $ir.remove_provider(self) }
         end
 
         # Add an item to this provider
@@ -33,7 +33,7 @@ module OpenHAB
             if !channel.include?(":") &&
                (group = builder.groups.find { |g| g.is_a?(GroupItemBuilder) && g.thing })
               thing = group.thing
-              thing = thing.uid if thing.is_a?(Things::Thing)
+              thing = thing.uid if thing.is_a?(Core::Things::Thing)
               channel = "#{thing}:#{channel}"
             end
             ItemChannelLinkProvider.instance.link(item, channel)
@@ -72,9 +72,9 @@ module OpenHAB
           super
 
           @links = Hash.new { |h, k| h[k] = Set.new }
-          registry = OpenHAB::Core::OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
+          registry = OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           registry.add_provider(self)
-          OpenHAB::Core::ScriptHandling.script_unloaded { registry.remove_provider(self) }
+          ScriptHandling.script_unloaded { registry.remove_provider(self) }
         end
 
         def link(item, channel, config = {})
@@ -164,7 +164,7 @@ module OpenHAB
           result
         end
 
-        include OpenHAB::Core::EntityLookup
+        include DSL
 
         private
 
@@ -172,7 +172,7 @@ module OpenHAB
           item = ItemBuilder.new(*args, provider: provider, **kwargs)
           item.instance_eval(&block) if block
           provider.add(item)
-          OpenHAB::Core::ItemProxy.new(item)
+          Core::Items::Proxy.new(item)
         end
       end
 
@@ -505,7 +505,7 @@ module OpenHAB
             dto.params = match[2..]
             function = org.openhab.core.items.dto.ItemDTOMapper.map_function(base_item, dto)
           end
-          GroupItem.new(name, base_item, function)
+          Core::Items::GroupItem.new(name, base_item, function)
         end
 
         # @!visibility private

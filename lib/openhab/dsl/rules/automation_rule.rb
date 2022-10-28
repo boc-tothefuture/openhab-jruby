@@ -1,25 +1,13 @@
 # frozen_string_literal: true
 
-require "openhab/core/thread_local"
-
-require "openhab/dsl/between"
-
-require_relative "item_event"
-
 module OpenHAB
   module DSL
-    #
-    # Creates and manages OpenHAB Rules
-    #
     module Rules
       #
-      # JRuby extension to OpenHAB Rule
+      # OpenHAB rules engine object
       #
-      class AutomationRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
-        include Log
-        include OpenHAB::Core::ThreadLocal
-        include OpenHAB::DSL::Between
-
+      # @!visibility private
+      class AutomationRule < org.openhab.core.automation.module.script.rulesupport.shared.simple.SimpleRule
         field_writer :uid
 
         #
@@ -54,12 +42,14 @@ module OpenHAB
         #
         #
         def execute(mod = nil, inputs = nil)
-          thread_local(OPENHAB_RULE_UID: uid) do
+          ThreadLocal.thread_local(OPENHAB_RULE_UID: uid) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
             trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
               process_queue(create_queue(inputs), mod, inputs)
             end
+          rescue Exception => e
+            @run_context.send(:logger).log_exception(e)
           end
         end
 
@@ -81,9 +71,9 @@ module OpenHAB
         def create_queue(inputs)
           case check_guards(event: extract_event(inputs))
           when true
-            @run_queue.dup.grep_v(RuleDSL::Otherwise)
+            @run_queue.dup.grep_v(Builder::Otherwise)
           when false
-            @run_queue.dup.grep(RuleDSL::Otherwise)
+            @run_queue.dup.grep(Builder::Otherwise)
           end
         end
 
@@ -146,7 +136,7 @@ module OpenHAB
         #
         # @param [Map] event OpenHAB rule trigger event
         #
-        # @return [Boolean] True if guards says rule should execute, false otherwise
+        # @return [true,false] True if guards says rule should execute, false otherwise
         #
         # Loggging inflates method length
         def check_guards(event:)
@@ -162,8 +152,6 @@ module OpenHAB
             logger.trace("Skipped execution of rule '#{name}' because of guard #{@guard}")
           end
           false
-        rescue Exception => e
-          logger.log_exception(e, name)
         end
 
         #
@@ -173,20 +161,16 @@ module OpenHAB
         # @param [Map] mod OpenHAB map object describing rule trigger
         # @param [Map] inputs OpenHAB map object describing rule trigge
         #
-        #
-        # No logical way to break this method up
         def process_queue(run_queue, mod, inputs)
           event = extract_event(inputs)
 
           while (task = run_queue.shift)
-            if task.is_a? RuleDSL::Delay
+            if task.is_a?(Builder::Delay)
               process_delay_task(inputs, mod, run_queue, task)
             else
               process_task(event, task)
             end
           end
-        rescue Exception => e
-          logger.log_exception(e, name)
         end
 
         #
@@ -196,11 +180,11 @@ module OpenHAB
         # @param [Task] task task containing otherwise block to execute
         #
         def process_task(event, task)
-          thread_local(OPENHAB_RULE_UID: uid) do
+          ThreadLocal.thread_local(OPENHAB_RULE_UID: uid) do
             case task
-            when RuleDSL::Run then process_run_task(event, task)
-            when RuleDSL::Trigger then process_trigger_task(event, task)
-            when RuleDSL::Otherwise then process_otherwise_task(event, task)
+            when Builder::Run then process_run_task(event, task)
+            when Builder::Trigger then process_trigger_task(event, task)
+            when Builder::Otherwise then process_otherwise_task(event, task)
             end
           end
         end
@@ -228,7 +212,7 @@ module OpenHAB
         #
         def process_delay_task(inputs, mod, run_queue, task)
           remaining_queue = run_queue.slice!(0, run_queue.length)
-          after(task.duration) { process_queue(remaining_queue, mod, inputs) }
+          DSL.after(task.duration) { process_queue(remaining_queue, mod, inputs) }
         end
 
         #

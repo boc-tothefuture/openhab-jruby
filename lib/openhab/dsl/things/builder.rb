@@ -16,7 +16,7 @@ module OpenHAB
           @things = []
 
           $things.add_provider(self)
-          OpenHAB::Core::ScriptHandling.script_unloaded { $things.remove_provider(self) }
+          ScriptHandling.script_unloaded { $things.remove_provider(self) }
         end
 
         # Add a thing to this provider
@@ -60,7 +60,7 @@ module OpenHAB
           builder = klass.new(*args, **kwargs)
           builder.instance_eval(&block) if block
           thing = ThingProvider.instance.add(builder)
-          thing = ::OpenHAB::DSL::Things::Thing.new(thing)
+          thing = Core::Things::Thing.new(thing)
           thing.enable(enabled: builder.enabled) unless builder.enabled.nil?
           thing
         end
@@ -96,13 +96,13 @@ module OpenHAB
         class << self
           # @!visibility private
           def thing_type_registry
-            @thing_type_registry ||= ::OpenHAB::Core::OSGi.service("org.openhab.core.thing.type.ThingTypeRegistry")
+            @thing_type_registry ||= OSGi.service("org.openhab.core.thing.type.ThingTypeRegistry")
           end
 
           # @!visibility private
           def config_description_registry
             @config_description_registry ||=
-              ::OpenHAB::Core::OSGi.service("org.openhab.core.config.core.ConfigDescriptionRegistry")
+              OSGi.service("org.openhab.core.config.core.ConfigDescriptionRegistry")
           end
 
           # @!visibility private
@@ -181,7 +181,7 @@ module OpenHAB
           end
 
           thing = builder.build
-          Thing.thing_manager.set_enabled(uid, enabled) unless enabled.nil?
+          Core::Things.manager.set_enabled(uid, enabled) unless enabled.nil?
           thing
         end
 

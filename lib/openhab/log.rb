@@ -12,6 +12,8 @@ module OpenHAB
       base.singleton_class.include(self)
     end
 
+    protected
+
     #
     # Retrieve the {Logger} for this class.
     #
@@ -148,7 +150,7 @@ module OpenHAB
 
       # @!visibility private
       def log_service
-        @log_service = Core::OSGi.service("org.apache.karaf.log.core.LogService")
+        @log_service = OSGi.service("org.apache.karaf.log.core.LogService")
       end
 
       private
@@ -230,13 +232,12 @@ module OpenHAB
     # Print error and stack trace without calls to internal classes
     #
     # @param [Exception] exception A rescued error
-    # @param [String] rule_name The name of the rule where the exception occurred
     # @return [void]
     #
-    def log_exception(exception, rule_name)
+    def log_exception(exception)
       exception = clean_backtrace(exception)
       error do
-        "#{exception.message} (#{exception.class})\nIn rule: #{rule_name}\n#{exception.backtrace&.join("\n")}"
+        "#{exception.message} (#{exception.class}):\n#{exception.backtrace&.join("\n")}"
       end
     end
 
@@ -282,4 +283,6 @@ module OpenHAB
       @slf4j_logger.send(severity, msg.to_s)
     end
   end
+
+  Object.include(Log)
 end

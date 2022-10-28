@@ -7,8 +7,6 @@ module OpenHAB
       # Provides methods to support DSL properties
       #
       module Property
-        include Log
-
         # @!visibility private
         #
         # Extend the calling object with the property methods

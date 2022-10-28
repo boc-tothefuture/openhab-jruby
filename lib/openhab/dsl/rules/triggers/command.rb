@@ -6,12 +6,10 @@ module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include Log
-
         #
         # Create a trigger for when an item or group receives a command
         #
-        # The commands/commands parameters are replicated for DSL fluency
+        # The command/commands parameters are replicated for DSL fluency
         #
         # @param [Array] items Array of items to create trigger for
         # @param [Array] command commands to match for trigger
@@ -107,7 +105,7 @@ module OpenHAB
           # @param [Object] attach object to be attached to the trigger
           #
           def command_trigger(item:, command:, attach: nil, conditions: nil)
-            type, config = if item.is_a? OpenHAB::DSL::Items::GroupItem::GroupMembers
+            type, config = if item.is_a?(GroupItem::GroupMembers)
                              group(group: item)
                            else
                              item(item: item)

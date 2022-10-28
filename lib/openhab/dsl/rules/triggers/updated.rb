@@ -6,8 +6,6 @@ module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include Log
-
         #
         # Create a trigger when item, group or thing is updated
         #
@@ -34,8 +32,6 @@ module OpenHAB
         # Creates updated triggers
         #
         class Updated < Trigger
-          include Log
-
           #
           # Create the trigger
           #
@@ -99,8 +95,8 @@ module OpenHAB
           #
           def update_trigger(item:, to:, attach: nil, conditions: nil)
             type, config = case item
-                           when OpenHAB::DSL::Items::GroupItem::GroupMembers then group_update(item: item, to: to)
-                           when Thing then thing_update(thing: item, to: to)
+                           when GroupItem::GroupMembers then group_update(item: item, to: to)
+                           when Core::Things::Thing then thing_update(thing: item, to: to)
                            else item_update(item: item, to: to)
                            end
             append_trigger(type: type, config: config, attach: attach, conditions: conditions)

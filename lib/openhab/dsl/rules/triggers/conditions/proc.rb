@@ -6,16 +6,12 @@ module OpenHAB
       module Triggers
         # @!visibility private
         module Conditions
-          include Log
-
           #
           # This creates trigger conditions that work on procs
           # @param [Proc] from Proc
           # @param [Proc] to Proc
           #
           class Proc
-            include Log
-
             #
             # Converts supplied ranges to procs that check range
             # @param [Array] ranges objects to convert to range proc if they are ranges
@@ -59,8 +55,8 @@ module OpenHAB
             def self.from_value(value)
               logger.trace("Creating proc for Value(#{value})")
               return value if value.nil?
-              return value if value.is_a? ::Proc
-              return range_proc(value) if value.is_a? Range
+              return value if value.is_a?(::Proc)
+              return range_proc(value) if value.is_a?(Range)
 
               equality_proc(value)
             end
