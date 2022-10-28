@@ -18,7 +18,7 @@ module OpenHAB
       #
       # Rule configuration for OpenHAB Rules engine
       #
-      class RuleConfig
+      class RuleDSL
         include OpenHAB::Core::EntityLookup
         prepend OpenHAB::DSL::Rules::Triggers
         include OpenHAB::DSL::Rules::Guard
@@ -205,7 +205,7 @@ module OpenHAB
 
         # @!visibility private
         #
-        # Create a new RuleConfig
+        # Create a new RuleDSL
         #
         # @param [Object] caller_binding The object initializing this configuration.
         #   Used to execute within the object's context

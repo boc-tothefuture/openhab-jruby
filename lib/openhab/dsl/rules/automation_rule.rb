@@ -82,9 +82,9 @@ module OpenHAB
         def create_queue(inputs)
           case check_guards(event: extract_event(inputs))
           when true
-            @run_queue.dup.grep_v(RuleConfig::Otherwise)
+            @run_queue.dup.grep_v(RuleDSL::Otherwise)
           when false
-            @run_queue.dup.grep(RuleConfig::Otherwise)
+            @run_queue.dup.grep(RuleDSL::Otherwise)
           end
         end
 
@@ -180,7 +180,7 @@ module OpenHAB
           event = extract_event(inputs)
 
           while (task = run_queue.shift)
-            if task.is_a? RuleConfig::Delay
+            if task.is_a? RuleDSL::Delay
               process_delay_task(inputs, mod, run_queue, task)
             else
               process_task(event, task)
@@ -199,9 +199,9 @@ module OpenHAB
         def process_task(event, task)
           thread_local(OPENHAB_RULE_UID: uid) do
             case task
-            when RuleConfig::Run then process_run_task(event, task)
-            when RuleConfig::Trigger then process_trigger_task(event, task)
-            when RuleConfig::Otherwise then process_otherwise_task(event, task)
+            when RuleDSL::Run then process_run_task(event, task)
+            when RuleDSL::Trigger then process_trigger_task(event, task)
+            when RuleDSL::Otherwise then process_otherwise_task(event, task)
             end
           end
         end

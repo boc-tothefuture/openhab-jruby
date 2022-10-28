@@ -26,7 +26,7 @@ module OpenHAB
           #   @param id [String] The ID for the rule.
           #   @yield The execution block for the rule.
           #   @return [nil]
-          #   @see RuleConfig#$1
+          #   @see RuleDSL#$1
           def def_terse_rule(trigger)
             class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
               def #{trigger}(*args, name: nil, id: nil, **kwargs, &block)   # def changed(*args, name: nil, id: nil, **kwargs, &block)

@@ -5,7 +5,7 @@ require "method_source"
 require "openhab/core/thread_local"
 require "openhab/core/services"
 
-require_relative "rule_config"
+require_relative "rule_dsl"
 require_relative "automation_rule"
 require_relative "guard"
 require_relative "name_inference"
@@ -45,8 +45,8 @@ module OpenHAB
         # @see Terse
         #
         # @param [String] name The rule name
-        # @yield Block executed in context of a {RuleConfig}
-        # @yieldparam [RuleConfig] rule
+        # @yield Block executed in context of a {RuleDSL}
+        # @yieldparam [RuleDSL] rule
         #   Optional parameter to access the rule configuration from within execution blocks and guards.
         # @return [void]
         #
@@ -66,7 +66,7 @@ module OpenHAB
           OpenHAB::Core::ThreadLocal.thread_local(OPENHAB_RULE_UID: id) do
             @rule_name = name
 
-            config = RuleConfig.new(block.binding)
+            config = RuleDSL.new(block.binding)
             config.uid(id)
             config.instance_exec(config, &block)
             config.guard = Guard::Guard.new(run_context: config.caller, only_if: config.only_if,
@@ -115,7 +115,7 @@ module OpenHAB
         #
         # Process a rule based on the supplied configuration
         #
-        # @param [RuleConfig] config for rule
+        # @param [RuleDSL] config for rule
         #
         def process_rule_config(config, script)
           return unless create_rule?(config)
@@ -134,7 +134,7 @@ module OpenHAB
         #
         # Should a rule be created based on rule configuration
         #
-        # @param [RuleConfig] config to check
+        # @param [RuleDSL] config to check
         #
         # @return [Boolean] true if it should be created, false otherwise
         #
@@ -154,7 +154,7 @@ module OpenHAB
         #
         # Check if the rule has any triggers
         #
-        # @param [RuleConfig] config to check for triggers
+        # @param [RuleDSL] config to check for triggers
         #
         # @return [Boolean] True if rule has triggers, false otherwise
         #
@@ -165,7 +165,7 @@ module OpenHAB
         #
         # Check if the rule has any execution blocks
         #
-        # @param [RuleConfig] config to check for triggers
+        # @param [RuleDSL] config to check for triggers
         #
         # @return [Boolean] True if rule has execution blocks, false otherwise
         #
