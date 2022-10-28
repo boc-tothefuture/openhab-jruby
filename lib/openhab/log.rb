@@ -5,8 +5,6 @@ module OpenHAB
   # Provides access to the OpenHAB logging facilities using Ruby logging methods
   #
   module Log
-    PREFIX = "org.openhab.automation.jrubyscripting"
-
     # @!visibility private
     def self.included(base)
       return if base.singleton_class?
@@ -42,14 +40,14 @@ module OpenHAB
       def logger(object)
         case object
         when Module
-          name = PREFIX
+          name = Logger::PREFIX
           klass = java_klass(object)
           name += ".#{klass.name.gsub("::", ".")}" if klass.name
         when String
           name = object
         end
         if object.equal?(Object)
-          name = "#{PREFIX}.#{(rule_uid || rules_file).tr_s(":", "_")
+          name = "#{Logger::PREFIX}.#{(rule_uid || rules_file).tr_s(":", "_")
           .gsub(/[^A-Za-z0-9_.-]/, "")}"
         end
 
@@ -104,6 +102,9 @@ module OpenHAB
   # Ruby Logger that forwards messages at appropriate levels to OpenHAB Logger
   #
   class Logger
+    # The base prefix for all loggers from this gem.
+    PREFIX = "org.openhab.automation.jrubyscripting"
+
     # @return [Array] Supported logging levels
     LEVELS = %i[trace debug warn info error].freeze
     private_constant :LEVELS
@@ -130,13 +131,19 @@ module OpenHAB
       # The root logger (all of OpenHAB)
       # @return [Logger]
       def root
-        logger(org.slf4j.Logger::ROOT_LOGGER_NAME)
+        Log.logger(org.slf4j.Logger::ROOT_LOGGER_NAME)
+      end
+
+      # The root logger for this gem
+      # @return [Logger]
+      def gem_root
+        Log.logger(PREFIX)
       end
 
       # The events logger (events.log)
       # @return [Logger]
       def events
-        logger("openhab.event")
+        Log.logger("openhab.event")
       end
 
       # @!visibility private

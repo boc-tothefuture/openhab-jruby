@@ -35,7 +35,7 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    OpenHAB::Log.logger(OpenHAB::Log::PREFIX).level = :trace
+    OpenHAB::Logger.gem_root.level = :trace
   end
 
   Kernel.srand config.seed
