@@ -11,8 +11,8 @@ module OpenHAB
       def self.range(range)
         raise ArgumentError, "Supplied object must be a range" unless range.is_a?(Range)
 
-        start = MonthDay.parse(range.begin)
-        ending = MonthDay.parse(range.end)
+        start = java.time.MonthDay.parse(range.begin)
+        ending = java.time.MonthDay.parse(range.end)
 
         start_range = DayOfYear.new(month_day: start, range: start..ending)
         ending_range = DayOfYear.new(month_day: ending, range: start..ending)
@@ -27,7 +27,7 @@ module OpenHAB
       def self.range?(range)
         return false unless range.is_a?(Range)
 
-        MonthDay.day_of_month?(range.begin) && MonthDay.day_of_month?(range.end)
+        java.time.MonthDay.day_of_month?(range.begin) && java.time.MonthDay.day_of_month?(range.end)
       end
 
       # Converts a MonthDay to a day of year
@@ -35,15 +35,13 @@ module OpenHAB
       class DayOfYear
         include Comparable
 
-        java_import java.time.LocalDate
-
         attr_accessor :month_day
 
         # Number of days in a leap year
         DAYS_IN_YEAR = 366
 
         # Create a new MonthDayRange element
-        # @param [MonthDay] month_day MonthDay element
+        # @param [java.time.MonthDay] month_day MonthDay element
         # @param [Range] range Underlying MonthDay range
         #
         def initialize(month_day:, range:)
@@ -62,7 +60,7 @@ module OpenHAB
             next_month = @month_day.month.plus(1).value
           end
 
-          DayOfYear.new(month_day: MonthDay.of(next_month, next_day_of_month), range: @range)
+          DayOfYear.new(month_day: java.time.MonthDay.of(next_month, next_day_of_month), range: @range)
         end
 
         #
@@ -83,93 +81,16 @@ module OpenHAB
         # Compare MonthDayRangeElement to other objects as required by Range class
         def <=>(other)
           case other
-          when DayOfYear then day_in_range.<=>(other.day_in_range)
-          when MonthDay then self.<=>(DayOfYear.new(month_day: other, range: @range))
-          when LocalDate then self.<=>(MonthDay.of(other.month_value, other.day_of_month))
-          when Date then self.<=>(MonthDay.of(other.month, other.day))
+          when DayOfYear then day_in_range <=> other.day_in_range
+          when java.time.MonthDay then self <=> DayOfYear.new(month_day: other, range: @range)
+          when java.time.LocalDate then self <=> java.time.MonthDay.of(other.month_value, other.day_of_month)
+          when Date then self <=> java.time.MonthDay.of(other.month, other.day)
           else
-            return self.<=>(other.to_local_date) if other.respond_to?(:to_local_date)
-            return self.<=>(other.to_date) if other.respond_to?(:to_date)
+            return self <=> other.to_local_date if other.respond_to?(:to_local_date)
+            return self <=> other.to_date if other.respond_to?(:to_date)
 
             raise "Unable to convert #{other.class} to compare to MonthDay"
           end
-        end
-      end
-    end
-
-    java_import java.time.Month
-    # Extend Month with helper method
-    class Month
-      # Calcalute and memoize the maximum number of days in a year before this month
-      # @return [Number] maximum nummber of days in a year before this month
-      def max_days_before
-        @max_days_before ||= Month.values.select { |month| month < self }.sum(&:max_length)
-      end
-    end
-
-    java_import java.time.MonthDay
-    # Extend MonthDay java object with some helper methods
-    class MonthDay
-      java_import java.time.format.DateTimeFormatter
-      java_import java.time.Month
-
-      #
-      # Constructor
-      #
-      # @param [Integer] m month
-      # @param [Integer] d day of month
-      #
-      # @return [Object] MonthDay object
-      #
-      def self.new(m:, d:) # rubocop:disable Naming/MethodParameterName
-        MonthDay.of(m, d)
-      end
-
-      # Parse MonthDay string as defined with by Monthday class without leading double dash "--"
-      def self.parse(string)
-        logger.trace("#{self.class}.parse #{string} (#{string.class})")
-        java_send :parse, [java.lang.CharSequence, java.time.format.DateTimeFormatter],
-                  string.to_s,
-                  DateTimeFormatter.ofPattern("[--]M-d")
-      end
-
-      # Can the supplied object be parsed into a MonthDay
-      def self.day_of_month?(obj)
-        /^-*[01][0-9]-[0-3]\d$/.match? obj.to_s
-      end
-
-      # Get the maximum (supports leap years) day of the year this month day could be
-      def max_day_of_year
-        day_of_month + month.max_days_before
-      end
-
-      # Remove -- from MonthDay string representation
-      def to_s
-        to_string.delete_prefix("--")
-      end
-
-      # Checks if MonthDay is between the dates of the supplied range
-      # @param [Range] range to check against MonthDay
-      # @return [true,false] true if the MonthDay falls within supplied range, false otherwise
-      def between?(range)
-        MonthDayRange.range(range).cover? self
-      end
-
-      # remove the inherited #== method to use our <=> below
-      remove_method :==
-
-      # Extends MonthDay comparison to support Strings
-      # Necessary to support mixed ranges of Strings and MonthDay types
-      # @return [Number, nil] -1,0,1 if other MonthDay is less than, equal to, or greater than this MonthDay
-      def <=>(other)
-        case other
-        when String
-          self.<=>(MonthDay.parse(other))
-        when MonthDayRange::DayOfYear
-          # Compare with DayOfYear and invert result
-          -other.<=>(self)
-        else
-          super
         end
       end
     end

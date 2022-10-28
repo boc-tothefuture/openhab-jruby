@@ -4,14 +4,7 @@ module OpenHAB
   module Core
     # @!visibility private
     module Actions
-      begin
-        # openHAB 3.3 uses ScriptThingActionsImpl
-        java_import Java::OrgOpenhabCoreAutomationModuleScriptInternalDefaultscope::ScriptThingActionsImpl
-      rescue NameError
-        # openHAB 3.2 uses ScriptThingActions
-        java_import Java::OrgOpenhabCoreAutomationModuleScriptInternalDefaultscope::ScriptThingActions
-        ScriptThingActionsImpl = ScriptThingActions
-      end
+      java_import org.openhab.core.automation.module.script.internal.defaultscope.ScriptThingActionsImpl
 
       class ScriptThingActionsImpl
         field_reader :THING_ACTIONS_MAP

@@ -4,7 +4,7 @@ require "json"
 require "open3"
 require "pp"
 
-OPENHAB_VERSIONS = ["3.2.0", "3.3.0"].freeze
+OPENHAB_VERSIONS = ["3.3.0"].freeze
 
 # Get list
 def features

@@ -293,9 +293,10 @@ module OpenHAB
         # @return [Object] the original result object otherwise.
         #
         def wrap_result(result, method)
-          java_import org.openhab.core.persistence.HistoricItem
-
-          return HistoricState.new(quantify(result.state), result.timestamp) if result.is_a?(HistoricItem)
+          if result.is_a?(org.openhab.core.persistence.HistoricItem)
+            return HistoricState.new(quantify(result.state),
+                                     result.timestamp)
+          end
           return quantify(result) if QUANTITY_METHODS.include?(method)
 
           result

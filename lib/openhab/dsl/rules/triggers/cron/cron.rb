@@ -72,7 +72,7 @@ module OpenHAB
         #   end
         #
         def every(value, at: nil, attach: nil)
-          return every(MonthDay.parse(value), at: at, attach: attach) if value.is_a?(String)
+          return every(java.time.MonthDay.parse(value), at: at, attach: attach) if value.is_a?(String)
 
           @ruby_triggers << [:every, value, { at: at }]
 
