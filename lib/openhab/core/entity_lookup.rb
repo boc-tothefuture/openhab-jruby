@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require_relative "item_proxy"
 
 # Automation lookup and injection of OpenHab entities
@@ -11,7 +10,7 @@ module OpenHAB
     # Manages access to OpenHAB entities
     #
     module EntityLookup
-      include OpenHAB::Log
+      include Log
 
       #
       # Automatically looks up OpenHAB items and things in appropriate registries

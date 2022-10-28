@@ -10,7 +10,7 @@ module OpenHAB
     # Provides access to and ruby wrappers around OpenHAB timers
     #
     module Timers
-      include OpenHAB::Log
+      include Log
 
       # Manages timers
       @timer_manager = OpenHAB::DSL::Support::TimerManager.new
@@ -32,7 +32,7 @@ module OpenHAB
       #
       def after(duration, id: nil, &block)
         # Carry rule name to timer thread
-        thread_locals = { RULE_NAME: Thread.current[:RULE_NAME] } if Thread.current[:RULE_NAME]
+        thread_locals = { OPENHAB_RULE_UID: Thread.current[:OPENHAB_RULE_UID] } if Thread.current[:OPENHAB_RULE_UID]
         thread_locals ||= {}
         return Timers.reentrant_timer(duration: duration, thread_locals: thread_locals, id: id, &block) if id
 

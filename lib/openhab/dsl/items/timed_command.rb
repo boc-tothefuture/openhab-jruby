@@ -3,7 +3,6 @@
 require "openhab/dsl/timers"
 require "openhab/dsl/rules/rule_triggers"
 require "openhab/dsl/rules/triggers/triggers"
-require "openhab/log/logger"
 
 require_relative "generic_item"
 
@@ -132,7 +131,7 @@ module OpenHAB
           # Rule to cancel timed commands
           #
           class TimedCommandCancelRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
-            include OpenHAB::Log
+            include Log
             include OpenHAB::Core::ThreadLocal
 
             def initialize(timed_command_details, semaphore, &block)
@@ -141,7 +140,11 @@ module OpenHAB
               @timed_command_details = timed_command_details
               @block = block
               # Capture rule name if known
-              @thread_locals = Thread.current[:RULE_NAME] ? { RULE_NAME: Thread.current[:RULE_NAME] } : {}
+              @thread_locals = if Thread.current[:OPENHAB_RULE_UID]
+                                 { OPENHAB_RULE_UID: Thread.current[:OPENHAB_RULE_UID] }
+                               else
+                                 {}
+                               end
               set_name("Cancels implicit timer for #{timed_command_details.item.id}")
               set_triggers([OpenHAB::DSL::Rules::RuleTriggers.trigger(
                 type: OpenHAB::DSL::Rules::Triggers::Changed::ITEM_STATE_CHANGE,

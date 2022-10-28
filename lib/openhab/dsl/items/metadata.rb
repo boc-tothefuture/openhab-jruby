@@ -3,7 +3,6 @@
 require "delegate"
 require "forwardable"
 require "openhab/core/osgi"
-require "openhab/log/logger"
 
 module OpenHAB
   module DSL
@@ -12,7 +11,7 @@ module OpenHAB
       # Metadata extension for Items
       #
       module Metadata
-        include OpenHAB::Log
+        include Log
 
         java_import org.openhab.core.items.Metadata
         java_import org.openhab.core.items.MetadataKey

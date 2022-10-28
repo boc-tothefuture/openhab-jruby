@@ -2,7 +2,7 @@
 
 require "delegate"
 require "forwardable"
-require "openhab/log/logger"
+
 require "openhab/core/thread_local"
 
 module OpenHAB
@@ -13,7 +13,7 @@ module OpenHAB
     # @author Brian O'Connell
     # @since 2.0.0
     class Timer < SimpleDelegator
-      include OpenHAB::Log
+      include Log
       include OpenHAB::Core::ThreadLocal
       extend Forwardable
 

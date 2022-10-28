@@ -4,7 +4,7 @@ require "method_source"
 
 require "openhab/core/thread_local"
 require "openhab/core/services"
-require "openhab/log/logger"
+
 require_relative "rule_config"
 require_relative "automation_rule"
 require_relative "guard"
@@ -23,7 +23,7 @@ module OpenHAB
       # The main {rule} DSL method.
       #
       module Rule
-        include OpenHAB::Log
+        include Log
 
         @script_rules = []
 
@@ -63,7 +63,7 @@ module OpenHAB
           id ||= NameInference.infer_rule_id_from_block(block)
           script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
-          OpenHAB::Core::ThreadLocal.thread_local(RULE_NAME: name) do
+          OpenHAB::Core::ThreadLocal.thread_local(OPENHAB_RULE_UID: id) do
             @rule_name = name
 
             config = RuleConfig.new(block.binding)
@@ -79,7 +79,7 @@ module OpenHAB
             logger.trace { config.inspect }
             process_rule_config(config, script)
           end
-        rescue => e
+        rescue Exception => e
           logger.log_exception(e, @rule_name)
         end
 

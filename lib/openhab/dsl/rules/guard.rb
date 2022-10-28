@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "openhab/dsl/rules/property"
-require "openhab/log/logger"
 
 module OpenHAB
   module DSL
@@ -28,7 +27,7 @@ module OpenHAB
         # Guard that can prevent execute of a rule if not satisfied
         #
         class Guard
-          include OpenHAB::Log
+          include Log
 
           #
           # Create a new Guard

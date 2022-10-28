@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require_relative "trigger"
 
 module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include OpenHAB::Log
+        include Log
 
         #
         # Create a trigger when item, group or thing is updated
@@ -35,7 +34,7 @@ module OpenHAB
         # Creates updated triggers
         #
         class Updated < Trigger
-          include OpenHAB::Log
+          include Log
 
           #
           # Create the trigger

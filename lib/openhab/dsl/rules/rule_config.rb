@@ -19,7 +19,6 @@ module OpenHAB
       # Rule configuration for OpenHAB Rules engine
       #
       class RuleConfig
-        include OpenHAB::Log
         include OpenHAB::Core::EntityLookup
         prepend OpenHAB::DSL::Rules::Triggers
         include OpenHAB::DSL::Rules::Guard
@@ -286,6 +285,13 @@ module OpenHAB
             "Trigger Conditions: #{trigger_conditions} " \
             "Trigger UIDs: #{triggers.map(&:id).join(", ")} " \
             "Attachments: #{attachments}"
+        end
+
+        private
+
+        # delegate to the caller's logger
+        def logger
+          @caller.logger
         end
       end
     end

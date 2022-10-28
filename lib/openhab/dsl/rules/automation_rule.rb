@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "openhab/core/thread_local"
-require "openhab/log/logger"
+
 require "openhab/dsl/between"
 
 require_relative "item_event"
@@ -16,7 +16,7 @@ module OpenHAB
       # JRuby extension to OpenHAB Rule
       #
       class AutomationRule < Java::OrgOpenhabCoreAutomationModuleScriptRulesupportSharedSimple::SimpleRule
-        include OpenHAB::Log
+        include Log
         include OpenHAB::Core::ThreadLocal
         include OpenHAB::DSL::Between
 
@@ -55,7 +55,7 @@ module OpenHAB
         #
         def execute(mod = nil, inputs = nil)
           OpenHAB::DSL.import_presets
-          thread_local(RULE_NAME: name) do
+          thread_local(OPENHAB_RULE_UID: uid) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
             trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
@@ -163,7 +163,7 @@ module OpenHAB
             logger.trace("Skipped execution of rule '#{name}' because of guard #{@guard}")
           end
           false
-        rescue => e
+        rescue Exception => e
           logger.log_exception(e, name)
         end
 
@@ -186,7 +186,7 @@ module OpenHAB
               process_task(event, task)
             end
           end
-        rescue => e
+        rescue Exception => e
           logger.log_exception(e, name)
         end
 
@@ -197,7 +197,7 @@ module OpenHAB
         # @param [Task] task task containing otherwise block to execute
         #
         def process_task(event, task)
-          thread_local(RULE_NAME: name) do
+          thread_local(OPENHAB_RULE_UID: uid) do
             case task
             when RuleConfig::Run then process_run_task(event, task)
             when RuleConfig::Trigger then process_trigger_task(event, task)

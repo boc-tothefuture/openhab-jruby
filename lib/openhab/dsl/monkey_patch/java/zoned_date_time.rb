@@ -14,7 +14,7 @@ module OpenHAB
         #
         module ZonedDateTimeExtensions
           include TimeExtensions
-          include OpenHAB::Log
+          include Log
 
           # apply meta-programming methods to prepending class
           # @!visibility private

@@ -14,8 +14,6 @@ module OpenHAB
       #
       # @see https://www.openhab.org/javadoc/latest/org/openhab/core/items/genericitem
       class GenericItem
-        include Log
-
         prepend Metadata
         prepend Persistence
         include Semantics

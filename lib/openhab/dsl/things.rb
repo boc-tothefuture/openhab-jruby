@@ -4,7 +4,6 @@ require "delegate"
 
 require "singleton"
 
-require "openhab/log/logger"
 require "openhab/dsl/actions"
 require "openhab/dsl/lazy_array"
 require "openhab/dsl/things/builder"
@@ -16,7 +15,7 @@ module OpenHAB
     #
     module Things
       java_import org.openhab.core.thing.ThingStatus
-      include OpenHAB::Log
+      include Log
 
       #
       # Ruby Delegator for Thing
@@ -45,7 +44,7 @@ module OpenHAB
         end
 
         include OpenHAB::DSL::Actions
-        include OpenHAB::Log
+        include Log
 
         def initialize(thing)
           super

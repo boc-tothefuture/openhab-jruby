@@ -2,7 +2,7 @@
 
 module OpenHAB
   module DSL
-    include OpenHAB::Log
+    include Log
     #
     # Import required java classes
     #

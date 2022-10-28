@@ -14,7 +14,7 @@ module OpenHAB
 
           # super
           DSL.import_presets
-          thread_local(RULE_NAME: name) do
+          thread_local(OPENHAB_RULE_UID: uid) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
             trigger_conditions(inputs).process(mod: mod, inputs: inputs) do

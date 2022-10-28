@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require_relative "trigger"
 
 module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include OpenHAB::Log
+        include Log
 
         #
         # Create a trigger for when an item or group receives a command
@@ -30,7 +29,7 @@ module OpenHAB
 
           flattened_items.map do |item|
             combined_commands.map do |cmd|
-              logger.states "Creating received command trigger", item: item, command: cmd
+              logger.trace "Creating received command trigger for items #{item.inspect} and commands #{cmd.inspect}"
 
               command_trigger.trigger(item: item, command: cmd, attach: attach)
             end

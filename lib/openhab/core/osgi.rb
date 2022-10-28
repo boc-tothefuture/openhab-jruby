@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
-
 module OpenHAB
   module Core
     #
     # OSGi services interface
     #
     class OSGi
-      include OpenHAB::Log
+      include Log
 
       java_import org.osgi.framework.FrameworkUtil
 

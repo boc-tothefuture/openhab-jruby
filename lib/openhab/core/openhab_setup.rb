@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require "openhab/core/services"
 
 module OpenHAB
@@ -8,7 +7,7 @@ module OpenHAB
   # Core support for OpenHAB JRuby Library
   #
   module Core
-    include OpenHAB::Log
+    include Log
 
     # @return [Integer] Number of seconds to wait between checks for automation manager
     CHECK_DELAY = 10

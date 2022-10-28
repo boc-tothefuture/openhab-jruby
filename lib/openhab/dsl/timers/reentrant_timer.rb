@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require_relative "timer"
 
 module OpenHAB
@@ -11,7 +10,7 @@ module OpenHAB
     # @author Brian O'Connell
     # @since 2.0.0
     class ReentrantTimer < Timer
-      include OpenHAB::Log
+      include Log
 
       attr_reader :id, :reentrant_id
 

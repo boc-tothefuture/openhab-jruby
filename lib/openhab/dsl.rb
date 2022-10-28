@@ -5,7 +5,7 @@ require "openhab/core/load_path"
 require "openhab/core/entity_lookup"
 require "openhab/core/script_handling"
 require "openhab/core/openhab_setup"
-require "openhab/log/logger"
+require "openhab/log"
 require "openhab/dsl/dsl"
 require "openhab/dsl/version"
 
@@ -13,7 +13,7 @@ require "openhab/dsl/version"
 # Module used to extend base object with OpenHAB Library functionality
 #
 module OpenHAB
-  include OpenHAB::Log
+  include Log
   #
   # Extends calling object with DSL and helper methods
   #

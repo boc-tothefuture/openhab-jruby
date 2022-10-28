@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
-
 module OpenHAB
   module DSL
     module Rules
@@ -9,7 +7,7 @@ module OpenHAB
       # Provides methods to support DSL properties
       #
       module Property
-        include OpenHAB::Log
+        include Log
 
         # @!visibility private
         #

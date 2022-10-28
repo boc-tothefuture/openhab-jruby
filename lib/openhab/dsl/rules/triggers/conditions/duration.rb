@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
-
 module OpenHAB
   module DSL
     module Rules
       module Triggers
         # @!visibility private
         module Conditions
-          include OpenHAB::Log
+          include Log
           #
           # this is a no-op condition which simply executes the provided block
           #

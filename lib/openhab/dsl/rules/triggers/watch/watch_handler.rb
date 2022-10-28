@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require "openhab/core/services"
 
 module OpenHAB
@@ -12,7 +11,7 @@ module OpenHAB
         # Module for watching directories/files
         #
         module WatchHandler
-          include OpenHAB::Log
+          include Log
 
           #
           # Creates trigger types and trigger type factories for OpenHAB
@@ -85,7 +84,7 @@ module OpenHAB
 
           # Implements the OpenHAB TriggerHandler interface to process Watch Triggers
           class WatchTriggerHandler
-            include OpenHAB::Log
+            include Log
             include org.openhab.core.automation.handler.TriggerHandler
 
             # Creates a new WatchTriggerHandler

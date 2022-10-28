@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
-
 # OpenHAB main module
 module OpenHAB
   module Core
@@ -26,7 +24,7 @@ module OpenHAB
     # Manages script loading and unloading
     #
     module ScriptHandlingCallbacks
-      include OpenHAB::Log
+      include Log
 
       class << self
         #

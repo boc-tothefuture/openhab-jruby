@@ -17,7 +17,7 @@ module OpenHAB
     # Provides access to OpenHAB attributes
     #
     module Core
-      include OpenHAB::Log
+      include Log
 
       module_function
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
-
 # OpenHAB main module
 module OpenHAB
   module Core
@@ -9,7 +7,7 @@ module OpenHAB
     # Manages thread local varaibles for access inside of blocks
     #
     module ThreadLocal
-      include OpenHAB::Log
+      include Log
 
       #
       # Execute the supplied block with the supplied values set for the currently running thread

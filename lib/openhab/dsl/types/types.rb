@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
-
 require_relative "type"
 
 require_relative "date_time_type"
@@ -51,7 +49,7 @@ module OpenHAB
     # modules
     #
     module Types
-      include OpenHAB::Log
+      include Log
 
       constants.map { |c| const_get(c) }
                .grep(Module)

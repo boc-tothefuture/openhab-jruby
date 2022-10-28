@@ -6,7 +6,7 @@ module OpenHAB
     module Between
       # Manages Month Day Ranges
       module MonthDayRange
-        include OpenHAB::Log
+        include Log
 
         # Creates a range that can be compared against MonthDay objects, strings
         # or anything responding to 'to_date' to see if they are within the range
@@ -37,7 +37,7 @@ module OpenHAB
         # which is represented as a number from 1 to 732 to support comparisions when the range overlaps a year boundary
         class DayOfYear
           include Comparable
-          include OpenHAB::Log
+          include Log
           java_import java.time.LocalDate
 
           attr_accessor :month_day
@@ -113,7 +113,7 @@ module OpenHAB
       java_import java.time.MonthDay
       # Extend MonthDay java object with some helper methods
       class MonthDay
-        include OpenHAB::Log
+        include Log
         java_import java.time.format.DateTimeFormatter
         java_import java.time.Month
 

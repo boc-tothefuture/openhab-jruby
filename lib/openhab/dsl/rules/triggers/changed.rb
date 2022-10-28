@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require_relative "conditions/duration"
 require_relative "conditions/proc"
 require_relative "trigger"
@@ -9,7 +8,7 @@ module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include OpenHAB::Log
+        include Log
 
         #
         # Creates a trigger when an item, member of a group, or a thing changed states.

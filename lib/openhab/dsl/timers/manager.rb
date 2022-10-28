@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "set"
-require "openhab/log/logger"
+
 require_relative "reentrant_timer"
 
 module OpenHAB
@@ -14,7 +14,7 @@ module OpenHAB
       # Manages data structures that track timers
       #
       class TimerManager
-        include OpenHAB::Log
+        include Log
 
         attr_reader :timer_ids
 

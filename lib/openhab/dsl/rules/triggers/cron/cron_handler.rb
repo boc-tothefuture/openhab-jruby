@@ -11,7 +11,7 @@ module OpenHAB
         # Cron trigger handler that provides trigger ID
         #
         module CronHandler
-          include OpenHAB::Log
+          include Log
 
           #
           # Creates trigger types and trigger type factories for OpenHAB
@@ -45,7 +45,7 @@ module OpenHAB
           # Unfortunatly because the CronTriggerHandler in OpenHAB core is marked internal
           # the entire thing must be recreated here
           class CronTriggerHandler < org.openhab.core.automation.handler.BaseTriggerModuleHandler
-            include OpenHAB::Log
+            include Log
             include org.openhab.core.scheduler.SchedulerRunnable
             include org.openhab.core.automation.handler.TimeBasedTriggerHandler
 

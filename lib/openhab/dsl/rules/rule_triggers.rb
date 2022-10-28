@@ -3,7 +3,7 @@
 require "forwardable"
 
 require "securerandom"
-require "openhab/log/logger"
+
 require_relative "triggers/conditions/proc"
 
 module OpenHAB
@@ -16,7 +16,7 @@ module OpenHAB
       # Rule configuration for OpenHAB Rules engine
       #
       class RuleTriggers
-        include OpenHAB::Log
+        include Log
 
         # @return [Array] Of triggers
         attr_accessor :triggers

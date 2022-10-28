@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require "openhab/dsl/rules/triggers/trigger"
 
 module OpenHAB
@@ -26,7 +25,7 @@ module OpenHAB
           types = [binding.local_variable_get(:for)].flatten
           config = { path: path.to_s, types: types.map(&:to_s), glob: glob.to_s }
 
-          logger.state "Creating a watch trigger", path: path, glob: glob, types: types
+          logger.trace "Creating a watch trigger for #{path} with glob #{glob} on types #{types.inspect}"
           Watch.new(rule_triggers: @rule_triggers).trigger(config: config, attach: attach)
         end
 

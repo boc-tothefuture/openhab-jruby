@@ -4,8 +4,6 @@ require_relative "imports"
 
 OpenHAB::DSL.import_presets
 
-require "openhab/log/logger"
-
 # the order of these is important
 require_relative "types/types"
 require_relative "items/items"

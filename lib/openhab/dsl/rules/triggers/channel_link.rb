@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require "openhab/dsl/things"
 require_relative "trigger"
 
@@ -8,7 +7,7 @@ module OpenHAB
   module DSL
     module Rules
       module Triggers
-        include OpenHAB::Log
+        include Log
 
         #
         # Creates a channel linked trigger

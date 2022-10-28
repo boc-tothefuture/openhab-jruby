@@ -27,7 +27,7 @@ module OpenHAB
     # Contains all OpenHAB *Item classes, as well as associated support
     # modules
     module Items
-      include OpenHAB::Log
+      include Log
 
       class << self
         private

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "openhab/log/logger"
 require "openhab/dsl/types/date_time_type"
 require "openhab/dsl/items/items"
 require "time"
@@ -18,7 +17,7 @@ module OpenHAB
       # @since 0.0.1
       class TimeOfDay
         include Comparable
-        include OpenHAB::Log
+        include Log
 
         # Immutable Java object containing Time Of Day
         # @return [Java.Time.LocalTime] reprsenting the Time Of Day
@@ -164,7 +163,7 @@ module OpenHAB
       # Modules that refines the Ruby Range object cover? and include? methods to support TimeOfDay ranges
       class TimeOfDayRangeElement < Numeric
         include Comparable
-        include OpenHAB::Log
+        include Log
 
         NUM_SECONDS_IN_DAY = (60 * 60 * 24)
 
