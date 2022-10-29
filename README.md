@@ -20,7 +20,7 @@
 
 The OpenHAB JRuby scripting helpers bring the power of the Ruby language to OpenHAB. Rather than being a pure pass-through to OpenHAB, they provide a Ruby-like experience when building automation rules within OpenHAB.
 
-Full documentation is available at [rubydoc.info](https://rubydoc.info/gems/openhab-jrubyscripting/).
+Full documentation is available on [GitHub Pages](https://ccutrer.github.io/openhab-jrubyscripting/).
 
  * [Installation](docs/installation.md)
  * [Usage](docs/usage.md)

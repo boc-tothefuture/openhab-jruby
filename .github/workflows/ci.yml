@@ -1,4 +1,4 @@
-name: Openhab-JRuby-Scripting
+name: Continuous Integration
 
 on:
   pull_request:
@@ -21,17 +21,8 @@ jobs:
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
-      - name: Rubocop
-        run: bundle exec rubocop
-
-  commit-lint:
-    runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'ci skip')"
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v4
+      - name: RuboCop
+        run: bin/rubocop
 
   cucumber-lint:
     runs-on: ubuntu-latest
@@ -43,7 +34,7 @@ jobs:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
       - name: Cucumber Lint
-        run: bundle exec cuke_linter -p features/
+        run: bin/cuke_linter -p features/
 
   yard-coverage:
     runs-on: ubuntu-latest
@@ -56,8 +47,8 @@ jobs:
           bundler-cache: true
       - name: Yard Coverage
         run: |
-          bundle exec yard stats --list-undoc
-          bundle exec yard stats | grep "100.00% documented"
+          bin/yard stats --list-undoc
+          bin/yard stats | grep "100.00% documented"
 
   openhab-matrix:
     runs-on: ubuntu-latest
@@ -72,7 +63,7 @@ jobs:
           bundler-cache: true
       - id: set-matrix
         run: |
-          JSON=$(bundle exec rake github:oh_versions)
+          JSON=$(bin/rake github:oh_versions)
           echo $JSON
           echo "::set-output name=matrix::$( echo "$JSON" )"
 
@@ -98,7 +89,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         env:
           OPENHAB_VERSION: ${{ matrix.openhab_version }}
-        run: bundle exec rake openhab:setup
+        run: bin/rake openhab:setup
 
   rspec:
     needs: [openhab-matrix, openhab-setup]
@@ -122,7 +113,7 @@ jobs:
           path: tmp/
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: RSpec
-        run: bundle exec rspec
+        run: bin/rspec
         timeout-minutes: 2
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
@@ -148,14 +139,14 @@ jobs:
           rm features/support/env.rb
       - id: set-matrix
         run: |
-          JSON=$(bundle exec rake github:matrix[20])
+          JSON=$(bin/rake github:matrix[20])
           echo $JSON
           echo "::set-output name=matrix::$( echo "$JSON" )"
 
   cucumber:
     needs: [cucumber-matrix, openhab-setup]
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    if: "false" # !contains(github.event.head_commit.message, 'ci skip')"
     strategy:
       matrix: ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
     steps:
@@ -174,9 +165,9 @@ jobs:
           path: tmp/
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: Cucumber
-        run: bundle exec rake "features[${{ matrix.features }}]"
+        run: bin/rake "features[${{ matrix.features }}]"
       - name: Generate OpenHAB Dump
-        run: bundle exec rake openhab:dump
+        run: bin/rake openhab:dump
         if: failure()
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
@@ -185,4 +176,3 @@ jobs:
           name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.index }}
           path: tmp/
           retention-days: 2
-

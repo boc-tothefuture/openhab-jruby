@@ -1,1 +1,1 @@
---protected --output-dir docs/yard --plugin coderay --markup markdown --markup-provider commonmarker - CHANGELOG.md docs/**/*.md
+--protected --load openhab/yard.rb --output-dir docs/yard --plugin coderay --markup markdown --markup-provider commonmarker - CHANGELOG.md docs/**/*.md
