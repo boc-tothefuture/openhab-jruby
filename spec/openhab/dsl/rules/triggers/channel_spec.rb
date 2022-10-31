@@ -4,7 +4,7 @@ require "method_source"
 
 RSpec.describe OpenHAB::DSL::Rules::Triggers::Channel do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
   before do
-    install_addon "binding-astro"
+    install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
     things.build { thing "astro:sun:home", config: { "geolocation" => "0,0" } }
   end
 

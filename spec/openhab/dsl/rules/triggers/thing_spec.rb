@@ -2,7 +2,7 @@
 
 RSpec.describe "OpenHAB::DSL::Rules::Triggers#thing_added" do
   before do
-    install_addon "binding-astro"
+    install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
   end
 
   it "triggers" do

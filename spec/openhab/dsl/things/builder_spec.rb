@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe OpenHAB::DSL::Things::Builder do
-  before { install_addon "binding-astro" }
+  before { install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes" }
 
   it "can create a thing" do
     things.build do

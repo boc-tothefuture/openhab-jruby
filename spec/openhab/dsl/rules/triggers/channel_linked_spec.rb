@@ -2,7 +2,7 @@
 
 RSpec.describe "OpenHAB::DSL::Rules::Triggers#channel_linked" do
   before do
-    install_addon "binding-astro"
+    install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
     things.build { thing "astro:sun:home", config: { "geolocation" => "0,0" } }
   end
 

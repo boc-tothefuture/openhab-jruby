@@ -266,16 +266,39 @@ module OpenHAB
       #
       # @param [String] addon_id The addon id, such as "binding-mqtt"
       # @param [true,false] wait Wait until OSGi has confirmed the bundle is installed and running before returning.
+      # @param [String,Array<String>] ready_markers Array of ready marker types to wait for.
+      #   The addon's bundle id is used as the identifier.
       # @return [void]
       #
-      def install_addon(addon_id, wait: true)
+      def install_addon(addon_id, wait: true, ready_markers: nil)
         addon_service = OSGi.service("org.openhab.core.addon.AddonService")
         addon_service.install(addon_id)
         return unless wait
 
+        addon = nil
         loop do
           addon = addon_service.get_addon(addon_id, nil)
-          return if addon.installed?
+          break if addon.installed?
+
+          sleep 0.25
+        end
+
+        return unless ready_markers
+
+        package_id = addon.logger_packages.first
+
+        ready_markers = Array(ready_markers).map do |marker|
+          case marker
+          when String
+            org.openhab.core.service.ReadyMarker.new(marker, package_id)
+          else
+            marker
+          end
+        end
+
+        rs = OSGi.service("org.openhab.core.service.ReadyService")
+        loop do
+          break if ready_markers.all? { |rm| rs.ready?(rm) }
 
           sleep 0.25
         end

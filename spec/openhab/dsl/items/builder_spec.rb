@@ -155,7 +155,7 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
 
   context "with a thing" do
     before do
-      install_addon "binding-astro"
+      install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
       things.build do
         thing "astro:sun:home", "Astro Sun Data", config: { "geolocation" => "0,0" }
       end

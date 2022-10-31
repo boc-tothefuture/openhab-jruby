@@ -2,7 +2,7 @@
 
 RSpec.describe "OpenHAB::DSL::Rules::Triggers on thing status" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
   before do
-    install_addon "binding-astro"
+    install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
   end
 
   let!(:thing) do

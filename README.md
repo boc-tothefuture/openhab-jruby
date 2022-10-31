@@ -16,7 +16,7 @@
   <a href="https://semver.org/">
     <img alt="SemVer version observance" src="https://img.shields.io/badge/semver-2.0.0-blue"/>
   </a>
- </p>
+</p>
 
 The OpenHAB JRuby scripting helpers bring the power of the Ruby language to OpenHAB. Rather than being a pure pass-through to OpenHAB, they provide a Ruby-like experience when building automation rules within OpenHAB.
 
