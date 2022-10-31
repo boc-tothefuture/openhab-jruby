@@ -7,8 +7,7 @@ module OpenHAB
     module Types
       StopMoveType = org.openhab.core.library.types.StopMoveType
 
-      # Adds methods to core OpenHAB StopMoveType to make it more
-      # natural in Ruby
+      # Implements the {STOP} and {MOVE} commands.
       class StopMoveType # rubocop:disable Lint/EmptyClass
         # @!parse include Type
 

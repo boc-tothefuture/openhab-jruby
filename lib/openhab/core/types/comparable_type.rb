@@ -4,8 +4,8 @@ require_relative "type"
 
 module OpenHAB
   module Core
-    # Comparable#== is overwritten by Type, because DecimalType etc.
-    # inherits from Comparable on the Java side, so it's in the wrong place
+    # {Comparable#==} is overwritten by Type, because {DecimalType} etc.
+    # inherit from {Comparable} on the Java side, so it's in the wrong place
     # in the ancestor list
     # @!visibility private
     module ComparableType

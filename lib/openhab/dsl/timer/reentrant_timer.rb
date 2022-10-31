@@ -25,6 +25,13 @@ module OpenHAB
           logger.trace("Created Reentrant Timer #{self} with reentrant Key #{@reentrant_id}")
         end
 
+        #
+        # Forms a full ID for a timer including its source location.
+        #
+        # @param [Object] id
+        # @param [Proc] block The block to get the source location from
+        # @return [Array<Object>] A non-nested array describing the full ID.
+        #
         def self.reentrant_id(id:, &block)
           [id, block.source_location].flatten
         end

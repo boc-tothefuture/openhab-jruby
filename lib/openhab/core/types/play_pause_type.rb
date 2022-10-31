@@ -7,8 +7,7 @@ module OpenHAB
     module Types
       PlayPauseType = org.openhab.core.library.types.PlayPauseType
 
-      # Adds methods to core OpenHAB PlayPauseType to make it more
-      # natural in Ruby
+      # Implements {PLAY} and {PAUSE} commands and states.
       class PlayPauseType # rubocop:disable Lint/EmptyClass
         # @!parse include Type
 

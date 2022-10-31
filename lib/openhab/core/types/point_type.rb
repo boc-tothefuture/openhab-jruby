@@ -7,7 +7,7 @@ module OpenHAB
     module Types
       PointType = org.openhab.core.library.types.PointType
 
-      # Adds methods to core OpenHAB PointType to make it more natural in Ruby
+      # {PointType} can be used for items that are dealing with GPS or location awareness functionality.
       class PointType
         # @!parse include PrimitiveType
 

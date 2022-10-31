@@ -5,28 +5,8 @@ module OpenHAB
     module Items
       # Functionality to implement `ensure`/`ensure_states`
       module Ensure
-        # Contains the global `ensure_states` method
-        module EnsureStates
-          # Global method that takes a block and for the duration of the block
-          # all commands sent will check if the item is in the command's state
-          # before sending the command.
-          #
-          # @example Turn on several switches only if they're not already on
-          #   ensure_states do
-          #     Switch1.on
-          #     Switch2.on
-          #   end
-          def ensure_states
-            old = Thread.current[:ensure_states]
-            Thread.current[:ensure_states] = true
-            yield
-          ensure
-            Thread.current[:ensure_states] = old
-          end
-          module_function :ensure_states
-        end
-
-        # Contains the `ensure` method mixed into {GenericItem} and {GroupItem::GroupMembers}
+        # Contains the `ensure` method mixed into {Core::Items::GenericItem} and
+        # {Core::Items::GroupItem::GroupMembers}
         module Ensurable
           # Fluent method call that you can chain commands on to, that will
           # then automatically ensure that the item is not in the command's
@@ -100,5 +80,3 @@ module OpenHAB
     end
   end
 end
-
-Object.include OpenHAB::DSL::Items::Ensure::EnsureStates

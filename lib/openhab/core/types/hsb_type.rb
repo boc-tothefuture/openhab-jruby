@@ -9,7 +9,8 @@ module OpenHAB
     module Types
       HSBType = org.openhab.core.library.types.HSBType
 
-      # Adds methods to core OpenHAB HSBType to make it more natural in Ruby
+      # {HSBType} is a complex type with constituents for hue, saturation and
+      #  brightness and can be used for color items.
       class HSBType < PercentType
         # @!parse BLACK = BLACK # @return [HSBType]
         # @!parse WHITE = WHITE # @return [HSBType]

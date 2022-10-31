@@ -1,1 +1,13 @@
---protected --load openhab/yard.rb --output-dir docs/yard --plugin coderay --markup markdown --markup-provider commonmarker - CHANGELOG.md docs/**/*.md
+--exclude lib/openhab/rspec/mocks/
+--exclude lib/openhab/yard/
+--exclude lib/openhab/rspec/jruby.rb
+--exclude lib/openhab/rspec/karaf.rb
+--exclude lib/openhab/rspec/openhab/
+--exclude lib/openhab/rspec/suspend_rules.rb
+--load openhab/yard.rb
+--output-dir docs/yard
+--plugin coderay
+--protected
+--markup markdown
+--markup-provider commonmarker
+- CHANGELOG.md docs/**/*.md

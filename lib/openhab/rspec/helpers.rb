@@ -50,19 +50,28 @@ end
 
 module OpenHAB
   module RSpec
+    #
+    # Provides helper methods for use in specs, to easily work with and adjust
+    # the OpenHAB environment.
+    #
+    # These methods are automatically available in RSpec spec blocks, as well
+    # as other per-spec hooks like `before` and `after`. You can also call them
+    # explicitly.
+    #
     module Helpers
-      # @!visibility private
       module BindingHelper
+        # @!visibility private
         def add_kwargs_to_current_binding(binding, kwargs)
           kwargs.each { |(k, v)| binding.local_variable_set(k, v) }
         end
       end
-
       private_constant :BindingHelper
 
       # Yard crashes on this; be tricky so it doesn't realize what's going on
       s = singleton_class
       s.include(Helpers)
+
+      module_function
 
       #
       # Reconfigure all items to autoupdate

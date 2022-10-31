@@ -5,7 +5,7 @@ module OpenHAB
     module Events
       java_import org.openhab.core.items.events.ItemStateEvent
 
-      # Helpers common to ItemStateEvent and ItemStateChangedEvent
+      # Helpers common to {ItemStateEvent} and {ItemStateChangedEvent}.
       module ItemState
         #
         # Check if the state == UNDEF
@@ -34,15 +34,15 @@ module OpenHAB
         end
 
         #
-        # Get the item state
-        #
-        # @return [Types::PrimitiveState] OpenHAB state if state is not UNDEF or NULL, nil otherwise
+        # @!attribute [r] state
+        # @return [Types::State, nil] The state of the item if it is not {UNDEF} or {NULL}, `nil` otherwise.
         #
         def state
           item_state if state?
         end
       end
 
+      # {AbstractEvent} sent when an item's state is updated (regardless of if it changed or not).
       class ItemStateEvent < ItemEvent
         include ItemState
       end

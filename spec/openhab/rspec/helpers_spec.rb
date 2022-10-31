@@ -13,7 +13,7 @@ RSpec.describe OpenHAB::RSpec::Helpers do
       expect(helpers).to receive(:load).with("automation/sl30/filec.rb").ordered
       expect(helpers).to receive(:load).with("automation/filea.rb").ordered
       # rubocop:enable RSpec/SubjectStub
-      helpers.load_rules
+      load_rules
     end
   end
 end

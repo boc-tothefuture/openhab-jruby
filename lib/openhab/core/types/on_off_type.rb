@@ -7,7 +7,13 @@ module OpenHAB
     module Types
       OnOffType = org.openhab.core.library.types.OnOffType
 
-      # Adds methods to core OpenHAB OnOffType to make it more natural in Ruby
+      #
+      # Implements {ON} and {OFF} commands and states.
+      #
+      # Also, {PercentType} can be converted to {OnOffType}
+      # for more semantic comparisons. `0` is {OFF}, anything
+      # else if {ON}.
+      #
       class OnOffType
         # @!parse include Type
 

@@ -14,6 +14,9 @@ module OpenHAB
       #
       # Wait until OpenHAB engine ready to process
       #
+      # @return [void]
+      #
+      # @!visibility private
       def wait_till_openhab_ready
         logger.trace("Checking readiness of OpenHAB")
         until automation_manager
@@ -23,6 +26,10 @@ module OpenHAB
         logger.trace "Automation manager instantiated, OpenHAB ready for rule processing."
       end
 
+      #
+      # @!attribute [r] config_folder
+      # @return [String] The configuration folder path name.
+      #
       def config_folder
         org.openhab.core.OpenHAB.config_folder
       end
@@ -30,6 +37,9 @@ module OpenHAB
       #
       # JRuby isn't respecting $RUBYLIB when run embedded inside of OpenHAB, so do it manually
       #
+      # @return [void]
+      #
+      # @!visibility private
       def add_rubylib_to_load_path
         ENV["RUBYLIB"]&.split(File::PATH_SEPARATOR)&.each do |path|
           next if path.empty?
@@ -38,14 +48,19 @@ module OpenHAB
         end
       end
 
-      # Get the OpenHAB automation manager
-      # @return [AutomationManager] OpenHAB Automation manager
+      #
+      # @!attribute [r] automation_manager
+      # @return [org.openhab.core.automation.rule.script.rulesupport.shared.ScriptedAutomationManager]
+      #   The OpenHAB Automation manager.
+      #
       def automation_manager
         $scriptExtension.get("automationManager")
       end
 
-      # Get the OpenHAB rule registry
-      # @return [Registry] OpenHAB rule registry
+      #
+      # @!attribute [r] rule_registry
+      # @return [org.openhab.core.automation.RuleRegistry] The OpenHAB rule registry
+      #
       def rule_registry
         $scriptExtension.get("ruleRegistry")
       end

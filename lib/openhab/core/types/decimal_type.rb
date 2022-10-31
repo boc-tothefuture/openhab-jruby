@@ -10,6 +10,8 @@ module OpenHAB
     module Types
       DecimalType = org.openhab.core.library.types.DecimalType
 
+      # {DecimalType} uses a {java.lang.BigDecimal} internally and thus can be
+      # used for integers, longs and floating point numbers alike.
       class DecimalType
         # @!parse include Type
         include NumericType

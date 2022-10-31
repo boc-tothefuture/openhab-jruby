@@ -3,7 +3,9 @@
 module OpenHAB
   module CoreExt
     module Java
+      # @!visibility private
       module MonthDay
+        # @!visibility private
         module ClassMethods
           # Parse MonthDay string as defined with by Monthday class without leading double dash "--"
           def parse(string)
@@ -19,6 +21,7 @@ module OpenHAB
           end
         end
 
+        # @!visibility private
         def self.included(klass)
           klass.singleton_class.include(ClassMethods)
           klass.remove_method :==

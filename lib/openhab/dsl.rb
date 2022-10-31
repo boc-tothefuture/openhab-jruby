@@ -65,6 +65,28 @@ module OpenHAB
     end
 
     #
+    # Global method that takes a block and for the duration of the block
+    # all commands sent will check if the item is in the command's state
+    # before sending the command.
+    #
+    # @yield
+    # @return [Object] The result of the block.
+    #
+    # @example Turn on several switches only if they're not already on
+    #   ensure_states do
+    #     Switch1.on
+    #     Switch2.on
+    #   end
+    #
+    def ensure_states
+      old = Thread.current[:ensure_states]
+      Thread.current[:ensure_states] = true
+      yield
+    ensure
+      Thread.current[:ensure_states] = old
+    end
+
+    #
     # Fetches all items from the item registry
     #
     # @return [Core::Items::Registry]
@@ -179,11 +201,6 @@ module OpenHAB
     # @return [Hash] hash of user specified ids to sets of times
     def timers
       Timer::Manager.instance.timer_ids
-    end
-
-    def self.include(klass)
-      # the class needs the const_missing method
-      klass.singleton_class.include(Core::EntityLookup)
     end
   end
 end

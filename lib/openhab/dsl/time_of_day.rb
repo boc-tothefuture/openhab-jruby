@@ -13,27 +13,37 @@ module OpenHAB
       attr_reader :local_time
 
       class << self
+        #
         # Constructs a TimeOfDay representing the time when called
+        #
         # @return [TimeOfDay] representing time when method was invoked
+        #
         def now
           now = java.time.LocalTime.now()
           new(h: now.hour, m: now.minute, s: now.second)
         end
 
+        #
         # Constructs a TimeOfDay representing midnight
-
+        #
         # @return [TimeOfDay] representing midnight
         def midnight
           new(h: 0, m: 0, s: 0)
         end
 
+        #
         # Constructs a TimeOfDay representing noon
-
+        #
         # @return [TimeOfDay] representing noon
         def noon
           new(h: 12, m: 0, s: 0)
         end
 
+        #
+        # Constructs a TimeOfDay range representing an entire day.
+        #
+        # @return [Range] A range describing an entire day
+        #
         def all_day
           between(new(h: 0, m: 0, s: 0)..new(h: 23, m: 59, s: 59))
         end
@@ -152,10 +162,12 @@ module OpenHAB
       end
     end
 
-    # Modules that refines the Ruby Range object cover? and include? methods to support TimeOfDay ranges
+    # Module that refines the Ruby Range object cover? and include? methods to support TimeOfDay ranges
+    # @!visibility private
     class TimeOfDayRangeElement < Numeric
       include Comparable
 
+      # @!visibility private
       NUM_SECONDS_IN_DAY = (60 * 60 * 24)
 
       attr_reader :sod

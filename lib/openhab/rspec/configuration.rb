@@ -2,6 +2,10 @@
 
 module OpenHAB
   module RSpec
+    #
+    # Contains configuration for how the OpenHAB instance should be set
+    # up for the testing environment.
+    #
     module Configuration
       class << self
         #

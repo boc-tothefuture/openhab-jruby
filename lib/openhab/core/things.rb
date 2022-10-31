@@ -6,6 +6,10 @@ require "singleton"
 
 module OpenHAB
   module Core
+    #
+    # Contains the core {Thing} that bindings use to represent connected devices,
+    # as well as related infrastructure.
+    #
     module Things
       java_import org.openhab.core.thing.ThingStatus
 
@@ -16,6 +20,9 @@ module OpenHAB
         end
       end
 
+      #
+      # The core class that bindings use to represent connected devices.
+      #
       class Thing < SimpleDelegator
         # Array wrapper class to allow searching a list of channels
         # by channel id

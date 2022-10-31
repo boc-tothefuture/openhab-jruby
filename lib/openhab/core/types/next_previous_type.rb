@@ -7,8 +7,7 @@ module OpenHAB
     module Types
       NextPreviousType = org.openhab.core.library.types.NextPreviousType
 
-      # Adds methods to core OpenHAB NextPreviousType to make it more
-      # natural in Ruby
+      # Implements {NEXT} and {PREVIOUS} commands.
       class NextPreviousType # rubocop:disable Lint/EmptyClass
         # @!parse include Type
 

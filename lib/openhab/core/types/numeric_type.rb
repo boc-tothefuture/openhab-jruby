@@ -9,7 +9,7 @@ require_relative "type"
 module OpenHAB
   module Core
     module Types
-      # Mixin for methods common to DecimalType and QuantityType
+      # Mixin for methods common to DecimalType and QuantityType.
       module NumericType
         # apply meta-programming to including class
         def self.included(klass)
@@ -32,7 +32,7 @@ module OpenHAB
           compare_to(other).zero?
         end
 
-        # Unary plus
+        # @return [self]
         def +@
           self
         end

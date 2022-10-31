@@ -203,6 +203,27 @@ module OpenHAB
         #
         # @!method only_if
         #
+        # {only_if} allows rule execution when the block's is true and prevents it when it's false.
+        #
+        # @yieldparam [Core::Events::AbstractEvent] event The event data that is about to trigger the rule.
+        # @yieldreturn [Boolean] A value indicating if the rule should run.
+        # @return [void]
+        #
+        # @example
+        #   rule "Set OutsideDimmer to 50% if LightSwitch turned on and OtherSwitch is also ON" do
+        #     changed LightSwitch, to: ON
+        #     run { OutsideDimmer << 50 }
+        #     only_if { OtherSwitch.on? }
+        #   end
+        #
+        # @example Multiple {only_if} statements can be used and *all* must be true for the rule to run.
+        #   rule "Set OutsideDimmer to 50% if LightSwitch turned on and OtherSwitch is also ON and Door is closed" do
+        #     changed LightSwitch, to: ON
+        #     run { OutsideDimmer << 50 }
+        #     only_if { OtherSwitch.on? }
+        #     only_if { Door.closed? }
+        #   end
+        #
         prop_array(:only_if) do |item|
           unless item.is_a?(Proc) || [item].flatten.all? { |it| it.respond_to?(:truthy?) }
             raise ArgumentError, "Object passed to only_if must be a proc"
@@ -211,6 +232,27 @@ module OpenHAB
 
         #
         # @!method not_if
+        #
+        # {not_if} prevents execution of rules when the block's result is true and allows it when it's true.
+        #
+        # @yieldparam [Core::Events::AbstractEvent] event The event data that is about to trigger the rule.
+        # @yieldreturn [Boolean] A value indicating if the rule should _not_ run.
+        # @return [void]
+        #
+        # @example
+        #   rule "Set OutsideDimmer to 50% if LightSwtich turned on and OtherSwitch is OFF" do
+        #     changed LightSwitch, to: ON
+        #     run { OutsideDimmer << 50 }
+        #     not_if { OtherSwitch.on? }
+        #   end
+        #
+        # @example Multiple {not_if} statements can be used and if **any** of them are not satisfied the rule will not run. # rubocop:disable Style/LineLength
+        #   rule "Set OutsideDimmer to 50% if LightSwitch turned on and OtherSwitch is OFF and Door is not CLOSED" do
+        #     changed LightSwitch, to: ON
+        #     run { OutsideDimmer << 50 }
+        #     not_if { OtherSwitch.on? }
+        #     not_if { Door.closed? }
+        #   end
         #
         prop_array(:not_if) do |item|
           unless item.is_a?(Proc) || [item].flatten.all? { |it| it.respond_to?(:truthy?) }

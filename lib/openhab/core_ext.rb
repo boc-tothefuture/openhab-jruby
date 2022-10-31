@@ -7,5 +7,12 @@ end
 module OpenHAB
   # @!visibility private
   module CoreExt
+    # Extensions to core Java classes
+    module Java
+    end
+
+    # Extensions to core Ruby classes
+    module Ruby
+    end
   end
 end

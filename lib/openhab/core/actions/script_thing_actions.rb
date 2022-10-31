@@ -6,6 +6,7 @@ module OpenHAB
     module Actions
       java_import org.openhab.core.automation.module.script.internal.defaultscope.ScriptThingActionsImpl
 
+      # @!visibility private
       class ScriptThingActionsImpl
         field_reader :THING_ACTIONS_MAP
 

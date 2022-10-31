@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "item_state_event"
+
 module OpenHAB
   module Core
     module Events
@@ -38,9 +40,8 @@ module OpenHAB
         end
 
         #
-        # Get the previous item state
-        #
-        # @return [Types::Type] OpenHAB state if state was not UNDEF or NULL, nil otherwise
+        # @!attribute [r] was
+        # @return [Types::State, nil] The state of the item if it was not {UNDEF} or {NULL}, `nil` otherwise.
         #
         def was
           old_item_state if was?

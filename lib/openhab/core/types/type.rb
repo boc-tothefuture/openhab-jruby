@@ -5,9 +5,12 @@ module OpenHAB
     module Types
       java_import org.openhab.core.types.Type
 
-      #
-      # Add basic type conversion and comparison to all core OpenHAB types
-      #
+      # This is a parent interface for all {State}s and {Command}s. It
+      # was introduced as many states can be commands at the same time and vice
+      # versa. E.g a light can have the state {ON} or {OFF} and one can also
+      # send {ON} and {OFF} as commands to the device. This duality is captured
+      # by this marker interface and allows implementing classes to be both
+      # state and command at the same time.
       module Type
         # can't alias because to_s doesn't exist on Type
         # @!visibility private

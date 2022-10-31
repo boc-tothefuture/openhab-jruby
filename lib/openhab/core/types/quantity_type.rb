@@ -8,7 +8,7 @@ module OpenHAB
     module Types
       QuantityType = org.openhab.core.library.types.QuantityType
 
-      # Adds methods to core OpenHAB QuantityType to make it more natural in Ruby
+      # {QuantityType} extends {DecimalType} to handle physical unit measurement.
       class QuantityType
         # @!parse include Type
         include NumericType

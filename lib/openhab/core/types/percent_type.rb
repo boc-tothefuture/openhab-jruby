@@ -7,7 +7,7 @@ module OpenHAB
     module Types
       PercentType = org.openhab.core.library.types.PercentType
 
-      # Adds methods to core OpenHAB PercentType to make it more natural in Ruby
+      # {PercentType} extends {DecimalType} by putting constraints for its value on top (0-100).
       class PercentType < DecimalType
         # remove the JRuby default == so that we can inherit the Ruby method
         remove_method :==

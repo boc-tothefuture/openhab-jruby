@@ -10,6 +10,7 @@ module OpenHAB
     module Types
       DateTimeType = org.openhab.core.library.types.DateTimeType
 
+      # {DateTimeType} uses a {java.time.ZonedDateTime} internally.
       class DateTimeType
         # @!parse include Type
 

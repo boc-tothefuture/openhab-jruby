@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 module OpenHAB
+  #
+  # This module contains helper methods, hooks, and infrastracture to
+  # boot OpenHAB inside of JRuby, and run RSpec (or other Ruby processes)
+  # in that context.
+  #
+  # @see file:testing.md Testing Your Rules
+  #
   module RSpec
     Object.include Helpers if defined?(IRB)
 

@@ -12,8 +12,13 @@ module OpenHAB
         include LazyArray
         include Singleton
 
-        # Gets a specific thing by name in the format binding_id:type_id:thing_id or via the ThingUID
-        # @return Thing specified by name/UID or nil if name/UID does not exist in thing registry
+        #
+        # Gets a specific thing
+        #
+        # @param [String, ThingUID] Thing UID in the format `binding_id:type_id:thing_id`
+        #   or via the ThingUID
+        # @return [Thing, nil]
+        #
         def [](uid)
           uid = generate_thing_uid(uid) unless uid.is_a?(org.openhab.core.thing.ThingUID)
           thing = $things.get(uid)
@@ -25,13 +30,18 @@ module OpenHAB
         alias_method :include?, :[]
         alias_method :key?, :[]
 
-        # explicit conversion to array
+        #
+        # Explicit conversion to array
+        #
+        # @return [Array<Thing>]
+        #
         def to_a
           $things.getAll.map { |thing| Thing.new(thing) }
         end
 
         # Enter the Thing Builder DSL.
         # @yield [DSL::Things::Builder] Builder object.
+        # @return [Object] The result of the block.
         def build(&block)
           DSL::Things::Builder.new.instance_eval(&block)
         end

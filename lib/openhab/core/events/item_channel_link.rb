@@ -9,19 +9,24 @@ module OpenHAB
 
       # Adds methods to core OpenHAB ItemChannelLinkDTO to make it more natural in Ruby
       class ItemChannelLinkDTO
-        # @!method item_name
-        #   Gets the name of the item that was linked or unlinked.
-        #   @return [String]
+        #
+        # @!attribute [r] item_name
+        # @return [String] The name of the item that was linked or unlinked.
+        #
         alias_method :item_name, :itemName
 
-        # Gets the item that was linked or unlinked
-        # @return [GenericItem]
+        #
+        # @!attribute [r] item
+        # @return [Items::GenericItem] The item that was linked or unlinked
+        #
         def item
           EntityLookup.lookup_item(itemName)
         end
 
-        # Get the channel UID that was linked or unlinked.
-        # @return [ChannelUID]
+        #
+        # @!attribute [r] channel_uid
+        # @return [ChannelUID] The UID of the channel that was linked or unlinked.
+        #
         def channel_uid
           ChannelUID.new(channelUID)
         end

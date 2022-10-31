@@ -6,6 +6,10 @@ end
 
 module OpenHAB
   module Core
+    #
+    # Contains the core types that OpenHAB uses as {State}s for items, and
+    # {Command}s to be sent to control them.
+    #
     module Types
       # Hash taking a Enum value, and returning two symbols of
       # predicates to be defined for it. the first is the "command" form,

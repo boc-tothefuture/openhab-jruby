@@ -7,8 +7,7 @@ module OpenHAB
     module Types
       IncreaseDecreaseType = org.openhab.core.library.types.IncreaseDecreaseType
 
-      # Adds methods to core OpenHAB IncreaseDecreaseType to make it more
-      # natural in Ruby
+      # Represents {INCREASE} and {DECREASE} commands.
       class IncreaseDecreaseType # rubocop:disable Lint/EmptyClass
         # @!parse include Type
 

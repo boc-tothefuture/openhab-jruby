@@ -41,6 +41,7 @@ module OpenHAB
       @suspended = false
 
       class << self
+        # @!visibility private
         def suspend_rules
           old_suspended = @suspended
           @suspended = true
@@ -49,6 +50,7 @@ module OpenHAB
           @suspended = old_suspended
         end
 
+        # @!visibility private
         def suspended?
           @suspended
         end

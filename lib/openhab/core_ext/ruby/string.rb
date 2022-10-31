@@ -9,6 +9,8 @@ module OpenHAB
       module String
         ::String.prepend(self)
 
+        # Adds comparisons to {Core::Types::QuantityType}, {Core::Types::DateTimeType},
+        # and {DSL::TimeOfDay}
         def ==(other)
           case other
           when Core::Types::QuantityType,
@@ -20,6 +22,7 @@ module OpenHAB
           end
         end
 
+        # Adds comparisons to {Core::Types::QuantityType}, {Core::Types::DateTimeType}
         def <=>(other)
           case other
           when Core::Types::QuantityType,

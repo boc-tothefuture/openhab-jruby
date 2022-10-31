@@ -7,7 +7,11 @@ module OpenHAB
     module Types
       UnDefType = org.openhab.core.types.UnDefType
 
-      # Adds methods to core OpenHAB UnDefType to make it more natural in Ruby
+      # There are situations when item states do not have any defined value.
+      # This might be because they have not been initialized yet (never
+      # received an state update so far) or because their state is ambiguous
+      # (e.g. a group item with members whose states do not match will be
+      # {NULL}).
       class UnDefType # rubocop:disable Lint/EmptyClass
         # @!parse include Type
 

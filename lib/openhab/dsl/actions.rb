@@ -2,6 +2,7 @@
 
 module OpenHAB
   module DSL
+    # Contains helper methods for easy access to common OpenHAB script actions.
     module Actions
       include Log
 

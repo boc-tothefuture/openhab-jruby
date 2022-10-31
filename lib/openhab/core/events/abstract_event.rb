@@ -5,8 +5,9 @@ module OpenHAB
     module Events
       java_import org.openhab.core.events.AbstractEvent
 
-      # Add attachments to ItemEvent
+      # Add attachments event data.
       class AbstractEvent
+        # @return [Object]
         attr_accessor :attachment
       end
     end

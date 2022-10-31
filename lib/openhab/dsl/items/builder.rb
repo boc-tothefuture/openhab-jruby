@@ -2,6 +2,9 @@
 
 module OpenHAB
   module DSL
+    #
+    # Contains extensions to simplify working with [Core::Items::GenericItem]s.
+    #
     module Items
       # Stores all items created in scripts, and notifies the ItemRegistry
       # of their existence
@@ -77,6 +80,7 @@ module OpenHAB
           ScriptHandling.script_unloaded { registry.remove_provider(self) }
         end
 
+        # @!visibility private
         def link(item, channel, config = {})
           config = org.openhab.core.config.core.Configuration.new(config)
           channel = org.openhab.core.thing.ChannelUID.new(channel) if channel.is_a?(String)

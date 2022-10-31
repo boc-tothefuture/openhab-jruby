@@ -7,7 +7,13 @@ module OpenHAB
     module Types
       UpDownType = org.openhab.core.library.types.UpDownType
 
-      # Adds methods to core OpenHAB UpDownType to make it more natural in Ruby
+      #
+      # Implements the {UP} and {DOWN} commands.
+      #
+      # Also, {PercentType} can be converted to {UpDownType}
+      # for more semantic comparisons. `0` is {UP}, `100` is
+      # {DOWN}, and anything in-between is neither.
+      #
       class UpDownType
         # @!parse include Type
 

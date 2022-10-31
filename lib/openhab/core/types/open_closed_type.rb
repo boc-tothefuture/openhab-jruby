@@ -7,7 +7,7 @@ module OpenHAB
     module Types
       OpenClosedType = org.openhab.core.library.types.OpenClosedType
 
-      # Adds methods to core OpenHAB OpenClosedType to make it more natural in Ruby
+      # Implements {OPEN} and {CLOSED} states.
       class OpenClosedType
         # @!parse include Type
 

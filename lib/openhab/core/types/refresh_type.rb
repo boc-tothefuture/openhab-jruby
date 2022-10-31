@@ -7,7 +7,7 @@ module OpenHAB
     module Types
       RefreshType = org.openhab.core.types.RefreshType
 
-      # Adds methods to core OpenHAB RefreshType to make it more natural in Ruby
+      # Implements the {REFRESH} command.
       class RefreshType # rubocop:disable Lint/EmptyClass
         # @!parse include Type
 

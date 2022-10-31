@@ -8,8 +8,14 @@ end
 
 module OpenHAB
   module Core
+    #
+    # Contains the core types that OpenHAB uses to represent items.
+    # Items have states from the [Types] module.
+    #
     module Items
       class << self
+        # Imports all of the item classes into the global namespace
+        # for convenient access.
         def import_into_global_namespace
           constants.map { |c| const_get(c) }
                    .grep(Module)

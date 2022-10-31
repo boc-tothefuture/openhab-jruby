@@ -10,10 +10,7 @@ module OpenHAB
     module Types
       StringType = org.openhab.core.library.types.StringType
 
-      #
-      # Add methods to core OpenHAB StringType to make it behave as a Ruby
-      # String object
-      #
+      # {StringType} represents a {String} as a {Type} and a {Command}.
       class StringType
         # @!parse include Type
 
