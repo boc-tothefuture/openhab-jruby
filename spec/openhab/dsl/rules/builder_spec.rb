@@ -385,7 +385,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
 
       context "with things" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
         let!(:thing) do
-          things.build { thing "astro:sun:home", config: { "geolocation" => "0,0" }, enabled: true }
+          things.build { thing "astro:sun:home", config: { "geolocation" => "0,0" } }
         end
 
         test_thing_status_trigger(:changed)
@@ -575,7 +575,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
     describe "#updated" do
       context "with things" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
         let!(:thing) do # rubocop:disable RSpec/LetSetup
-          things.build { thing "astro:sun:home", config: { "geolocation" => "0,0" }, enabled: true }
+          things.build { thing "astro:sun:home", config: { "geolocation" => "0,0" } }
         end
 
         test_thing_status_trigger(:updated)
