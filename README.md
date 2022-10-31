@@ -1,22 +1,9 @@
 # JRuby OpenHAB Scripting Library
 
-<p align="center">
-  <a href="https://github.com/ccutrer/openhab-jrubyscripting/releases">
-    <img alt="GitHub release (latest SemVer including pre-releases)" src="https://img.shields.io/github/v/release/ccutrer/openhab-jrubyscripting?include_prereleases"/>
-  </a>
-  <a href="https://github.com/ccutrer/openhab-jrubyscripting/actions/workflows/workflow.yml?query=event%3Apush">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/ccutrer/openhab-jrubyscripting/Openhab-JRuby-Scripting"/>
-  </a>
-  <a href="https://github.com/ccutrer/openhab-jrubyscripting/graphs/contributors">
-    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/ccutrer/openhab-jrubyscripting"/>
-  </a>
-  <a href="https://github.com/ccutrer/openhab-jrubyscripting/graphs/commit-activity">
-    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/ccutrer/openhab-jrubyscripting">
-  </a>
-  <a href="https://semver.org/">
-    <img alt="SemVer version observance" src="https://img.shields.io/badge/semver-2.0.0-blue"/>
-  </a>
-</p>
+[![Gem Version](https://img.shields.io/gem/v/openhab-jrubyscripting)](https://rubygems.org/gems/openhab-jrubyscripting)
+[![Continous Integration](https://github.com/ccutrer/openhab-jrubyscripting/workflows/Continuous%20Integration/badge.svg)](https://github.com/ccutrer/openhab-jrubyscripting/actions/workflows/ci.yml)
+[![GitHub contributors](https://img.shields.io/github/contributors/ccutrer/openhab-jrubyscripting)](https://github.com/ccutrer/openhab-jrubyscripting/graphs/contributors)
+[![EPLv2 License](https://img.shields.io/badge/License-EPLv2-blue.svg)](https://www.eclipse.org/legal/epl-2.0/)
 
 The OpenHAB JRuby scripting helpers bring the power of the Ruby language to OpenHAB. Rather than being a pure pass-through to OpenHAB, they provide a Ruby-like experience when building automation rules within OpenHAB.
 
