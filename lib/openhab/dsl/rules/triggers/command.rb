@@ -6,34 +6,6 @@ module OpenHAB
   module DSL
     module Rules
       module Triggers
-        #
-        # Create a trigger for when an item or group receives a command
-        #
-        # The command/commands parameters are replicated for DSL fluency
-        #
-        # @param [Array] items Array of items to create trigger for
-        # @param [Array] command commands to match for trigger
-        # @param [Array] commands commands to match for trigger
-        # @param [Object] attach object to be attached to the trigger
-        #
-        #
-        def received_command(*items, command: nil, commands: nil, attach: nil)
-          command_trigger = Command.new(rule_triggers: @rule_triggers)
-
-          # Combine command and commands, doing union so only a single nil will be in the combined array.
-          combined_commands = Command.combine_commands(command: command, commands: commands)
-          flattened_items = Command.flatten_items(items)
-          @ruby_triggers << [:received_command, flattened_items, { command: combined_commands }]
-
-          flattened_items.map do |item|
-            combined_commands.map do |cmd|
-              logger.trace "Creating received command trigger for items #{item.inspect} and commands #{cmd.inspect}"
-
-              command_trigger.trigger(item: item, command: cmd, attach: attach)
-            end
-          end.flatten
-        end
-
         # @!visibility private
         #
         # Creates command triggers

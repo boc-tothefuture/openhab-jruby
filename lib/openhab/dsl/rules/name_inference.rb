@@ -6,6 +6,7 @@ module OpenHAB
   module DSL
     module Rules
       # Contains helper methods for inferring a rule name from its triggers
+      # @!visibility private
       module NameInference
         # Trigger Type UIDs that we know how to generate a name for
         KNOWN_TRIGGER_TYPES = [

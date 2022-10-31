@@ -39,6 +39,8 @@ RSpec/MessageSpies:
   Enabled: false
 RSpec/MultipleExpectations:
   Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
 
 Style/Alias:
   EnforcedStyle: prefer_alias_method

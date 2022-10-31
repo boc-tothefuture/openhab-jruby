@@ -6,11 +6,9 @@ module OpenHAB
   module DSL
     module Rules
       #
-      # Guards for rules
+      # Guard that can prevent execution of a rule if not satisfied
       #
-      #
-      # Guard that can prevent execute of a rule if not satisfied
-      #
+      # @!visibility private
       class Guard
         #
         # Create a new Guard

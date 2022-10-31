@@ -76,6 +76,12 @@ module OpenHAB
           enable(enabled: false)
         end
 
+        # @return [String]
+        def inspect
+          "#<OpenHAB::Core::Things::Thing #{uid}>"
+        end
+        alias_method :to_s, :inspect
+
         private
 
         #

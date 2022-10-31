@@ -43,6 +43,9 @@ module OpenHAB
           allow(DSL::Items::ItemProvider).to receive(:instance).and_return(@item_provider)
           @thing_provider = DSL::Things::ThingProvider.send(:new)
           allow(DSL::Things::ThingProvider).to receive(:instance).and_return(@thing_provider)
+          tss = OSGi.service("org.openhab.core.storage.StorageService")
+                    .get_storage("thing_status_storage", org.openhab.core.thing.ThingManager.java_class.class_loader)
+          tss.keys.each { |k| tss.remove(k) } # rubocop:disable Style/HashEachMethods not a hash
         end
 
         config.after do
