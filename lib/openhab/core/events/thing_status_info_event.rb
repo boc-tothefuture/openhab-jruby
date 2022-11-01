@@ -7,7 +7,7 @@ module OpenHAB
       java_import org.openhab.core.thing.events.ThingStatusInfoEvent
 
       # The {AbstractEvent} sent when a {Things::Thing}'s status has changed.
-      class ThingStatusInfoChangedEvent
+      class ThingStatusInfoChangedEvent < AbstractEvent
         # @!attribute [r] uid
         # @return [Things::ThingUID] The UID of the [Things::Thing] that triggered this event.
         alias_method :uid, :get_thing_uid
@@ -28,7 +28,7 @@ module OpenHAB
       end
 
       # The {AbstractEvent} sent when a {Things::Thing}'s status is set.
-      class ThingStatusInfoEvent
+      class ThingStatusInfoEvent < AbstractEvent
         #
         # @!attribute [r] uid
         # @return [Things::ThingUID] The UID of the [Things::Thing] that triggered this event.

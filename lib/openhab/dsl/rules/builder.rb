@@ -562,6 +562,7 @@ module OpenHAB
         # Creates a channel linked trigger
         #
         # @param [Object] attach object to be attached to the trigger
+        # @return [void]
         #
         # @example
         #    rule "channel linked" do
@@ -583,6 +584,7 @@ module OpenHAB
         # so if you try to access those objects they'll be nil.
         #
         # @param [Object] attach object to be attached to the trigger
+        # @return [void]
         #
         # @example
         #    rule "channel unlinked" do
@@ -602,6 +604,11 @@ module OpenHAB
         #
         # When the changed element is a {Thing}, the `from` and `to` values will accept symbols and strings,
         # where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html#thing-status).
+        #
+        # The `event` passed to run blocks will be an
+        # {Core::Events::ItemStateChangedEvent} or a
+        # {Core::Events::ThingStatusInfoChangedEvent} depending on if the
+        # triggering element was an item or a thing.
         #
         # @param [Item, GroupItem::GroupMembers, Thing] items Objects to create trigger for.
         # @param [State, Array<State>, Range, Proc] from
@@ -649,7 +656,7 @@ module OpenHAB
         #   rule "Execute rule when item is changed to any number greater than 12"
         #     changed Alarm_Mode, to: (12..)   # Parenthesis required for endless ranges
         #     run { logger.info("Alarm Mode Updated") }
-        # end
+        #   end
         #
         # @example Works with procs:
         #   rule "Execute when item state is changed from an odd number, to an even number, for specified duration" do
@@ -664,10 +671,10 @@ module OpenHAB
         #   end
         #
         # @example Works with Things:
-        #  rule "Execute rule when thing is changed" do
-        #    changed things["astro:sun:home"], :from => :online, :to => :uninitialized
-        #    run { |event| logger.info("Thing #{event.uid} status <trigger> to #{event.status}") }
-        #  end
+        #   rule "Execute rule when thing is changed" do
+        #     changed things["astro:sun:home"], :from => :online, :to => :uninitialized
+        #     run { |event| logger.info("Thing #{event.uid} status <trigger> to #{event.status}") }
+        #   end
         #
         # @example Real World Example
         #   rule "Log (or notify) when an exterior door is left open for more than 5 minutes" do
@@ -694,16 +701,44 @@ module OpenHAB
         #
         # Create a cron trigger
         #
-        # @param [String] expression OpenHAB style cron expression
-        # @param [Object] attach object to be attached to the trigger
-        # @param [Hash] fields cron expression elements (second, minute, hour, dom, month, dow, year)
-        # @return [void]
+        # @overload cron(expression, attach: nil)
+        #   @param [String, nil] expression [OpenHAB style cron expression](https://www.openhab.org/docs/configuration/rules-dsl.html#time-based-triggers)
+        #   @param [Object] attach object to be attached to the trigger
         #
-        # @example
-        #   rule "cron expression" do
-        #     cron "* * * * * * ?"
-        #     run { Light.on }
-        #   end
+        #   @example Using a cron expression
+        #     rule "cron expression" do
+        #       cron "43 46 13 ? * ?"
+        #       run { Light.on }
+        #     end
+        #
+        # @overload cron(second: nil, minute: nil, hour: nil, dom: nil, month: nil, dow: nil, year: nil, attach: nil)
+        #   The trigger can be created by specifying each field as keyword arguments.
+        #   Omitted fields will default to `*` or `?` as appropriate.
+        #
+        #   Each field is optional, but at least one must be specified.
+        #
+        #   The same rules for the standard
+        #   [cron expression](https://www.quartz-scheduler.org/documentation/quartz-2.2.2/tutorials/tutorial-lesson-06.html)
+        #   apply for each field. For example, multiple values can be separated
+        #   with a comma within a string.
+        #
+        #   @param [Integer, String, nil] second
+        #   @param [Integer, String, nil] minute
+        #   @param [Integer, String, nil] hour
+        #   @param [Integer, String, nil] dom
+        #   @param [Integer, String, nil] month
+        #   @param [Integer, String, nil] dow
+        #   @param [Integer, String, nil] year
+        #   @param [Object] attach object to be attached to the trigger
+        #   @example
+        #     # Run every 3 minutes on Monday to Friday
+        #     # equivalent to the cron expression "0 */3 * ? * MON-FRI *"
+        #     rule "Using cron fields" do
+        #       cron second: 0, minute: "*/3", dow: "MON-FRI"
+        #       run { logger.info "Cron rule executed" }
+        #     end
+        #
+        # @return [void]
         #
         def cron(expression = nil, attach: nil, **fields)
           if fields.any?
@@ -723,8 +758,8 @@ module OpenHAB
         # Create a rule that executes at the specified interval.
         #
         # @param [String,
-        #   Duration,
-        #   MonthDay,
+        #   java.time.Duration,
+        #   java.time.MonthDay,
         #   :second,
         #   :minute,
         #   :hour,
@@ -750,6 +785,12 @@ module OpenHAB
         #     run do
         #       Light.on
         #     end
+        #   end
+        #
+        # @example The above rule could also be expressed using TimeOfDay class as below
+        #   rule "Daily" do |rule|
+        #     every :day, at: TimeOfDay.new(h: 5, m: 15)
+        #     run { Light.on }
         #   end
         #
         # @example
@@ -784,6 +825,12 @@ module OpenHAB
         #     end
         #   end
         #
+        # @example
+        #   rule 'Every 14th of Feb at 2pm' do
+        #     every '02-14', at: '2pm'
+        #     run { logger.info "Happy Valentine's Day!" }
+        #   end
+        #
         def every(value, at: nil, attach: nil)
           return every(java.time.MonthDay.parse(value), at: at, attach: attach) if value.is_a?(String)
 
@@ -801,6 +848,10 @@ module OpenHAB
         #
         # Run this rule when the script is loaded.
         #
+        # Execute the rule on OpenHAB start up and whenever the script is
+        # reloaded. This is useful to perform initialization routines,
+        # especially when combined with other triggers.
+        #
         # @param [true, false] run_on_start Run this rule on start, defaults to True
         # @param [Object] attach object to be attached to the trigger
         # @return [void]
@@ -813,6 +864,12 @@ module OpenHAB
         #     end
         #   end
         #
+        # @example
+        #   rule 'Ensure all security lights are on' do
+        #     on_start
+        #     run { Security_Lights.on }
+        #   end
+        #
         # rubocop:disable Style/OptionalBooleanParameter
         def on_start(run_on_start = true, attach: nil)
           @on_start = Struct.new(:enabled, :attach).new(run_on_start, attach)
@@ -822,13 +879,70 @@ module OpenHAB
         #
         # Create a trigger for when an item or group receives a command
         #
-        # The command/commands parameters are replicated for DSL fluency
+        # The command/commands parameters are replicated for DSL fluency.
         #
-        # @param [Array] items Array of items to create trigger for
-        # @param [Array] command commands to match for trigger
-        # @param [Array] commands commands to match for trigger
+        # The `event` passed to run blocks will be an
+        # {Core::Events::ItemCommandEvent}.
+        #
+        # @param [Core::Items::GenericItem, Core::Items::GroupItem::GroupMembers] items Items to create trigger for
+        # @param [Array<Core::Types::Command>, Range, Proc] command commands to match for trigger
+        # @param [Array<Core::Types::Command>, Range, Proc] commands commands to match for trigger
         # @param [Object] attach object to be attached to the trigger
+        # @return [void]
         #
+        # @example
+        #   rule 'Execute rule when item received command' do
+        #     received_command Alarm_Mode
+        #     run { |event| logger.info("Item received command: #{event.command}" ) }
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when item receives specific command' do
+        #     received_command Alarm_Mode, command: 7
+        #     run { |event| logger.info("Item received command: #{event.command}" ) }
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when item receives one of many specific commands' do
+        #     received_command Alarm_Mode, commands: [7,14]
+        #     run { |event| logger.info("Item received command: #{event.command}" ) }
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when group receives a specific command' do
+        #     received_command AlarmModes
+        #     triggered { |item| logger.info("Group #{item.name} received command")}
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when member of group receives any command' do
+        #     received_command AlarmModes.members
+        #     triggered { |item| logger.info("Group item #{item.name} received command")}
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when member of group is changed to one of many states' do
+        #     received_command AlarmModes.members, commands: [7, 14]
+        #     triggered { |item| logger.info("Group item #{item.name} received command")}
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when item receives a range of commands' do
+        #     received_command Alarm_Mode, commands: 7..14
+        #     run { |event| logger.info("Item received command: #{event.command}" ) }
+        #   end
+        #
+        # @example Works with procs
+        #   rule 'Execute rule when Alarm Mode command is odd' do
+        #     received_command Alarm_Mode, command: proc { |c| c.odd? }
+        #     run { |event| logger.info("Item received command: #{event.command}" ) }
+        #   end
+        #
+        # @example Works with lambdas
+        #   rule 'Execute rule when Alarm Mode command is odd' do
+        #     received_command Alarm_Mode, command: -> c { c.odd? }
+        #     run { |event| logger.info("Item received command: #{event.command}" ) }
+        #   end
         #
         def received_command(*items, command: nil, commands: nil, attach: nil)
           command_trigger = Command.new(rule_triggers: @rule_triggers)
@@ -851,6 +965,7 @@ module OpenHAB
         # Creates a thing added trigger
         #
         # @param [Object] attach object to be attached to the trigger
+        # @return [void]
         #
         # @example
         #    rule "thing added" do
@@ -869,6 +984,7 @@ module OpenHAB
         # Creates a thing removed trigger
         #
         # @param [Object] attach object to be attached to the trigger
+        # @return [void]
         #
         # @example
         #    rule "thing removed" do
@@ -887,6 +1003,7 @@ module OpenHAB
         # Creates a thing updated trigger
         #
         # @param [Object] attach object to be attached to the trigger
+        # @return [void]
         #
         # @example
         #    rule "thing updated" do
@@ -895,6 +1012,7 @@ module OpenHAB
         #        logger.info("#{event.thing.uid} updated.")
         #      end
         #    end
+        #
         def thing_updated(attach: nil)
           @ruby_triggers << [:thing_removed]
           trigger("core.GenericEventTrigger", eventTopic: "openhab/things/*/updated",
@@ -904,11 +1022,38 @@ module OpenHAB
         #
         # Create a generic trigger given the trigger type uid and a configuration hash
         #
-        # @param [Type] type Trigger type UID
-        # @param [Object] attach object to be attached to the trigger
-        # @param [Configuration] configuration A hash containing the trigger configuration entries
+        # This provides the ability to create a trigger type not already covered by the other methods.
         #
-        # @return [Trigger] Trigger object
+        # @param [String] type Trigger type UID
+        # @param [Object] attach object to be attached to the trigger
+        # @param [Hash] configuration A hash containing the trigger configuration entries
+        # @return [void]
+        #
+        # @example Create a trigger for the [PID Controller Automation](https://www.openhab.org/addons/automation/pidcontroller/) add-on.
+        #   rule 'PID Control' do
+        #     trigger 'pidcontroller.trigger',
+        #       input: InputItem.name,
+        #       setpoint: SetPointItem.name,
+        #       kp: 10,
+        #       ki: 10,
+        #       kd: 10,
+        #       kdTimeConstant: 1,
+        #       loopTime: 1000
+        #
+        #     run do |event|
+        #       logger.info("PID controller command: #{event.command}")
+        #       ControlItem << event.command
+        #     end
+        #   end
+        #
+        # @example DateTime Trigger
+        #   rule 'DateTime Trigger' do
+        #     description 'Triggers at a time specified in MyDateTimeItem'
+        #     trigger 'timer.DateTimeTrigger', itemName: MyDateTimeItem.name
+        #     run do
+        #       logger.info("DateTimeTrigger has been triggered")
+        #     end
+        #   end
         #
         def trigger(type, attach: nil, **configuration)
           logger.trace("Creating a generic trigger for type(#{type}) with configuration(#{configuration})")
@@ -919,11 +1064,80 @@ module OpenHAB
         #
         # Create a trigger when item, group or thing is updated
         #
-        # @param [Array] items array to trigger on updated
-        # @param [State] to to match for tigger
-        # @param [Object] attach object to be attached to the trigger
+        # The `event` passed to run blocks will be an
+        # {Core::Events::ItemStateEvent} or a
+        # {Core::Events::ThingStatusInfoEvent} depending on if the triggering
+        # element was an item or a thing.
         #
-        # @return [Trigger] Trigger for updated entity
+        # @param [Core::Items::GenericItem, Core::Items::GroupItem::GroupMembers, Thing] items
+        #   Objects to create trigger for.
+        # @param [State, Array<State>, Range, Proc, Symbol, String] to
+        #   Only execute rule if the state matches `to` state(s). If the
+        #   updated element is a {Core::Things::Thing}, the `to` accepts
+        #   symbols and strings that match
+        #   [supported thing statuses](https://www.openhab.org/docs/concepts/things.html#thing-status).
+        # @param [Object] attach object to be attached to the trigger
+        # @return [void]
+        #
+        # @example
+        #   rule 'Execute rule when item is updated to any value' do
+        #     updated Alarm_Mode
+        #     run { logger.info("Alarm Mode Updated") }
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when item is updated to specific number' do
+        #     updated Alarm_Mode, to: 7
+        #     run { logger.info("Alarm Mode Updated") }
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when item is updated to one of many specific states' do
+        #     updated Alarm_Mode, to: [7, 14]
+        #     run { logger.info("Alarm Mode Updated")}
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when item is within a range' do
+        #     updated Alarm_Mode, to: 7..14
+        #     run { logger.info("Alarm Mode Updated to a value between 7 and 14")}
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when group is updated to any state' do
+        #     updated AlarmModes
+        #     triggered { |item| logger.info("Group #{item.name} updated")}
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when member of group is changed to any state' do
+        #     updated AlarmModes.members
+        #     triggered { |item| logger.info("Group item #{item.name} updated")}
+        #   end
+        #
+        # @example
+        #   rule 'Execute rule when member of group is changed to one of many states' do
+        #     updated AlarmModes.members, to: [7, 14]
+        #     triggered { |item| logger.info("Group item #{item.name} updated")}
+        #   end
+        #
+        # @example Works with procs
+        #   rule 'Execute rule when member of group is changed to an odd state' do
+        #     updated AlarmModes.members, to: proc { |t| t.odd? }
+        #     triggered { |item| logger.info("Group item #{item.name} updated")}
+        #   end
+        #
+        # @example Works with lambdas:
+        #   rule 'Execute rule when member of group is changed to an odd state' do
+        #     updated AlarmModes.members, to: -> t { t.odd? }
+        #     triggered { |item| logger.info("Group item #{item.name} updated")}
+        #   end
+        #
+        # @example Works with things as well
+        #   rule 'Execute rule when thing is updated' do
+        #      updated things['astro:sun:home'], :to => :uninitialized
+        #      run { |event| logger.info("Thing #{event.uid} status <trigger> to #{event.status}") }
+        #   end
         #
         def updated(*items, to: nil, attach: nil)
           updated = Updated.new(rule_triggers: @rule_triggers)
@@ -940,12 +1154,64 @@ module OpenHAB
         #
         # Create a trigger to watch a path
         #
-        # @param [String] path to watch
-        # @param [String] glob
-        # @param [Array, Symbol] for types of changes to watch: +:created+, +:deleted+, +:modified+
-        # @param [Object] attach object to be attached to the trigger
+        # It provides the ability to create a trigger on file and directory
+        # changes.
         #
-        # @return [Trigger] Trigger object
+        # If a file or a path that does not exist is supplied as the argument
+        # to watch, the parent directory will be watched and the file or
+        # non-existent part of the supplied path will become the glob. For
+        # example, if the directory given is `/tmp/foo/bar` and `/tmp/foo`
+        # exists but `bar` does not exist inside of of `/tmp/foo` then the
+        # directory `/tmp/foo` will be watched for any files that match
+        # `*/bar`.
+        #
+        # If the last part of the path contains any glob characters e.g.
+        # `/tmp/foo/*bar`, the parent directory will be watched and the last
+        # part of the path will be treated as if it was passed as the `glob`
+        # argument. In other words, `watch '/tmp/foo/*bar'` is equivalent to
+        # `watch '/tmp/foo', glob: '*bar'`
+        #
+        # The `event` passed to run blocks will be a {Events::WatchEvent}.
+        #
+        # @param [String] path Path to watch. Can be a directory of a file.
+        # @param [String] glob
+        #   Limit events to paths matching this glob. Globs are matched using
+        #   [File.fnmatch?](https://ruby-doc.org/core-2.6/File.html#method-c-fnmatch-3F)
+        #   rules.
+        # @param [Array<:created, :deleted, :modified>, :created, :deleted, :modified] for
+        #   Types of changes to watch for.
+        # @param [Object] attach object to be attached to the trigger
+        # @return [void]
+        #
+        # @example Watch `items` directory inside of the OpenHAB configuration path and log any changes.
+        #   rule 'watch directory' do
+        #     watch OpenHAB::Core.config_folder / 'items'
+        #     run { |event| logger.info("#{event.path.basename} - #{event.type}") }
+        #   end
+        #
+        # @example Watch `items` directory for files that end in `*.erb` and log any changes
+        #   rule 'watch directory' do
+        #     watch OpenHAB::Core.config_folder / 'items', glob: '*.erb'
+        #     run { |event| logger.info("#{event.path.basename} - #{event.type}") }
+        #   end
+        #
+        # @example Watch `items/foo.items` log any changes
+        #   rule 'watch directory' do
+        #     watch OpenHAB::Core.config_folder / 'items/foo.items'
+        #     run { |event| logger.info("#{event.path.basename} - #{event.type}") }
+        #   end
+        #
+        # @example Watch `items/*.items` log any changes
+        #   rule 'watch directory' do
+        #     watch OpenHAB::Core.config_folder / 'items/*.items'
+        #     run { |event| logger.info("#{event.path.basename} - #{event.type}") }
+        #   end
+        #
+        # @example Watch `items/*.items` for when items files are deleted or created (ignore changes)
+        #   rule 'watch directory' do
+        #     watch OpenHAB::Core.config_folder / 'items/*.items', for: [:deleted, :created]
+        #     run { |event| logger.info("#{event.path.basename} - #{event.type}") }
+        #   end
         #
         def watch(path, glob: "*", for: %i[created deleted modified], attach: nil)
           glob, path = Watch.glob_for_path(Pathname.new(path), glob)

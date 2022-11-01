@@ -8,7 +8,7 @@ module OpenHAB
       #
       # Adds methods to core OpenHAB ItemEvent to make it more natural in Ruby
       #
-      class ItemEvent
+      class ItemEvent < AbstractEvent
         #
         # @!attribute [r] item
         # @return [Items::GenericItem] The item that triggered this event.

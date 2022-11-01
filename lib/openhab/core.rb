@@ -28,10 +28,10 @@ module OpenHAB
 
       #
       # @!attribute [r] config_folder
-      # @return [String] The configuration folder path name.
+      # @return [Pathname] The configuration folder path.
       #
       def config_folder
-        org.openhab.core.OpenHAB.config_folder
+        Pathname.new(org.openhab.core.OpenHAB.config_folder)
       end
 
       #

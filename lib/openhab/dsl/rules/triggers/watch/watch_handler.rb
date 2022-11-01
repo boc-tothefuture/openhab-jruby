@@ -24,9 +24,6 @@ module OpenHAB
             )
           end
 
-          # Struct for Watch Events
-          WatchEvent = Struct.new(:type, :path, :attachment)
-
           # Trigger ID for Watch Triggers
           WATCH_TRIGGER_MODULE_ID = "jsr223.jruby.WatchTrigger"
 
@@ -73,7 +70,7 @@ module OpenHAB
             # @param [StandardWatchEventKind] kind NIO watch event kind
             # @param [java.nio.Path] path that had an event
             def processWatchEvent(_event, kind, path)
-              @block.call(WatchEvent.new(EVENT_TO_SYMBOL[kind], Pathname.new(path.to_s)))
+              @block.call(Events::WatchEvent.new(EVENT_TO_SYMBOL[kind], Pathname.new(path.to_s)).freeze)
             end
           end
           # rubocop:enable Naming/MethodName
