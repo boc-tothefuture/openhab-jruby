@@ -13,7 +13,7 @@ module OpenHAB
         #
         # Create a new Timer Object
         #
-        # @param [Duration] duration Duration until timer should fire
+        # @param [java.time.Duration] duration Duration until timer should fire
         # @param [Block] block Block to execute when timer fires
         #
         def initialize(duration:, id:, thread_locals: {}, &block)

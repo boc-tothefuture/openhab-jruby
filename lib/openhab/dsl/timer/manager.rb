@@ -108,7 +108,7 @@ module OpenHAB
         #
         # A shorthand to reschedule all the timer objects held within the set
         #
-        # @param [Duration] duration An optional duration to reschedule
+        # @param [java.time.Duration] duration An optional duration to reschedule
         #
         # @return [TimerSet] Set of timers
         #

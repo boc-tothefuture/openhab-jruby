@@ -19,6 +19,10 @@ Bundler/GemFilename:
   Exclude:
     - lib/openhab/dsl/gems.rb
 
+Layout/LineLength:
+  IgnoredPatterns:
+    - "# @example" # YARD example titles can't be broken up onto multiple lines.
+
 Lint/RescueException:
   Enabled: false # we need to rescue Java exceptions quite a bit
 

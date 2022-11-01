@@ -1,0 +1,16 @@
+<% if method_listing.size > 0 %>
+  <% groups(method_listing) do |list, group| %>
+    <h2>
+      <%= group.to_s %>
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <%= with_section { run({ object: group }, section, 0, true) } if group.respond_to?(:docstring) %>
+
+    <ul class="summary">
+      <% list.each do |meth| %>
+        <%= with_section { run({ item: meth }, section, 1) } %>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

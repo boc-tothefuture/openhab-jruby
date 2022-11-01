@@ -58,8 +58,39 @@ module OpenHAB
         #
         # Add a block that will be passed event data.
         #
-        # @yieldparam [Event] event
+        # The run property is the automation code that is executed when a rule
+        # is triggered. This property accepts a block of code and executes it.
+        # The block is automatically passed an event object which can be used
+        # to access multiple properties about the triggering event. The code
+        # for the automation can be entirely within the run block and can call
+        # methods defined in the Ruby script.
+        #
+        # @yieldparam [Core::Events::AbstractEvent] event
         # @return [void]
+        #
+        # @example `{}` style used for single line blocks.
+        #   rule 'Access Event Properties' do
+        #     changed TestSwitch
+        #     run { |event| logger.info("#{event.item.name} triggered from #{event.was} to #{event.state}") }
+        #   end
+        #
+        # @example `do/end` style used for multi-line blocks.
+        #   rule 'Multi Line Run Block' do
+        #     changed TestSwitch
+        #     run do |event|
+        #       logger.info("#{event.item.name} triggered")
+        #       logger.info("from #{event.was}") if event.was?
+        #       logger.info("to #{event.state}") if event.state?
+        #      end
+        #   end
+        #
+        # @example Rules can have multiple run blocks and they are executed in order. Useful when used in combination with {#delay}.
+        #   rule 'Multiple Run Blocks' do
+        #     changed TestSwitch
+        #     run { |event| logger.info("#{event.item.name} triggered") }
+        #     run { |event| logger.info("from #{event.was}") if event.was? }
+        #     run { |event| logger.info("to #{event.state}") if event.state?  }
+        #   end
         #
         prop_array :run, array_name: :run_queue, wrapper: Run
 
@@ -67,6 +98,11 @@ module OpenHAB
         # @!method triggered
         #
         # Add a block that will be passed the triggering item.
+        #
+        # This property is the same as the {#run} property except rather than
+        # passing an event object to the automation block the triggered item is
+        # passed. This enables optimizations for simple cases and supports
+        # Ruby's [pretzel colon `&:` operator.](https://medium.com/@dcjones/the-pretzel-colon-75df46dde0c7).
         #
         # @yieldparam [Item] item
         # @return [void]
@@ -79,6 +115,31 @@ module OpenHAB
         #     end
         #   end
         #
+        # @example
+        #   rule 'Triggered has access directly to item triggered' do
+        #     changed TestSwitch
+        #     triggered { |item| logger.info("#{item.name} triggered") }
+        #   end
+        #
+        # @example Triggered items are highly useful when working with groups
+        #   # Switches is a group of Switch items
+        #   rule 'Triggered item is item changed when a group item is changed.' do
+        #     changed Switches.members
+        #     triggered { |item| logger.info("Switch #{item.name} changed to #{item.state}")}
+        #   end
+        #
+        #   rule 'Turn off any switch that changes' do
+        #     changed Switches.members
+        #     triggered(&:off)
+        #   end
+        #
+        # @example Like other execution blocks, multiple triggered blocks are supported in a single rule
+        #   rule 'Turn a switch off and log it, 5 seconds after turning it on' do
+        #     changed Switches.members, to: ON
+        #     delay 5.seconds
+        #     triggered(&:off)
+        #     triggered {|item| logger.info("#{item.label} turned off") }
+        #   end
         prop_array :triggered, array_name: :run_queue, wrapper: Trigger
 
         #
@@ -86,7 +147,10 @@ module OpenHAB
         #
         # Add a wait between or after run blocks.
         #
-        # @param [Duration] duration How long to delay for.
+        # The delay property is a non thread-blocking element that is executed
+        # after, before, or between run blocks.
+        #
+        # @param [java.time.Duration] duration How long to delay for.
         # @return [void]
         #
         # @example
@@ -96,14 +160,56 @@ module OpenHAB
         #     run { Light.off }
         #   end
         #
+        # @example
+        #   rule 'Delay sleeps between execution elements' do
+        #     on_start
+        #     run { logger.info("Sleeping") }
+        #     delay 5.seconds
+        #     run { logger.info("Awake") }
+        #   end
+        #
+        # @example Like other execution blocks, multiple can exist in a single rule.
+        #   rule 'Multiple delays can exist in a rule' do
+        #     on_start
+        #     run { logger.info("Sleeping") }
+        #     delay 5.seconds
+        #     run { logger.info("Sleeping Again") }
+        #     delay 5.seconds
+        #     run { logger.info("Awake") }
+        #   end
+        #
+        # @example You can use Ruby code in your rule across multiple execution blocks like a run and a delay.
+        #   rule 'Dim a switch on system startup over 100 seconds' do
+        #     on_start
+        #     100.times do
+        #       run { DimmerSwitch.dim }
+        #       delay 1.second
+        #     end
+        #   end
+        #
         prop_array :delay, array_name: :run_queue, wrapper: Delay
 
         #
         # @!method otherwise
         #
-        # Add a block that will be passed event data, to be run if guards are not satisfied.
+        # Add a block that will be passed event data, to be run if guards are
+        # not satisfied.
         #
-        # @yieldparam [Event] event
+        # The {otherwise} property is the automation code that is executed when
+        # a rule is triggered and guards are not satisfied.  This property
+        # accepts a block of code and executes it. The block is automatically
+        # passed an event object which can be used to access multiple
+        # properties about the triggering event.
+        #
+        # @yieldparam [Core::Events::AbstractEvent] event
+        #
+        # @example
+        #   rule 'Turn switch ON or OFF based on value of another switch' do
+        #     on_start
+        #     run { TestSwitch << ON }
+        #     otherwise { TestSwitch << OFF }
+        #     only_if { OtherSwitch.on? }
+        #   end
         #
         prop_array :otherwise, array_name: :run_queue, wrapper: Otherwise
 
@@ -122,7 +228,7 @@ module OpenHAB
         #
         # @!method name(value)
         #
-        # Set the fule's name.
+        # Set the rule's name.
         #
         # @param [String] value
         # @return [void]
@@ -158,6 +264,8 @@ module OpenHAB
         # @!method enabled(value)
         #
         # Enable or disable the rule from executing
+        #
+        # @param [true,false] value
         # @return [void]
         #
         # @example
@@ -168,6 +276,24 @@ module OpenHAB
         prop :enabled
 
         # @!group Guards
+        #   Guards exist to only permit rules to run if certain conditions are
+        #   satisfied. Think of these as declarative `if` statements that keep
+        #   the run block free of conditional logic, although you can of course
+        #   still use conditional logic in run blocks if you prefer.
+        #
+        #   ### Guard Combination
+        #
+        #   {#only_if} and {#not_if} can be used on the same rule. Both must be
+        #   satisfied for a rule to execute.
+        #
+        #   @example
+        #     rule "Set OutsideDimmer to 50% if LightSwitch turned on and OtherSwitch is OFF and Door is CLOSED" do
+        #       changed LightSwitch, to: ON
+        #       run { OutsideDimmer << 50 }
+        #       only_if { Door.closed? }
+        #       not_if { OtherSwitch.on? }
+        #     end
+        #
 
         #
         # @!method between(range)
@@ -198,6 +324,34 @@ module OpenHAB
         #     run { Light.on }
         #   end
         #
+        # @example {String} of {TimeOfDay}
+        #   rule 'Log an entry if started between 3:30:04 and midnight using strings' do
+        #     on_start
+        #     run { logger.info ("Started at #{TimeOfDay.now}")}
+        #     between '3:30:04'..MIDNIGHT
+        #   end
+        #
+        # @example {TimeOfDay}
+        #   rule 'Log an entry if started between 3:30:04 and midnight using TimeOfDay objects' do
+        #     on_start
+        #     run { logger.info ("Started at #{TimeOfDay.now}")}
+        #     between TimeOfDay.new(h: 3, m: 30, s: 4)..MIDNIGHT
+        #   end
+        #
+        # @example {String} of {MonthDay}
+        #   rule 'Log an entry if started between March 9th and April 10ths' do
+        #     on_start
+        #     run { logger.info ("Started at #{Time.now}")}
+        #     between '03-09'..'04-10'
+        #   end
+        #
+        # @example {MonthDay}
+        #   rule 'Log an entry if started between March 9th and April 10ths' do
+        #     on_start
+        #     run { logger.info ("Started at #{Time.now}")}
+        #     between MonthDay.of(03,09)..'04-06'
+        #   end
+        #
         prop :between
 
         #
@@ -224,6 +378,13 @@ module OpenHAB
         #     only_if { Door.closed? }
         #   end
         #
+        # @example Guards have access to event information.
+        #   rule "Set OutsideDimmer to 50% if any switch in group Switches starting with Outside is switched On" do
+        #     changed Switches.items, to: ON
+        #     run { OutsideDimmer << 50 }
+        #     only_if { |event| event.item.name.start_with?("Outside") }
+        #   end
+        #
         prop_array(:only_if) do |item|
           unless item.is_a?(Proc) || [item].flatten.all? { |it| it.respond_to?(:truthy?) }
             raise ArgumentError, "Object passed to only_if must be a proc"
@@ -246,7 +407,7 @@ module OpenHAB
         #     not_if { OtherSwitch.on? }
         #   end
         #
-        # @example Multiple {not_if} statements can be used and if **any** of them are not satisfied the rule will not run. # rubocop:disable Layout/LineLength
+        # @example Multiple {not_if} statements can be used and if **any** of them are not satisfied the rule will not run.
         #   rule "Set OutsideDimmer to 50% if LightSwitch turned on and OtherSwitch is OFF and Door is not CLOSED" do
         #     changed LightSwitch, to: ON
         #     run { OutsideDimmer << 50 }
@@ -279,6 +440,25 @@ module OpenHAB
         end
 
         # @!group Triggers
+        #   Triggers specify what will cause the execution blocks to run.
+        #   Multiple triggers can be defined within the same rule.
+        #
+        #   ### Trigger Attachments
+        #
+        #   All triggers support event attachments that enable the association
+        #   of an object to a trigger. This enables one to use the same rule
+        #   and take different actions if the trigger is different. The
+        #   attached object is passed to the execution block through the
+        #   {Core::Events::AbstractEvent#attachment} accessor.
+        #
+        #   @note The trigger attachment feature is not available for UI rules.
+        #
+        #   @example
+        #     rule 'Set Dark switch at sunrise and sunset' do
+        #       channel 'astro:sun:home:rise#event', attach: OFF
+        #       channel 'astro:sun:home:set#event', attach: ON
+        #       run { |event| Dark << event.attachment }
+        #     end
 
         #
         # Creates a channel trigger
@@ -286,7 +466,6 @@ module OpenHAB
         # The channel trigger executes rule when a specific channel is triggered. The syntax
         # supports one or more channels with one or more triggers. `thing` is an optional
         # parameter that makes it easier to set triggers on multiple channels on the same thing.
-        #
         #
         # @param [String, Channel, ChannelUID] channels
         #   channels to create triggers for in form of 'binding_id:type_id:thing_id#channel_id'
@@ -339,6 +518,14 @@ module OpenHAB
         #   rule "Rule provides access to channel trigger events in run block" do
         #     channel "astro:sun:home:rise#event", triggered: 'START'
         #     run { |trigger| logger.info("Channel(#{trigger.channel}) triggered event: #{trigger.event}") }
+        #   end
+        #
+        # @example
+        #   rule "Keypad Code Received test" do
+        #     channel "mqtt:homie300:mosquitto:backgate:keypad#code"
+        #     run do |event|
+        #       logger.info("Received keycode from #{event.channel.thing.uid.id}")
+        #     end
         #   end
         #
         # @example
@@ -421,7 +608,7 @@ module OpenHAB
         #   Only execute rule if previous state matches `from` state(s).
         # @param [State, Array<State>, Range, Proc] to State(s) for
         #   Only execute rule if new state matches `to` state(s).
-        # @param [OpenHAB::Core::Duration] for
+        # @param [java.time.Duration] for
         #   Duration item must remain in the same state before executing the execution blocks.
         # @param [Object] attach object to be attached to the trigger
         # @return [void]

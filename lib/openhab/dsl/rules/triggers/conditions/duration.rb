@@ -23,7 +23,7 @@ module OpenHAB
             # Create a new duration condition
             # @param [Object] to optional condition on to state
             # @param [Object] from optional condition on from state
-            # @param [Duration] duration to state must stay at specific value before triggering
+            # @param [java.time.Duration] duration to state must stay at specific value before triggering
             #
             def initialize(to:, from:, duration:)
               to = Conditions::Proc.from_value(to)

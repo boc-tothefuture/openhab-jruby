@@ -35,7 +35,7 @@ module OpenHAB
     #
     # Execute the supplied block after the specified duration
     #
-    # @param [Duration] duration after which to execute the block
+    # @param [java.time.Duration] duration after which to execute the block
     # @param [Object] id to associate with timer
     # @param [Block] block to execute, block is passed a Timer object
     #

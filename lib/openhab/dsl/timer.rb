@@ -18,7 +18,7 @@ module OpenHAB
       class << self
         # Create or reschedule a reentrant time
         #
-        # @param [Duration] duration after which to execute the block
+        # @param [java.time.Duration] duration after which to execute the block
         # @param [Object] id to associate with timer
         # @param [Block] block to execute, block is passed a Timer object
         # @return [ReentrantTimer] Timer object
@@ -37,7 +37,7 @@ module OpenHAB
       #
       # Create a new Timer Object
       #
-      # @param [Duration] duration Duration until timer should fire
+      # @param [java.time.Duration] duration Duration until timer should fire
       # @param [Block] block Block to execute when timer fires
       #
       def initialize(duration:, thread_locals: {}, &block)
@@ -60,7 +60,7 @@ module OpenHAB
       #
       # Reschedule timer
       #
-      # @param [Duration] duration
+      # @param [java.time.Duration] duration
       #
       # @return [Timer] Rescheduled timer instances
       #
@@ -129,7 +129,7 @@ module OpenHAB
     #
     # @param [Float, Integer] secs The number of seconds in integer or float
     #
-    # @return [Duration]
+    # @return [java.time.Duration]
     #
     def self.seconds_to_duration(secs)
       return unless secs
