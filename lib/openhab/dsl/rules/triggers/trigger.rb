@@ -20,7 +20,7 @@ module OpenHAB
           #
           # @param [Array] item_array Array of items passed to a trigger
           #
-          # @return [Array] A new flat array with any GroupMembers object left intact
+          # @return [Array] A new flat array with any Members object left intact
           #
           def self.flatten_items(item_array)
             # we want to support anything that can be flattened... i.e. responds to to_ary
@@ -29,7 +29,7 @@ module OpenHAB
             # Enumerables
             return item_array unless item_array.find { |item| item.respond_to?(:to_ary) }
 
-            groups, items = item_array.partition { |item| item.is_a?(GroupItem::GroupMembers) }
+            groups, items = item_array.partition { |item| item.is_a?(GroupItem::Members) }
             groups + flatten_items(items.flatten(1))
           end
 

@@ -13,7 +13,7 @@ Feature:  run
       rule 'Access Event Properties' do
         <trigger> TestSwitch
         run do |event|
-          logger.info("#{event.item.id} triggered to #{event.state}")
+          logger.info("#{event.item.name} triggered to #{event.state}")
          end
       end
       """
@@ -31,7 +31,7 @@ Feature:  run
       """
       rule 'Access Event Properties' do
         changed TestSwitch
-        run { |event| logger.info("#{event.item.id} triggered from #{event.was} to #{event.state}") }
+        run { |event| logger.info("#{event.item.name} triggered from #{event.was} to #{event.state}") }
       end
       """
     When I deploy the rule
@@ -44,7 +44,7 @@ Feature:  run
       rule 'Multi Line Run Block' do
         changed TestSwitch
         run do |event|
-          logger.info("#{event.item.id} triggered")
+          logger.info("#{event.item.name} triggered")
           logger.info("from #{event.was}") if event.was
           logger.info("to #{event.state}") if event.state
         end
@@ -61,7 +61,7 @@ Feature:  run
       """
       rule 'Multiple Run Blocks' do
         changed TestSwitch
-        run { |event| logger.info("#{event.item.id} triggered") }
+        run { |event| logger.info("#{event.item.name} triggered") }
         run { |event| logger.info("from #{event.was}") if event.was }
         run { |event| logger.info("to #{event.state}") if event.state  }
       end

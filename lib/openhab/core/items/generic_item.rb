@@ -5,10 +5,11 @@ module OpenHAB
     module Items
       java_import org.openhab.core.items.GenericItem
 
-      # Adds methods to core OpenHAB GenericItem type to make it more natural in
-      # Ruby
+      #
+      # The abstract base class for all items.
       #
       # @see https://www.openhab.org/javadoc/latest/org/openhab/core/items/genericitem
+      #
       class GenericItem
         # rubocop:disable Naming/MethodName these mimic Java fields, which are
         # actually methods
@@ -51,6 +52,8 @@ module OpenHAB
         # @param [Types::Type] command to send to object
         # @return [self]
         #
+        # @see DSL::Items::TimedCommand#command
+        #
         def command(command)
           command = format_type_pre(command)
           logger.trace "Sending Command #{command} to #{name}"
@@ -88,10 +91,12 @@ module OpenHAB
         end
 
         #
-        # Get the item state
-        #
+        # @!attribute [r] state
         # @return [Types::Type, nil]
-        #   OpenHAB item state if state is not `UNDEF` or `NULL`, nil otherwise
+        #   OpenHAB item state if state is not `UNDEF` or `NULL`, nil otherwise.
+        #   This makes it easy to use with the
+        #   [Ruby safe navigation operator `&.`](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html)
+        #   Use {#undef?} or {#null?} to check for those states.
         #
         def state
           raw_state if state?

@@ -78,7 +78,7 @@ module OpenHAB
 
             trigger_name = trigger.to_s.tr("_", " ")
             item_names = items.map do |item|
-              if item.is_a?(GroupItem::GroupMembers)
+              if item.is_a?(GroupItem::Members)
                 "#{item.group.name}.members"
               else
                 item.name

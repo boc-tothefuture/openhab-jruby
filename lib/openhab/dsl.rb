@@ -27,7 +27,6 @@ module OpenHAB
     include Actions
     include Rules::Terse
     include ScriptHandling
-    include Units
     include Core::EntityLookup
 
     module_function
@@ -69,6 +68,9 @@ module OpenHAB
     # all commands sent will check if the item is in the command's state
     # before sending the command.
     #
+    # @note Wrapping an entire rule or file in an ensure_states block will not
+    #   ensure the states during execution of the rules. See examples.
+    #
     # @yield
     # @return [Object] The result of the block.
     #
@@ -76,6 +78,37 @@ module OpenHAB
     #   ensure_states do
     #     Switch1.on
     #     Switch2.on
+    #   end
+    #
+    # @example
+    #   # VirtualSwitch is in state `ON`
+    #   ensure_states do
+    #     VirtualSwitch << ON       # No command will be sent
+    #     VirtualSwitch.update(ON)  # No update will be posted
+    #     VirtualSwitch << OFF      # Off command will be sent
+    #     VirtualSwitch.update(OFF) # No update will be posted
+    #   end
+    #
+    # @example This will not work
+    #   ensure_states do
+    #     rule 'Items in an execution block will not have ensure_states applied to them' do
+    #       changed VirtualSwitch
+    #       run do
+    #         VirtualSwitch.on
+    #         VirtualSwitch2.on
+    #       end
+    #     end
+    #   end
+    #
+    # @example This will work
+    #   rule 'ensure_states must be in an execution block' do
+    #     changed VirtualSwitch
+    #     run do
+    #        ensure_states do
+    #           VirtualSwitch.on
+    #           VirtualSwitch2.on
+    #        end
+    #     end
     #   end
     #
     def ensure_states
@@ -90,6 +123,34 @@ module OpenHAB
     # Fetches all items from the item registry
     #
     # @return [Core::Items::Registry]
+    #
+    # The examples all assume the following items exist.
+    #
+    # ```xtend
+    # Dimmer DimmerTest "Test Dimmer"
+    # Switch SwitchTest "Test Switch"
+    # ```
+    #
+    # @example
+    #   logger.info("Item Count: #{items.count}")  # Item Count: 2
+    #   logger.info("Items: #{items.map(&:label).sort.join(', ')}")  # Items: Test Dimmer, Test Switch'
+    #   logger.info("DimmerTest exists? #{items.key?('DimmerTest')}") # DimmerTest exists? true
+    #   logger.info("StringTest exists? #{items.key?('StringTest')}") # StringTest exists? false
+    #
+    # @example
+    #   rule 'Use dynamic item lookup to increase related dimmer brightness when switch is turned on' do
+    #     changed SwitchTest, to: ON
+    #     triggered { |item| items[item.name.gsub('Switch','Dimmer')].brighten(10) }
+    #   end
+    #
+    # @example
+    #   rule 'search for a suitable item' do
+    #     on_start
+    #     triggered do
+    #       # Send ON to DimmerTest if it exists, otherwise send it to SwitchTest
+    #       (items['DimmerTest'] || items['SwitchTest'])&.on
+    #     end
+    #   end
     #
     def items
       Core::Items::Registry.instance
@@ -201,6 +262,51 @@ module OpenHAB
     # @return [Hash] hash of user specified ids to sets of times
     def timers
       Timer::Manager.instance.timer_ids
+    end
+
+    # @overload unit
+    #  @return [javax.measure.unit] The current thread unit
+    #
+    # @overload unit(unit)
+    #   Sets a thread local variable to the supplied unit such that classes
+    #   operating inside the block can perform automatic conversions to the
+    #   supplied unit for NumberItems.
+    #
+    #   To facilitate conversion of multiple dimensioned and dimensionless
+    #   numbers the unit block may be used. The unit block attempts to do the
+    #   _right thing_ based on the mix of dimensioned and dimensionless items
+    #   within the block. Specifically all dimensionless items are converted to
+    #   the supplied unit, except when they are used for multiplication or
+    #   division.
+    #
+    #   @param [String, javax.measure.unit] unit Unit or String representing unit
+    #   @yield The block will be executed in the context of the specify unit.
+    #
+    #   @example
+    #     # Number:Temperature NumberC = 23 °C
+    #     # Number:Temperature NumberF = 70 °F
+    #     # Number Dimensionless = 2
+    #     unit('°F') { NumberC.state - NumberF.state < 4 }                                      # => true
+    #     unit('°F') { NumberC.state - '24 °C' < 4 }                                            # => true
+    #     unit('°F') { (24 | '°C') - NumberC.state < 4 }                                        # => true
+    #     unit('°C') { NumberF.state - '20 °C' < 2 }                                            # => true
+    #     unit('°C') { NumberF.state - Dimensionless.state }                                    # => 19.11 °C
+    #     unit('°C') { NumberF.state - Dimensionless.state < 20 }                               # => true
+    #     unit('°C') { Dimensionless.state + NumberC.state == 25 }                              # => true
+    #     unit('°C') { 2 + NumberC.state == 25 }                                                # => true
+    #     unit('°C') { Dimensionless.state * NumberC.state == 46 }                              # => true
+    #     unit('°C') { 2 * NumberC.state == 46 }                                                # => true
+    #     unit('°C') { ( (2 * (NumberF.state + NumberC.state) ) / Dimensionless.state ) < 45 }  # => true
+    #     unit('°C') { [NumberC.state, NumberF.state, Dimensionless.state].min }                # => 2
+    #
+    def unit(unit = nil)
+      return Thread.current[:unit] if !unit && !block_given?
+
+      unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit) if unit.is_a?(String)
+      Thread.current[:unit] = unit
+      yield
+    ensure
+      Thread.current[:unit] = nil
     end
   end
 end

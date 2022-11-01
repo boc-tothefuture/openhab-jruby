@@ -610,7 +610,7 @@ module OpenHAB
         # {Core::Events::ThingStatusInfoChangedEvent} depending on if the
         # triggering element was an item or a thing.
         #
-        # @param [Item, GroupItem::GroupMembers, Thing] items Objects to create trigger for.
+        # @param [Item, GroupItem::Members, Thing] items Objects to create trigger for.
         # @param [State, Array<State>, Range, Proc] from
         #   Only execute rule if previous state matches `from` state(s).
         # @param [State, Array<State>, Range, Proc] to State(s) for
@@ -679,7 +679,7 @@ module OpenHAB
         # @example Real World Example
         #   rule "Log (or notify) when an exterior door is left open for more than 5 minutes" do
         #     changed ExteriorDoors.members, to: OPEN, for: 5.minutes
-        #     triggered {|door| logger.info("#{door.id} has been left open!") }
+        #     triggered {|door| logger.info("#{door.name} has been left open!") }
         #   end
         #
         def changed(*items, to: nil, from: nil, for: nil, attach: nil)
@@ -884,7 +884,7 @@ module OpenHAB
         # The `event` passed to run blocks will be an
         # {Core::Events::ItemCommandEvent}.
         #
-        # @param [Core::Items::GenericItem, Core::Items::GroupItem::GroupMembers] items Items to create trigger for
+        # @param [Core::Items::GenericItem, Core::Items::GroupItem::Members] items Items to create trigger for
         # @param [Array<Core::Types::Command>, Range, Proc] command commands to match for trigger
         # @param [Array<Core::Types::Command>, Range, Proc] commands commands to match for trigger
         # @param [Object] attach object to be attached to the trigger
@@ -1069,7 +1069,7 @@ module OpenHAB
         # {Core::Events::ThingStatusInfoEvent} depending on if the triggering
         # element was an item or a thing.
         #
-        # @param [Core::Items::GenericItem, Core::Items::GroupItem::GroupMembers, Thing] items
+        # @param [Core::Items::GenericItem, Core::Items::GroupItem::Members, Thing] items
         #   Objects to create trigger for.
         # @param [State, Array<State>, Range, Proc, Symbol, String] to
         #   Only execute rule if the state matches `to` state(s). If the

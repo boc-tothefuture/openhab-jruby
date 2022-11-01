@@ -1,17 +1,5 @@
 # @title NumberItem
-
-# NumberItem
-
-| Method          | Parameters | Description                                                                                                                                                  | Example                                                                      |
-| --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| truthy?         |            | Item state not UNDEF, not NULL and is not Zero                                                                                                               | `puts "#{item.name} is truthy" if item.truthy?`                              |
-| +,-,\*,/        | amount     | Perform the operation between the state of the number item and the supplied value\*                                                                          | `NumberItem << NumberItem - 5` or `NumberItem << 10 + NumberItem`            |
-| \|              | unit       | Convert the supplied NumberItem to the supplied unit. Unit can either be a Unit class or string representation of the symbol, returns a QuantityType object. | `NumberItem` &#124; `ImperialUnits::FAHRENHEIT` or `NumberItem `&#124;`'°F'` |
-| to_d            |            | Returns the state as a BigDecimal or nil if state is UNDEF or NULL                                                                                           | `NumberOne.to_d`                                                             |
-| to_i            |            | Returns the state as an Integer or nil if state is UNDEF or NULL                                                                                             | `NumberOne.to_i`                                                             |
-| to_f            |            | Returns the state as a Float or nil if state is UNDEF or NULL                                                                                                | `NumberOne.to_f`                                                             |
-| dimension       |            | Returns the dimension of the Number Item, nil if the number is dimensionless                                                                                 | `Numberone.dimension`                                                        |
-| Numeric Methods |            | All methods for [Ruby Numeric](https://ruby-doc.org/core-2.6.8/Numeric.html)                                                                                 |                                                                              |
+                                                 |
 
 Math operations for dimensionless numbers return a type of [Ruby BigDecimal](https://ruby-doc.org/stdlib-2.6.8/libdoc/bigdecimal/rdoc/BigDecimal.html). Check [Quantities section](#quantities) for details of how math operations impact dimensioned numbers.
 
@@ -33,7 +21,7 @@ Number Items can be selected in an enumerable with grep.
 ```ruby
 # Get all NumberItems
 items.grep(NumberItem)
-     .each { |number| logger.info("#{number.id} is a Number Item") }
+     .each { |number| logger.info("#{item.name} is a Number Item") }
 ```
 
 Number Item work with ranges and can be used in grep.
@@ -42,7 +30,7 @@ Number Item work with ranges and can be used in grep.
 # Get numbers in group Numbers with a state of less than 50
 # Get all NumberItems less than 50
 Numbers.grep(0...50)
-       .each { |number| logger.info("#{number.id} is less than 50") }
+       .each { |number| logger.info("#{item.name} is less than 50") }
 ```
 
 Number Items can also be used in case statements with ranges.
@@ -51,9 +39,9 @@ Number Items can also be used in case statements with ranges.
 #Check if number items is less than 50
 case NumberOne
 when (0...50)
-  logger.info("#{NumberOne.id} is less than 50")
+  logger.info("#{NumberOne.name} is less than 50")
 when (50..100)
-  logger.info("#{NumberOne.id} is greater than 50")
+  logger.info("#{NumberOne.name} is greater than 50")
 end
 ```
 
@@ -235,23 +223,3 @@ For certain unit types, such as temperature, all unit needs to be normalized to 
 (NumberC | '°F') - (NumberF | '°F') < '4 °F'
 ```
 
-To facilitate conversion of multiple dimensioned and dimensionless numbers the unit block may be used. The unit block attempts to do the _right thing_ based on the mix of dimensioned and dimensionless items within the block. Specifically all dimensionless items are converted to the supplied unit, except when they are used for multiplication or division.
-
-```ruby
-# Number:Temperature NumberC = 23 °C
-# Number:Temperature NumberF = 70 °F
-# Number Dimensionless = 2
-
-unit('°F') { NumberC - NumberF < 4 }                                # => true
-unit('°F') { NumberC - '24 °C' < 4 }                                # => true
-unit('°F') { (24 | '°C') - NumberC < 4 }                            # => true
-unit('°C') { NumberF - '20 °C' < 2 }                                # => true
-unit('°C') { NumberF - Dimensionless }                              # => 19.11 °C
-unit('°C') { NumberF - Dimensionless < 20 }                         # => true
-unit('°C') { Dimensionless + NumberC == 25 }                        # => true
-unit('°C') { 2 + NumberC == 25 }                                    # => true
-unit('°C') { Dimensionless * NumberC == 46 }                        # => true
-unit('°C') { 2 * NumberC == 46 }                                    # => true
-unit('°C') { ( (2 * (NumberF + NumberC) ) / Dimensionless ) < 45 }  # => true
-unit('°C') { [NumberC, NumberF, Dimensionless].min }                # => 2
-```

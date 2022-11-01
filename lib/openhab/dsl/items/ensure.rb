@@ -6,7 +6,7 @@ module OpenHAB
       # Functionality to implement `ensure`/`ensure_states`
       module Ensure
         # Contains the `ensure` method mixed into {Core::Items::GenericItem} and
-        # {Core::Items::GroupItem::GroupMembers}
+        # {Core::Items::GroupItem::Members}
         module Ensurable
           # Fluent method call that you can chain commands on to, that will
           # then automatically ensure that the item is not in the command's
@@ -76,7 +76,7 @@ module OpenHAB
         end
       end
 
-      Core::Items::GroupItem::GroupMembers.include(Ensure::Ensurable)
+      Core::Items::GroupItem::Members.include(Ensure::Ensurable)
     end
   end
 end

@@ -139,7 +139,7 @@ module OpenHAB
         alias_method :raw_hue, :hue
 
         # @!attribute [r] hue
-        # @return [QuantityType]
+        # @return [QuantityType] The color's hue component as a {QuantityType} of unit DEGREE_ANGLE.
         def hue
           QuantityType.new(raw_hue.to_big_decimal, org.openhab.core.library.unit.Units::DEGREE_ANGLE)
         end

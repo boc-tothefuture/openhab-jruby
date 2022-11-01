@@ -42,10 +42,10 @@ rule 'Snap Fan to preset percentages' do
               when 67...100 then 100
               end
     if snapped
-      logger.info("Snapping fan #{item.id} to #{snapped}")
+      logger.info("Snapping fan #{item.name} to #{snapped}")
       item << snapped
     else
-      logger.info("#{item.id} set to snapped percentage, no action taken.")
+      logger.info("#{item.name} set to snapped percentage, no action taken.")
     end
   end
 end

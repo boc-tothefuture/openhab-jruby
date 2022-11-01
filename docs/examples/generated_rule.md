@@ -12,7 +12,7 @@ rule 'Log whenever a Virtual Switch Changes' do
          changed item
        end
 
-  run { |event| logger.info "#{event.item.id} changed from #{event.was} to #{event.state}" }
+  run { |event| logger.info "#{event.item.name} changed from #{event.was} to #{event.state}" }
 end
 ```
 
@@ -23,7 +23,7 @@ virtual_switches = items.select { |item| item.is_a? Switch }
 
 rule 'Log whenever a Virtual Switch Changes 2' do
   changed virtual_switches
-  run { |event| logger.info "#{event.item.id} changed from #{event.was} to #{event.state} 2" }
+  run { |event| logger.info "#{event.item.name} changed from #{event.was} to #{event.state} 2" }
 end
 ```
 
@@ -35,7 +35,7 @@ virtual_switches = items.select { |item| item.is_a? Switch }
 virtual_switches.each do |switch|
   rule "Log whenever a #{switch.label} Changes" do
     changed switch
-    run { |event| logger.info "#{event.item.id} changed from #{event.was} to #{event.state} 2" }
+    run { |event| logger.info "#{event.item.name} changed from #{event.was} to #{event.state} 2" }
   end
 end
 ```

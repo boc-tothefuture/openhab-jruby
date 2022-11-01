@@ -12,7 +12,7 @@ Feature:  triggered
       """
       rule 'Triggered has access directly to item triggered' do
         changed TestSwitch
-        triggered { |item| logger.info("#{item.id} triggered") }
+        triggered { |item| logger.info("#{item.name} triggered") }
       end
       """
     When item "TestSwitch" state is changed to "ON"
@@ -29,7 +29,7 @@ Feature:  triggered
       """
       rule 'Triggered item is item changed when a group item is changed.' do
         changed Switches.members
-        triggered { |item| logger.info("Switch #{item.id} changed to #{item}")}
+        triggered { |item| logger.info("Switch #{item.name} changed to #{item}")}
       end
       """
     When item "Switch1" state is changed to "ON"

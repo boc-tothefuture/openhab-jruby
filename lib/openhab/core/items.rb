@@ -12,6 +12,9 @@ module OpenHAB
     # Contains the core types that OpenHAB uses to represent items.
     # Items have states from the [Types] module.
     #
+    # You may use an item name anywhere {DSL} (or just {Core::EntityLookup})
+    # is available, and it will automatically be loaded.
+    #
     module Items
       class << self
         # Imports all of the item classes into the global namespace

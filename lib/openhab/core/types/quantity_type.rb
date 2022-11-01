@@ -179,7 +179,7 @@ module OpenHAB
         # @!visibility private
         def unitize(other_unit = unit)
           # prefer converting to the thread-specified unit if there is one
-          other_unit = DSL::Units.unit || other_unit
+          other_unit = DSL.unit || other_unit
           logger.trace("Converting #{self} to #{other_unit}")
 
           case unit

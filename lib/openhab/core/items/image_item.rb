@@ -12,8 +12,28 @@ module OpenHAB
     module Items
       java_import org.openhab.core.library.items.ImageItem
 
-      # Adds methods to core OpenHAB ImageItem type to make it more natural in
-      # Ruby
+      #
+      # An {ImageItem} holds the binary image data as its state.
+      #
+      # @!attribute [r] state
+      #   @return [Types::RawType, nil]
+      #
+      # @example Update from a base 64 encode image string
+      #   Image.update("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=")
+      #
+      # @example Update from image bytes and mime type
+      #   Image.update_from_bytes(File.binread(File.join(Dir.tmpdir,'1x1.png')), mime_type: 'image/png')
+      #
+      # @example Update from URL
+      #   Image.update_from_url('https://raw.githubusercontent.com/boc-tothefuture/openhab-jruby/main/features/assets/1x1.png')
+      #
+      # @example Update from File
+      #   Image.update_from_file('/tmp/1x1.png')
+      #
+      # @example Log image data
+      #   logger.info("Mime type: #{Image.state.mime_type}")
+      #   logger.info("Number of bytes: #{Image.state.bytes.length}")
+      #
       class ImageItem < GenericItem
         #
         # Update image from file

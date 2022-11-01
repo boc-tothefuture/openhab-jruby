@@ -22,6 +22,7 @@ Bundler/GemFilename:
 Layout/LineLength:
   IgnoredPatterns:
     - "# @example" # YARD example titles can't be broken up onto multiple lines.
+    - "data:[a-z/]+;base64," # Base64 data is long
 
 Lint/RescueException:
   Enabled: false # we need to rescue Java exceptions quite a bit

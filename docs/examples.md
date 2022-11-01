@@ -202,7 +202,7 @@ Trigger defined as:
 - Command: ON
 
 ```ruby
-logger.info("#{event.item.id} Triggered the rule")
+logger.info("#{event.item.name} Triggered the rule")
 after 5.seconds do
   event.item << OFF
 end
@@ -227,6 +227,6 @@ Trigger defined as:
 - State: ON
 
 ```ruby
-logger.info("#{event.item.id} Triggered")
+logger.info("#{event.item.name} Triggered")
 items["#{event.item_name}_LastMotion"].update Time.now
 ```

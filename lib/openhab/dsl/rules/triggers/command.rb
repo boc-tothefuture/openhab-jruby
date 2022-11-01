@@ -77,7 +77,7 @@ module OpenHAB
           # @param [Object] attach object to be attached to the trigger
           #
           def command_trigger(item:, command:, attach: nil, conditions: nil)
-            type, config = if item.is_a?(GroupItem::GroupMembers)
+            type, config = if item.is_a?(GroupItem::Members)
                              group(group: item)
                            else
                              item(item: item)

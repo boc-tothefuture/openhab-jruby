@@ -7,8 +7,17 @@ module OpenHAB
     module Items
       java_import org.openhab.core.library.items.PlayerItem
 
-      # Adds methods to core OpenHAB NumberItem type to make it more natural in
-      # Ruby
+      #
+      # A {PlayerItem} allows control of a player, e.g. an audio player.
+      #
+      # @!attribute [r] state
+      #   @return [Types::PlayPauseType, Types;:RewindFastforwardType, nil]
+      #
+      # @example Start playing on a player item
+      #   Chromecast.play
+      # @example Check if a player is paused
+      #   logger.warn("#{item.name} is paused) if Chromecast.paused?
+      #
       class PlayerItem < GenericItem
         # @!method play?
         #   Check if the item state == `PLAYING`

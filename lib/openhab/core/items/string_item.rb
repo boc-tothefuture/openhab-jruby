@@ -7,8 +7,18 @@ module OpenHAB
     module Items
       java_import org.openhab.core.library.items.StringItem
 
-      # Adds methods to core OpenHAB StringItem type to make it more natural in
-      # Ruby
+      #
+      # A {StringItem} can be used for any kind of string to either send or
+      # receive from a device.
+      #
+      # @!attribute [r] state
+      #   @return [Types::StringType, nil]
+      #
+      # @example
+      #   # StringOne has a current state of "Hello"
+      #   StringOne << StringOne + " World!"
+      #   # StringOne will eventually have a state of 'Hello World!'
+      #
       class StringItem < GenericItem
       end
     end

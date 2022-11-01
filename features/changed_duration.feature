@@ -17,7 +17,7 @@ Feature: changed_duration
       """
       rule "Execute rule when group is changed" do
         <rule>, for: 5.seconds
-        triggered { |item| logger.info("#{item.id} Changed")}
+        triggered { |item| logger.info("#{item.name} Changed")}
       end
       """
     When item "Switch_Two" state is changed to "<to>"

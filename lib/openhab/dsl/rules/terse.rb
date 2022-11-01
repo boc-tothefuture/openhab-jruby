@@ -25,7 +25,7 @@ module OpenHAB
           #   @param name [String] The name for the rule.
           #   @param id [String] The ID for the rule.
           #   @yield The execution block for the rule.
-          #   @return [nil]
+          #   @return [void]
           #   @see Builder#$1
           def def_terse_rule(trigger)
             class_eval(<<~RUBY, __FILE__, __LINE__ + 1)

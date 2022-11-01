@@ -28,10 +28,10 @@ module OpenHAB
         # Returns true if the given item name exists
         # @param name [String] Item name to check
         # @return [true,false] true if the item exists, false otherwise
-        def include?(name)
+        def key?(name)
           !$ir.getItems(name).empty?
         end
-        alias_method :key?, :include?
+        alias_method :include?, :key?
 
         # Explicit conversion to array
         # @return [Array]

@@ -8,8 +8,24 @@ module OpenHAB
     module Items
       java_import org.openhab.core.library.items.RollershutterItem
 
-      # Adds methods to core OpenHAB RollershutterItem type to make it more natural in
-      # Ruby
+      #
+      # A {RollershutterItem} allows the control of roller shutters, i.e.
+      # moving them up, down, stopping or setting it to close to a certain
+      # percentage.
+      #
+      # @!attribute [r] state
+      #   @return [Types::PercentType, Types::UpDownType, nil]
+      #
+      # @example Roll up all Rollershutters in a group
+      #   Shutters.up
+      #
+      # @example Log a warning for all rollershutters that are not up
+      #   Shutters.reject(&:up?).each do |item|
+      #     logger.warn("#{item.name} is not rolled up!")
+      #   end
+      #
+      # @example Set rollershutter to a specified position
+      #   Example_Rollershutter << 40
       class RollershutterItem < GenericItem
         include NumericItem
 

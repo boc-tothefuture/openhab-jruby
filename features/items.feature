@@ -56,8 +56,8 @@ Feature:  items
       | Dimmer | DimmerTwo |             |
     Given code in a rules file
       """
-      logger.info "Dimmer One: #{DimmerOne.id}"
-      logger.info "Dimmer Two: #{DimmerTwo.id}"
+      logger.info "Dimmer One: #{DimmerOne.name}"
+      logger.info "Dimmer Two: #{DimmerTwo.name}"
       """
     When I deploy the rules file
     Then It should log 'Dimmer One: Test Dimmer' within 5 seconds

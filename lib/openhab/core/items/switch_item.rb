@@ -7,8 +7,34 @@ module OpenHAB
     module Items
       java_import org.openhab.core.library.items.SwitchItem
 
-      # Adds methods to core OpenHAB SwitchItem type to make it more natural in
-      # Ruby
+      #
+      # A SwitchItem represents a normal switch that can be ON or OFF.
+      # Useful for normal lights, presence detection etc.
+      #
+      # @!attribute [r] state
+      #   @return [Types::OnOffType, nil]
+      #
+      #
+      # @example Turn on all switches in a `Group:Switch` called Switches
+      #   Switches.on
+      #
+      # @example Turn on all switches in a group called Switches that are off
+      #   Switches.select(&:off?).each(&:on)
+      #
+      # @example Switches accept booelan commands (true/false)
+      #   # Turn on switch
+      #   SwitchItem << true
+      #
+      #   # Turn off switch
+      #   SwitchItem << false
+      #
+      #   # Turn off switch if any in another group is on
+      #   SwitchItem << Switches.any?(&:on?)
+      #
+      # @example Invert all Switches
+      #   items.grep(SwitchItem)
+      #        .each(&:toggle)
+      #
       class SwitchItem < GenericItem
         # Convert boolean commands to ON/OFF
         # @!visibility private

@@ -14,7 +14,7 @@ Feature:  units_of_measurement
     Given code in a rules file
       """
         result = <convert_line>
-        logger.info("#{NumberC.id} is #{result.format('%.1f %unit%')} in Fahrenheit")
+        logger.info("#{NumberC.name} is #{result.format('%.1f %unit%')} in Fahrenheit")
       """
     When I deploy the rules file
     Then It should log 'NumberC is 73.4 °F in Fahrenheit' within 5 seconds
@@ -27,7 +27,7 @@ Feature:  units_of_measurement
     Given code in a rules file
       """
         result = <convert_line>
-        logger.info("#{Dimensionless.id} is #{result.format('%.1f %unit%')} in Fahrenheit")
+        logger.info("#{Dimensionless.name} is #{result.format('%.1f %unit%')} in Fahrenheit")
       """
     When I deploy the rules file
     Then It should log 'Dimensionless is 2.0 °F in Fahrenheit' within 5 seconds

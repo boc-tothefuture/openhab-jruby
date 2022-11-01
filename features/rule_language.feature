@@ -54,7 +54,7 @@ Feature: rule_language
     And code in a rules file
       """
       open_doors = GarageDoors.select(&:open?)
-      open_doors.each { | door | logger.warn("Garage Door #{door.id} is OPEN") }
+      open_doors.each { | door | logger.warn("Garage Door #{door.name} is OPEN") }
       """
     When I deploy the rules file
     Then It should log 'Garage Door Left Door is OPEN' within 5 seconds
@@ -67,9 +67,9 @@ Feature: rule_language
       """
       case TestDimmer
       when 0...50
-       logger.info("#{TestDimmer.id} Less than 50")
+       logger.info("#{TestDimmer.name} Less than 50")
       when 50..100
-       logger.info("#{TestDimmer.id} More than 50")
+       logger.info("#{TestDimmer.name} More than 50")
       else
        logger.info("#{TestDimmer} Not matched")
       end
