@@ -16,7 +16,7 @@ insert the `require` statement at the beginning of your scripts (_optional_).
 1. Go to `Settings -> Add-ons -> Automation` and install the jrubyscripting automation addon following the [openHAB instructions](https://www.openhab.org/docs/configuration/addons.html) 
 2. Go to `Settings -> Other Services -> JRuby Scripting`:
    * **Ruby Gems**: `openhab-jrubyscripting=~>4.0`
-   * **Require Scripts**: `openhab` (openHAB 3.3+: recommended if you are using GUI scripting)
+   * **Require Scripts**: `openhab/dsl` (not required, but recommended)
 
 ### Using files
 
@@ -27,7 +27,7 @@ insert the `require` statement at the beginning of your scripts (_optional_).
    org.openhab.automation.jrubyscripting:gems=openhab-jrubyscripting=~>4.0
    # optional: uncomment the following line if you prefer not having to 
    # insert require 'openhab/dsl' at the top of your scripts.
-   # org.openhab.automation.jrubyscripting:require=openhab
+   # org.openhab.automation.jrubyscripting:require=openhab/dsl
    ```
 
    This configuration with the openhab-jrubyscripting gem specified with [pessimistic versioning](https://thoughtbot.com/blog/rubys-pessimistic-operator) will install any version of openhab-jrubyscripting greater than or equal to 4.0 but less than 5.0. On system restart if any (non-breaking) new versions of the library are available they will automatically be installed.

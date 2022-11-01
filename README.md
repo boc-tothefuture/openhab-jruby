@@ -5,9 +5,12 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/ccutrer/openhab-jrubyscripting)](https://github.com/ccutrer/openhab-jrubyscripting/graphs/contributors)
 [![EPLv2 License](https://img.shields.io/badge/License-EPLv2-blue.svg)](https://www.eclipse.org/legal/epl-2.0/)
 
-The OpenHAB JRuby scripting helpers bring the power of the Ruby language to OpenHAB. Rather than being a pure pass-through to OpenHAB, they provide a Ruby-like experience when building automation rules within OpenHAB.
+The OpenHAB JRuby scripting helpers bring the power of the Ruby language to
+OpenHAB. Rather than being a pure pass-through to OpenHAB, they provide a
+Ruby-like experience when building automation rules within OpenHAB.
 
-Full documentation is available on [GitHub Pages](https://ccutrer.github.io/openhab-jrubyscripting/).
+Full documentation is available on
+[GitHub Pages](https://ccutrer.github.io/openhab-jrubyscripting/).
 
  * [Installation](docs/installation.md)
  * [Usage](docs/usage.md)
@@ -25,10 +28,19 @@ Full documentation is available on [GitHub Pages](https://ccutrer.github.io/open
  * [Changelog](CHANGELOG.md)
  * [Contributing](CONTRIBUTING.md)
 
+## Fork from [openhab-scripting](https://github.com/boc-tothefuture/openhab-jruby/)
+
+This gem is a fork. Thanks to @boc-tothefuture, @pacive, and @jimtng on the
+original gem. See [Changes from openhab-scripting](docs/fork.md) for more
+details on the reasoning behind the fork, and the significant breaking changes.
+
 ## Discussion
 
-Please see [this thread](https://community.openhab.org/t/jruby-openhab-rules-system/110598) on the OpenHAB forum for further discussion. Ideas and suggestions are welcome.
+Please see
+[this thread](https://community.openhab.org/t/jruby-openhab-rules-system/110598)
+on the OpenHAB forum for further discussion. Ideas and suggestions are welcome.
 
 ## Library Status
 
-This is a beta and syntax and all elements are subject to change as the library evolves.
+This is a beta and syntax and all elements are subject to change as the library
+evolves.
