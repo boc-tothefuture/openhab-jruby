@@ -225,6 +225,8 @@ module OpenHAB
         # Channel to link the item to
         # @return [String, ChannelUID, nil]
         attr_accessor :channel
+        # @return [Core::Items::Metadata::NamespaceHash]
+        attr_reader :metadata
         # Initial state
         attr_accessor :state
 
@@ -247,7 +249,7 @@ module OpenHAB
         # @param channel [String, Things::ChannelUID, nil] Channel to link the item to
         # @param expire [String] An expiration specification.
         # @param homekit [String, Array, nil] Homekit metadata (see {#alexa})
-        # @param metadata [Hash{String=>Hash}] Generic metadata (see {#metadata})
+        # @param metadata [Hash<String, Hash>] Generic metadata (see {#metadata})
         # @param state [Types::State] Initial state
         def initialize(type, name = nil, label = nil,
                        provider:,
@@ -278,19 +280,22 @@ module OpenHAB
           @icon = icon
           @groups = groups || []
           @tags = []
-          @metadata = metadata || {}
+          @metadata = Core::Items::Metadata::NamespaceHash.new
+          @metadata.merge!(metadata) if metadata
           @autoupdate = autoupdate
-          metadata("alexa", alexa) if alexa
+          self.alexa(alexa) if alexa
           @channel = channel
           @expire = nil
           self.expire(*Array(expire)) if expire
-          metadata("homekit", homekit) if homekit
+          self.homekit(homekit) if homekit
           @state = state
 
           (tags || []).each do |tag|
             self.tag(tag)
           end
         end
+
+        alias_method :to_s, :name
 
         # Tag item
         # @param tag [String, org.openhab.core.semantics.Tag]
@@ -312,7 +317,8 @@ module OpenHAB
         # @param value [String] Type of Homekit accessory or characteristic
         # @param config [Hash] Additional Homekit configuration
         def homekit(value = nil, config = nil)
-          metadata("homekit", value, config)
+          value, config = value if value.is_a?(Array)
+          metadata["homekit"] = [value, config]
         end
 
         # Shortcut for adding Alexa metadata
@@ -322,29 +328,8 @@ module OpenHAB
         # @param value [String] Type of Alexa endpoint
         # @param config [Hash] Additional Alexa configuration
         def alexa(value = nil, config = nil)
-          metadata("alexa", value, config)
-        end
-
-        # Add or metadata
-        # @example Retrieve the full metadata hash
-        #    metadata # => { "homekit" => "Switchable" }
-        # @example Retrieve the metadata for a specific key
-        #    metadata["homekit"] # => "Switchable"
-        def metadata(*args)
-          unless (0..3).cover?(args.length)
-            raise ArgumentError,
-                  "wrong number of arguments (given #{args.length}, expected 0..3)"
-          end
-          return @metadata if args.empty?
-
-          namespace, value, config = *args
-          return @metadata[namespace] if value.nil? && config.nil?
-
-          @metadata[namespace] = if config.nil?
-                                   value
-                                 else
-                                   [value, config]
-                                 end
+          value, config = value if value.is_a?(Array)
+          metadata["alexa"] = [value, config]
         end
 
         # @!method expire(command: nil, state: nil)
@@ -390,21 +375,15 @@ module OpenHAB
           item.label = label
           item.category = icon.to_s if icon
           groups.each do |group|
-            group = group.name if group.is_a?(GroupItemBuilder)
-            group = $ir.get(group) if group.is_a?(String)
-            next unless group
-
-            group.add_member(item)
+            item.add_group_name(group.to_s)
           end
           tags.each do |tag|
             item.add_tag(tag)
           end
-          metadata.each do |namespace, data|
-            process_meta(item, namespace, data)
-          end
-          item.meta["autoupdate"] = autoupdate.to_s unless autoupdate.nil?
-          item.meta["expire"] = expire if expire
-          item.meta["stateDescription"] = { "pattern" => format } if format
+          item.metadata.merge!(metadata)
+          item.metadata["autoupdate"] = autoupdate.to_s unless autoupdate.nil?
+          item.metadata["expire"] = expire if expire
+          item.metadata["stateDescription"] = { "pattern" => format } if format
           unless state.nil?
             state = self.state
             state = item.__send__(:format_type_pre, state) unless state.is_a?(org.openhab.core.types.State)
@@ -422,30 +401,6 @@ module OpenHAB
           type = @type.to_s.gsub(/(?:^|_)[a-z]/) { |match| match[-1].upcase }
           type = "#{type}:#{dimension}" if dimension
           self.class.item_factory.create_item(type, name)
-        end
-
-        def process_meta(item, namespace, data)
-          case data
-          when String
-            value = data
-          when Hash
-            config = data
-          when Array
-            value = data.first
-            config = data.last
-            unless data.length == 2
-              raise ArgumentError,
-                    "Metadata array must be a string, a hash, or an array of a string and hash"
-            end
-          else
-            unless data.length == 2
-              raise ArgumentError,
-                    "Metadata array must be a string, a hash, or an array of a string and hash"
-            end
-          end
-          config ||= {}
-          item.meta[namespace] = config
-          item.meta[namespace].value = value
         end
       end
 

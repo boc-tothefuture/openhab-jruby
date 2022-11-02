@@ -77,9 +77,9 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
       switch_item "MySwitch3"
     end
 
-    expect(MySwitch1.meta["autoupdate"]&.value).to eq "true"
-    expect(MySwitch2.meta["autoupdate"]&.value).to eq "false"
-    expect(MySwitch3.meta["autoupdate"]).to be_nil
+    expect(MySwitch1.metadata["autoupdate"]&.value).to eq "true"
+    expect(MySwitch2.metadata["autoupdate"]&.value).to eq "false"
+    expect(MySwitch3.metadata["autoupdate"]).to be_nil
   end
 
   it "can configure expires" do
@@ -91,11 +91,11 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
       string_item "MyString", expire: [5.hours, "EXPIRED"]
     end
 
-    expect(MySwitch1.meta["expire"]&.value).to eq "1h"
-    expect(MySwitch2.meta["expire"]&.value).to eq "2h"
-    expect(MySwitch3.meta["expire"]&.value).to eq "3h,state=OFF"
-    expect(MySwitch4.meta["expire"]&.value).to eq "4h,command=OFF"
-    expect(MyString.meta["expire"]&.value).to eq "5h,state='EXPIRED'"
+    expect(MySwitch1.metadata["expire"]&.value).to eq "1h"
+    expect(MySwitch2.metadata["expire"]&.value).to eq "2h"
+    expect(MySwitch3.metadata["expire"]&.value).to eq "3h,state=OFF"
+    expect(MySwitch4.metadata["expire"]&.value).to eq "4h,command=OFF"
+    expect(MyString.metadata["expire"]&.value).to eq "5h,state='EXPIRED'"
   end
 
   it "passes homekit helper on to metadata" do
@@ -103,8 +103,8 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
       switch_item "MySwitch1", homekit: ["Switchable", { somethingElse: "more" }]
     end
 
-    expect(MySwitch1.meta["homekit"]&.value).to eql "Switchable"
-    expect(MySwitch1.meta["homekit"].to_h).to eql({ "somethingElse" => "more" })
+    expect(MySwitch1.metadata["homekit"]&.value).to eql "Switchable"
+    expect(MySwitch1.metadata["homekit"].to_h).to eql({ "somethingElse" => "more" })
   end
 
   it "prefixes group members" do

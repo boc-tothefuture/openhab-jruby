@@ -105,15 +105,6 @@ module OpenHAB
         alias_method :to_s, :name
 
         #
-        # Inspect the item
-        #
-        # @return [String] details of the item
-        #
-        def inspect
-          to_string
-        end
-
-        #
         # Return all groups that this item is part of
         #
         # @return [Array<Group>] All groups that this item is part of
@@ -121,6 +112,128 @@ module OpenHAB
         def groups
           group_names.map { |name| EntityLookup.lookup_item(name) }.compact
         end
+
+        # rubocop:disable Layout/LineLength
+
+        # @!attribute [r] metadata
+        # @return [Metadata::NamespaceHash]
+        #
+        # Access to the item's metadata.
+        #
+        # Both the return value of this method as well as the individual
+        # namespaces can be treated as {Hash}es.
+        #
+        # Examples assume the following items:
+        #
+        # ```xtend
+        # Switch Item1 { namespace1="value" [ config1="foo", config2="bar" ] }
+        # String StringItem1
+        # ```
+        #
+        # @example Check namespace's existence
+        #   Item1.metadata["namespace"].nil?
+        #   Item1.metadata.key?("namespace")
+        #
+        # @example Access item's metadata value
+        #   Item1.metadata["namespace1"].value
+        #
+        # @example Access namespace1's configuration
+        #   Item1.metadata["namespace1"]["config1"]
+        #
+        # @example Safely search for the specified value - no errors are raised, only nil returned if a key in the chain doesn"t exist
+        #   Item1.metadata.dig("namespace1", "config1") # => "foo"
+        #   Item1.metadata.dig("namespace2", "config1") # => nil
+        #
+        # @example Set item's metadata value, preserving its config
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace1"].value = "new value"
+        #   # Item1's metadata after: {"namespace1"=>["new value", {"config1"=>"foo", "config2"=>"bar"]}}
+        #
+        # @example Set item's metadata config, preserving its value
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace1"].replace({ "scooby"=>"doo" })
+        #   # Item1's metadata after: {"namespace1"=>["value", {scooby="doo"}]}
+        #
+        # @example Set a namespace to a new value and config in one line
+        #   # Item1's metadata before: {"namespace1"=>"value", {"config1"=>"foo", "config2"=>"bar"}}
+        #   Item1.metadata["namespace1"] = "new value", { "scooby"=>"doo" }
+        #   # Item1's metadata after: {"namespace1"=>["new value", {scooby="doo"}]}
+        #
+        # @example Set item's metadata value and clear its previous config
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace1"] = "new value"
+        #   # Item1's metadata after: {"namespace1"=>"value" }
+        #
+        # @example Set item's metadata config, set its value to nil, and wiping out previous config
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace1"] = { "newconfig"=>"value" }
+        #   # Item1's metadata after: {"namespace1"=>{"config1"=>"foo", "config2"=>"bar"}}
+        #
+        # @example Update namespace1's specific configuration, preserving its value and other config
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace1"]["config1"] = "doo"
+        #   # Item1's metadata will be: {"namespace1"=>["value", {"config1"=>"doo", "config2"=>"bar"}]}
+        #
+        # @example Add a new configuration to namespace1
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace1"]["config3"] = "boo"
+        #   # Item1's metadata after: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar", config3="boo"}]}
+        #
+        # @example Delete a config
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace1"].delete("config2")
+        #   # Item1's metadata after: {"namespace1"=>["value", {"config1"=>"foo"}]}
+        #
+        # @example Add a namespace and set it to a value
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace2"] = "qx"
+        #   # Item1's metadata after: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}], "namespace2"=>"qx"}
+        #
+        # @example Add a namespace and set it to a value and config
+        #   # Item1's metadata before: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace2"] = "qx", { "config1"=>"doo" }
+        #   # Item1's metadata after: {"namespace1"=>["value", {"config1"=>"foo", "config2"=>"bar"}], "namespace2"=>["qx", {"config1"=>"doo"}]}
+        #
+        # @example Enumerate Item1's namespaces
+        #   Item1.metadata.each { |namespace, metadata| logger.info("Item1's namespace: #{namespace}=#{metadata}") }
+        #
+        # @example Add metadata from a hash
+        #   Item1.metadata.merge!({"namespace1"=>{"foo", {"config1"=>"baz"} ], "namespace2"=>{"qux", {"config"=>"quu"} ]})
+        #
+        # @example Merge Item2's metadata into Item1's metadata
+        #   Item1.metadata.merge!(Item2.metadata)
+        #
+        # @example Delete a namespace
+        #   Item1.metadata.delete("namespace1")
+        #
+        # @example Delete all metadata of the item
+        #   Item1.metadata.clear
+        #
+        # @example Does this item have any metadata?
+        #   Item1.metadata.any?
+        #
+        # @example Store another item's state
+        #   StringItem1.update "TEST"
+        #   Item1.metadata["other_state"] = StringItem1.state
+        #
+        # @example Store event's state
+        #   rule "save event state" do
+        #     changed StringItem1
+        #     run { |event| Item1.metadata["last_event"] = event.was }
+        #   end
+        #
+        # @example If the namespace already exists: Update the value of a namespace but preserve its config; otherwise create a new namespace with the given value and nil config.
+        #   Item1.metadata["namespace"] = "value", Item1.metadata["namespace"]
+        #
+        # @example Copy another namespace
+        #   # Item1's metadata before: {"namespace2"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #   Item1.metadata["namespace"] = Item1.metadata["namespace2"]
+        #   # Item1's metadata after: {"namespace2"=>["value", {"config1"=>"foo", "config2"=>"bar"}], "namespace"=>["value", {"config1"=>"foo", "config2"=>"bar"}]}
+        #
+        def metadata
+          @metadata ||= Metadata::NamespaceHash.new(name)
+        end
+        # rubocop:enable Layout/LineLength
 
         # Return the item's thing if this item is linked with a thing. If an item is linked to more than one thing,
         # this method only returns the first thing.

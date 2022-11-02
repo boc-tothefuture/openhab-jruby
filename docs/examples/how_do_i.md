@@ -679,7 +679,7 @@ end
 ## Use Metadata
 
 ```ruby
-metadata = My_Item.meta['namespace'].value
+metadata = My_Item.metadata['namespace'].value
 ```
 
 See [Metadata](docs/usage/misc/metadata.md)

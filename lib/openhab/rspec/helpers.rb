@@ -90,7 +90,7 @@ module OpenHAB
         $ir.for_each do |_provider, item|
           if item.meta.key?("autoupdate")
             @autoupdated_items << item.meta.delete("autoupdate")
-            item.meta["autoupdate"] = true
+            item.metadata["autoupdate"] = true
           end
         end
       end
@@ -177,6 +177,7 @@ module OpenHAB
         require "openhab/dsl"
 
         require_relative "mocks/persistence_service"
+        require_relative "mocks/metadata_provider"
 
         # override several DSL methods
         require_relative "openhab/core/items/proxy"

@@ -45,6 +45,10 @@ module OpenHAB
           allow(DSL::Things::ThingProvider).to receive(:instance).and_return(@thing_provider)
           @item_channel_link_provider = DSL::Items::ItemChannelLinkProvider.send(:new)
           allow(DSL::Items::ItemChannelLinkProvider).to receive(:instance).and_return(@item_channel_link_provider)
+          @metadata_provider = Mocks::MetadataProvider.new
+          mr = Core::Items::Metadata::NamespaceHash.registry
+          mr.add_provider(@metadata_provider)
+          mr.set_managed_provider(@metadata_provider)
           tm = OSGi.service("org.openhab.core.thing.ThingManager")
           tm.class.field_reader :storage
           tm.storage.keys.each { |k| tm.storage.remove(k) } # rubocop:disable Style/HashEachMethods not a hash
@@ -61,6 +65,7 @@ module OpenHAB
           Core::Things::Thing.reset_cache
           registry = OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           registry.remove_provider(@item_channel_link_provider)
+          Core::Items::Metadata::NamespaceHash.registry.remove_provider(@metadata_provider)
           DSL::Timer::Manager.instance.cancel_all
           Timecop.return
           restore_autoupdate_items
