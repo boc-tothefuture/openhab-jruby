@@ -463,8 +463,10 @@ module OpenHAB
             dto.name = match[1]
             dto.params = match[2..]
             function = org.openhab.core.items.dto.ItemDTOMapper.map_function(base_item, dto)
+            Core::Items::GroupItem.new(name, base_item, function)
+          else
+            Core::Items::GroupItem.new(name, base_item)
           end
-          Core::Items::GroupItem.new(name, base_item, function)
         end
 
         # @!visibility private

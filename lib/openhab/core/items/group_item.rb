@@ -123,10 +123,10 @@ module OpenHAB
 
         #
         # @!attribute [r] all_members
-        # @return [Array] Get all members of the group recursively.
+        # @return [Array] Get all non-group members of the group recursively.
         #
         def all_members
-          super.map { |m| Proxy.new(m) }
+          getAllMembers.map { |m| Proxy.new(m) }
         end
 
         protected
@@ -135,9 +135,9 @@ module OpenHAB
         def type_details
           r = ""
           r += ":#{base_item.type}#{base_item.type_details}" if base_item
-          if function
-            r += ":#{function.class.java_class.simple_name.upcase}"
-            r += ":(#{function.parameters.map(&:inspect).join(",")})" unless function.parameters.empty?
+          if function && (fn = function.class.java_class.simple_name.upcase) != "EQUALITY"
+            r += ":#{fn}"
+            r += "(#{function.parameters.map(&:inspect).join(",")})" unless function.parameters.empty?
           end
           r
         end
@@ -156,7 +156,6 @@ module OpenHAB
           super
         end
 
-        # Is this ever called?
         # give the base item type a chance to format commands
         # @!visibility private
         def format_type(command)

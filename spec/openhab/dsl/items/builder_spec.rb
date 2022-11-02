@@ -122,6 +122,14 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
     expect(FamilyLamps_Switch.label).to eql "Family Room Lamps"
   end
 
+  it "can create a group with a base type" do
+    items.build do
+      group_item "MyGroup", type: :switch
+    end
+
+    expect(MyGroup.base_item).to be_a(SwitchItem)
+  end
+
   it "can create a group with a function and base type" do
     items.build do
       group_item "MyGroup", type: :switch, function: "OR(ON,OFF)"
