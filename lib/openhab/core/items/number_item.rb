@@ -24,6 +24,13 @@ module OpenHAB
 
       class NumberItem < GenericItem
         include NumericItem
+
+        protected
+
+        # Adds the unit dimension
+        def type_details
+          ":#{dimension}" if dimension
+        end
       end
     end
   end

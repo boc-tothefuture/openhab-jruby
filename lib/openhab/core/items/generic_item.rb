@@ -274,6 +274,23 @@ module OpenHAB
 
           command.to_s
         end
+
+        # @return [String]
+        def inspect
+          s = "#<OpenHAB::Core::Items::#{type}Item#{type_details} #{label.inspect} state=#{raw_state.inspect}"
+          s += " category=#{category.inspect}" if category
+          s += " tags=#{tags.to_a.inspect}" unless tags.empty?
+          s += " groups=#{group_names}" unless group_names.empty?
+          meta = metadata.to_h
+          s += " metadata=#{meta.inspect}" unless meta.empty?
+          "#{s}>"
+        end
+
+        protected
+
+        # Allows sub-classes to append additional details to the type in an inspect string
+        # @return [String]
+        def type_details; end
       end
     end
   end

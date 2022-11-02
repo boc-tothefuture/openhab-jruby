@@ -96,6 +96,12 @@ module OpenHAB
           def name
             group.name
           end
+
+          # @return [String]
+          def inspect
+            "#<OpenHAB::Core::Items::GroupItems::Members #{name} #{super}>"
+          end
+          alias_method :to_s, :inspect
         end
 
         # Override because we want to send them to the base item if possible
@@ -121,6 +127,19 @@ module OpenHAB
         #
         def all_members
           super.map { |m| Proxy.new(m) }
+        end
+
+        protected
+
+        # Add base type and function details
+        def type_details
+          r = ""
+          r += ":#{base_item.type}#{base_item.type_details}" if base_item
+          if function
+            r += ":#{function.class.java_class.simple_name.upcase}"
+            r += ":(#{function.parameters.map(&:inspect).join(",")})" unless function.parameters.empty?
+          end
+          r
         end
 
         # Delegate missing methods to {base_item} if possible

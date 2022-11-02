@@ -11,6 +11,12 @@ module OpenHAB
     module LazyArray
       include Enumerable
 
+      # @!visibility private
+      def self.included(klass)
+        klass.undef_method :inspect
+        klass.undef_method :to_s
+      end
+
       # Calls the given block once for each object, passing that object as a
       # parameter. Returns self.
       #
