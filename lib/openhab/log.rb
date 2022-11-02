@@ -1,10 +1,43 @@
 # frozen_string_literal: true
 
 module OpenHAB
+  # rubocop:disable Layout/LineLength
+
   #
   # Provides access to the OpenHAB logging facilities using Ruby logging methods
   #
+  # Logging is available everywhere through the {#logger} object.
+  #
+  # The logging prefix is `org.openhab.automation.jrubyscripting`.
+  # Logging within file-based rules will have the name of the file appended to
+  # the logger name. Logging inside of a rule will have the id of the rule
+  # appended to the logger name. Any classes will have the full class anem
+  # appended to the logger name.
+  #
+  # @example The following entries are in a file named 'log_test.rb'
+  #   logger.trace('Test logging at trace') # 2020-12-03 18:05:20.903 [TRACE] [org.openhab.automation.jrubyscripting.log_test] - Test logging at trace
+  #   logger.debug('Test logging at debug') # 2020-12-03 18:05:32.020 [DEBUG] [org.openhab.automation.jrubyscripting.log_test] - Test logging at debug
+  #   logger.warn('Test logging at warn')   # 2020-12-03 18:05:41.817 [WARN ] [org.openhab.automation.jrubyscripting.log_test] - Test logging at warn
+  #   logger.info('Test logging at info')   # 2020-12-03 18:05:41.817 [INFO ] [org.openhab.automation.jrubyscripting.log_test] - Test logging at info
+  #   logger.error('Test logging at error') # 2020-12-03 18:06:02.021 [ERROR] [org.openhab.automation.jrubyscripting.log_test] - Test logging at error
+  #
+  # @example The following entries are in a file named 'log_test.rb'
+  #   rule 'foo' do
+  #     run { logger.trace('Test logging at trace') } # 2020-12-03 18:05:20.903 [TRACE] [org.openhab.automation.jrubyscripting.foo] - Test logging at trace
+  #     on_start
+  #   end
+  #
+  #
+  # @example A log entry from inside a class
+  #   class MyClass
+  #     def initialize
+  #       logger.trace("hi!") # 2020-12-03 18:05:20.903 [TRACE] [org.openhab.automation.jrubyscripting.MyClass] - hi!
+  #     end
+  #   end
+  #
   module Log
+    # rubocop:enable Layout/LineLength
+
     # @!visibility private
     def self.included(base)
       return if base.singleton_class?
@@ -166,6 +199,13 @@ module OpenHAB
       #     confirmed that logging is enabled at $1 level.
       #   @yieldreturn [Object, nil] The log message
       #   @return [void]
+      #
+      #   @example
+      #     logger.$1 do
+      #       total = Item1.state + Item2.state
+      #       average = total / 2
+      #     "Total: #{total}, Average: #{average}"
+      #     end
       #
       def def_level_method(level)
         define_method(level) do |msg = nil, &block|
