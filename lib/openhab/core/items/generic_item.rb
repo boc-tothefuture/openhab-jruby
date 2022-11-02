@@ -55,7 +55,7 @@ module OpenHAB
         # @see DSL::Items::TimedCommand#command
         #
         def command(command)
-          command = format_type_pre(command)
+          command = format_type(command)
           logger.trace "Sending Command #{command} to #{name}"
           org.openhab.core.model.script.actions.BusEvent.sendCommand(self, command)
           self
@@ -75,7 +75,7 @@ module OpenHAB
         # @return [self]
         #
         def update(update)
-          update = format_type_pre(update)
+          update = format_type(update)
           logger.trace "Sending Update #{update} to #{name}"
           org.openhab.core.model.script.actions.BusEvent.postUpdate(self, update)
           self
@@ -273,15 +273,6 @@ module OpenHAB
           return command if command.is_a?(Types::Type)
 
           command.to_s
-        end
-
-        private
-
-        # convert items to their state before formatting, so that subclasses
-        # only have to deal with Types
-        def format_type_pre(command)
-          command = command.state if command.is_a?(GenericItem)
-          format_type(command)
         end
       end
     end

@@ -12,9 +12,8 @@ RSpec.describe OpenHAB::Core::Items::RollershutterItem do
     end
   end
 
-  describe "sending command using PercentType" do
+  describe "#command" do
     specify { expect((item << 70).state).to eq 70 }
-    specify { expect((RollerOne << RollerTwo).state).to eq 70 }
     specify { expect((item << PercentType.new(10)).state).to eq 10 }
   end
 

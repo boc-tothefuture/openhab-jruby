@@ -145,7 +145,7 @@ module OpenHAB
         # The default expire for ON/OFF is their inverse
         #
         def default_on_expire(command)
-          case format_type_pre(command)
+          case format_type(command)
           when ON then OFF
           when OFF then ON
           else state

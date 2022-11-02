@@ -35,9 +35,9 @@ module OpenHAB
               return super(command) unless Thread.current[:ensure_states]
 
               logger.trace do
-                "#{name} ensure #{command}, format_type_pre: #{format_type_pre(command)}, current state: #{state}"
+                "#{name} ensure #{command}, format_type: #{format_type(command)}, current state: #{state}"
               end
-              return if state == format_type_pre(command)
+              return if state == format_type(command)
 
               super(command)
             end
