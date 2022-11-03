@@ -65,7 +65,7 @@ jobs:
         run: |
           JSON=$(bin/rake github:oh_versions)
           echo $JSON
-          echo "::set-output name=matrix::$( echo "$JSON" )"
+          echo "matrix=$JSON" >> $GITHUB_OUTPUT
 
   openhab-setup:
     needs: [openhab-matrix]
@@ -147,7 +147,7 @@ jobs:
         run: |
           JSON=$(bin/rake github:matrix[20])
           echo $JSON
-          echo "::set-output name=matrix::$( echo "$JSON" )"
+          echo "matrix=$JSON" >> $GITHUB_OUTPUT
 
   cucumber:
     needs: [cucumber-matrix, openhab-setup]
