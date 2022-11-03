@@ -7,6 +7,14 @@ end
 module OpenHAB
   # Contains classes and modules that wrap actual OpenHAB objects
   module Core
+    # The OpenHAB Version. >= 3.3.0 is required.
+    # @return [String]
+    VERSION = org.openhab.core.OpenHAB.version.freeze
+
+    unless Gem::Version.new(VERSION) >= Gem::Version.new("3.3.0")
+      raise "`openhab-jrubyscripting` requires OpenHAB >= 3.3.0"
+    end
+
     # @return [Integer] Number of seconds to wait between checks for automation manager
     CHECK_DELAY = 10
     private_constant :CHECK_DELAY
