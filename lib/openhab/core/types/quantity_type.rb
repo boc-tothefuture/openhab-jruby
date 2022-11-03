@@ -43,7 +43,7 @@ module OpenHAB
           elsif other.respond_to?(:to_str)
             compare_to(QuantityType.new(other.to_str))
           elsif other.respond_to?(:to_d)
-            compare_to(QuantityType.new(other.to_d.to_java, Units.unit || unit))
+            compare_to(QuantityType.new(other.to_d.to_java, DSL.unit || unit))
           elsif other.respond_to?(:coerce)
             return nil unless (lhs, rhs = other.coerce(self))
 

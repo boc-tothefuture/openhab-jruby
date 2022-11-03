@@ -11,12 +11,13 @@ module OpenHAB
     module Types
       # Mixin for methods common to DecimalType and QuantityType.
       module NumericType
-        # apply meta-programming to including class
+        # @!visibility private
         def self.included(klass)
           klass.extend Forwardable
 
           klass.delegate %i[to_d zero?] => :to_big_decimal
           klass.delegate %i[positive? negative? to_f to_i to_int hash] => :to_d
+
           # remove the JRuby default == so that we can inherit the Ruby method
           klass.remove_method :==
         end

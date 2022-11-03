@@ -108,6 +108,6 @@ module Enumerable
   # can't use `include`, because Enumerable has already been included
   # in other classes
   def ensure
-    OpenHAB::DSL::Ensure::GenericItemDelegate.new(self)
+    OpenHAB::DSL::Items::Ensure::GenericItemDelegate.new(self)
   end
 end

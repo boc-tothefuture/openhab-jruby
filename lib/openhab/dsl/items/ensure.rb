@@ -63,7 +63,7 @@ module OpenHAB
           def method_missing(method, *args, &block)
             return super unless @item.respond_to?(method)
 
-            ensure_states do
+            DSL.ensure_states do
               @item.__send__(method, *args, &block)
             end
           end

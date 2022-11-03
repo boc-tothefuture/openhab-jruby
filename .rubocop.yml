@@ -44,6 +44,8 @@ RSpec/MessageSpies:
   Enabled: false
 RSpec/MultipleExpectations:
   Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
 RSpec/NestedGroups:
   Enabled: false
 
