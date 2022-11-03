@@ -113,13 +113,18 @@ jobs:
           path: tmp/
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: RSpec
-        run: bin/rspec
+        run: bin/rspec --format progress --format html --out rspec.html
         timeout-minutes: 2
+      - name: Upload RSpec results
+        uses: actions/upload-artifact@v2
+        with:
+          name: RSpec-results-${{ matrix.openhab_version }}
+          path: rspec.html
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: OpenHAB-logs-rspec-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.index }}
+          name: RSpec-logs-${{ matrix.openhab_version }}
           path: tmp/openhab/runtime/logs
           retention-days: 2
 
