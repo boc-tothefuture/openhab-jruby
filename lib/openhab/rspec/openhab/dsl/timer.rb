@@ -17,8 +17,6 @@ module OpenHAB
       end
       ZonedDateTime.singleton_class.prepend(MockedZonedDateTime)
 
-      # rubocop:disable Lint/UnusedMethodArgument
-
       # extend Timecop to support java time classes
       # @!visibility private
       module TimeCopStackItem
@@ -36,6 +34,7 @@ module OpenHAB
 
       def initialize(duration:, thread_locals: {}, &block)
         @block = block
+        @thread_locals = thread_locals
         reschedule(duration)
       end
 
@@ -51,7 +50,9 @@ module OpenHAB
         raise "Timer already cancelled" if cancelled?
         raise "Timer already executed" if terminated?
 
-        @block.call(self)
+        DSL::ThreadLocal.thread_local(**@thread_locals) do
+          @block.call(self)
+        end
         Manager.instance.delete(self)
         @executed = true
       end
@@ -85,8 +86,6 @@ module OpenHAB
           @timers.each { |t| t.execute if t.active? && t.execution_time < ZonedDateTime.now }
         end
       end
-
-      # rubocop:enable Lint/UnusedMethodArgument
     end
   end
 end

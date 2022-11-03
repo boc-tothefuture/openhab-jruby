@@ -52,6 +52,7 @@ module OpenHAB
           tm = OSGi.service("org.openhab.core.thing.ThingManager")
           tm.class.field_reader :storage
           tm.storage.keys.each { |k| tm.storage.remove(k) } # rubocop:disable Style/HashEachMethods not a hash
+          @log_index = File.size(log_file)
         end
 
         config.after do

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module OpenHAB
   # rubocop:disable Layout/LineLength
 
@@ -53,13 +55,13 @@ module OpenHAB
     # @return [Logger]
     #
     def logger
-      if equal?(Object)
-        # can't cache, because the logger for `main` will change
-        # depending on rule context
-        return Log.logger(self)
+      # no caching on `main`
+      if (instance_of?(Object) && !singleton_methods.empty?) ||
+         # also pretend loggers in example groups are in the top-level
+         (defined?(::RSpec::Core::ExampleGroup) && is_a?(Module) && self < ::RSpec::Core::ExampleGroup)
+        return Log.logger(:main)
       end
-
-      return @logger ||= Log.logger(self) if equal?(self.class) || is_a?(Module) || equal?(Object)
+      return @logger ||= Log.logger(self) if equal?(self.class) || is_a?(Module)
 
       self.class.logger
     end
@@ -80,10 +82,10 @@ module OpenHAB
           name += ".#{klass.name.gsub("::", ".")}" if klass.name
         when String
           name = object
-        end
-        if object.equal?(Object)
-          name = "#{Logger::PREFIX}.#{(rule_uid || rules_file).tr_s(":", "_")
-          .gsub(/[^A-Za-z0-9_.-]/, "")}"
+        when :main
+          name = "#{Logger::PREFIX}.#{rules_file.tr_s(":", "_")
+                                   .gsub(/[^A-Za-z0-9_.-]/, "")}"
+          return @loggers[name] ||= BiLogger.new(Logger.new(name))
         end
 
         @loggers[name] ||= Logger.new(name)
@@ -105,32 +107,18 @@ module OpenHAB
         klass
       end
 
-      def rules_file
-        # Each rules file gets its own context
-        # Set it once as a class value so that threads not
-        # tied to a rules file pick up the rules file they
-        # were spawned from
-        @rules_file ||= log_caller
-      end
-
-      # Get the id of the rule from the thread context
-      def rule_uid
-        Thread.current[:OPENHAB_RULE_UID]
-      end
-
       #
       # Figure out the log prefix
       #
       # @return [String] Prefix for log messages
       #
-      def log_caller
-        caller_locations.map(&:path)
-                        .grep_v(%r{rubygems|openhab-jrubyscripting|<script>|gems/(?:irb|bundler)-|/\.irbrc})
-                        .first
-                        .then { |caller| File.basename(caller, ".*") if caller }
+      def rules_file
+        caller_locations(3, 2).map(&:path)
+                              .grep_v(%r{lib/openhab/log\.rb})
+                              .first
+                              .then { |caller| File.basename(caller, ".*") if caller }
       end
     end
-    rules_file # load this immediately
   end
 
   #
@@ -140,9 +128,8 @@ module OpenHAB
     # The base prefix for all loggers from this gem.
     PREFIX = "org.openhab.automation.jrubyscripting"
 
-    # @return [Array] Supported logging levels
+    # @return [Array<symbol>] Supported logging levels
     LEVELS = %i[trace debug warn info error].freeze
-    private_constant :LEVELS
 
     #
     # Regex for matching internal calls in a stack trace
@@ -322,6 +309,41 @@ module OpenHAB
 
       @slf4j_logger.send(severity, msg.to_s)
     end
+  end
+
+  module Log
+    # Logger that changes its backing logger depending on thread context
+    class BiLogger < Logger
+      @rule_loggers = {}
+      class << self
+        # class shared cache of loggers-per-rule
+        attr_reader :rule_loggers
+      end
+
+      def initialize(file_logger) # rubocop:disable Lint/MissingSuper
+        @file_logger = file_logger
+      end
+
+      # The current logger - the file logger if rule_uid is nil,
+      # otherwise a logger specific to the rule.
+      def current_logger
+        return @file_logger unless rule_uid
+
+        self.class.rule_loggers[rule_uid] ||= Logger.new("#{Logger::PREFIX}.#{rule_uid.tr_s(":", "_")
+            .gsub(/[^A-Za-z0-9_.-]/, "")}")
+      end
+
+      # Get the id of the rule from the thread context
+      def rule_uid
+        Thread.current[:OPENHAB_RULE_UID]
+      end
+
+      extend Forwardable
+      def_delegators :current_logger, *(Logger.public_instance_methods.select do |m|
+        Logger.instance_method(m).owner == Logger
+      end - BasicObject.public_instance_methods)
+    end
+    private_constant :BiLogger
   end
 
   Object.include(Log)

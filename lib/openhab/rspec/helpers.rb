@@ -305,6 +305,27 @@ module OpenHAB
         end
       end
 
+      # @return [String] The filename of the OpenHAB log.
+      def log_file
+        "#{java.lang.System.get_property("openhab.logdir", nil)}/openhab.log"
+      end
+
+      #
+      # @return [Array<String>] The log lines since this spec started.
+      #
+      # @example
+      #   it "logs" do
+      #     logger.trace("log line")
+      #     expect(spec_log_lines).to include(match(/TRACE.*log line/))
+      #   end
+      #
+      def spec_log_lines
+        File.open(log_file, "rb") do |f|
+          f.seek(@log_index) if @log_index
+          f.read.split("\n")
+        end
+      end
+
       private
 
       def jrubyscripting_config
