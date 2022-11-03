@@ -80,4 +80,9 @@ RSpec.describe OpenHAB::Core::Types::PercentType do
     specify { expect(100 / state).to eq 2 }
     specify { expect(70 % state).to eq 20 }
   end
+
+  describe "ranges" do
+    specify { expect(0...50).not_to be === PercentType.new(55) }
+    specify { expect(50..100).to be === PercentType.new(55) }
+  end
 end

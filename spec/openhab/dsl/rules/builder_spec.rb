@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe OpenHAB::DSL::Rules::Builder do
+  it "doesn't create a rule if there are no execution blocks" do
+    rule(id: "test_rule") { on_start }
+
+    expect($rules.get("test_rule")).to be_nil
+    expect(spec_log_lines).to include(include("has no execution blocks, not creating rule"))
+  end
+
   describe "triggers" do
     before do
       install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
@@ -582,6 +589,86 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         test_thing_status_trigger(:updated, to: :uninitialized)
         test_thing_status_trigger(:updated, to: :unknown, expect_triggered: false)
       end
+    end
+  end
+
+  describe "execution blocks" do
+    describe "#run" do
+      it "can call top level methods" do
+        def outer_function
+          logger.info("Outer function called")
+        end
+        rule do
+          on_start
+          run { outer_function }
+        end
+        expect(spec_log_lines).to include(include("Outer function called"))
+      end
+
+      it "logs errors" do
+        rule do
+          on_start
+          run { raise "failure!" }
+        end
+        expect(spec_log_lines).to include(include("failure! (RuntimeError)"))
+        expect(spec_log_lines).to include(match(%r{rules/builder_spec\.rb:(?:\d+):in `block}))
+      end
+
+      it "logs java exceptions" do
+        rule do
+          on_start
+          run { java.lang.Integer.parse_int("k") }
+        end
+        expect(spec_log_lines).to include(include("Java::JavaLang::NumberFormatException"))
+        expect(spec_log_lines).to include(match(/RUBY.*builder_spec\.rb/))
+      end
+    end
+
+    # rubocop:disable RSpec/InstanceVariable
+    context "with guards" do
+      def run_rule
+        rule do
+          on_start
+          run { @ran = :run }
+          otherwise { @ran = :otherwise }
+          only_if { @condition }
+        end
+      end
+
+      it "executes run blocks if only_if is true" do
+        @condition = true
+        run_rule
+        expect(@ran).to be :run
+      end
+
+      it "executes otherwise blocks if only_if is false" do
+        @condition = false
+        run_rule
+        expect(@ran).to be :otherwise
+      end
+    end
+    # rubocop:enable RSpec/InstanceVariable
+  end
+
+  describe "#description" do
+    it "works" do
+      rule id: "test_rule" do
+        description "Rule Description"
+        every :day
+        run { nil }
+      end
+      expect($rules.get("test_rule").description).to eql "Rule Description"
+    end
+  end
+
+  describe "#tags" do
+    it "works" do
+      rule id: "test_rule" do
+        tags "tag1", "tag2", Semantics::LivingRoom
+        every :day
+        run { nil }
+      end
+      expect($rules.get("test_rule").tags).to match_array(%w[tag1 tag2 LivingRoom])
     end
   end
 end
