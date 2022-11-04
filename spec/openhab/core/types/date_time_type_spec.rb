@@ -50,4 +50,21 @@ RSpec.describe OpenHAB::Core::Types::DateTimeType do
   it "can create between ranges" do
     expect(between(date1...date2)).to cover("05:00")
   end
+
+  describe "comparisons" do
+    let(:date_one) { DateTimeType.new("2021-01-01T00:00:00+00:00") }
+    let(:date_two) { DateTimeType.new("2021-02-01T12:00:00+00:00") }
+
+    specify { expect(date_one).to be < date_two }
+    specify { expect(date_one).to be <= "2021-02-09" }
+    specify { expect(date_one).not_to be > Time.now }
+    specify { expect(date_one).to eq "2021-01-01T00:00:00+00:00" }
+    specify { expect(date_one != "2021-01-01T00:00:00+00:00").to be false }
+
+    specify { expect(date_two).not_to be < date_one }
+    specify { expect("2021-02-09").to be >= date_one }
+    specify { expect(Time.now).to be > date_one }
+    specify { expect("2021-01-01T00:00:00+00:00").to eq date_one }
+    specify { expect("2021-01-01T00:00:00+01:00" != date_one).to be true }
+  end
 end

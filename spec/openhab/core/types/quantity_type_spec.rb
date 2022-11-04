@@ -35,7 +35,7 @@ RSpec.describe OpenHAB::Core::Types::QuantityType do
     expect(QuantityType.new("50 °F")).to be > QuantityType.new("25 °F")
     expect(QuantityType.new("50 °F")).not_to be > QuantityType.new("525 °F")
     expect(QuantityType.new("50 °F")).to be >= QuantityType.new("25 °F")
-    expect(QuantityType.new("50 °F")).to eq QuantityType.new("50 °F") # rubocop:disable RSpec/IdenticalEqualityAssertion
+    expect(QuantityType.new("50 °F")).to eq QuantityType.new("50 °F")
     expect(QuantityType.new("50 °F")).to be < QuantityType.new("25 °C")
 
     expect(QuantityType.new("50 °F")).to eq "50 °F"
@@ -70,11 +70,78 @@ RSpec.describe OpenHAB::Core::Types::QuantityType do
     expect((1 | "h") | "s").to eql QuantityType.new("3600 s")
   end
 
-  # rubocop:disable RSpec/ExpectActual
   it "supports ranges with string quantity" do
     expect("0 W".."10 W").to cover(0 | "W")
     expect("0 W".."10 W").not_to cover(14 | "W")
     expect("0 W".."10 W").to cover(10 | "W")
   end
-  # rubocop:enable RSpec/ExpectActual
+
+  describe "comparisons" do
+    let(:ten_c) { QuantityType.new("10 °C") }
+    let(:five_c) { QuantityType.new("5 °C") }
+    let(:ten_f) { QuantityType.new("10 °F") }
+    let(:fifty_f) { QuantityType.new("50 °F") }
+
+    # QuantityType vs QuantityType
+    specify { expect(ten_c).to eql ten_c }
+    specify { expect(ten_c).to eq ten_c }
+    specify { expect(ten_c != ten_c).to be false }
+    specify { expect(ten_c).not_to eq ten_f }
+    specify { expect(ten_c).to eq fifty_f }
+    specify { expect(ten_c != ten_f).to be true }
+    specify { expect(ten_c != QuantityType.new("10.1 °C")).to be true }
+    specify { expect(ten_c != fifty_f).to be false }
+
+    specify { expect(ten_c).to be > five_c }
+    specify { expect(ten_c).to be > ten_f }
+    specify { expect(ten_c).not_to be > fifty_f }
+    specify { expect(five_c).to be < ten_c }
+    specify { expect(QuantityType.new("20 °C")).not_to be < ten_c }
+    specify { expect(five_c).to be < fifty_f }
+
+    # QuantityType vs String
+    specify { expect(ten_c).not_to eql "10 °C" }
+    specify { expect(ten_c).to be > "4 °F" }
+    specify { expect(ten_c).to eq "10 °C" }
+    specify { expect(fifty_f).to eq "10 °C" }
+    specify { expect(ten_f).not_to eq "10 °C" }
+    specify { expect(ten_c).not_to eq "20 °C" }
+
+    specify { expect(ten_f != "10 °C").to be true }
+    specify { expect(QuantityType.new("10.1 °C") != "10 °C").to be true }
+    specify { expect(fifty_f != "10 °C").to be false }
+    specify { expect(ten_c != "10 °C").to be false }
+
+    specify { expect(QuantityType.new("50 °C")).to be > ten_c }
+    specify { expect(ten_f).not_to be > ten_c }
+    specify { expect(fifty_f).not_to be > ten_c }
+    specify { expect(ten_c).to be < "20 °C" }
+    specify { expect(ten_c).not_to be < "5 °C" }
+    specify { expect(fifty_f).to be < "20 °C" }
+
+    # QuantityType vs Numeric
+    specify { expect(ten_c).not_to eql 10 }
+    specify { expect(ten_c).to be > 3 }
+    specify { expect(ten_c).to eq 10 }
+    specify { expect(QuantityType.new("465.3 lx")).not_to be < 100 }
+
+    # String vs QuantityType
+    specify { expect("10 °C").to eq ten_c }
+    specify { expect("10 °C").to eq fifty_f }
+    specify { expect("10 °C").not_to eq ten_f }
+    specify { expect("20 °C").not_to eq ten_c }
+    specify { expect("10 °C" != ten_f).to be true }
+    specify { expect("10 °C" != QuantityType.new("10.1 °C")).to be true }
+    specify { expect("10 °C" != fifty_f).to be false }
+    specify { expect("10 °C" != ten_c).to be false }
+    specify { expect("10 °C").to be < QuantityType.new("50 °C") }
+    specify { expect("10 °C").not_to be < ten_f }
+    specify { expect("10 °C").not_to be < fifty_f }
+    specify { expect("20 °C").to be > ten_c }
+    specify { expect("5 °C").not_to be > ten_c }
+    specify { expect("20 °C").to be > fifty_f }
+
+    # Numeric vs QuantityType
+    specify { expect(100).not_to be > QuantityType.new("465.3 lx") }
+  end
 end

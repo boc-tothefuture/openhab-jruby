@@ -26,6 +26,9 @@ Layout/LineLength:
 
 Lint/RescueException:
   Enabled: false # we need to rescue Java exceptions quite a bit
+Lint/BinaryOperatorWithIdenticalOperands:
+  Exclude:
+    - spec/openhab/core/types/*_spec.rb
 
 Metrics:
   Enabled: false
@@ -37,9 +40,15 @@ RSpec/DescribeClass:
   Enabled: false
 RSpec/ExampleLength:
   Enabled: false
+RSpec/ExpectActual:
+  Exclude:
+    - spec/openhab/core/types/*_spec.rb
 RSpec/FilePath:
   CustomTransform:
     OpenHAB: openhab
+RSpec/IdenticalEqualityAssertion:
+  Exclude:
+    - spec/openhab/core/types/*_spec.rb
 RSpec/MessageSpies:
   Enabled: false
 RSpec/MultipleExpectations:
@@ -82,3 +91,6 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 Style/TernaryParentheses:
   EnforcedStyle: require_parentheses_when_complex
+Style/YodaCondition:
+  Exclude:
+    - spec/openhab/core/types/*_spec.rb

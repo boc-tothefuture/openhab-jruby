@@ -85,4 +85,64 @@ RSpec.describe OpenHAB::Core::Types::PercentType do
     specify { expect(0...50).not_to be === PercentType.new(55) }
     specify { expect(50..100).to be === PercentType.new(55) }
   end
+
+  describe "comparisons" do
+    let(:ten) { PercentType.new(10) }
+    let(:number_ten) { DecimalType.new(10) }
+    let(:number_five) { DecimalType.new(5) }
+    let(:number_twenty) { DecimalType.new(20) }
+
+    # PercentType vs PercentType
+    specify { expect(ten).to eql ten }
+    specify { expect(ten).to eq ten }
+    specify { expect(ten).not_to eq PercentType.new(1) }
+    specify { expect(ten != PercentType.new(1)).to be true }
+    specify { expect(ten != ten).to be false }
+    specify { expect(ten).to be < PercentType.new(10.1) }
+    specify { expect(ten).not_to be < PercentType.new(5) }
+    specify { expect(ten).to be > PercentType.new(5) }
+    specify { expect(ten).not_to be > PercentType.new(10.1) }
+
+    # PercentType vs DecimalType
+    specify { expect(ten).not_to eql number_ten }
+    specify { expect(ten).to eq number_ten }
+    specify { expect(ten != number_five).to be true }
+    specify { expect(ten != number_ten).to be false }
+
+    specify { expect(ten).to be < number_twenty }
+    specify { expect(ten).not_to be < number_five }
+    specify { expect(ten).to be > number_five }
+    specify { expect(ten).not_to be > number_twenty }
+
+    # PercentType vs Numeric
+    specify { expect(ten).not_to eql 10 }
+    specify { expect(ten).to eq 10 }
+    specify { expect(ten).not_to eq 10.1 }
+    specify { expect(ten != 2).to be true }
+    specify { expect(ten != 10).to be false }
+
+    specify { expect(ten).to be < 20 }
+    specify { expect(ten).not_to be < 5 }
+    specify { expect(ten).to be > 5 }
+    specify { expect(ten).not_to be > 20 }
+
+    # PercentType vs OnOffType
+    specify { expect(ten).not_to eql ON }
+    specify { expect(ten).to eq ON }
+    specify { expect(ten).not_to eq OFF }
+    specify { expect(ten != ON).to be false }
+    specify { expect(ten != OFF).to be true }
+
+    # Numeric vs PercentType
+    specify { expect(10).not_to eql ten }
+    specify { expect(10).to eq ten }
+    specify { expect(10.1).not_to eq ten }
+    specify { expect(2 != ten).to be true }
+    specify { expect(10 != ten).to be false }
+
+    specify { expect(5).to be < ten }
+    specify { expect(20).not_to be < ten }
+    specify { expect(11).to be > ten }
+    specify { expect(5).not_to be > ten }
+  end
 end

@@ -3,12 +3,14 @@
 RSpec.describe OpenHAB::Core::Types::DecimalType do
   subject(:state) { DecimalType::ZERO }
 
+  let(:ten) { DecimalType.new(10) }
+
   it "is inspectable" do
-    expect(DecimalType.new(10).inspect).to eql "10"
+    expect(ten.inspect).to eql "10"
   end
 
   it "can be converted to QuantityType" do
-    expect(DecimalType.new(10) | "°C").to eql QuantityType.new("10 °C")
+    expect(ten | "°C").to eql QuantityType.new("10 °C")
   end
 
   it "has numeric predicates" do
@@ -81,5 +83,64 @@ RSpec.describe OpenHAB::Core::Types::DecimalType do
 
   it "is comparable to floats" do
     expect((0.0...50.0).include?(state)).to be true # rubocop:disable Performance/RangeInclude
+  end
+
+  describe "comparisons" do
+    let(:twenty) { DecimalType.new(20) }
+    let(:five) { DecimalType.new(5) }
+    let(:ten_percent) { PercentType.new(10) }
+    let(:five_percent) { PercentType.new(5) }
+
+    # DecimalType vs UnDefType
+    specify { expect(ten).not_to eq(NULL) }
+    specify { expect(ten).not_to eq(UNDEF) }
+
+    # DecimalType vs DecimalType
+    specify { expect(ten).to eql ten }
+    specify { expect(ten).to eq ten }
+    specify { expect(ten).not_to eq(five) }
+    specify { expect(ten != five).to be true }
+    specify { expect(ten != ten).to be false }
+
+    specify { expect(ten).to be < twenty }
+    specify { expect(ten).not_to be < five }
+    specify { expect(ten).to be > five }
+    specify { expect(ten).not_to be > twenty }
+
+    # DecimalType vs Numeric
+    specify { expect(ten).not_to eql 10 }
+    specify { expect(ten).to eq 10 }
+    specify { expect(ten).not_to eq 1 }
+    specify { expect(ten != 1).to be true }
+    specify { expect(ten != 10).to be false }
+
+    specify { expect(ten).to be < 10.1 }
+    specify { expect(ten).not_to be < 5 }
+    specify { expect(ten).to be > 5 }
+    specify { expect(ten).not_to be > 10.1 }
+
+    # Numeric vs DecimalType
+    specify { expect(10).not_to eql ten }
+    specify { expect(10).to eq ten }
+    specify { expect(10).not_to eq five }
+    specify { expect(10 != five).to be true }
+    specify { expect(10 != ten).to be false }
+
+    specify { expect(10.5).to be < twenty }
+    specify { expect(10).not_to be < five }
+    specify { expect(10).to be > five }
+    specify { expect(10).not_to be > ten }
+
+    # DecimalType vs PercentType
+    specify { expect(ten).not_to eql ten_percent }
+    specify { expect(ten).to eq ten_percent }
+    specify { expect(ten).not_to eq five_percent }
+    specify { expect(ten != five_percent).to be true }
+    specify { expect(ten != ten_percent).to be false }
+
+    specify { expect(five).to be < ten_percent }
+    specify { expect(ten).not_to be < five_percent }
+    specify { expect(ten).to be > five_percent }
+    specify { expect(five).not_to be > five_percent }
   end
 end

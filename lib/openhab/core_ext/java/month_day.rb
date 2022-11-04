@@ -23,7 +23,7 @@ module OpenHAB
 
         # @!visibility private
         def self.included(klass)
-          klass.singleton_class.include(ClassMethods)
+          klass.singleton_class.prepend(ClassMethods)
           klass.remove_method :==
         end
         java.time.MonthDay.include(self)
@@ -42,7 +42,7 @@ module OpenHAB
         # @param [Range] range to check against MonthDay
         # @return [true,false] true if the MonthDay falls within supplied range, false otherwise
         def between?(range)
-          MonthDayRange.range(range).cover? self
+          OpenHAB::DSL::MonthDayRange.range(range).cover? self
         end
 
         # Extends MonthDay comparison to support Strings
@@ -52,9 +52,9 @@ module OpenHAB
           case other
           when String
             self <=> java.time.MonthDay.parse(other)
-          when MonthDayRange::DayOfYear
+          when OpenHAB::DSL::MonthDayRange::DayOfYear
             # Compare with DayOfYear and invert result
-            -other <=> self
+            -(other <=> self)
           else
             super
           end
@@ -63,3 +63,5 @@ module OpenHAB
     end
   end
 end
+
+java_import java.time.MonthDay

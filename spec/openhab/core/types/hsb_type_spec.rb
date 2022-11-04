@@ -53,4 +53,14 @@ RSpec.describe OpenHAB::Core::Types::HSBType do
     specify { expect(state.to_a(:hsb)).to eql [0 | "°", PercentType::HUNDRED, PercentType::HUNDRED] }
     specify { expect(state.to_a(:rgb)).to eql [255, 0, 0] }
   end
+
+  describe "comparisons" do
+    specify { expect(HSBType::RED).to eq HSBType::RED }
+    specify { expect(HSBType::RED != HSBType::RED).to be false }
+    specify { expect(HSBType::RED).to eq 100 }
+    specify { expect(HSBType::RED).to eq ON }
+    specify { expect(HSBType::RED).not_to eq HSBType.new(1, 100, 100) }
+    specify { expect(HSBType::RED).not_to eq HSBType.new(0, 99, 100) }
+    specify { expect(HSBType::RED).not_to eq HSBType.new(0, 100, 99) }
+  end
 end
