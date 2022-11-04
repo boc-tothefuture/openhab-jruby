@@ -43,6 +43,9 @@ module OpenHAB
         Run = Struct.new(:block)
 
         # @!visibility private
+        Script = Struct.new(:block)
+
+        # @!visibility private
         Trigger = Struct.new(:block)
 
         # @!visibility private
@@ -93,6 +96,8 @@ module OpenHAB
         #   end
         #
         prop_array :run, array_name: :run_queue, wrapper: Run
+
+        prop_array :script, array_name: :run_queue, wrapper: Script
 
         #
         # @!method triggered
@@ -1303,6 +1308,8 @@ module OpenHAB
         # @return [true,false] true if it should be created, false otherwise
         #
         def create_rule?
+          return true if tags.include?("Script")
+
           if !triggers?
             logger.warn "Rule '#{uid}' has no triggers, not creating rule"
           elsif !execution_blocks?

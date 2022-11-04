@@ -195,6 +195,7 @@ module OpenHAB
       id ||= Rules::NameInference.infer_rule_id_from_block(block)
       script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
+      builder = nil
       ThreadLocal.thread_local(OPENHAB_RULE_UID: id) do
         builder = Rules::Builder.new(block.binding)
         builder.uid(id)
@@ -211,6 +212,38 @@ module OpenHAB
       rescue Exception => e
         builder.send(:logger).log_exception(e)
       end
+    end
+
+    #
+    # Create a new script
+    #
+    # A script is a rule with no triggers. It can be called by various other actions,
+    # such as the Run Rules action, or the script channel profile.
+    #
+    # Input variables are sent as keyword arguments to the block.
+    # The result of the block may be significant (like for the script channel profile).
+    #
+    # @param [String] id The script's ID
+    # @param [String] name A descriptive name
+    # @yield [] Block executed when the script is executed.
+    #
+    def script(name = nil, id: nil, script: nil, &block)
+      id ||= NameInference.infer_rule_id_from_block(block)
+      name ||= id
+      script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
+
+      builder = nil
+      ThreadLocal.thread_local(RULE_NAME: name) do
+        builder = Rules::Builder.new(block.binding)
+        builder.uid(id)
+        builder.tags(["Script"])
+        builder.name(name)
+        builder.script(&block)
+        logger.trace { builder.inspect }
+        builder.build(script)
+      end
+    rescue Exception => e
+      builder.send(:logger).log_exception(e)
     end
 
     #

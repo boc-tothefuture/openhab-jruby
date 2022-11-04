@@ -42,6 +42,7 @@ module OpenHAB
         #
         #
         def execute(mod = nil, inputs = nil)
+          @result = nil
           ThreadLocal.thread_local(OPENHAB_RULE_UID: uid) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
@@ -51,6 +52,7 @@ module OpenHAB
           rescue Exception => e
             @run_context.send(:logger).log_exception(e)
           end
+          @result
         end
 
         #
@@ -140,6 +142,8 @@ module OpenHAB
         #
         # Loggging inflates method length
         def check_guards(event:)
+          return true if @guard.nil?
+
           if @guard.should_run? event
             return true if @between.nil?
 
@@ -168,7 +172,7 @@ module OpenHAB
             if task.is_a?(Builder::Delay)
               process_delay_task(inputs, mod, run_queue, task)
             else
-              process_task(event, task)
+              process_task(inputs, event, task)
             end
           end
         end
@@ -179,10 +183,11 @@ module OpenHAB
         # @param [OpenHab Event] event that triggered the rule
         # @param [Task] task task containing otherwise block to execute
         #
-        def process_task(event, task)
+        def process_task(inputs, event, task)
           ThreadLocal.thread_local(OPENHAB_RULE_UID: uid) do
             case task
             when Builder::Run then process_run_task(event, task)
+            when Builder::Script then process_script_task(inputs, task)
             when Builder::Trigger then process_trigger_task(event, task)
             when Builder::Otherwise then process_otherwise_task(event, task)
             end
@@ -239,6 +244,30 @@ module OpenHAB
         def process_run_task(event, task)
           logger.trace { "Executing rule '#{name}' run block with event(#{event})" }
           @run_context.instance_exec(event, &task.block)
+        end
+
+        #
+        # Process a script task
+        #
+        # @param [Hash] inputs
+        # @param [Script] task to execute
+        #
+        def process_script_task(inputs, task)
+          kwargs = {}
+          task.block.parameters.each do |(param_type, name)|
+            case param_type
+            when :keyreq, :key
+              kwargs[name] = inputs[name.to_s] if inputs.key?(name.to_s)
+            when :keyrest
+              inputs.each do |k, v|
+                next if k.include?(".")
+
+                kwargs[k.to_sym] = v
+              end
+            end
+          end
+          logger.trace { "Executing script '#{name}' run block with kwargs #{kwargs.inspect}" }
+          @result = @run_context.instance_exec(**kwargs, &task.block)
         end
 
         #
