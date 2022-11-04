@@ -312,7 +312,7 @@ module OpenHAB
     #   the supplied unit, except when they are used for multiplication or
     #   division.
     #
-    #   @param [String, javax.measure.unit] unit Unit or String representing unit
+    #   @param [String, javax.measure.Unit] unit Unit or String representing unit
     #   @yield The block will be executed in the context of the specify unit.
     #
     #   @example
@@ -333,13 +333,18 @@ module OpenHAB
     #     unit('°C') { [NumberC.state, NumberF.state, Dimensionless.state].min }                # => 2
     #
     def unit(unit = nil)
-      return Thread.current[:unit] if !unit && !block_given?
+      return Thread.current[:unit] if unit.nil? && !block_given?
+      raise "You must specify an argument for the block", ArgumentError if unit.nil? && block_given?
+      raise "You must give a block to set the unit for the duration of", ArgumentError if !unit.nil? && !block_given?
 
-      unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit) if unit.is_a?(String)
-      Thread.current[:unit] = unit
-      yield
-    ensure
-      Thread.current[:unit] = nil
+      begin
+        unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit) if unit.is_a?(String)
+        old_unit = Thread.current[:unit]
+        Thread.current[:unit] = unit
+        yield
+      ensure
+        Thread.current[:unit] = old_unit
+      end
     end
   end
 end

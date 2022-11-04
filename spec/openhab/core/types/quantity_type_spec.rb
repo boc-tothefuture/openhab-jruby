@@ -68,12 +68,17 @@ RSpec.describe OpenHAB::Core::Types::QuantityType do
   it "converts to another unit with |" do
     expect((0 | "°C") | "°F").to eql QuantityType.new("32 °F")
     expect((1 | "h") | "s").to eql QuantityType.new("3600 s")
+    expect((23 | "°C") | ImperialUnits::FAHRENHEIT).to eql QuantityType.new("73.4 °F")
   end
 
   it "supports ranges with string quantity" do
     expect("0 W".."10 W").to cover(0 | "W")
     expect("0 W".."10 W").not_to cover(14 | "W")
     expect("0 W".."10 W").to cover(10 | "W")
+  end
+
+  it "normalizes units in complex expression" do
+    expect(((23 | "°C") | "°F") - (70 | "°F")).to be < "4 °F"
   end
 
   describe "comparisons" do

@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+# @!visibility private
+module Java::JavaxMeasure::Unit # rubocop:disable Style/ClassAndModuleChildren
+  def inspect
+    to_s
+  end
+end

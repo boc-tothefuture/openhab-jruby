@@ -81,7 +81,7 @@ module OpenHAB
           add: :+,
           subtract: :-
         }.each do |java_op, ruby_op|
-          convert = "self.class.new(other, Units.unit || unit)"
+          convert = "self.class.new(other, DSL.unit || unit)"
 
           class_eval( # rubocop:disable Style/DocumentDynamicEvalDefinition https://github.com/rubocop/rubocop/issues/10179
             # def +(other)
