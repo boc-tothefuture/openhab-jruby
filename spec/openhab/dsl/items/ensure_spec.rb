@@ -118,8 +118,6 @@ RSpec.describe OpenHAB::DSL::Items::Ensure do
     end
 
     it "can send a plain number to a NumberItem with a quantity" do
-      pending "there's a bug in QuantityType comparisons"
-
       items.build { number_item "Temp", dimension: "Temperature", format: "%d °F", groups: ["AllItems"] }
       Temp.update(80)
       triggers.clear

@@ -148,5 +148,8 @@ RSpec.describe OpenHAB::Core::Types::QuantityType do
 
     # Numeric vs QuantityType
     specify { expect(100).not_to be > QuantityType.new("465.3 lx") }
+
+    # QuantityType vs DecimalType
+    specify { expect(ten_f).to eq DecimalType.new(10) }
   end
 end

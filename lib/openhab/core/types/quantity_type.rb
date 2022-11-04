@@ -12,6 +12,7 @@ module OpenHAB
       class QuantityType
         # @!parse include Type
         include NumericType
+        include ComparableType
 
         # private alias
         ONE_UNIT = org.openhab.core.library.unit.Units::ONE
