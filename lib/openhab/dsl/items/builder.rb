@@ -119,6 +119,8 @@ module OpenHAB
       #     end
       #   end
       module Builder
+        include Core::EntityLookup
+
         class << self
           private
 
@@ -408,6 +410,7 @@ module OpenHAB
       # items will automatically be a member of this group.
       class GroupItemBuilder < ItemBuilder
         include Builder
+
         Builder.public_instance_methods.each do |m|
           class_eval <<~RUBY, __FILE__, __LINE__ + 1
             def #{m}(*args, groups: nil, **kwargs)  # def dimmer_item(*args, groups: nil, **kwargs)

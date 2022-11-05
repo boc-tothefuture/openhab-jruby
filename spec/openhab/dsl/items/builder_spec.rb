@@ -156,9 +156,27 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
     expect(Dimmer1.state).to eq 50
   end
 
-  it "set initial state on a date time item with a string" do
+  it "sets initial state on a date time item with a string" do
     items.build { date_time_item "DateTimeItem1", state: "1970-01-01T00:00:00+00:00" }
     expect(DateTimeItem1.state).to eq "1970-01-01T00:00:00+00:00"
+  end
+
+  it "can reference a group item directly" do
+    items.build do
+      group_item "group1"
+      group_item "group2", groups: [group1]
+    end
+    expect(group2.groups).to eql [group1]
+  end
+
+  it "can reference a group item within another group_item" do
+    items.build do
+      group_item "group1"
+      group_item "group2" do
+        switch_item "switch1", groups: [group1]
+      end
+    end
+    expect(switch1.groups).to match_array([group1, group2])
   end
 
   context "with a thing" do
@@ -196,7 +214,7 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
       items.build do
         group_item "OtherGroup"
         group_item "MyGroup", thing: "astro:sun:home" do
-          string_item "StringItem1", channel: "season#name", groups: ["OtherGroup"]
+          string_item "StringItem1", channel: "season#name", groups: [OtherGroup]
         end
       end
       expect(StringItem1.thing).to be things["astro:sun:home"]

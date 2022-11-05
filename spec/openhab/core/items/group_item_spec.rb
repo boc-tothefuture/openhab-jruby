@@ -3,17 +3,17 @@
 RSpec.describe OpenHAB::Core::Items::GroupItem do
   before do
     items.build do
+      group_item "Sensors" do
+        group_item "Temperatures"
+      end
+
       group_item "House" do
         group_item "GroundFloor" do
           group_item "LivingRoom" do
-            number_item "LivingRoom_Temp", "Living Room Temperature", state: 70, groups: ["Temperatures"]
+            number_item "LivingRoom_Temp", "Living Room Temperature", state: 70, groups: [Temperatures]
           end
-          number_item "Bedroom_Temp", "Bedroom Temperature", state: 50, groups: ["Temperatures"]
-          number_item "Den_Temp", "Den Temperature", state: 30, groups: ["Temperatures"]
-        end
-
-        group_item "Sensors" do
-          group_item "Temperatures"
+          number_item "Bedroom_Temp", "Bedroom Temperature", state: 50, groups: [Temperatures]
+          number_item "Den_Temp", "Den Temperature", state: 30, groups: [Temperatures]
         end
       end
     end
@@ -34,7 +34,7 @@ RSpec.describe OpenHAB::Core::Items::GroupItem do
     it "is a live view" do
       expect(Temperatures.members.map(&:name)).to match_array %w[Bedroom_Temp Den_Temp LivingRoom_Temp]
       items.build do
-        number_item "Kitchen_Temp", groups: ["Temperatures"]
+        number_item "Kitchen_Temp", groups: [Temperatures]
         number_item "Basement_Temp"
       end
       expect(Temperatures.members.map(&:name)).to match_array %w[Bedroom_Temp Den_Temp Kitchen_Temp

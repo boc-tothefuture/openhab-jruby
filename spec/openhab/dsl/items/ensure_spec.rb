@@ -3,12 +3,12 @@
 RSpec.describe OpenHAB::DSL::Items::Ensure do
   let(:triggers) { [] }
   let(:all_items_group) { items.build { group_item "AllItems" } }
-  let(:item) { items.build { dimmer_item "DimmerOne", groups: ["AllItems"] } }
+  let(:item) { items.build { dimmer_item "DimmerOne", groups: [AllItems] } }
   let(:group) do
     items.build do
       group_item "Dimmers", type: :dimmer, function: :avg do
-        dimmer_item "Dimmer1", groups: ["AllItems"]
-        dimmer_item "Dimmer2", groups: ["AllItems"]
+        dimmer_item "Dimmer1", groups: [AllItems]
+        dimmer_item "Dimmer2", groups: [AllItems]
       end
     end
   end
@@ -118,7 +118,7 @@ RSpec.describe OpenHAB::DSL::Items::Ensure do
     end
 
     it "can send a plain number to a NumberItem with a quantity" do
-      items.build { number_item "Temp", dimension: "Temperature", format: "%d °F", groups: ["AllItems"] }
+      items.build { number_item "Temp", dimension: "Temperature", format: "%d °F", groups: [AllItems] }
       Temp.update(80)
       triggers.clear
       Temp.ensure << 80
