@@ -17,6 +17,31 @@ RSpec.describe OpenHAB::DSL do
     end
   end
 
+  describe "#store_states" do
+    before do
+      items.build do
+        switch_item "Switch1", state: OFF
+        switch_item "Switch2", state: OFF
+      end
+    end
+
+    it "stores and restores states" do
+      states = store_states Switch1, Switch2
+      Switch1.on
+      expect(Switch1).to be_on
+      states.restore
+      expect(Switch1).to be_off
+    end
+
+    it "restores states after the block returns" do
+      store_states Switch1, Switch2 do
+        Switch1.on
+        expect(Switch1).to be_on
+      end
+      expect(Switch1).to be_off
+    end
+  end
+
   describe "#unit" do
     it "converts all units and numbers to specific unit for all operations" do
       c = 23 | "°C"
