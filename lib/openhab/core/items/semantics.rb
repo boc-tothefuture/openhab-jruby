@@ -39,6 +39,7 @@ module OpenHAB
             const_set(tag.simple_name.to_sym, tag.ruby_class)
           end
         end
+        # The base module for all semantic tag modules.
         Tag = org.openhab.core.semantics.Tag
 
         # put ourself into the global namespace, replacing the action
