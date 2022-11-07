@@ -51,6 +51,9 @@ gem:
    `items.grep(GroupItem)` if you would like to filter to only groups.
  * `OpenHAB::Core::Items::GenericItem#id` no longer exists; just use
    {OpenHAB::Core::Items::GenericItem#to_s} which does what `#id` used to do.
+ * `states?(*items)` helper is gone. Just use `items.all?(:state?)`, or in
+   the rare cased you used `states?(*items, things: true)`, use
+   `items.all? { |i| i.state? && i.things.all?(&:online?) }`.
  * {OpenHAB::Core::Items::GroupItem} is no longer {Enumerable}, and you must
    use {OpenHAB::Core::Items::GroupItem#members}.
  * {OpenHAB::Core::Items::GroupItem#all_members} no longer has a `filter`
