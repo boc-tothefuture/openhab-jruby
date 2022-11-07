@@ -11,23 +11,6 @@ module OpenHAB
         # Creates command triggers
         #
         class Command < Trigger
-          # Combine command and commands into a single array
-          #
-          # @param [Array] command list of commands to trigger on
-          # @param [Array] commands list of commands to trigger on
-          #
-          # @return [Array] Combined flattened and compacted list of commands
-          #
-          def self.combine_commands(command:, commands:)
-            combined_commands = ([command] | [commands]).flatten
-
-            # If either command or commands has a value and one is nil, we need to remove nil from the array.
-            # If it is only now a single nil value, we leave the nil in place, so that we create a trigger
-            # That isn't looking for a specific command.
-            combined_commands = combined_commands.compact unless combined_commands.all?(&:nil?)
-            combined_commands
-          end
-
           #
           # Create a received command trigger
           #

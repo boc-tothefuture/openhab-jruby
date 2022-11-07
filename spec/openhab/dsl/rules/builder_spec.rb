@@ -132,37 +132,6 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         test_changed_trigger("Alarm_Mode1, Alarm_Mode2",
                              new_state: 4,
                              expect_triggered: "Alarm_Mode2")
-        test_changed_trigger("[Alarm_Mode1, Alarm_Mode2]",
-                             new_state: 3,
-                             expect_triggered: "Alarm_Mode1")
-        test_changed_trigger("[Alarm_Mode1, Alarm_Mode2]",
-                             new_state: 4,
-                             expect_triggered: "Alarm_Mode2")
-
-        context "with a complicated item list" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
-          before do
-            items.build do
-              switch_item "Switch2", group: Switches
-              switch_item "Switch3"
-              group_item "Contacts", type: :contact do
-                contact_item "Contact1"
-                contact_item "Contact2"
-              end
-            end
-          end
-
-          test_changed_trigger("Switches.members, [[Contacts.members], Switch3]",
-                               new_state: "ON",
-                               expect_triggered: "Switch1")
-          test_changed_trigger("Switches.members, [[Contacts.members], Switch3]",
-                               new_state: "ON",
-                               expect_triggered: "Switch3")
-          test_changed_trigger("Switches.members, [[Contacts.members], Switch3]") do
-            items.build { contact_item "Contact3", group: Contacts }
-            Contact3.update(OPEN)
-            expect(triggered_item).to eql "Contact3"
-          end
-        end
 
         test_changed_trigger(initial_state: 10, from: [10, 14], new_state: 11)
         test_changed_trigger(initial_state: 11,

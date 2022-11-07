@@ -692,15 +692,19 @@ module OpenHAB
           # for is a reserved word in ruby, so use local_variable_get :for
           duration = binding.local_variable_get(:for)
 
-          flattened_items = Changed.flatten_items(items)
-          @ruby_triggers << [:changed, flattened_items, { to: to, from: from, duration: duration }]
-          flattened_items.map do |item|
-            logger.trace("Creating changed trigger for entity(#{item}), to(#{to}), from(#{from})")
+          from = [nil] if from.nil?
+          to = [nil] if to.nil?
 
-            Changed.each_state(from, to) do |from_state, to_state|
-              changed.trigger(item: item, from: from_state, to: to_state, duration: duration, attach: attach)
+          @ruby_triggers << [:changed, items, { to: to, from: from, duration: duration }]
+          items.each do |item|
+            logger.trace("Creating changed trigger for entity(#{item}), to(#{to.inspect}), from(#{from.inspect})")
+
+            Array.wrap(from).each do |from_state|
+              Array.wrap(to).each do |to_state|
+                changed.trigger(item: item, from: from_state, to: to_state, duration: duration, attach: attach)
+              end
             end
-          end.flatten
+          end
         end
 
         #
@@ -890,8 +894,8 @@ module OpenHAB
         # {Core::Events::ItemCommandEvent}.
         #
         # @param [Core::Items::GenericItem, Core::Items::GroupItem::Members] items Items to create trigger for
-        # @param [Array<Core::Types::Command>, Range, Proc] command commands to match for trigger
-        # @param [Array<Core::Types::Command>, Range, Proc] commands commands to match for trigger
+        # @param [Core::Types::Command, Array<Core::Types::Command>, Range, Proc] command commands to match for trigger
+        # @param [Array<Core::Types::Command>, Range, Proc] commands Fluent alias for `command`
         # @param [Object] attach object to be attached to the trigger
         # @return [void]
         #
@@ -952,18 +956,20 @@ module OpenHAB
         def received_command(*items, command: nil, commands: nil, attach: nil)
           command_trigger = Command.new(rule_triggers: @rule_triggers)
 
-          # Combine command and commands, doing union so only a single nil will be in the combined array.
-          combined_commands = Command.combine_commands(command: command, commands: commands)
-          flattened_items = Command.flatten_items(items)
-          @ruby_triggers << [:received_command, flattened_items, { command: combined_commands }]
+          # if neither command nor commands is specified, ensure that we create
+          # a trigger that isn't looking for a specific command.
+          commands = [nil] if command.nil? && commands.nil?
+          commands = Array.wrap(command) | Array.wrap(commands)
 
-          flattened_items.map do |item|
-            combined_commands.map do |cmd|
+          @ruby_triggers << [:received_command, items, { command: commands }]
+
+          items.each do |item|
+            commands.each do |cmd|
               logger.trace "Creating received command trigger for items #{item.inspect} and commands #{cmd.inspect}"
 
               command_trigger.trigger(item: item, command: cmd, attach: attach)
             end
-          end.flatten
+          end
         end
 
         #
@@ -1146,9 +1152,8 @@ module OpenHAB
         #
         def updated(*items, to: nil, attach: nil)
           updated = Updated.new(rule_triggers: @rule_triggers)
-          flattened_items = Updated.flatten_items(items)
-          @ruby_triggers << [:updated, flattened_items, { to: to }]
-          flattened_items.map do |item|
+          @ruby_triggers << [:updated, items, { to: to }]
+          items.map do |item|
             logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
             [to].flatten.map do |to_state|
               updated.trigger(item: item, to: to_state, attach: attach)

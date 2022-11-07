@@ -14,25 +14,6 @@ module OpenHAB
         #
         class Changed < Trigger
           #
-          # Run block for each state combination
-          #
-          # @param [Item State, Array<Item State>] from state to restrict trigger to
-          # @param [Item State, Array<Item State>] to state to restrict trigger to
-          #
-          # @yieldparam [Item State] from_state from state
-          # @yieldparam [Item State] to_state to state
-          #
-          # @return [Array] array of block return values
-          #
-          def self.each_state(from, to)
-            [to].flatten.each_with_object([]) do |to_state, agg|
-              [from].flatten.each do |from_state|
-                agg.push(yield(from_state, to_state))
-              end
-            end
-          end
-
-          #
           # Create the trigger
           #
           # @param [Object] item item to create trigger for
