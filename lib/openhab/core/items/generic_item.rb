@@ -102,7 +102,14 @@ module OpenHAB
           raw_state if state?
         end
 
-        alias_method :to_s, :name
+        #
+        # The item's label if one is defined, otherwise it's name
+        #
+        # @return [String]
+        #
+        def to_s
+          label || name
+        end
 
         #
         # Return all groups that this item is part of

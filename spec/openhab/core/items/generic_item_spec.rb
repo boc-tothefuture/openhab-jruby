@@ -20,4 +20,15 @@ RSpec.describe OpenHAB::Core::Items::GenericItem do
       expect(LightSwitch.group_names.to_a).to match_array %w[House NonExistent]
     end
   end
+
+  describe "#to_s" do
+    it "uses the label" do
+      items.build { switch_item "LightSwitch2", "My Light Switch" }
+      expect(LightSwitch2.to_s).to eql "My Light Switch"
+    end
+
+    it "use the item's name if it doesn't have a label" do
+      expect(LightSwitch.to_s).to eql "LightSwitch"
+    end
+  end
 end

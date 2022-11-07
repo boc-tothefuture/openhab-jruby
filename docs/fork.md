@@ -49,6 +49,8 @@ gem:
  * The top-level `groups` method providing access to only
    {OpenHAB::Core::Items::GroupItem}s has been removed. Use
    `items.grep(GroupItem)` if you would like to filter to only groups.
+ * `OpenHAB::Core::Items::GenericItem#id` no longer exists; just use
+   {OpenHAB::Core::Items::GenericItem#to_s} which does what `#id` used to do.
  * {OpenHAB::Core::Items::GroupItem} is no longer {Enumerable}, and you must
    use {OpenHAB::Core::Items::GroupItem#members}.
  * {OpenHAB::Core::Items::GroupItem#all_members} no longer has a `filter`
