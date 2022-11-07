@@ -144,14 +144,14 @@ module OpenHAB
 
         # Delegate missing methods to {base_item} if possible
         def method_missing(method, *args, &block)
-          return base_item.__send__(method, *args, &block) if base_item.respond_to?(method)
+          return base_item.__send__(method, *args, &block) if base_item&.respond_to?(method) # rubocop:disable Lint/RedundantSafeNavigation nil responds to :to_a
 
           super
         end
 
         # @!visibility private
         def respond_to_missing?(method, include_private = false)
-          return true if base_item.respond_to?(method)
+          return true if base_item&.respond_to?(method) # rubocop:disable Lint/RedundantSafeNavigation
 
           super
         end

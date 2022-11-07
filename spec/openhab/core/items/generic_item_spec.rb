@@ -4,7 +4,7 @@ RSpec.describe OpenHAB::Core::Items::GenericItem do
   before do
     items.build do
       group_item "House" do
-        switch_item "LightSwitch", groups: ["NonExistent"]
+        switch_item "LightSwitch", group: "NonExistent"
       end
     end
   end

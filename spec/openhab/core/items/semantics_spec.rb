@@ -4,29 +4,29 @@ RSpec.describe OpenHAB::Core::Items::Semantics do
   before do
     items.build do
       group_item "gMyGroup"
-      group_item "gOutdoor", tags: [Semantics::Outdoor] do
-        group_item "gPatio", tags: [Semantics::Patio] do
-          group_item "Patio_Light_Bulb", tags: [Semantics::Lightbulb] do
+      group_item "gOutdoor", tag: Semantics::Outdoor do
+        group_item "gPatio", tag: Semantics::Patio do
+          group_item "Patio_Light_Bulb", tag: Semantics::Lightbulb do
             dimmer_item "Patio_Light_Brightness", tags: [Semantics::Control, Semantics::Level]
             color_item "Patio_Light_Color", tags: [Semantics::Control, Semantics::Light]
           end
 
           switch_item "Patio_Motion", tags: [Semantics::MotionDetector, "CustomTag"]
-          switch_item "Patio_Point", tags: [Semantics::Control]
+          switch_item "Patio_Point", tag: Semantics::Control
         end
       end
-      group_item "gIndoor", tags: [Semantics::Indoor] do
-        group_item "gLivingRoom", tags: [Semantics::LivingRoom] do
-          group_item "LivingRoom_Light1_Bulb", groups: [gMyGroup], tags: [Semantics::Lightbulb] do
+      group_item "gIndoor", tag: Semantics::Indoor do
+        group_item "gLivingRoom", tag: Semantics::LivingRoom do
+          group_item "LivingRoom_Light1_Bulb", group: gMyGroup, tag: Semantics::Lightbulb do
             dimmer_item "LivingRoom_Light1_Brightness", tags: [Semantics::Control, Semantics::Level]
             color_item "LivingRoom_Light1_Color", tags: [Semantics::Control, Semantics::Light]
-            switch_item "LivingRoom_Light1_Custom", groups: [gMyGroup]
+            switch_item "LivingRoom_Light1_Custom", group: gMyGroup
           end
           group_item "LivingRoom_Light2_Bulb", tags: [Semantics::Lightbulb, "CustomTag"] do
             dimmer_item "LivingRoom_Light2_Brightness", tags: [Semantics::Control, Semantics::Level]
             color_item "LivingRoom_LIght2_Color", tags: [Semantics::Control, Semantics::Light]
           end
-          switch_item "LivingRoom_Motion", tags: [Semantics::MotionDetector]
+          switch_item "LivingRoom_Motion", tag: Semantics::MotionDetector
         end
       end
       switch_item "NoSemantic"
@@ -76,10 +76,10 @@ RSpec.describe OpenHAB::Core::Items::Semantics do
 
     it "does not return points in sublocations and equipments" do
       items.build do
-        group_item "Outdoor_Light_Bulb", groups: [gOutdoor], tags: [Semantics::Lightbulb] do
+        group_item "Outdoor_Light_Bulb", group: gOutdoor, tag: Semantics::Lightbulb do
           switch_item "Outdoor_Light_Switch", tags: [Semantics::Control, Semantics::Power]
         end
-        switch_item "Outdoor_Point", tags: [Semantics::Control], groups: [gOutdoor]
+        switch_item "Outdoor_Point", tag: Semantics::Control, group: gOutdoor
       end
 
       expect(gOutdoor.points).to eql [Outdoor_Point]
@@ -173,8 +173,8 @@ RSpec.describe OpenHAB::Core::Items::Semantics do
       context "with GroupItem as a point" do
         before do
           items.build do
-            group_item "My_Equipment", groups: [gIndoor], tags: [Semantics::Lightbulb] do
-              group_item "GroupPoint", tags: [Semantics::Switch]
+            group_item "My_Equipment", group: gIndoor, tag: Semantics::Lightbulb do
+              group_item "GroupPoint", tag: Semantics::Switch
               dimmer_item "Brightness", tags: [Semantics::Control, Semantics::Level]
             end
           end
@@ -186,7 +186,7 @@ RSpec.describe OpenHAB::Core::Items::Semantics do
 
         it "can find its siblings" do
           items.build do
-            switch_item "MySwitch", groups: [My_Equipment], tags: [Semantics::Control, Semantics::Switch]
+            switch_item "MySwitch", group: My_Equipment, tags: [Semantics::Control, Semantics::Switch]
           end
 
           expect(GroupPoint.points).to match_array([Brightness, MySwitch])
@@ -198,7 +198,7 @@ RSpec.describe OpenHAB::Core::Items::Semantics do
     describe "#equipments" do
       it "gets sub-equipment" do
         items.build do
-          group_item "SubEquipment", groups: [Patio_Light_Bulb], tags: [Semantics::Lightbulb]
+          group_item "SubEquipment", group: Patio_Light_Bulb, tag: Semantics::Lightbulb
         end
         expect(gPatio.equipments(Semantics::Lightbulb).members.equipments).to eql [SubEquipment]
       end
@@ -208,10 +208,10 @@ RSpec.describe OpenHAB::Core::Items::Semantics do
   describe "#equipments" do
     it "supports non-group equipments" do
       items.build do
-        group_item "Group_Equipment", groups: [gIndoor], tags: [Semantics::Lightbulb] do
+        group_item "Group_Equipment", group: gIndoor, tag: Semantics::Lightbulb do
           dimmer_item "Brightness", tags: [Semantics::Control, Semantics::Level]
         end
-        switch_item "NonGroup_Equipment", groups: [gIndoor], tags: [Semantics::Lightbulb]
+        switch_item "NonGroup_Equipment", group: gIndoor, tag: Semantics::Lightbulb
       end
       expect(gIndoor.equipments).to match_array([Group_Equipment, NonGroup_Equipment])
     end

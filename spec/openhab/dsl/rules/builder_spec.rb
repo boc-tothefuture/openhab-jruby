@@ -118,7 +118,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         end
         test_changed_trigger("Switches.members", new_state: ON, expect_triggered: "Switch1")
         test_changed_trigger("Switches.members") do
-          items.build { switch_item "Switch2", groups: [Switches] }
+          items.build { switch_item "Switch2", group: Switches }
           Switch2.on
           expect(triggered_item).to eql "Switch2"
         end
@@ -142,7 +142,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         context "with a complicated item list" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
           before do
             items.build do
-              switch_item "Switch2", groups: [Switches]
+              switch_item "Switch2", group: Switches
               switch_item "Switch3"
               group_item "Contacts", type: :contact do
                 contact_item "Contact1"
@@ -158,7 +158,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
                                new_state: "ON",
                                expect_triggered: "Switch3")
           test_changed_trigger("Switches.members, [[Contacts.members], Switch3]") do
-            items.build { contact_item "Contact3", groups: [Contacts] }
+            items.build { contact_item "Contact3", group: Contacts }
             Contact3.update(OPEN)
             expect(triggered_item).to eql "Contact3"
           end
@@ -359,7 +359,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
           context "with a switch group item" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
             before do
               items.build do
-                switch_item "Switch2", groups: [Switches]
+                switch_item "Switch2", group: Switches
               end
               Switch1.off
             end

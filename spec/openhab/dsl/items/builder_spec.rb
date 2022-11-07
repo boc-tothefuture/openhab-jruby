@@ -31,11 +31,16 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
   it "can add items to groups" do
     items.build do
       group_item "MyGroupItem"
-      switch_item "MySwitchItem", groups: [MyGroupItem]
+      group_item "Group2"
+      switch_item "MySwitchItem", group: MyGroupItem
+      switch_item "MySwitchItem2", groups: [Group2]
+      switch_item "MySwitchItem3", group: "MyGroupItem", groups: [Group2]
     end
 
-    expect(MyGroupItem.members.to_a).to eq [MySwitchItem]
-    expect(MySwitchItem.groups).to eq [MyGroupItem]
+    expect(MyGroupItem.members.to_a).to match_array [MySwitchItem, MySwitchItem3]
+    expect(MySwitchItem.groups).to eql [MyGroupItem]
+    expect(MySwitchItem2.groups).to eql [Group2]
+    expect(MySwitchItem3.groups).to match_array [MyGroupItem, Group2]
   end
 
   it "can set a dimension on a number item" do
@@ -65,9 +70,27 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
   it "can add tags" do
     items.build do
       switch_item "MySwitch", tags: ["MyTag", Semantics::Switch]
+      switch_item "MySwitch2", tag: "MyTag"
+      switch_item "MySwitch3", tag: "MyTag", tags: ["MyTag2"]
+      switch_item "MySwitch4", tags: "MyTag"
     end
 
     expect(MySwitch.tags).to match_array %w[MyTag Switch]
+    expect(MySwitch2.tags).to match_array ["MyTag"]
+    expect(MySwitch3.tags).to match_array %w[MyTag MyTag2]
+    expect(MySwitch4.tags).to match_array ["MyTag"]
+  end
+
+  it "raises errors on invalid argument types" do
+    rspec = self
+    items.build do
+      rspec.expect { switch_item "Switch1", tags: [1] }.to rspec.raise_error(ArgumentError)
+      rspec.expect { switch_item "Switch1", tag: 2 }.to rspec.raise_error(ArgumentError)
+      switch_item "SwitchNone"
+      rspec.expect { switch_item "Switch1", group: SwitchNone }.to rspec.raise_error(ArgumentError)
+      rspec.expect { switch_item "Switch1", groups: SwitchNone }.to rspec.raise_error(ArgumentError)
+      rspec.expect { switch_item "Switch1", group: [SwitchNone] }.to rspec.raise_error(ArgumentError)
+    end
   end
 
   it "can configure autoupdate" do
@@ -164,7 +187,7 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
   it "can reference a group item directly" do
     items.build do
       group_item "group1"
-      group_item "group2", groups: [group1]
+      group_item "group2", group: group1
     end
     expect(group2.groups).to eql [group1]
   end
@@ -173,7 +196,7 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
     items.build do
       group_item "group1"
       group_item "group2" do
-        switch_item "switch1", groups: [group1]
+        switch_item "switch1", group: group1
       end
     end
     expect(switch1.groups).to match_array([group1, group2])
@@ -214,7 +237,7 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
       items.build do
         group_item "OtherGroup"
         group_item "MyGroup", thing: "astro:sun:home" do
-          string_item "StringItem1", channel: "season#name", groups: [OtherGroup]
+          string_item "StringItem1", channel: "season#name", group: OtherGroup
         end
       end
       expect(StringItem1.thing).to be things["astro:sun:home"]

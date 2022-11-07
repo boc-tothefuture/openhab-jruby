@@ -10,13 +10,17 @@ RSpec.describe OpenHAB::Core::Items::GroupItem do
       group_item "House" do
         group_item "GroundFloor" do
           group_item "LivingRoom" do
-            number_item "LivingRoom_Temp", "Living Room Temperature", state: 70, groups: [Temperatures]
+            number_item "LivingRoom_Temp", "Living Room Temperature", state: 70, group: Temperatures
           end
-          number_item "Bedroom_Temp", "Bedroom Temperature", state: 50, groups: [Temperatures]
-          number_item "Den_Temp", "Den Temperature", state: 30, groups: [Temperatures]
+          number_item "Bedroom_Temp", "Bedroom Temperature", state: 50, group: Temperatures
+          number_item "Den_Temp", "Den Temperature", state: 30, group: Temperatures
         end
       end
     end
+  end
+
+  it "does not respond to #to_a" do
+    expect(Temperatures.respond_to?(:to_a)).to be false
   end
 
   describe "#members" do
@@ -34,7 +38,7 @@ RSpec.describe OpenHAB::Core::Items::GroupItem do
     it "is a live view" do
       expect(Temperatures.members.map(&:name)).to match_array %w[Bedroom_Temp Den_Temp LivingRoom_Temp]
       items.build do
-        number_item "Kitchen_Temp", groups: [Temperatures]
+        number_item "Kitchen_Temp", group: Temperatures
         number_item "Basement_Temp"
       end
       expect(Temperatures.members.map(&:name)).to match_array %w[Bedroom_Temp Den_Temp Kitchen_Temp
@@ -82,14 +86,14 @@ RSpec.describe OpenHAB::Core::Items::GroupItem do
       items.build do
         group_item "Switches", type: :switch
       end
-      expect(Switches.inspect).to eql "#<OpenHAB::Core::Items::GroupItem:Switch nil state=NULL>"
+      expect(Switches.inspect).to eql "#<OpenHAB::Core::Items::GroupItem:Switch Switches nil state=NULL>"
     end
 
     it "includes the function" do
       items.build do
         group_item "Switches", type: :switch, function: "OR(ON,OFF)"
       end
-      expect(Switches.inspect).to eql "#<OpenHAB::Core::Items::GroupItem:Switch:OR(ON,OFF) nil state=NULL>"
+      expect(Switches.inspect).to eql "#<OpenHAB::Core::Items::GroupItem:Switch:OR(ON,OFF) Switches nil state=NULL>"
     end
   end
 end

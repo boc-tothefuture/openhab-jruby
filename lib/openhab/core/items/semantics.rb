@@ -39,6 +39,7 @@ module OpenHAB
             const_set(tag.simple_name.to_sym, tag.ruby_class)
           end
         end
+        Tag = org.openhab.core.semantics.Tag
 
         # put ourself into the global namespace, replacing the action
         ::Semantics = self # rubocop:disable Naming/ConstantName

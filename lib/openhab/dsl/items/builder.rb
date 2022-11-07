@@ -52,7 +52,7 @@ module OpenHAB
           return nil unless @items.key?(item_name)
 
           item = @items.delete(item_name)
-          if recursive && item.is_a?(GroupItem)
+          if recursive && item.is_a?(Core::Items::GroupItem)
             item.members.each { |member| remove(member.__getobj__, recursive: true) }
           end
 
@@ -130,8 +130,7 @@ module OpenHAB
           #   @param name [String] The name for the new item
           #   @param label [String] The item label
           #   @yield [ItemBuilder] Item for further customization
-          #   @return [Item] The Item
-          #   @see ItemBuilder#initialize for additional arguments.
+          #   @see ItemBuilder#initialize ItemBuilder#initialize for additional arguments.
           def def_item_method(method)
             class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{method}_item(*args, **kwargs, &block)         # def dimmer_item(*args, **kwargs, &block)
@@ -141,25 +140,37 @@ module OpenHAB
           end
         end
 
+        # @return [Core::Items::ColorItem]
         def_item_method(:color)
+        # @return [Core::Items::ContactItem]
         def_item_method(:contact)
+        # @return [Core::Items::DateTimeItem]
         def_item_method(:date_time)
+        # @return [Core::Items::DimmerItem]
         def_item_method(:dimmer)
+        # @return [Core::Items::ImageItem]
         def_item_method(:image)
+        # @return [Core::Items::LocationItem]
         def_item_method(:location)
+        # @return [Core::Items::NumberItem]
         def_item_method(:number)
+        # @return [Core::Items::PlayerItem]
         def_item_method(:player)
+        # @return [Core::Items::RollershutterItem]
         def_item_method(:rollershutter)
+        # @return [Core::Items::StringItem]
         def_item_method(:string)
+        # @return [Core::Items::SwitchItem]
         def_item_method(:switch)
 
-        # Create a new {GroupItem}
+        # Create a new {Core::Items::GroupItem}
         #
         # @!method group_item(name, label = nil, **kwargs)
         # @param name [String] The name for the new item
         # @param label [String] The item label
         # @yield GroupItemBuilder
-        # @see GroupItemBuilder#initialize
+        # @return [Core::Items::GroupItem]
+        # @see GroupItemBuilder#initialize GroupItemBuilder#initialize for additional arguments.
         def group_item(*args, **kwargs, &block)
           item = GroupItemBuilder.new(*args, provider: provider, **kwargs)
           item.instance_eval(&block) if block
@@ -216,7 +227,7 @@ module OpenHAB
         # @return [Symbol, nil]
         attr_accessor :icon
         # Groups to which this item should be added
-        # @return [Array<String, GroupItem>]
+        # @return [Array<String, Core::Items::GroupItem>]
         attr_reader :groups
         # Tags to apply to this item
         # @return [Array<String, Semantics::Tag>]
@@ -242,10 +253,22 @@ module OpenHAB
         # @param dimension [Symbol, nil] The unit dimension for a {NumberItem} (see {#dimension})
         # @param format [String, nil] The formatting pattern for the item's state (see {#format})
         # @param icon [Symbol, nil] The icon to be associated with the item (see {#icon})
-        # @param groups [String, GroupItem, Array<String, GroupItem>, nil]
-        #        Groups to which this item should be added (see {#group})
-        # @param tags [String, org.openhab.core.semantics.Tag, Array<String, Semantics::Tag>, nil]
-        #        Tags to apply to this item (see {tag})
+        # @param group [String,
+        #   Core::Items::GroupItem,
+        #   GroupItemBuilder,
+        #   Array<String, Core::Items::GroupItem, GroupItemBuilder>,
+        #   nil]
+        #        Group(s) to which this item should be added (see {#group}).
+        # @param groups [String,
+        #   Core::Items::GroupItem,
+        #   GroupItemBuilder,
+        #   Array<String, Core::Items::GroupItem, GroupItemBuilder>,
+        #   nil]
+        #        Fluent alias for `group`.
+        # @param tag [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
+        #        Tag(s) to apply to this item (see {tag}).
+        # @params tags [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
+        #        Fluent alias for `tag`.
         # @param alexa [String, Array, nil] Alexa metadata (see {#alexa})
         # @param autoupdate [true, false, nil] Autoupdate setting (see {#autoupdate})
         # @param channel [String, Things::ChannelUID, nil] Channel to link the item to
@@ -258,7 +281,9 @@ module OpenHAB
                        dimension: nil,
                        format: nil,
                        icon: nil,
+                       group: nil,
                        groups: nil,
+                       tag: nil,
                        tags: nil,
                        alexa: nil,
                        autoupdate: nil,
@@ -267,7 +292,8 @@ module OpenHAB
                        homekit: nil,
                        metadata: nil,
                        state: nil)
-          raise ArgumentError, "Dimension can only be specified with NumberItem" if dimension && type != :number
+          raise ArgumentError, "`name` cannot be nil" if name.nil?
+          raise ArgumentError, "`dimension` can only be specified with NumberItem" if dimension && type != :number
 
           if provider.is_a?(GroupItemBuilder)
             name = "#{provider.name_base}#{name}"
@@ -275,12 +301,12 @@ module OpenHAB
           end
           @provider = provider
           @type = type
-          @name = name
+          @name = name.to_s
           @label = label
           @dimension = dimension
           @format = format
           @icon = icon
-          @groups = groups || []
+          @groups = []
           @tags = []
           @metadata = Core::Items::Metadata::NamespaceHash.new
           @metadata.merge!(metadata) if metadata
@@ -292,24 +318,57 @@ module OpenHAB
           self.homekit(homekit) if homekit
           @state = state
 
-          (tags || []).each do |tag|
-            self.tag(tag)
+          self.group(*group)
+          self.group(*groups)
+
+          self.tag(*tag)
+          self.tag(*tags)
+        end
+
+        #
+        # The item's label if one is defined, otherwise it's name.
+        #
+        # @return [String]
+        #
+        def to_s
+          label || name
+        end
+
+        #
+        # Tag item
+        #
+        # @param tags [String, Symbol, Semantics::Tag]
+        # @return [void]
+        #
+        def tag(*tags)
+          unless tags.all? do |tag|
+                   tag.is_a?(String) ||
+                   tag.is_a?(Symbol) ||
+                   (tag.is_a?(Module) && tag < Semantics::Tag)
+                 end
+            raise ArgumentError, "`tag` must be a subclass of Semantics::Tag, or a `String``."
+          end
+
+          tags.each do |tag|
+            tag = tag.name.split("::").last if tag.is_a?(Module) && tag < Semantics::Tag
+            @tags << tag.to_s
           end
         end
 
-        alias_method :to_s, :name
-
-        # Tag item
-        # @param tag [String, org.openhab.core.semantics.Tag]
-        def tag(tag)
-          tag = tag.name.split("::").last if tag.is_a?(Module) && tag < org.openhab.core.semantics.Tag
-          @tags << tag.to_s
-        end
-
+        #
         # Add this item to a group
-        # @param group [String, GroupItemBuilder, GroupItem]
-        def group(group)
-          @groups << group
+        #
+        # @param groups [String, GroupItemBuilder, Core::Items::GroupItem]
+        # @return [void]
+        #
+        def group(*groups)
+          unless groups.all? do |group|
+                   group.is_a?(String) || group.is_a?(Core::Items::GroupItem) || group.is_a?(GroupItemBuilder)
+                 end
+            raise ArgumentError, "`group` must be a `GroupItem`, `GroupItemBuilder`, or a `String`"
+          end
+
+          @groups.concat(groups)
         end
 
         # Shortcut for adding Homekit metadata
@@ -445,7 +504,7 @@ module OpenHAB
         # @param thing [ThingUID, Thing, String, nil]
         #        A Thing to be used as the base for the channel for any contained items.
         # @param kwargs [] Additional parameters
-        # @see ItemBuilder#initialize
+        # @see ItemBuilder#initialize ItemBuilder#initialize for additional arguments
         def initialize(*args, type: nil, function: nil, thing: nil, **kwargs)
           raise ArgumentError, "invalid function #{function}" if function && !function.match?(FUNCTION_REGEX)
           raise ArgumentError, "state cannot be set on GroupItems" if kwargs[:state]

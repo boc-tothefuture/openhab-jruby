@@ -103,7 +103,7 @@ module OpenHAB
         end
 
         #
-        # The item's label if one is defined, otherwise it's name
+        # The item's label if one is defined, otherwise it's name.
         #
         # @return [String]
         #
@@ -284,7 +284,7 @@ module OpenHAB
 
         # @return [String]
         def inspect
-          s = "#<OpenHAB::Core::Items::#{type}Item#{type_details} #{label.inspect} state=#{raw_state.inspect}"
+          s = "#<OpenHAB::Core::Items::#{type}Item#{type_details} #{name} #{label.inspect} state=#{raw_state.inspect}"
           s += " category=#{category.inspect}" if category
           s += " tags=#{tags.to_a.inspect}" unless tags.empty?
           s += " groups=#{group_names}" unless group_names.empty?
