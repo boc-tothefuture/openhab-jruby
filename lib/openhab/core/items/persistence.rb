@@ -260,7 +260,8 @@ module OpenHAB
         # @return [ZonedDateTime]
         #
         def to_zdt(timestamp)
-          timestamp = timestamp.negated if timestamp.is_a?(java).time.Duration
+          timestamp = timestamp.call if timestamp.is_a?(Proc)
+          timestamp = timestamp.negated if timestamp.is_a?(java.time.Duration)
           OpenHAB::DSL.to_zdt(timestamp)
         end
 
