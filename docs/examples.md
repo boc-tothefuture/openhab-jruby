@@ -76,7 +76,7 @@ Set_Temperature << '24 °C'
 # Items:
 # Number:Temperature Outside_Temperature e.g. 28 °C
 # Number:Temperature Inside_Temperature e.g. 22 °C
-temperature_difference = Outside_Temperature - Inside_Temperature
+temperature_difference = Outside_Temperature.state - Inside_Temperature.state
 logger.info("Temperature difference: #{temperature_difference}") # "Temperature difference: 6 °C"
 ```
 
@@ -85,7 +85,7 @@ logger.info("Temperature difference: #{temperature_difference}") # "Temperature 
 # Number:Power Solar_Panel_Power
 # Number:Power Load_Power
 # Number:Power Excess_Power
-Excess_Power.update(Solar_Panel_Power - Load_Power)
+Excess_Power.update(Solar_Panel_Power.state - Load_Power.state)
 ```
 
 ### Detect change duration without creating an explicit timer
@@ -99,7 +99,8 @@ end
 
 ### Use timers
 
-[Timers](docs/usage/misc/timers.md) are created using `after` with an easier way to specify when it should execute, based on [duration](docs/usage/misc/duration.md) syntax, e.g. `10.minutes` instead of using ZonedDateTime.
+Timers are created using {after after} with an easier way to specify when it should execute, 
+based on [duration](docs/usage/misc/duration.md) syntax, e.g. `10.minutes` instead of using ZonedDateTime.
 
 ```ruby
 rule 'simple timer' do
@@ -159,7 +160,7 @@ end
 #### Or use the timed command feature to achieve the same thing
 
 The two timer examples above required an extra rule to keep track of the Light_Item state, so when it's turned off, 
-the timer is cancelled. However, the [timed command](docs/usage/items/index.md#timed-commands) 
+the timer is cancelled. However, the {OpenHAB::DSL::Items::TimedCommand timed command} 
 feature in the next example handles that automatically for you.
 
 ```ruby
@@ -182,11 +183,11 @@ rule 'Humidity: Control ExhaustFan' do
   updated BathRoom_Humidity
   triggered do |humidity|
     evo_rate = humidity.evolution_rate 4.minutes, :influxdb
-    logger.info("#{humidity.name} #{humidity} evolution_rate: #{evo_rate}")
+    logger.info("#{humidity.name} #{humidity.state} evolution_rate: #{evo_rate}")
 
-    if (humidity > 70 && evo_rate > 15) || humidity > 85
-      BathRoom_ExhaustFan.ensure.on if Sun_Elevation.positive? || BathRoom_Light.state.nil? || BathRoom_Light.on?
-    elsif humidity < 70 || evo_rate < -5
+    if (humidity.state > 70 && evo_rate > 15) || humidity.state > 85
+      BathRoom_ExhaustFan.ensure.on if Sun_Elevation.state.positive? || BathRoom_Light.state.nil? || BathRoom_Light.on?
+    elsif humidity.state < 70 || evo_rate < -5
       BathRoom_ExhaustFan.ensure.off
     end
   end

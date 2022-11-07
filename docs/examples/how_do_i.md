@@ -58,7 +58,7 @@ My_Item << ON
 ```
 
 Note: all possible commands are supported on the corresponding item types, e.g. `on`, `off`, `up`, `down`, `play`, `pause`, `stop`, etc. 
-For more details, see the individual item type sub-sections under [Items](docs/usage/items/index.md)
+For more details, see the individual item type sub-sections under {OpenHAB::Core::Items}
 
 ### Send a Command to an Item Only When Its State is Different
 
@@ -76,7 +76,8 @@ My_Item.ensure << ON
 
 ### Send a Timed Command
 
-A [Timed command](docs/usage/items/index.md#timed-commands) is similar to the OpenHAB Item's [expire parameter](https://www.openhab.org/docs/configuration/items.html#parameter-expire)
+A {OpenHAB::DSL::Items::TimedCommand Timed Command} is similar to the OpenHAB Item's 
+[expire parameter](https://www.openhab.org/docs/configuration/items.html#parameter-expire)
 but it offers more flexibility. It removes the need to manually create a timer.
 
 ```ruby
@@ -91,11 +92,10 @@ My_Switch.update ON
 
 ### Get State of an Item
 
-Item's state is inferred in the item object. Most operations can be done directly using the item itself. Explicitly, `My_Item.state` can also be used 
-to refer to the item's state.
+The Item's state is accessible through `Item.state`.
 
 ```ruby
-if My_Item == ON
+if My_Item.state == ON
   # do something
 end
 
@@ -104,13 +104,9 @@ if My_Item.on?
   # do something
 end
 
-# Items can be compared directly against its state or against another item's state
-if Indoor_Temperature > '20 °C' || Indoor_Temperature > Outdoor_Temperature
+if Indoor_Temperature.state > '20 °C' || Indoor_Temperature.state > Outdoor_Temperature.state
   # do something
 end
-
-# This is possible but unnecessary
-Indoor_Temperature.state > '20 °C' || Indoor_Temperature.state > Outdoor_Temperature.state
 ```
 
 Note: all boolean helper methods are available depending on the item / state type.
@@ -127,15 +123,15 @@ end
 ### Compare Item's State
 
 ```ruby
-String_Item == 'test string'
-Number_Item > 5.3
-items['Number_Item'] == 10
+String_Item.state == 'test string'
+Number_Item.state > 5.3
+items['Number_Item'].state == 10
 
-Temperature_Item > '24 °C'
-Temperature_Item > 24| '°C'
-Indoor_Temperature > Outdoor_Temperature 
-Indoor_Temperature > Outdoor_Temperature + '5 °C'
-Indoor_Temperature - Outdoor_Temperature > '5 °C'
+Temperature_Item.state > '24 °C'
+Temperature_Item.state > 24| '°C'
+Indoor_Temperature.state > Outdoor_Temperature.state 
+Indoor_Temperature.state > Outdoor_Temperature.state + '5 °C'
+Indoor_Temperature.state - Outdoor_Temperature.state > '5 °C'
 ```
 
 ### Get the Thing Linked to an Item
@@ -160,8 +156,10 @@ end
 ### Get the Members or All Members of a Group
 
 ```ruby
+# direct members
 gTest.members
 
+# direct members and all their descendents
 gTest.all_members
 ```
 
@@ -177,11 +175,6 @@ curtains_in_family_room = gFamilyRoom.members & gCurtains.members
 ### Iterate Over Members of a Group
 
 ```ruby
-gTest.each do |item|
-  # process item
-end
-
-# The same:
 gTest.members.each do |item|
   # process item
 end
@@ -195,34 +188,13 @@ end
 ### Filter Members of a Group
 
 ```ruby
-members_that_are_on = gTest.grep(ON)
-# Alternatively
-members_that_are_on = gTest.select(&:on?)
+members_that_are_on = gTest.members.select(&:on?)
 
 # exclude state
-members_that_are_not_on = gTest.grep_v(ON)
-# the same as:
-members_that_are_not_on = gTest.reject(&:on?)
+members_that_are_not_on = gTest.members.reject(&:on?)
 
 # Filter with code:
-high_temperatures = gTemperatures.select(&:state?).select { |item| item > '30 °C' }
-```
-
-### Get the First Item in a Filtered List of Group Members
-
-Because group acts like an array, simply use Ruby's [Array#first](https://ruby-doc.org/core-2.6/Array.html#method-i-first)
-
-```ruby
-my_item = gTest.grep(ON).first
-```
-
-### Get first 5 Items from a filtered list of Group members
-
-```ruby
-my_item = gTest.grep(ON)[0, 5]
-my_item = gTest.grep(ON)[0..4]
-my_item = gTest.grep(ON)[0...5]
-my_item = gTest.grep(ON).slice(0, 5)
+high_temperatures = gTemperatures.members.select(&:state?).select { |item| item.state > '30 °C' }
 ```
 
 See [Accessing elements in a Ruby array](https://ruby-doc.org/core-2.6/Array.html#class-Array-label-Accessing+Elements).
@@ -230,23 +202,24 @@ See [Accessing elements in a Ruby array](https://ruby-doc.org/core-2.6/Array.htm
 ### Get a sorted list of Group members matching a condition
 
 ```ruby
-sorted_items_by_battery_level = gBattery.select(&:state?) # only include non NULL / UNDEF members
-                                        .select { |item| item < 20 } # select only those with low battery
-                                        .sort # sort is done by comparing items, which does it by their states
+sorted_items_by_battery_level = gBattery.members
+                                        .select(&:state?) # only include non NULL / UNDEF members
+                                        .select { |item| item.state < 20 } # select only those with low battery
+                                        .sort_by(&:state) 
 ```
 
 ### Get a List of Values Mapped from the Members of a Group
 
 ```ruby
 battery_levels = gBattery.select(&:state?) # only include non NULL / UNDEF members
-                         .sort
-                         .map { |item| "#{item.label}: #{item}" } # Use item state default formatting
+                         .sort_by(&:state)
+                         .map { |item| "#{item.label}: #{item.state}" } # Use item state default formatting
 ```
 
 ### Perform Arithmetic on Values from Members of a Group
 
 ```ruby
-weekly_rainfall = gRainWeeklyForecast.sum
+weekly_rainfall = gRainWeeklyForecast.members.sum(&:state)
 ```
 
 ## Rules
@@ -262,7 +235,7 @@ rule 'my first rule' do
 end
 ```
 
-This applies to file-based rules. See [Rules](docs/usage/rule.md)
+This applies to file-based rules. See {OpenHAB::DSL::Rules::Builder}
 
 ### Create a Rule with One Line of Code
 
@@ -270,7 +243,7 @@ This applies to file-based rules. See [Rules](docs/usage/rule.md)
 received_command(My_Switch, to: ON) { My_Light.on }
 ```
 
-This applies to file-based rules. See [Terse Rules](docs/usage/rule.md#terse-rules)
+This applies to file-based rules. See {OpenHAB::DSL::Rules::Terse Terse Rules}
 
 ### Create a Rule in the Main UI
 
@@ -306,14 +279,12 @@ or
 event.item.state
 ```
 
-The item's state can also be obtained by accessing the triggering item itself.
-
 ```ruby
 # Item can be compared against their state
-if event.item == ON
+if event.item.state == ON
   # do something
 end
-# or
+# or (preferable)
 if event.item.on?
   # do something
 end
@@ -379,7 +350,7 @@ end
 rule 'multiple triggers' do
   changed Switch1, to: ON
   changed Switch2, to: ON
-  run { |event| logger.info "Switch: #{event.item.name} changed to: #{event.item}" }
+  run { |event| logger.info "Switch: #{event.item.name} changed to: #{event.state}" }
 end
 ```
 
@@ -388,7 +359,7 @@ When the trigger conditions are the same, the triggers can be combined
 ```ruby
 rule 'multiple triggers' do
   changed Switch1, Switch2, to: ON
-  run { |event| logger.info "Switch: #{event.item.name} changed to: #{event.item}" }
+  run { |event| logger.info "Switch: #{event.item.name} changed to: #{event.state}" }
 end
 ```
 
@@ -397,7 +368,7 @@ end
 ```ruby
 rule 'multiple conditions' do
   changed Button_Action, to: ['single', 'double']
-  run { |event| logger.info "Action: #{event.item}" }
+  run { |event| logger.info "Action: #{event.state}" }
 end
 ```
 
@@ -426,7 +397,7 @@ rule 'Anniversary Reminder' do
 end
 ```
 
-See [Every](docs/usage/triggers/every.md)
+See {OpenHAB::DSL::Rules::Builder.every Every Trigger}
 
 ### Create a Complex Cron Rule
 
@@ -446,20 +417,20 @@ rule 'cron rule' do
 end
 ```
 
-See [Cron](docs/usage/triggers/cron.md)
+See {OpenHAB::DSL::Rules::Builder.cron Cron Trigger}
 
 ### Use Rule Guards
 
 ```ruby
 rule 'motion sensor' do
   updated Motion_Sensor, to: ON
-  only_if Sensor_Enable # Run rule only if Sensor_Enable item is ON
+  only_if { Sensor_Enable.on? } # Run rule only if Sensor_Enable item is ON
   not_if { Sun_Elevation.positive? } # and not while the sun is up
   run { LightItem.on }
 end
 ```
 
-See [Guards](docs/usage/guards/index.md)
+See {OpenHAB::DSL::Rules::Builder.only_if only_if}, {OpenHAB::DSL::Rules::Builder.not_if not_if}
 
 ### Restrict Rule Executions to Certain Time of Day
 
@@ -493,8 +464,8 @@ can only be done using a file-based rule.
 ```ruby
 rule 'Announce pool temperature' do
   changed Pool_Temperature, for: 10.minutes # Only when temp is stable for at least 10 minutes
-  only_if Pool_Heater # And only when the pool heater is running
-  run { say "The pool temperature is now #{Pool_Temperature}" }
+  only_if { Pool_Heater.on? } # And only when the pool heater is running
+  run { say "The pool temperature is now #{Pool_Temperature.state}" }
 end
 ```
 
@@ -506,7 +477,7 @@ sleep 1.5 # sleep for 1.5 seconds
 
 See Ruby docs on [sleep](https://ruby-doc.org/core-2.6/Kernel.html#method-i-sleep)
 
-`sleep` should be avoided if possible. A [delay](docs/usage/execution/delay.md)
+`sleep` should be avoided if possible. A {OpenHAB::DSL::Rules::Builder.delay delay}
 can be inserted in between two execution blocks to achieve the same result. This delay is implemented with a timer.
 This is available only on file-based rules.
 
@@ -519,8 +490,8 @@ rule 'delay something' do
 end
 ```
 
-Alternatively a [timer](docs/usage/misc/timers.md) can be used in 
-either a file-based rule or in a UI based rule:
+Alternatively a timer can be used in 
+either a file-based rule or in a UI based rule using {OpenHAB::DSL.after after}
 
 ```ruby
 rule 'delay something' do
@@ -580,7 +551,7 @@ after 3.minutes do
 end
 ```
 
-See [Timers](docs/usage/misc/timers.md)
+See {OpenHAB::DSL.after after}
 
 ### Reschedule a Timer
 
@@ -634,7 +605,7 @@ rule 'a timer for each group member' do
 end
 ```
 
-However, [a built in mechanism](docs/usage/misc/timers.md#reentrant-timers) is available to 
+However, a built in mechanism is available to 
 help manage multiple timers. This is done using timer IDs. The following rule automatically finds and reschedules 
 the timer matching the same ID, which corresponds to each group member.
 
@@ -649,7 +620,7 @@ rule 'a timer for each group member' do
 end
 ```
 
-Furthermore, you can manipulate the managed timers using the built-in `timers[]` hash.
+Furthermore, you can manipulate the managed timers using the built-in {OpenHAB::DSL.timers timers[]} hash.
 
 ```ruby
 # timers[] is a special hash to access the timers created with an id
@@ -708,10 +679,10 @@ See [Semantics](docs/usage/misc/semantics.md)
 ## Use Logging
 
 ```ruby
-logger.info("My Item's state is: #{My_Item}")
+logger.info("My Item's state is: #{My_Item.state}")
 ```
 
-See [Logging](docs/usage/misc/logging.md)
+See {OpenHAB::Log Logging}
 
 ## Use Actions
 
@@ -747,6 +718,9 @@ Exec.executeCommandLine('/path/to/program')
 
 ```ruby
 ZonedDateTime.now.plus_minutes(30)
+
+# or
+ZonedDateTime.now + 30.minutes
 ```
 
 ### Convert ZonedDateTime to Ruby Time

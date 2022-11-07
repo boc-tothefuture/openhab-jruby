@@ -36,7 +36,7 @@ Ruby
 rule 'Snap Fan to preset percentages' do
   changed CeilingFans.members
   triggered do |item|
-    snapped = case item
+    snapped = case item.state
               when 0...25 then 25
               when 26...66 then 66
               when 67...100 then 100
@@ -105,10 +105,10 @@ Ruby
 rule 'Use supplemental heat in office' do
   changed Office_Temperature, Thermostats_Upstairs_Temp, Office_Occupied, OfficeDoor
   run { Lights_Office_Outlet << ON }
-  only_if Office_Occupied
-  only_if { OfficeDoor == CLOSED }
-  only_if { Thermostate_Upstairs_Heat_Set > Office_Temperature }
-  only_if { unit('°F') { Thermostat_Upstairs_Temp - Office_Temperature > 2 } }
+  only_if { Office_Occupied.on? }
+  only_if { OfficeDoor.closed? }
+  only_if { Thermostate_Upstairs_Heat_Set.state > Office_Temperature.state }
+  only_if { Thermostat_Upstairs_Temp.state - Office_Temperature.state > '2 °F' }
   otherwise { Lights_Office_Outlet << OFF if Lights_Office_Outlet.on? }
 end
 ```
