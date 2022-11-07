@@ -9,9 +9,32 @@ module OpenHAB
     # This class implements delegator to delegate methods to the OpenHAB timer
     #
     # @author Brian O'Connell
+    #
+    # @see https://www.openhab.org/javadoc/latest/org/openhab/core/model/script/actions/timer
+    #
 
     class Timer < SimpleDelegator
       extend Forwardable
+
+      # @!method execution_time
+      #   Return the scheduled execution time of this timer.
+      #   @return [ZonedDateTime] The scheduled execution time, or null if the timer was cancelled
+
+      # @!method active?
+      #   Check if the timer will execute in the future.
+      #   @return [true,false]
+
+      # @!method cancelled?
+      #   Check if the timer has been cancelled.
+      #   @return [true,false]
+
+      # @!method running?
+      #   Check if the timer code is currently running.
+      #   @return [true,false]
+
+      # @!method terminated?
+      #   Check if the timer has terminated.
+      #   @return [true,false]
 
       def_delegator :@timer, :has_terminated, :terminated?
 
@@ -37,8 +60,9 @@ module OpenHAB
       #
       # Create a new Timer Object
       #
-      # @param [java.time.Duration, Proc] duration
-      #   Duration until timer should fire (or a Proc that returns a Duration).
+      # @param [java.time.Duration, ZonedDateTime, Time, Float, Integer, Proc] duration
+      #   Duration or the number of seconds until the timer should fire,
+      #   an absolute date+time when the timer should execute or a Proc that returns a Duration).
       # @param [Block] block Block to execute when timer fires
       #
       def initialize(duration:, thread_locals: {}, &block)
@@ -61,7 +85,8 @@ module OpenHAB
       #
       # Reschedule timer
       #
-      # @param [java.time.Duration] duration
+      # @param [java.time.Duration, ZonedDateTime, nil] duration Duration or date+time to reschedule the timer.
+      #   If unspecified, the original duration is used.
       #
       # @return [Timer] Rescheduled timer instances
       #

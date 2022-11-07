@@ -32,14 +32,87 @@ module OpenHAB
     module_function
 
     #
-    # Execute the supplied block after the specified duration
+    # Create a timer and execute the supplied block after the specified duration
+    #
+    # ### Reentrant Timer
+    #
+    # Timers with an id are reentrant, by id and block. Reentrant means that when the same id and block are encountered,
+    # the timer is rescheduled rather than creating a second new timer.
+    #
+    # This removes the need for the usual boilerplate code to manually keep track of timer objects.
+    #
+    # ### Managing Timers with `id`
+    #
+    # Timers with `id` can be managed with the built-in {timers} hash. Multiple timer blocks can share
+    # the same `id`, which is why `timers[id]` returns a {Timer::TimerSet} object. It is a descendant of `Set`
+    # and it contains a set of timers associated with that id.
+    #
+    # When a timer is cancelled, it will be removed from the set. Once the set is empty, it will be removed
+    # from `timers[]` hash and `timers[id]` will return nil.
+    #
+    # @see timers timers hash
+    # @see docs/usage/triggers/changed.md#changed-duration Changed Duration
+    # @see Items::TimedCommand
     #
     # @param [java.time.Duration] duration after which to execute the block
-    # @param [Object] id to associate with timer
+    # @param [Object] id to associate with timer. The timer can be accessed with the {timers} hash.
     # @param [Block] block to execute, block is passed a Timer object
+    #
+    # @yieldparam [Timer] timer Timer object
     #
     # @return [Timer] Timer object
     #
+    # @example Create a simple timer
+    #   after 5.seconds do
+    #     logger.info("Timer Fired")
+    #   end
+    #
+    # @example Timers delegate methods to OpenHAB timer objects
+    #   after 1.second do |timer|
+    #     logger.info("Timer is active? #{timer.active?}")
+    #   end
+    #
+    # @example Timers can be rescheduled to run again, waiting the original duration
+    #   after 3.seconds do |timer|
+    #     logger.info("Timer Fired")
+    #     timer.reschedule
+    #   end
+    #
+    # @example Timers can be rescheduled for different durations
+    #   after 3.seconds do |timer|
+    #     logger.info("Timer Fired")
+    #     timer.reschedule 5.seconds
+    #   end
+    #
+    # @example Timers can be manipulated through the returned object
+    #   mytimer = after 1.minute do
+    #     logger.info("It has been 1 minute")
+    #   end
+    #
+    #   mytimer.cancel
+    #
+    # @example Reentrant timers will automatically reschedule if the same block is encountered again
+    #   rule "Turn off closet light after 10 minutes" do
+    #     changed ClosetLights.members, to: ON
+    #     triggered do |item|
+    #       after 10.minutes, id: item do
+    #         item.ensure.off
+    #       end
+    #     end
+    #   end
+    #
+    # @example Timers with id can be managed through the built-in `timers[]` hash
+    #   after 1.minute, :id => :foo do
+    #     logger.info("managed timer has fired")
+    #   end
+    #
+    #   timers[:foo]&.cancel
+    #
+    #   if !timers[:foo]
+    #     logger.info("The timer :foo is not active")
+    #   end
+    #
+
     def after(duration, id: nil, &block)
       # Carry rule name to timer thread
       thread_locals = { OPENHAB_RULE_UID: Thread.current[:OPENHAB_RULE_UID] } if Thread.current[:OPENHAB_RULE_UID]
@@ -174,7 +247,7 @@ module OpenHAB
     #
     # Create a new rule
     #
-    # @see Terse
+    # @see Rules::Terse Terse Rules
     #
     # @param [String] name The rule name
     # @yield Block executed in context of a {Rules::Builder}
@@ -338,8 +411,10 @@ module OpenHAB
     end
 
     #
-    # Provides access to the hash for mapping timer ids to the set of active timers associated with that id
-    # @return [Hash] hash of user specified ids to sets of times
+    # Provides access to the hash for mapping timer ids created by {after}
+    # to the set of active timers associated with that id
+    #
+    # @return [Hash] hash of user specified ids to {Timer::TimerSet}
     def timers
       Timer::Manager.instance.timer_ids
     end
