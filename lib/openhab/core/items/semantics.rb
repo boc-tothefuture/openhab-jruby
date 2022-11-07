@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 require_relative "generic_item"
 require_relative "group_item"
 require_relative "semantics/enumerable"
@@ -20,7 +22,8 @@ module OpenHAB
       # @see https://github.com/openhab/openhab-core/blob/main/bundles/org.openhab.core.semantics/model/SemanticTags.csv
       module Semantics
         GenericItem.include(self)
-        GroupItem.prepend(Semantics) # make Semantics#points take precedence over Enumerable#points for GroupItem
+        GroupItem.extend(Forwardable)
+        GroupItem.def_delegators :members, :equipments, :locations
 
         # @!visibility private
         # import the actual semantics action
@@ -82,7 +85,7 @@ module OpenHAB
         #
         # @return [GenericItem, nil]
         def location
-          SemanticsAction.get_location(self)
+          SemanticsAction.get_location(self)&.then(&Proxy.method(:new))
         end
 
         # Returns the sub-class of {Location} related to this Item.
@@ -100,7 +103,7 @@ module OpenHAB
         #
         # @return [GenericItem, nil]
         def equipment
-          SemanticsAction.get_equipment(self)
+          SemanticsAction.get_equipment(self)&.then(&Proxy.method(:new))
         end
 
         # Returns the sub-class of {Equipment} related to this Item.
@@ -165,8 +168,8 @@ module OpenHAB
 
           # automatically search the parent equipment (or location?!) for sibling points
           result = (equipment || location)&.points(*point_or_property_types) || []
-          # remove self. but avoid state comparisons
-          result.delete_if { |item| item.eql?(self) }
+          result.delete(self)
+          result
         end
       end
     end
@@ -178,7 +181,7 @@ module Enumerable
   # Returns a new array of items that are a semantics Location (optionally of the given type)
   # @return [Array<OpenHAB::Core::Items::GenericItem>]
   def locations(type = nil)
-    if type && !(type < OpenHAB::Core::Items::Semantics::Location)
+    if type && (!type.is_a?(Module) || !(type < OpenHAB::Core::Items::Semantics::Location))
       raise ArgumentError, "type must be a subclass of Location"
     end
 
@@ -195,7 +198,7 @@ module Enumerable
   # @example Get all TVs in a room
   #   lGreatRoom.equipments(Semantics::Screen)
   def equipments(type = nil)
-    if type && !(type < OpenHAB::Core::Items::Semantics::Equipment)
+    if type && (!type.is_a?(Module) || !(type < OpenHAB::Core::Items::Semantics::Equipment))
       raise ArgumentError, "type must be a subclass of Equipment"
     end
 
@@ -216,7 +219,8 @@ module Enumerable
       raise ArgumentError, "wrong number of arguments (given #{point_or_property_types.length}, expected 0..2)"
     end
     unless point_or_property_types.all? do |tag|
-             tag < OpenHAB::Core::Items::Semantics::Point || tag < OpenHAB::Core::Items::Semantics::Property
+             tag.is_a?(Module) &&
+             (tag < OpenHAB::Core::Items::Semantics::Point || tag < OpenHAB::Core::Items::Semantics::Property)
            end
       raise ArgumentError, "point_or_property_types must all be a subclass of Point or Property"
     end
