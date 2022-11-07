@@ -233,6 +233,15 @@ module OpenHAB
     # Sets a thread local variable to set the default persistence service
     # for method calls inside the block
     #
+    # @example
+    #   persistence(:influxdb) do
+    #     Item1.persist
+    #     Item1.changed_since(1.hour)
+    #     Item1.average_since(12.hours)
+    #   end
+    #
+    # @see OpenHAB::Core::Items::Persistence
+    #
     # @param [Object] service service either as a String or a Symbol
     # @yield [] Block executed in context of the supplied persistence service
     # @return [Object] The return value from the block.

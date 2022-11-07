@@ -6,10 +6,36 @@ module OpenHAB
   module Core
     module Items
       #
-      # Persistence extension for Items
+      # Items Extension to support {https://www.openhab.org/docs/configuration/persistence.html OpenHAB Persistence} feature.
       #
       # @note Methods that accept a timestamp can accept a `ZonedDateTime`, Ruby `Time`, or a `Duration`.
       #       When given a positive Duration, the timestamp will be calculated as `now - Duration`
+      #
+      # @see OpenHAB::DSL.persistence Persistence Block
+      #
+      # @example The following examples are based on these items
+      #   Number        UV_Index
+      #   Number:Power  Power_Usage "Power Usage [%.2f W]"
+      #
+      # @example Getting persistence data from the system default persistence service
+      #   UV_Index.average_since(1.hour)      # returns a DecimalType
+      #   Power_Usage.average_since(12.hours) # returns a QuantityType that corresponds to the item's type
+      #
+      # @example Querying a non-default persistence service
+      #   UV_Index.average_since(1.hour, :influxdb)
+      #   Power_Usage.average_since(12.hours, :rrd4j)
+      #
+      # @example Comparison using Quantity
+      #   # Because Power_Usage has a unit, the return value
+      #   # from average_since is a QuantityType which can be
+      #   # compared against a string with quantity
+      #   if Power_Usage.average_since(15.minutes) > '5 kW'
+      #     logger.info("The power usage exceeded its 15 min average)
+      #   end
+      #
+      # @example HistoricState
+      #   max = Power_Usage.maximum_since(24.hours)
+      #   logger.info("Max power usage: #{max}, at: #{max.timestamp})
       #
       module Persistence
         GenericItem.prepend(self)
