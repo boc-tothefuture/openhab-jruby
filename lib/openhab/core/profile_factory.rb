@@ -36,6 +36,7 @@ module OpenHAB
         def onCommandFromItem(command)
           return unless process_event(:command_from_item, command: command) == true
 
+          logger.trace("Forwarding original command")
           @callback.handle_command(command)
         end
 
@@ -43,6 +44,7 @@ module OpenHAB
         def onStateUpdateFromHandler(state)
           return unless process_event(:state_from_handler, state: state) == true
 
+          logger.trace("Forwarding original update")
           @callback.send_update(state)
         end
 
@@ -50,6 +52,7 @@ module OpenHAB
         def onCommandFromHandler(command)
           return unless process_event(:command_from_handler, command: command) == true
 
+          logger.trace("Forwarding original command")
           callback.send_command(command)
         end
 
@@ -61,6 +64,8 @@ module OpenHAB
         private
 
         def process_event(event, **params)
+          logger.trace("Handling event #{event.inspect} in profile #{@uid} with param #{params.values.first.inspect}.")
+
           params[:callback] = @callback
           params[:context] = @context
           params[:config] = @context.configuration
