@@ -16,6 +16,7 @@ module OpenHAB
         #
         # @return [StateStorage] A state storage object
         #
+        # @!visibility private
         def self.from_items(*items)
           StateStorage.new(org.openhab.core.model.script.actions.BusEvent.store_states(*items).to_h)
         end
@@ -23,6 +24,7 @@ module OpenHAB
         #
         # Restore the stored states of all items
         #
+        # @return [void]
         #
         def restore
           org.openhab.core.model.script.actions.BusEvent.restore_states(to_h)
@@ -31,18 +33,19 @@ module OpenHAB
         #
         # Restore states for items that have changed
         #
+        # @return [void]
         #
         def restore_changes
-          org.openhab.core.model.script.actions.BusEvent.restore_states(select { |item, value| item != value })
+          org.openhab.core.model.script.actions.BusEvent.restore_states(select { |item, value| item.state != value })
         end
 
         #
-        # Detect if any item have changed states since being stored
+        # Detect if any items have changed states since being stored
         #
         # @return [true,false] True if any items have changed states, false otherwise
         #
         def changed?
-          any? { |item, value| item != value }
+          any? { |item, value| item.state != value }
         end
       end
     end

@@ -394,9 +394,23 @@ module OpenHAB
     #
     # Store states of supplied items
     #
-    # @param [Array] items to store states of
+    # Takes one or more items and returns a map `{Item => State}` with the
+    # current state of each item. It is implemented by calling OpenHAB's
+    # [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
     #
-    # @return [StateStorage] item states
+    # @param [Core::Items::GenericItem] items Items to store states of.
+    #
+    # @return [Core::Items::StateStorage] item states
+    #
+    # @example
+    #   states = store_states Item1, Item2
+    #   ...
+    #   states.restore
+    #
+    # @example With a block
+    #   store_states Item1, Item2 do
+    #     ...
+    #   end # the states will be restored here
     #
     def store_states(*items)
       items = items.flatten.map do |item|
