@@ -277,6 +277,12 @@ module OpenHAB
             re.class.field_accessor :executor
             re.executor = Mocks::SynchronousExecutor.instance
           end
+          wait_for_service("org.openhab.core.thing.internal.CommunicationManager") do |cm|
+            require_relative "mocks/safe_caller"
+            field = cm.class.java_class.declared_field :safeCaller
+            field.accessible = true
+            field.set(cm, Mocks::SafeCaller.instance)
+          end
         end
       end
 
