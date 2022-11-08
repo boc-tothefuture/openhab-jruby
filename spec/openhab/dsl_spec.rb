@@ -22,7 +22,9 @@ RSpec.describe OpenHAB::DSL do
       end
 
       items.build do
-        string_item "MyString", channel: ["astro:sun:home:season#name", { profile: "ruby:use_a_different_state" }]
+        string_item "MyString",
+                    channel: ["astro:sun:home:season#name", { profile: "ruby:use_a_different_state" }],
+                    autoupdate: false
       end
 
       MyString << "foo"
