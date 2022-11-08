@@ -100,7 +100,7 @@ Feature: persistence
       """
       rule 'update persistence' do
         on_start
-        run { Number_Power.update "3 kW" }
+        run { Number_Power.update 3 | "kW" }
         delay 3.second
         run do
           logger.info("Average: #{Number_Power.average_since(10.seconds, :mapdb)}")
@@ -170,7 +170,7 @@ Feature: persistence
       """
       rule 'Check HistoricState' do
         on_start
-        run { Number_Power.update "3 kW" }
+        run { Number_Power.update 3 | "kW" }
         delay 3.second
         run do
           max = Number_Power.maximum_since(10.seconds, :mapdb)

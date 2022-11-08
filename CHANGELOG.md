@@ -49,6 +49,10 @@ here is a non-exhaustive list of significant departures from the original gem:
    {OpenHAB::DSL::Rules::Builder#not_if not_if} guards now _only_ take blocks.
    This just means where you previously had `only_if Item` you now write
    `only_if { Item.on? }`.
+ * {OpenHAB::Core::Types::QuantityType QuantityType} is no longer implicitly
+   convertible and comparable against Strings. Use the `|` operator for easy
+   construction of {OpenHAB::Core::Types::QuantityType QuantityType}s:
+   `10 | "°F"`.
  * The top-level `groups` method providing access to only
    {OpenHAB::Core::Items::GroupItem GroupItem}s has been removed. Use
    `items.grep(GroupItem)` if you would like to filter to only groups.

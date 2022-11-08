@@ -26,7 +26,7 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [NumericType, Numeric, String]
+        # @param [NumericType, Numeric]
         #   other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether `other` is
@@ -41,8 +41,6 @@ module OpenHAB
             return compare_to(other.unitize(unit)) if other.unit == ONE_UNIT
 
             compare_to(other)
-          elsif other.respond_to?(:to_str)
-            compare_to(QuantityType.new(other.to_str))
           elsif other.respond_to?(:to_d)
             compare_to(QuantityType.new(other.to_d.to_java, DSL.unit || unit))
           elsif other.respond_to?(:coerce)
@@ -57,8 +55,7 @@ module OpenHAB
         #
         # Coerce object to a QuantityType
         #
-        # @param [Numeric, Type, String] other object to
-        #   coerce to a {QuantityType}
+        # @param [Numeric, Type] other object to coerce to a {QuantityType}
         #
         #   if `other` is a {Type}, `self` will instead be coerced
         #   to that type to accomodate comparison with things such as {OnOffType}
@@ -70,8 +67,6 @@ module OpenHAB
             [other, as(other.class)]
           elsif other.respond_to?(:to_d)
             [QuantityType.new(other.to_d.to_java, ONE_UNIT), self]
-          elsif other.is_a?(String)
-            [QuantityType.new(other), self]
           end
         end
 
@@ -94,8 +89,6 @@ module OpenHAB
             #     add_quantity(self.class.new(other, Units.unit || unit))
             #   elsif other.is_a?(java.math.BigDecimal)
             #     add_quantity(self.class.new(other, Units.unit || unit))
-            #   elsif other.respond_to?(:to_str)
-            #     self + self.class.new(other)
             #   elsif other.respond_to?(:to_d)
             #     other = other.to_d.to_java
             #     add_quantity(self.class.new(other, Units.unit || unit))
@@ -115,8 +108,6 @@ module OpenHAB
                   #{java_op}_quantity(#{convert})
                 elsif other.is_a?(java.math.BigDecimal)
                   #{java_op}_quantity(#{convert})
-                elsif other.respond_to?(:to_str)
-                  self #{ruby_op} self.class.new(other)
                 elsif other.respond_to?(:to_d)
                   other = other.to_d.to_java
                   #{java_op}_quantity(#{convert})
@@ -143,8 +134,6 @@ module OpenHAB
             #     multiply(other.to_big_decimal)
             #   elsif other.is_a?(java.math.BigDecimal)
             #     multiply(other)
-            #   elsif other.respond_to?(:to_str)
-            #     self * self.class.new(other)
             #   elsif other.respond_to?(:to_d)
             #     multiply(other.to_d.to_java)
             #   elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
@@ -162,8 +151,6 @@ module OpenHAB
                   #{java_op}(other.to_big_decimal)
                 elsif other.is_a?(java.math.BigDecimal)
                   #{java_op}(other)
-                elsif other.respond_to?(:to_str)
-                  self #{ruby_op} self.class.new(other)
                 elsif other.respond_to?(:to_d)
                   #{java_op}(other.to_d.to_java)
                 elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
