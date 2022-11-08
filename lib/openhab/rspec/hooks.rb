@@ -38,7 +38,7 @@ module OpenHAB
           @known_rules = Core.rule_registry.all.map(&:uid)
         end
 
-        config.before do
+        config.before do |example|
           @item_provider = DSL::Items::ItemProvider.send(:new)
           allow(DSL::Items::ItemProvider).to receive(:instance).and_return(@item_provider)
           @thing_provider = DSL::Things::ThingProvider.send(:new)
@@ -56,6 +56,7 @@ module OpenHAB
           profile_factory = Core::ProfileFactory.send(:new)
           @profile_factory_registration = OSGi.register_service(profile_factory)
           allow(Core::ProfileFactory).to receive(:instance).and_return(profile_factory)
+          logger.info("rspec #{example.location} # #{example.full_description}")
         end
 
         config.after do
