@@ -126,7 +126,7 @@ jobs:
         if: failure()
         with:
           name: RSpec-logs-${{ matrix.openhab_version }}
-          path: tmp/openhab/runtime/logs
+          path: tmp/openhab/userdata/logs
           retention-days: 2
 
   cucumber-matrix:
