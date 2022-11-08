@@ -58,6 +58,7 @@ gem:
    use {OpenHAB::Core::Items::GroupItem#members}.
  * {OpenHAB::Core::Items::GroupItem#all_members} no longer has a `filter`
    parameter; use `grep` if you want just {OpenHAB::Core::Items::GroupItem}s.
+ * `create_timer` no longer exists as an alias for {after after}.
  * Triggers (such as {OpenHAB::DSL::Rules::Builder#changed} that previously
    took a splat _or_ an Array of Items now _only_ take a splat. This just
    means instead of `changed [Item1, Item2]` you write `changed Item1, Item2`,
