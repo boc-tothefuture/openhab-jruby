@@ -29,6 +29,29 @@ module OpenHAB
         end
       end
 
+      #
+      # Register a new service instance with OSGi
+      #
+      # @param [Object] instance The service instance
+      # @param [Module] interfaces The interfaces to register this service for.
+      #   If not provided, it will default to all Java interfaces the instance
+      #   implements.
+      # @param [Hash] properties The service registration properties.
+      # @return [org.osgi.framework.ServiceRegistration]
+      #
+      def register_service(instance, *interfaces, **properties)
+        if interfaces.empty?
+          interfaces = instance.class.ancestors.select { |k| k.respond_to?(:java_class) && k.java_class&.interface? }
+        end
+
+        bundle = org.osgi.framework.FrameworkUtil.get_bundle(interfaces.first)
+        bundle.bundle_context.register_service(
+          interfaces.map(&:java_class).map(&:name).to_java(java.lang.String),
+          instance,
+          java.util.Hashtable.new(properties)
+        )
+      end
+
       private
 
       # @!attribute [r] bundle_context

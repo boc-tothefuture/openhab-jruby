@@ -215,6 +215,13 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
       expect(StringItem1.thing).to be things["astro:sun:home"]
     end
 
+    it "can link to an item channel with a profile" do
+      items.build do
+        date_time_item "LastUpdated", channel: ["astro:sun:home:season#name", { profile: "system:timestamp-update" }]
+      end
+      expect(LastUpdated.thing).to be things["astro:sun:home"]
+    end
+
     it "implicitly assumes a group's thing (string) for channels" do
       items.build do
         group_item "MyGroup", thing: "astro:sun:home" do

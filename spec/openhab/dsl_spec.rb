@@ -5,6 +5,31 @@ RSpec.describe OpenHAB::DSL do
     expect { 5.rule }.to raise_error(NoMethodError)
   end
 
+  describe "#profile" do
+    it "works" do
+      OpenHAB::Log.logger("org.openhab.core.thing.internal.CommunicationManager").level = :trace
+
+      install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
+
+      things.build do
+        thing "astro:sun:home", "Astro Sun Data", config: { "geolocation" => "0,0" }, enabled: true
+      end
+
+      profile "use_a_different_state" do |_event, callback:, item:|
+        callback.send_update("bar")
+        expect(item).to eql MyString
+        false
+      end
+
+      items.build do
+        string_item "MyString", channel: ["astro:sun:home:season#name", { profile: "ruby:use_a_different_state" }]
+      end
+
+      MyString << "foo"
+      expect(MyString.state).to eq "bar"
+    end
+  end
+
   describe "#script" do
     it "creates triggerable rule" do
       triggered = false

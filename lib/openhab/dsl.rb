@@ -247,6 +247,53 @@ module OpenHAB
     end
 
     #
+    # Defines a new profile that can be applied to item channel links.
+    #
+    # @param [String, Symbol] id The id for the profile.
+    # @yield [event, command: nil, state: nil, link:, item:, channel_uid:, configuration:, context:]
+    #   All keyword params are optional. Any that aren't defined won't be passed.
+    # @yieldparam [Core::Things::ProfileCallback] callback
+    #   The callback to be used to customize the action taken.
+    # @yieldparam [:command_from_item, :state_from_item, :command_from_handler, :state_from_handler] event
+    #   The event that needs to be processed.
+    # @yieldparam [Core::Types::Command, nil] command
+    #   The command being sent for `:command_from_item` and `:command_from_handler` events.
+    # @yieldparam [Core::Types::State, nil] state
+    #   The state being sent for `:state_from_item` and `:state_from_handler` events.
+    # @yieldparam [Core::Things::ItemChannelLink] link
+    #   The link between the item and the channel, including its configuration.
+    # @yieldparam [Core::Items::GenericItem] item The linked item.
+    # @yieldparam [org.openhab.core.thing.ChannelUID] channel_uid The linked channel.
+    # @yieldparam [Hash] configuration The profile configuration.
+    # @yieldparam [org.openhab.core.thing.profiles.ProfileContext] context The profile context.
+    # @yieldreturn [Boolean] Return true from the block in order to have default processing.
+    # @return [void]
+    #
+    # @see org.openhab.thing.Profile
+    # @see org.openhab.thing.StateProfile
+    #
+    # @example
+    #   profile(:veto_closing_shades) do |event, item:, command: nil|
+    #     next false if command&.down?
+    #
+    #     true
+    #   end
+    #
+    #   items.build do
+    #     rollershutter_item "MyShade" do
+    #       channel "thing:rollershutter", profile: "ruby:veto_closing_shades"
+    #     end
+    #   end
+    #   # can also be referenced from an `.items` file:
+    #   # Rollershutter MyShade { channel="thing:rollershutter"[profile="ruby:veto_closing_shades"] }
+    #
+    def profile(id, &block)
+      uid = org.openhab.core.thing.profiles.ProfileTypeUID.new("ruby", id)
+
+      Core::ProfileFactory.instance.register(uid, block)
+    end
+
+    #
     # Remove a rule
     #
     # @return [void]

@@ -31,15 +31,14 @@ module OpenHAB
           notify_listeners_about_added_element(item)
 
           # make sure to add the item to the registry before linking it
-          if builder.channel
-            channel = builder.channel
+          builder.channels.each do |(channel, config)|
             if !channel.include?(":") &&
                (group = builder.groups.find { |g| g.is_a?(GroupItemBuilder) && g.thing })
               thing = group.thing
               thing = thing.uid if thing.is_a?(Core::Things::Thing)
               channel = "#{thing}:#{channel}"
             end
-            ItemChannelLinkProvider.instance.link(item, channel)
+            ItemChannelLinkProvider.instance.link(item, channel, config)
           end
 
           item
@@ -82,7 +81,7 @@ module OpenHAB
 
         # @!visibility private
         def link(item, channel, config = {})
-          config = org.openhab.core.config.core.Configuration.new(config)
+          config = org.openhab.core.config.core.Configuration.new(config.transform_keys(&:to_s))
           channel = org.openhab.core.thing.ChannelUID.new(channel) if channel.is_a?(String)
           channel = channel.uid if channel.is_a?(org.openhab.core.thing.Channel)
           link = org.openhab.core.thing.link.ItemChannelLink.new(item.name, channel, config)
@@ -237,7 +236,7 @@ module OpenHAB
         attr_accessor :autoupdate
         # Channel to link the item to
         # @return [String, ChannelUID, nil]
-        attr_accessor :channel
+        attr_accessor :channels
         # @return [Core::Items::Metadata::NamespaceHash]
         attr_reader :metadata
         # Initial state
@@ -312,7 +311,7 @@ module OpenHAB
           @metadata.merge!(metadata) if metadata
           @autoupdate = autoupdate
           self.alexa(alexa) if alexa
-          @channel = channel
+          @channels = []
           @expire = nil
           self.expire(*Array(expire)) if expire
           self.homekit(homekit) if homekit
@@ -323,6 +322,8 @@ module OpenHAB
 
           self.tag(*tag)
           self.tag(*tags)
+
+          self.channel(*channel) if channel
         end
 
         #
@@ -391,6 +392,23 @@ module OpenHAB
         def alexa(value = nil, config = nil)
           value, config = value if value.is_a?(Array)
           metadata["alexa"] = [value, config]
+        end
+
+        #
+        # Add a channel link to this item.
+        #
+        # @param config [Hash] Additional configuration, such as profile
+        # @return [void]
+        #
+        # @example
+        #   items.build do
+        #     date_time_item "Bedroom_Light_Updated" do
+        #       channel "hue:0210:1:bulb1:color", profile: "system:timestamp-update"
+        #     end
+        #   end
+        #
+        def channel(channel, **config)
+          @channels << [channel, config]
         end
 
         # @!method expire(command: nil, state: nil)

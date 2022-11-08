@@ -53,6 +53,9 @@ module OpenHAB
           tm.class.field_reader :storage
           tm.storage.keys.each { |k| tm.storage.remove(k) } # rubocop:disable Style/HashEachMethods not a hash
           @log_index = File.size(log_file)
+          profile_factory = Core::ProfileFactory.send(:new)
+          @profile_factory_registration = OSGi.register_service(profile_factory)
+          allow(Core::ProfileFactory).to receive(:instance).and_return(profile_factory)
         end
 
         config.after do
@@ -67,6 +70,7 @@ module OpenHAB
           registry = OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           registry.remove_provider(@item_channel_link_provider)
           Core::Items::Metadata::NamespaceHash.registry.remove_provider(@metadata_provider)
+          @profile_factory_registration.unregister
           DSL::Timer::Manager.instance.cancel_all
           Timecop.return
           restore_autoupdate_items
