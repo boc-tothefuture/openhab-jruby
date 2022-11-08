@@ -30,9 +30,12 @@ Full documentation is available on
 
 ## Fork from [openhab-scripting](https://github.com/boc-tothefuture/openhab-jruby/)
 
-This gem is a fork. Thanks to @boc-tothefuture, @pacive, and @jimtng on the
-original gem. See [Changes from openhab-scripting](CHANGELOG.md#5_0_0) for more
-details on the reasoning behind the fork, and the significant breaking changes.
+This gem is a fork. Thanks to
+[@boc-tothefuture](https://github.com/boc-tothefuture),
+[@jimtng](https://github.com/jimtng), and [@pacive](https://github.com/pacive)
+on the original gem. See [Changes from openhab-scripting](CHANGELOG.md#5_0_0)
+for more details on the reasoning behind the fork, and the significant breaking
+changes.
 
 ## Discussion
 
