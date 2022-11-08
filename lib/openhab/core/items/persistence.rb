@@ -6,7 +6,8 @@ module OpenHAB
   module Core
     module Items
       #
-      # Items Extension to support {https://www.openhab.org/docs/configuration/persistence.html OpenHAB Persistence} feature.
+      # Items extensions to support
+      # {https://www.openhab.org/docs/configuration/persistence.html OpenHAB's Persistence} feature.
       #
       # @note Methods that accept a timestamp can accept a `ZonedDateTime`, Ruby `Time`, or a `Duration`.
       #       When given a positive Duration, the timestamp will be calculated as `now - Duration`
