@@ -2,9 +2,9 @@
 
 ## Type Comparisons
 
-Some OpenHAB item types can accept different command types. For example, a {OpenHAB::Core::Items::DimmerItem} can accept a command 
-with an {OpenHAB::Core::Types::OnOffType}, {OpenHAB::Core::Types::IncreaseDecreaseType} or a {OpenHAB::Core::Types::PercentType}. However, ultimately an item only stores its 
-state in its native type, e.g. a {OpenHAB::Core::Items::DimmerItem}'s native type is {OpenHAB::Core::Types::PercentType}.
+Some OpenHAB item types can accept different command types. For example, a {OpenHAB::Core::Items::DimmerItem DimmerItem} can accept a command 
+with an {OpenHAB::Core::Types::OnOffType OnOffType}, {OpenHAB::Core::Types::IncreaseDecreaseType IncreaseDecreaseType} or a {OpenHAB::Core::Types::PercentType PercentType}. However, ultimately an item only stores its 
+state in its native type, e.g. a {OpenHAB::Core::Items::DimmerItem DimmerItems}'s native type is {OpenHAB::Core::Types::PercentType PercentType}.
 
 ## Loose Type-Comparisons
 
@@ -53,7 +53,7 @@ logger.error DimmerItem1.state.eql?(PercentType.new(10)) # => true
 
 ## Strict Type-Comparisons
 
-Sometimes it is critical to know the exact command being sent. For example, a rule may need to distinguish between `ON` vs. a {OpenHAB::Core::Types::PercentType} command. In this instance, Ruby's case equality operator `===` can be used. It will only evaluate to true if the two operands have the same type.
+Sometimes it is critical to know the exact command being sent. For example, a rule may need to distinguish between `ON` vs. a {OpenHAB::Core::Types::PercentType PercentType} command. In this instance, Ruby's case equality operator `===` can be used. It will only evaluate to true if the two operands have the same type.
 
 The strict type comparison applies to Ruby's `case` statement because it is implemented using the case equality operator `===`
 
@@ -76,7 +76,7 @@ end
 
 ```
 
-Regular expressions can still be used on a {OpenHAB::Core::Types::StringType} command.
+Regular expressions can still be used on a {OpenHAB::Core::Types::StringType StringType} command.
 
 ```ruby
 rule 'command' do
