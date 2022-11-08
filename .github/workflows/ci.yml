@@ -116,11 +116,6 @@ jobs:
       - name: RSpec
         run: bin/rspec --format progress --format html --out rspec.html
         timeout-minutes: 2
-      - name: Upload RSpec results
-        uses: actions/upload-artifact@v3
-        with:
-          name: RSpec-results-${{ matrix.openhab_version }}
-          path: rspec.html
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v3
         if: failure()
@@ -128,6 +123,13 @@ jobs:
           name: RSpec-logs-${{ matrix.openhab_version }}
           path: tmp/openhab/userdata/logs
           retention-days: 2
+      - name: Upload RSpec results
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: RSpec-results-${{ matrix.openhab_version }}
+          path: rspec.html
+
 
   cucumber-matrix:
     runs-on: ubuntu-latest
