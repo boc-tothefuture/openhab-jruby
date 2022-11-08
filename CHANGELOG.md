@@ -32,40 +32,46 @@ departures from the original gem:
    to explicitly call them on {OpenHAB::DSL}, or mix that module into your
    class yourself. Additional internal and Java constants and methods should
    no longer be leaking out of the gem's public API.
- * {OpenHAB::Core::Items::GenericItem} and descendants can no longer be treated
-   as the item's state. While convenient at times, it introduces many
-   ambiguities on if the intention is to interact with the item or its state,
-   and contortionist code attempting to support both use cases.
+ * {OpenHAB::Core::Items::GenericItem GenericItem} and descendants can no
+   longer be treated as the item's state. While convenient at times, it
+   introduces many ambiguities on if the intention is to interact with the item
+   or its state, and contortionist code attempting to support both use cases.
  * Semi-related to the above, the `#truthy?` method has been removed from any
    items the previously implemented it. Instead, be more explicit on what you
    mean - for example `Item.on?`. If you would like to use a similar structure
    with {StringItem}s, just [include the ActiveSupport gem](docs/gems.md)
    in your rules to get `#blank?` and `#present?` methods, and then you can
    use `Item.state.present?`.
- * Semi-related to the above, the {OpenHAB::DSL::Rules::Builder#only_if} and
-   {OpenHAB::DSL::Rules::Builder#not_if} guards now _only_ take blocks. This
-   just means where you previously had `only_if Item` you now write
+ * Semi-related to the above, the
+   {OpenHAB::DSL::Rules::Builder#only_if only_if} and
+   {OpenHAB::DSL::Rules::Builder#not_if not_if} guards now _only_ take blocks.
+   This just means where you previously had `only_if Item` you now write
    `only_if { Item.on? }`.
  * The top-level `groups` method providing access to only
-   {OpenHAB::Core::Items::GroupItem}s has been removed. Use
+   {OpenHAB::Core::Items::GroupItem GroupItem}s has been removed. Use
    `items.grep(GroupItem)` if you would like to filter to only groups.
- * `OpenHAB::Core::Items::GenericItem#id` no longer exists; just use
-   {OpenHAB::Core::Items::GenericItem#to_s} which does what `#id` used to do.
+ * `GenericItem#id` no longer exists; just use
+   {OpenHAB::Core::Items::GenericItem#to_s GenericItem#to_s} which does what
+   `#id` used to do.
  * `states?(*items)` helper is gone. Just use `items.all?(:state?)`, or in
    the rare cased you used `states?(*items, things: true)`, use
    `items.all? { |i| i.state? && i.things.all?(&:online?) }`.
- * {OpenHAB::Core::Items::GroupItem} is no longer {Enumerable}, and you must
-   use {OpenHAB::Core::Items::GroupItem#members}.
- * {OpenHAB::Core::Items::GroupItem#all_members} no longer has a `filter`
-   parameter; use `grep` if you want just {OpenHAB::Core::Items::GroupItem}s.
+ * {OpenHAB::Core::Items::GroupItem GroupItem} is no longer {Enumerable}, and
+   you must use {OpenHAB::Core::Items::GroupItem#members GroupItem#members}.
+ * {OpenHAB::Core::Items::GroupItem#all_members GroupItem#all_members} no
+   longer has a `filter` parameter; use `grep` if you want just
+   {OpenHAB::Core::Items::GroupItem GroupItem}s.
  * `create_timer` no longer exists as an alias for {after after}.
- * Triggers (such as {OpenHAB::DSL::Rules::Builder#changed} that previously
-   took a splat _or_ an Array of Items now _only_ take a splat. This just
-   means instead of `changed [Item1, Item2]` you write `changed Item1, Item2`,
-   or if you have an actual array you write `changed *item_array`.
-   This greatly simplifies the internal code that has to distinguish between
-   {OpenHAB::Core::Items::GroupItem::Members} and other types of
-   collections of items.
+ * Triggers (such as {OpenHAB::DSL::Rules::Builder#changed changed},
+   {OpenHAB::DSL::Rules::Builder#updated updated}, and
+   {OpenHAB::DSL::Rules::Builder#received_command received_command} that
+   previously took a splat _or_ an Array of Items now _only_ take a splat.
+   This just means instead of `changed [Item1, Item2]` you write
+   `changed Item1, Item2`, or if you have an actual array you write
+   `changed *item_array`. This greatly simplifies the internal code that has to
+   distinguish between
+   {OpenHAB::Core::Items::GroupItem::Members GroupItem::Members} and other
+   types of collections of items.
  * Logging has been reworked. There's generally no need to
    `include OpenHAB::Log` in your classes. {OpenHAB::Log.logger} method now
    accepts a String to explicitly find whichever logger you would like, and
