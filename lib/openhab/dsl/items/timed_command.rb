@@ -52,7 +52,7 @@ module OpenHAB
         # the expiration command to the item
         #
         # @param [Types::Type] command to send to object
-        # @param [java.time.Duration] for duration for item to be in command state
+        # @param [Duration] for duration for item to be in command state
         # @param [Types::Type] on_expire Command to send when duration expires
         # @param [Proc, nil] block
         #   Optional block to invoke when timer expires. If provided,

@@ -9,9 +9,6 @@ module OpenHAB
       # Items extensions to support
       # {https://www.openhab.org/docs/configuration/persistence.html OpenHAB's Persistence} feature.
       #
-      # @note Methods that accept a timestamp can accept a `ZonedDateTime`, Ruby `Time`, or a `Duration`.
-      #       When given a positive Duration, the timestamp will be calculated as `now - Duration`
-      #
       # @see OpenHAB::DSL.persistence Persistence Block
       #
       # @example The following examples are based on these items
@@ -19,23 +16,23 @@ module OpenHAB
       #   Number:Power  Power_Usage "Power Usage [%.2f W]"
       #
       # @example Getting persistence data from the system default persistence service
-      #   UV_Index.average_since(1.hour)      # returns a DecimalType
-      #   Power_Usage.average_since(12.hours) # returns a QuantityType that corresponds to the item's type
+      #   UV_Index.average_since(1.hour.ago)      # returns a DecimalType
+      #   Power_Usage.average_since(12.hours.ago) # returns a QuantityType that corresponds to the item's type
       #
       # @example Querying a non-default persistence service
-      #   UV_Index.average_since(1.hour, :influxdb)
-      #   Power_Usage.average_since(12.hours, :rrd4j)
+      #   UV_Index.average_since(1.hour.ago, :influxdb)
+      #   Power_Usage.average_since(12.hours.ago, :rrd4j)
       #
       # @example Comparison using Quantity
       #   # Because Power_Usage has a unit, the return value
       #   # from average_since is a QuantityType which can be
       #   # compared against a string with quantity
-      #   if Power_Usage.average_since(15.minutes) > '5 kW'
+      #   if Power_Usage.average_since(15.minutes.ago) > '5 kW'
       #     logger.info("The power usage exceeded its 15 min average)
       #   end
       #
       # @example HistoricState
-      #   max = Power_Usage.maximum_since(24.hours)
+      #   max = Power_Usage.maximum_since(24.hours.ago)
       #   logger.info("Max power usage: #{max}, at: #{max.timestamp})
       #
       module Persistence
@@ -77,150 +74,150 @@ module OpenHAB
         # @!method last_update(service = nil)
         #   Return the time the item was last updated.
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
-        #   @return [ZonedDateTime] The timestamp of the last update
+        #   @return [java.time.ZonedDateTime] The timestamp of the last update
 
         # @!method average_since(timestamp, service = nil)
         #   Return the average value of the item's state since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The average value since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method average_between(start, finish, service = nil)
         #   Return the average value of the item's state between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The average value between `start` and `finish`,
         #     or nil if no previous state could be found.
 
         # @!method delta_since(timestamp, service = nil)
         #   Return the difference value of the item's state since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The difference value since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method delta_between(start, finish, service = nil)
         #   Return the difference value of the item's state between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The difference value between `start` and `finish`,
         #     or nil if no previous state could be found.
 
         # @!method deviation_since(timestamp, service = nil)
         #   Return the standard deviation of the item's state since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The standard deviation since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method deviation_between(start, finish, service = nil)
         #   Return the standard deviation of the item's state between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The standard deviation between `start` and `finish`,
         #     or nil if no previous state could be found.
 
         # @!method sum_since(timestamp, service = nil)
         #   Return the sum of the item's state since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The sum since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method sum_between(start, finish, service = nil)
         #   Return the sum of the item's state between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The sum between `start` and `finish`,
         #     or nil if no previous state could be found.
 
         # @!method variance_since(timestamp, service = nil)
         #   Return the variance of the item's state since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The variance since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method variance_between(start, finish, service = nil)
         #   Return the variance of the item's state between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The variance between `start` and `finish`,
         #     or nil if no previous state could be found.
 
         # @!method changed_since?(timestamp, service = nil)
         #   Whether the item's state has changed since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [true,false] True if the item's state has changed since the given `timestamp`, False otherwise.
 
         # @!method changed_between?(start, finish, service = nil)
         #   Whether the item's state changed between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [true,false] True if the item's state changed between `start` and `finish`, False otherwise.
 
         # @!method evolution_rate(timestamp, service = nil)
         #   Return the evolution rate of the item's state since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The evolution rate since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method historic_state(timestamp, service = nil)
         #   Return the the item's state at the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time at which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time at which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [HistoricState, nil] The item's state at `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method maximum_since(timestamp, service = nil)
         #   Return the maximum value of the item's state since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [HistoricState, nil] The maximum value since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method maximum_between(start, finish, service = nil)
         #   Return the maximum value of the item's state between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [HistoricState, nil] The maximum value between `start` and `finish`,
         #     or nil if no previous state could be found.
 
         # @!method minimum_since(timestamp, service = nil)
         #   Return the minimum value of the item's state since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [HistoricState, nil] The minimum value since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method minimum_between(start, finish, service = nil)
         #   Return the minimum value of the item's state between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [HistoricState, nil] The minimum value between `start` and `finish`,
         #     or nil if no previous state could be found.
 
         # @!method updated_since?(timestamp, service = nil)
         #   Whether the item's state has been updated since the given time
-        #   @param [ZonedDateTime, Time, Duration] timestamp The point in time from which to search
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [true,false] True if the item's state has been updated since the given `timestamp`, False otherwise.
 
         # @!method updated_between?(start, finish, service = nil)
         #   Whether the item's state was updated between two points in time
-        #   @param [ZonedDateTime, Time, Duration] start The point in time from which to search
-        #   @param [ZonedDateTime, Time, Duration] finish The point in time to which to search
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [true,false] True if the item's state was updated between `start` and `finish`, False otherwise.
 
@@ -251,8 +248,11 @@ module OpenHAB
         PERSISTENCE_METHODS.each do |method|
           define_method(method) do |timestamp, service = nil|
             service ||= persistence_service
-            result = PersistenceExtensions.public_send(method.to_s.delete_suffix("?"), self, to_zdt(timestamp),
-                                                       service&.to_s)
+            result = PersistenceExtensions.public_send(
+              method.to_s.delete_suffix("?"),
+              self, timestamp.to_zoned_date_time,
+              service&.to_s
+            )
             wrap_result(result, method)
           end
 
@@ -264,8 +264,8 @@ module OpenHAB
             result = Core::Actions::PersistenceExtensions.public_send(
               between_method.to_s.delete_suffix("?"),
               self,
-              to_zdt(start),
-              to_zdt(finish),
+              start.to_zoned_date_time,
+              finish.to_zoned_date_time,
               service&.to_s
             )
             wrap_result(result, method)
@@ -278,19 +278,6 @@ module OpenHAB
         alias_method :updated_between, :updated_between?
 
         private
-
-        #
-        # Convert timestamp to ZonedDateTime with duration negated to indicate a time in the past
-        #
-        # @param [Object] timestamp timestamp to convert
-        #
-        # @return [ZonedDateTime]
-        #
-        def to_zdt(timestamp)
-          timestamp = timestamp.call if timestamp.is_a?(Proc)
-          timestamp = timestamp.negated if timestamp.is_a?(java.time.Duration)
-          OpenHAB::DSL.to_zdt(timestamp)
-        end
 
         #
         # Convert value to QuantityType if it is a DecimalType and a unit is defined

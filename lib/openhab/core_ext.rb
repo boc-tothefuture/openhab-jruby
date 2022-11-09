@@ -5,7 +5,7 @@ Dir[File.expand_path("core_ext/**/*.rb", __dir__)].sort.each do |f|
 end
 
 module OpenHAB
-  # @!visibility private
+  # Extensions to core classes
   module CoreExt
     # Extensions to core Java classes
     module Java

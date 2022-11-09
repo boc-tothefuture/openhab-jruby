@@ -66,8 +66,8 @@ module OpenHAB
           #
           # Create a cron map from a duration
           #
-          # @param [java.time.Duration] duration
-          # @param [Object] at TimeOfDay or String representing time of day
+          # @param [Duration] duration
+          # @param [Object] at LocalTime or String representing time of day
           #
           # @return [Hash] map describing cron expression
           #
@@ -81,7 +81,7 @@ module OpenHAB
           # Create a cron map from a MonthDay
           #
           # @param [java.time.MonthDay] monthday a {MonthDay} object
-          # @param [Object] at TimeOfDay or String representing time of day
+          # @param [Object] at LocalTime or String representing time of day
           #
           # @return [Hash] map describing cron expression
           #
@@ -95,7 +95,7 @@ module OpenHAB
           # Create a cron map from a symbol
           #
           # @param [Symbol] symbol
-          # @param [Object] at TimeOfDay or String representing time of day
+          # @param [Object] at LocalTime or String representing time of day
           #
           # @return [Hash] map describing cron expression created from symbol
           #
@@ -132,7 +132,7 @@ module OpenHAB
           #
           # Convert a Java Duration to a map for the map_to_cron method
           #
-          # @param duration [java.time.Duration] The duration object
+          # @param duration [Duration] The duration object
           #
           # @return [Hash] a map suitable for map_to_cron
           #
@@ -161,7 +161,7 @@ module OpenHAB
           #
           def self.at_condition(expression_map, at_time)
             if at_time
-              tod = at_time.is_a?(TimeOfDay::TimeOfDay) ? at_time : TimeOfDay::TimeOfDay.parse(at_time)
+              tod = at_time.is_a?(LocalTime) ? at_time : Localtime.parse(at_time)
               expression_map = expression_map.merge(hour: tod.hour, minute: tod.minute, second: tod.second)
             end
             expression_map

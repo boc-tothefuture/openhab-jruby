@@ -5,33 +5,95 @@ require_relative "time"
 module OpenHAB
   module CoreExt
     module Java
-      #
-      # Extend ZonedDateTime class to support arithmetic operators
-      #
-      module ZonedDateTime
+      ZonedDateTime = java.time.ZonedDateTime
+
+      # Extensions to ZonedDateTime
+      class ZonedDateTime
         include Time
 
-        # apply meta-programming methods to prepending class
-        # @!visibility private
-        def self.prepended(klass)
-          # remove the JRuby default == so that we can inherit the Ruby method
-          klass.remove_method :==
+        alias_method :to_local_time, :toLocalTime
+        alias_method :to_month, :month
+
+        # @param [TemporalAmount, #to_zoned_date_time, Numeric] other
+        #   If other is a Numeric, it's interpreted as seconds.
+        # @return [Duration] If other responds to #to_zoned_date_time
+        # @return [ZonedDateTime] If other is a TemporalAmount
+        def -(other)
+          if other.respond_to?(:to_zoned_date_time)
+            nanos = other.to_zoned_date_time.until(self, java.time.temporal.ChronoUnit::NANOS)
+            (nanos.to_f / 1_000_000_000).seconds
+          elsif other.is_a?(Numeric)
+            minus(other.seconds)
+          else
+            minus(other)
+          end
         end
 
-        java.time.ZonedDateTime.prepend(self)
+        # @param [TemporalAmount, Numeric] other
+        #   If other is a Numeric, it's interpreted as seconds.
+        # @return [ZonedDateTime]
+        def +(other)
+          return plus(other.seconds) if other.is_a?(Numeric)
+
+          plus(other)
+        end
 
         #
-        # Comparison
+        # The number of seconds since the Unix epoch.
         #
-        # @param [ZonedDateTime,::Time] other object to compare to
+        # @return [Integer]
+        def to_i
+          to_instant.epoch_second
+        end
+
         #
-        # @return [Integer] -1, 0, +1 depending on whether `other` is
-        #   less than, equal to, or greater than self
+        # The number of seconds since the Unix epoch.
         #
-        def compare_to(other)
-          logger.trace("(#{self.class}) #{self} compare_to #{other} (#{other.class})")
-          other = other.to_java(::ZonedDateTime) if other.is_a?(::Time)
-          super
+        # @return [Float]
+        def to_f
+          to_instant.to_epoch_milli / 1000.0
+        end
+
+        # @return [Date]
+        def to_date
+          Date.new(year, month_value, day_of_month)
+        end
+
+        # @return [LocalDate]
+        def to_local_date(_context = nil)
+          toLocalDate
+        end
+
+        # @return [MonthDay]
+        def to_month_day
+          MonthDay.of(month, day_of_month)
+        end
+
+        # @return [self]
+        def to_zoned_date_time(_context = nil)
+          self
+        end
+
+        # @return [Integer, nil]
+        def <=>(other)
+          # compare instants, otherwise it will differ by timezone, which we don't want
+          # (use eql? if you care about that)
+          if other.respond_to?(:to_zoned_date_time)
+            return to_instant.compare_to(other.to_zoned_date_time(self).to_instant)
+          end
+          return nil unless (lhs, rhs = other.coerce(self))
+
+          lhs <=> rhs
+        end
+
+        #
+        # Converts `other` to {ZonedDateTime}, if possible
+        #
+        # @param [#to_zoned_date_time] other
+        # @return [Array, nil]
+        #
+        def coerce(other)
+          [other.to_zoned_date_time(self), self] if other.respond_to?(:to_zoned_date_time)
         end
       end
     end

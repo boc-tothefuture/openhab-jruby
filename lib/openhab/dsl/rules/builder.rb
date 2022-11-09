@@ -155,7 +155,7 @@ module OpenHAB
         # The delay property is a non thread-blocking element that is executed
         # after, before, or between run blocks.
         #
-        # @param [java.time.Duration] duration How long to delay for.
+        # @param [java.time.temporal.TemporalAmount] duration How long to delay for.
         # @return [void]
         #
         # @example
@@ -305,7 +305,9 @@ module OpenHAB
         #
         # Only execute rule if current time is between supplied time ranges.
         #
-        # @param [Range<TimeOfDay, String>] range
+        # If the range is of strings, it will be parsed to an appropriate time class.
+        #
+        # @param [Range] range
         # @return [void]
         #
         # @example
@@ -325,22 +327,22 @@ module OpenHAB
         # @example
         #   rule "Between guard" do
         #     changed MotionSensor, to: OPEN
-        #     between TimeOfDay.new(h:6,m:5)..TimeOfDay.new(h:14,m:15,s:5)
+        #     between LocalTime.of(6, 5)..LocalTime.of(14, 15, 5)
         #     run { Light.on }
         #   end
         #
-        # @example {String} of {TimeOfDay}
+        # @example {String} of {LocalTime}
         #   rule 'Log an entry if started between 3:30:04 and midnight using strings' do
         #     on_start
-        #     run { logger.info ("Started at #{TimeOfDay.now}")}
+        #     run { logger.info ("Started at #{LocalTime.now}")}
         #     between '3:30:04'..MIDNIGHT
         #   end
         #
-        # @example {TimeOfDay}
-        #   rule 'Log an entry if started between 3:30:04 and midnight using TimeOfDay objects' do
+        # @example {LocalTime}
+        #   rule 'Log an entry if started between 3:30:04 and midnight using LocalTime objects' do
         #     on_start
-        #     run { logger.info ("Started at #{TimeOfDay.now}")}
-        #     between TimeOfDay.new(h: 3, m: 30, s: 4)..MIDNIGHT
+        #     run { logger.info ("Started at #{LocalTime.now}")}
+        #     between LocalTime.of(3, 30, 4)..MIDNIGHT
         #   end
         #
         # @example {String} of {MonthDay}
@@ -620,7 +622,7 @@ module OpenHAB
         #   Only execute rule if previous state matches `from` state(s).
         # @param [State, Array<State>, Range, Proc] to State(s) for
         #   Only execute rule if new state matches `to` state(s).
-        # @param [java.time.Duration] for
+        # @param [java.time.temporal.TemporalAmount] for
         #   Duration item must remain in the same state before executing the execution blocks.
         # @param [Object] attach object to be attached to the trigger
         # @return [void]
@@ -767,7 +769,7 @@ module OpenHAB
         # Create a rule that executes at the specified interval.
         #
         # @param [String,
-        #   java.time.Duration,
+        #   Duration,
         #   java.time.MonthDay,
         #   :second,
         #   :minute,
@@ -784,7 +786,7 @@ module OpenHAB
         #   :saturday,
         #   :sunday] value
         #   When to execute rule.
-        # @param [TimeOfDay, String] at What time of day to execute rule
+        # @param [LocalTime, String, nil] at What time of day to execute rule
         # @param [Object] attach Object to be attached to the trigger
         # @return [void]
         #
@@ -796,9 +798,9 @@ module OpenHAB
         #     end
         #   end
         #
-        # @example The above rule could also be expressed using TimeOfDay class as below
+        # @example The above rule could also be expressed using LocalTime class as below
         #   rule "Daily" do |rule|
-        #     every :day, at: TimeOfDay.new(h: 5, m: 15)
+        #     every :day, at: LocalTime.of(5, 15)
         #     run { Light.on }
         #   end
         #
@@ -847,7 +849,7 @@ module OpenHAB
 
           cron_expression = case value
                             when Symbol then Cron.from_symbol(value, at)
-                            when java.time.Duration then Cron.from_duration(value, at)
+                            when Duration then Cron.from_duration(value, at)
                             when java.time.MonthDay then Cron.from_monthday(value, at)
                             else raise ArgumentError, "Unknown interval"
                             end

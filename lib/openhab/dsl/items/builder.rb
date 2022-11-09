@@ -441,7 +441,7 @@ module OpenHAB
           duration = args.first
           return @expire = nil if duration.nil?
 
-          duration = duration.to_s[2..].downcase if duration.is_a?(java.time.Duration)
+          duration = duration.to_s[2..].downcase if duration.is_a?(Duration)
           state = "'#{state}'" if state.respond_to?(:to_str) && type == :string
           @expire = duration
           @expire += ",state=#{state}" if state

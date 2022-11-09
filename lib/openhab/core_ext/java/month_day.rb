@@ -1,67 +1,83 @@
 # frozen_string_literal: true
 
+require_relative "time"
+
 module OpenHAB
   module CoreExt
     module Java
-      # @!visibility private
-      module MonthDay
-        # @!visibility private
-        module ClassMethods
-          # Parse MonthDay string as defined with by Monthday class without leading double dash "--"
+      java_import java.time.MonthDay
+
+      # Extensions to MonthDay
+      class MonthDay
+        class << self
+          #
+          # Parses strings in the form "M-d"
+          #
+          # @param [String] string
+          # @return [MonthDay]
+          #
           def parse(string)
             logger.trace("#{self.class}.parse #{string} (#{string.class})")
-            java_send :parse, [java.lang.CharSequence, java.time.format.DateTimeFormatter],
+            java_send(:parse, [java.lang.CharSequence, java.time.format.DateTimeFormatter],
                       string.to_s,
-                      java.time.format.DateTimeFormatter.ofPattern("[--]M-d")
-          end
-
-          # Can the supplied object be parsed into a MonthDay
-          def day_of_month?(obj)
-            /^-*[01][0-9]-[0-3]\d$/.match? obj.to_s
+                      java.time.format.DateTimeFormatter.ofPattern("[--]M-d"))
           end
         end
 
-        # @!visibility private
-        def self.included(klass)
-          klass.singleton_class.prepend(ClassMethods)
-          klass.remove_method :==
-        end
-        java.time.MonthDay.include(self)
-
-        # Get the maximum (supports leap years) day of the year this month day could be
-        def max_day_of_year
-          day_of_month + month.max_days_before
-        end
-
-        # Remove -- from MonthDay string representation
+        # @return [String]
         def to_s
+          # Remove -- from MonthDay string representation
           to_string.delete_prefix("--")
         end
+        alias_method :inspect, :to_s
 
-        # Checks if MonthDay is between the dates of the supplied range
-        # @param [Range] range to check against MonthDay
-        # @return [true,false] true if the MonthDay falls within supplied range, false otherwise
-        def between?(range)
-          OpenHAB::DSL::MonthDayRange.range(range).cover? self
+        # wait until we redefine #to_s
+        include Time
+
+        # @return [MonthDay]
+        def +(other)
+          (LocalDate.of(1900, month, day_of_month) + other).to_month_day
         end
 
-        # Extends MonthDay comparison to support Strings
-        # Necessary to support mixed ranges of Strings and MonthDay types
-        # @return [Number, nil] -1,0,1 if other MonthDay is less than, equal to, or greater than this MonthDay
-        def <=>(other)
-          case other
-          when String
-            self <=> java.time.MonthDay.parse(other)
-          when OpenHAB::DSL::MonthDayRange::DayOfYear
-            # Compare with DayOfYear and invert result
-            -(other <=> self)
-          else
-            super
+        # @return [MonthDay]
+        def -(other)
+          (LocalDate.of(1900, month, day_of_month) - other).to_month_day
+        end
+
+        #
+        # Returns the next day
+        #
+        # Will go to the next month, or loop back to January if necessary.
+        #
+        # @return [MonthDay]
+        #
+        def succ
+          if day == month.max_length
+            return MonthDay.of(1, 1) if month_value == 12
+
+            return MonthDay.of(month_value + 1, 1)
           end
+
+          MonthDay.of(month_value, day_of_month + 1)
+        end
+
+        # @return [LocalDate]
+        def to_local_date(context = nil)
+          context ||= java.time.Year.now
+          year = java.time.Year.from(context)
+          year.at_month_day(self)
+        end
+
+        # @return [self]
+        def to_month_day
+          self
+        end
+
+        # @return [ZonedDateTime]
+        def to_zoned_date_time(context = nil)
+          to_local_date(context).to_zoned_date_time(context)
         end
       end
     end
   end
 end
-
-java_import java.time.MonthDay

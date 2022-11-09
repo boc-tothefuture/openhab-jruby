@@ -56,6 +56,7 @@ module OpenHAB
           profile_factory = Core::ProfileFactory.send(:new)
           @profile_factory_registration = OSGi.register_service(profile_factory)
           allow(Core::ProfileFactory).to receive(:instance).and_return(profile_factory)
+          stub_const("OpenHAB::Core::Timer", Mocks::Timer)
           logger.info("rspec #{example.location} # #{example.full_description}")
         end
 
@@ -72,7 +73,7 @@ module OpenHAB
           registry.remove_provider(@item_channel_link_provider)
           Core::Items::Metadata::NamespaceHash.registry.remove_provider(@metadata_provider)
           @profile_factory_registration.unregister
-          DSL::Timer::Manager.instance.cancel_all
+          DSL::TimerManager.instance.cancel_all
           Timecop.return
           restore_autoupdate_items
           Mocks::PersistenceService.instance.reset

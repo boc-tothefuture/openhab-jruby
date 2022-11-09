@@ -10,7 +10,7 @@ module OpenHAB
     module Types
       DateTimeType = org.openhab.core.library.types.DateTimeType
 
-      # {DateTimeType} uses a {java.time.ZonedDateTime} internally.
+      # {DateTimeType} uses a {ZonedDateTime} internally.
       class DateTimeType
         # @!parse include Type
 
@@ -43,32 +43,22 @@ module OpenHAB
           def parse(time_string)
             time_string = "#{time_string}Z" if TIME_ONLY_REGEX.match?(time_string)
             DateTimeType.new(time_string)
-          rescue java.lang.StringIndexOutOfBoundsException, java.lang.IllegalArgumentException
-            # Try ruby's Time.parse if OpenHAB's DateTimeType parser fails
+          rescue java.lang.StringIndexOutOfBoundsException, java.lang.IllegalArgumentException => e
+            # Try Ruby's Time.parse if OpenHAB's DateTimeType parser fails
             begin
               DateTimeType.new(::Time.parse(time_string))
             rescue ArgumentError
-              raise ArgumentError, "Unable to parse #{time_string} into a DateTimeType"
+              raise ArgumentError, e.message
             end
-          end
-
-          # parses a String representing a duration
-          #
-          # for internal use
-          #
-          # @return [java.time.Duration]
-          #
-          # @!visibility private
-          def parse_duration(time_string)
-            # convert from common HH:MM to ISO8601 for parsing
-            if (match = time_string.match(TIME_ONLY_REGEX))
-              time_string = "PT#{match[:hours]}H#{match[:minutes]}M#{match[:seconds] || 0}S"
-            end
-            java.time.Duration.parse(time_string)
           end
         end
 
-        # act like a ruby Time
+        # @return [java.time.ZonedTimeTime]
+        def to_zoned_date_time(_context = nil)
+          zoned_date_time
+        end
+
+        # act like a Ruby Time
         def_delegator :zoned_date_time, :month_value, :month
         def_delegator :zoned_date_time, :day_of_month, :mday
         def_delegator :zoned_date_time, :day_of_year, :yday
@@ -87,9 +77,9 @@ module OpenHAB
         def initialize(value = nil)
           if value.respond_to?(:to_time)
             time = value.to_time
-            instant = java.time.Instant.ofEpochSecond(time.to_i, time.nsec)
+            instant = java.time.Instant.of_epoch_second(time.to_i, time.nsec)
             zone_id = java.time.ZoneId.of_offset("UTC", java.time.ZoneOffset.of_total_seconds(time.utc_offset))
-            super(ZonedDateTime.ofInstant(instant, zone_id))
+            super(ZonedDateTime.of_instant(instant, zone_id))
             return
           elsif value.respond_to?(:to_str)
             # strings respond_do?(:to_d), but we want to avoid that conversion
@@ -97,10 +87,10 @@ module OpenHAB
             return
           elsif value.respond_to?(:to_d)
             time = value.to_d
-            super(ZonedDateTime.ofInstant(
-              java.time.Instant.ofEpochSecond(time.to_i,
-                                              ((time % 1) * 1_000_000_000).to_i),
-              java.time.ZoneId.systemDefault
+            super(ZonedDateTime.of_instant(
+              java.time.Instant.of_epochSecond(time.to_i,
+                                               ((time % 1) * 1_000_000_000).to_i),
+              java.time.ZoneId.system_default
             ))
             return
           end
@@ -122,7 +112,7 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [DateTimeType, Time, String] other object to compare to
+        # @param [Object] other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether `other` is
         #   less than, equal to, or greater than self
@@ -132,15 +122,9 @@ module OpenHAB
         def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(self.class)
-            zoned_date_time.to_instant.compare_to(other.zoned_date_time.to_instant)
-          elsif other.is_a?(DSL::TimeOfDay) || other.is_a?(DSL::TimeOfDayRangeElement)
-            to_tod <=> other
+            zoned_date_time <=> other.zoned_date_time
           elsif other.respond_to?(:to_time)
             to_time <=> other.to_time
-          elsif other.respond_to?(:to_str)
-            time_string = other.to_str
-            time_string = "#{time_string}T00:00:00#{zone}" if DATE_ONLY_REGEX.match?(time_string)
-            self <=> DateTimeType.parse(time_string)
           elsif other.respond_to?(:coerce)
             return nil unless (lhs, rhs = other.coerce(self))
 
@@ -159,6 +143,7 @@ module OpenHAB
         #
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
+          return [zoned_date_time, self] if other.respond_to?(:to_zoned_date_time)
           return [DateTimeType.new(other), self] if other.respond_to?(:to_time)
         end
 
@@ -170,17 +155,6 @@ module OpenHAB
         def to_time
           ::Time.at(to_i, nsec, :nsec).localtime(utc_offset)
         end
-
-        #
-        # Convert the time part of this DateTimeType to a TimeOfDay object
-        #
-        # @return [TimeOfDay] A TimeOfDay object representing the time
-        #
-        def to_time_of_day
-          DSL::TimeOfDay.new(h: hour, m: minute, s: second)
-        end
-
-        alias_method :to_tod, :to_time_of_day
 
         #
         # Returns the value of time as a floating point number of seconds since the Epoch
@@ -248,17 +222,14 @@ module OpenHAB
 
         # Add other to self
         #
-        # @param other [java.time.Duration, String, Numeric]
+        # @param other [Duration, Numeric]
         #
         # @return [DateTimeType]
         def +(other)
-          if other.is_a?(java.time.Duration)
+          if other.is_a?(Duration)
             DateTimeType.new(zoned_date_time.plus(other))
-          elsif other.respond_to?(:to_str)
-            other = self.class.parse_duration(other.to_str)
-            self + other
           elsif other.respond_to?(:to_d)
-            DateTimeType.new(zoned_date_time.plusNanos((other.to_d * 1_000_000_000).to_i))
+            DateTimeType.new(zoned_date_time.plus_nanos((other.to_d * 1_000_000_000).to_i))
           elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             lhs + rhs
           else
@@ -274,24 +245,16 @@ module OpenHAB
         # if other is a DateTime-like object, the result is a Duration
         # representing how long between the two instants in time.
         #
-        # @param other [java.time.Duration, Time, String, Numeric]
+        # @param other [Duration, Time, Numeric]
         #
-        # @return [DateTimeType, java.Time.Duration]
+        # @return [DateTimeType, Duration]
         def -(other)
-          if other.is_a?(java.time.Duration)
+          if other.is_a?(Duration)
             DateTimeType.new(zoned_date_time.minus(other))
           elsif other.respond_to?(:to_time)
             to_time - other.to_time
-          elsif other.respond_to?(:to_str)
-            time_string = other.to_str
-            other = if TIME_ONLY_REGEX.match?(time_string)
-                      self.class.parse_duration(time_string)
-                    else
-                      DateTimeType.parse(time_string)
-                    end
-            self - other
           elsif other.respond_to?(:to_d)
-            DateTimeType.new(zoned_date_time.minusNanos((other.to_d * 1_000_000_000).to_i))
+            DateTimeType.new(zoned_date_time.minus_nanos((other.to_d * 1_000_000_000).to_i))
           elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             lhs - rhs
           else

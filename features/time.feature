@@ -4,45 +4,6 @@ Feature:  time
   Background:
     Given Clean OpenHAB with latest Ruby Libraries
 
-  Scenario Outline: ZonedDateTime supports arithmetic operators against Duration
-    Given a rule:
-      """
-      now = ZonedDateTime.now
-      logger.info("<a>.equals(<b>): #{<a>.equals(<b>)}")
-      """
-    When I deploy the rule
-    Then It should log "<a>.equals(<b>): <result>" within 5 seconds
-    Examples:
-      | a                   | b               | result |
-      | now.plus(1.minutes) | now + 1.minutes | true   |
-      | now.minus_hours(2)  | now - 2.hours   | true   |
-
-  Scenario Outline: LocalTime supports arithmetic operators against Duration
-    Given a rule:
-      """
-      now = LocalTime.now
-      logger.info("<a>.equals(<b>): #{<a>.equals(<b>)}")
-      """
-    When I deploy the rule
-    Then It should log "<a>.equals(<b>): <result>" within 5 seconds
-    Examples:
-      | a                   | b               | result |
-      | now.plus(1.minutes) | now + 1.minutes | true   |
-      | now.minus_hours(2)  | now - 2.hours   | true   |
-
-  Scenario Outline: Ruby Time supports arithmetic operators against Duration
-    Given a rule:
-      """
-      now = Time.now
-      logger.info("<a> == <b>: #{<a> == <b>}")
-      """
-    When I deploy the rule
-    Then It should log "<a> == <b>: <result>" within 5 seconds
-    Examples:
-      | a          | b              | result |
-      | now + 60   | now + 1.minute | true   |
-      | now - 3600 | now - 1.hour   | true   |
-
   Scenario Outline: ZonedDateTime supports comparison operators
     Given a rule:
       """

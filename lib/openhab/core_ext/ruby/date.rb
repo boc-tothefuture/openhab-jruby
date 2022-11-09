@@ -3,18 +3,18 @@
 module OpenHAB
   module CoreExt
     module Ruby
-      # Extensions to Time
-      module Time
-        ::Time.prepend(self)
+      # Extensions to Date
+      module Date
+        ::Date.prepend(self)
 
         #
         # Extends {#+} to allow adding a {java.time.temporal.TemporalAmount TemporalAmount}
         #
         # @param [java.time.temporal.TemporalAmount] other
-        # @return [java.time.ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+        # @return [java.time.LocalDate] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
         #
         def +(other)
-          return to_zoned_date_time + other if other.is_a?(java.time.temporal.TemporalAmount)
+          return to_local_date + other if other.is_a?(java.time.temporal.TemporalAmount)
 
           super
         end
@@ -23,22 +23,20 @@ module OpenHAB
         # Extends {#-} to allow subtracting a {java.time.temporal.TemporalAmount TemporalAmount}
         #
         # @param [java.time.temporal.TemporalAmount] other
-        # @return [java.time.ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+        # @return [java.time.LocalDate] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
         #
         def -(other)
-          return to_zoned_date_time - other if other.is_a?(java.time.temporal.TemporalAmount)
-
-          super
+          case other
+          when java.time.temporal.TemporalAmount, java.time.LocalDate
+            to_local_date - other
+          else
+            super
+          end
         end
 
         # @return [java.time.LocalDate]
         def to_local_date(_context = nil)
           java.time.LocalDate.of(year, month, day)
-        end
-
-        # @return [java.time.LocalTime]
-        def to_local_time
-          java.time.LocalTime.of(hour, min, sec, nsec)
         end
 
         # @return [java.time.Month]
@@ -52,20 +50,32 @@ module OpenHAB
         end
 
         # @return [java.time.ZonedDateTime]
-        def to_zoned_date_time(_context = nil)
-          to_java(ZonedDateTime)
+        def to_zoned_date_time(context = nil)
+          to_local_date.to_zoned_date_time(context)
+        end
+
+        # @return [Integer, nil]
+        def <=>(other)
+          return super if other.is_a?(self.class)
+
+          if other.respond_to?(:coerce) && (lhs, rhs = coerce(self))
+            return lhs <=> rhs
+          end
+
+          super
         end
 
         #
-        # Converts to a {java.time.ZonedDateTime ZonedDateTime} if `other`
-        # is also convertible to a ZonedDateTime.
+        # Convert `other` to date, if possible.
         #
-        # @param [#to_zoned_date_time] other
+        # @param [#to_date] other
         # @return [Array, nil]
         #
         def coerce(other)
-          [other.to_zoned_date_time(to_zoned_date_time), self] if other.respond_to?(:to_zoned_date_time)
+          return [other.to_date, self] if other.respond_to?(:to_date)
         end
+
+        alias_method :inspect, :to_s
       end
     end
   end

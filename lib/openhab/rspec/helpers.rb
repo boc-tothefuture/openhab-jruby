@@ -101,7 +101,10 @@ module OpenHAB
       # @return [void]
       #
       def execute_timers
-        DSL::Timer::Manager.instance.execute_timers
+        now = ZonedDateTime.now
+        DSL::TimerManager.instance.instance_variable_get(:@timers).each do |t|
+          t.execute if t.active? && t.execution_time <= now
+        end
       end
 
       #
@@ -178,12 +181,12 @@ module OpenHAB
 
         require_relative "mocks/persistence_service"
         require_relative "mocks/metadata_provider"
+        require_relative "mocks/timer"
 
         # override several DSL methods
         require_relative "openhab/core/items/proxy"
         require_relative "openhab/core/things/thing"
         require_relative "openhab/dsl/actions"
-        require_relative "openhab/dsl/timer"
 
         ps = Mocks::PersistenceService.instance
         bundle = org.osgi.framework.FrameworkUtil.get_bundle(org.openhab.core.persistence.PersistenceService)

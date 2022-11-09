@@ -8,12 +8,10 @@ RSpec.describe OpenHAB::Core::Types::DateTimeType do
   describe "math operations" do
     let(:date1) { DateTimeType.new("1970-01-31T08:00:00+0200") }
 
-    specify { expect(date1 + 600).to eq "1970-01-31T08:10:00.000+0200" }
-    specify { expect(date1 - 600).to eq "1970-01-31T07:50:00.000+0200" }
-    specify { expect(date1 + "00:05").to eq "1970-01-31T08:05:00.000+0200" } # rubocop:disable Style/StringConcatenation
-    specify { expect(date1 - "00:05").to eq "1970-01-31T07:55:00.000+0200" }
-    specify { expect(date1 + 20.minutes).to eq "1970-01-31T08:20:00.000+0200" }
-    specify { expect(date1 - 20.minutes).to eq "1970-01-31T07:40:00.000+0200" }
+    specify { expect(date1 + 600).to eq Time.parse("1970-01-31T08:10:00.000+0200") }
+    specify { expect(date1 - 600).to eq Time.parse("1970-01-31T07:50:00.000+0200") }
+    specify { expect(date1 + 20.minutes).to eq Time.parse("1970-01-31T08:20:00.000+0200") }
+    specify { expect(date1 - 20.minutes).to eq Time.parse("1970-01-31T07:40:00.000+0200") }
   end
 
   describe "Ruby time methods" do
@@ -32,12 +30,12 @@ RSpec.describe OpenHAB::Core::Types::DateTimeType do
   describe "calculating time differences" do
     let(:date1) { DateTimeType.new("2021-01-31T09:00:00+00:00") }
 
-    specify { expect((date1 - "2021-01-31T07:00:00+00:00").to_i).to be 7200 }
+    specify { expect((date1 - Time.parse("2021-01-31T07:00:00+00:00")).to_i).to be 7200 }
     specify { expect((date1 - Time.utc(2021, 1, 31, 7)).to_i).to be 7200 }
     specify { expect((date1 - date2).to_i).to be 3600 }
   end
 
-  it "works with TimeOfDay ranges" do
+  it "works with LocalTime ranges" do
     expect(
       case date3
       when between("00:00"..."08:00") then 1
@@ -48,7 +46,7 @@ RSpec.describe OpenHAB::Core::Types::DateTimeType do
   end
 
   it "can create between ranges" do
-    expect(between(date1...date2)).to cover("05:00")
+    expect(date1...date2).to cover(Time.parse("2021-01-31T05:00:00+00:00"))
   end
 
   describe "comparisons" do
@@ -56,15 +54,15 @@ RSpec.describe OpenHAB::Core::Types::DateTimeType do
     let(:date_two) { DateTimeType.new("2021-02-01T12:00:00+00:00") }
 
     specify { expect(date_one).to be < date_two }
-    specify { expect(date_one).to be <= "2021-02-09" }
+    specify { expect(date_one).to be <= Date.parse("2021-02-09") }
     specify { expect(date_one).not_to be > Time.now }
-    specify { expect(date_one).to eq "2021-01-01T00:00:00+00:00" }
-    specify { expect(date_one != "2021-01-01T00:00:00+00:00").to be false }
+    specify { expect(date_one).to eq Time.parse("2021-01-01T00:00:00+00:00") }
+    specify { expect(date_one != Time.parse("2021-01-01T00:00:00+00:00")).to be false }
 
     specify { expect(date_two).not_to be < date_one }
-    specify { expect("2021-02-09").to be >= date_one }
+    specify { expect(Date.parse("2021-02-09")).to be >= date_one }
     specify { expect(Time.now).to be > date_one }
-    specify { expect("2021-01-01T00:00:00+00:00").to eq date_one }
-    specify { expect("2021-01-01T00:00:00+01:00" != date_one).to be true }
+    specify { expect(Time.parse("2021-01-01T00:00:00+00:00")).to eq date_one }
+    specify { expect(Time.parse("2021-01-01T00:00:00+01:00") != date_one).to be true }
   end
 end

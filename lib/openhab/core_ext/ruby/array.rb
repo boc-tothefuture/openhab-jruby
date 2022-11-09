@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
-# https://github.com/rails/rails/blob/main/activesupport/lib/active_support/core_ext/array/wrap.rb
+# Extensions to Array
 class Array
+  #
   # Ensure an object is an array, by wrapping
   # it in an array if it's not already an array.
+  # @return [Array]
+  #
+  # @see https://github.com/rails/rails/blob/main/activesupport/lib/active_support/core_ext/array/wrap.rb
+  #
   def self.wrap(object)
     if object.nil?
       []

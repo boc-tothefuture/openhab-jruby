@@ -19,7 +19,7 @@ module OpenHAB
           # @param [Object] item item to create trigger for
           # @param [Item State] from state to restrict trigger to
           # @param [Item State] to state to restrict trigger to
-          # @param [java.time.Duration, nil] duration ruration to delay trigger until to state is met
+          # @param [Duration, nil] duration ruration to delay trigger until to state is met
           # @param [Object] attach object to be attached to the trigger
           #
           # @return [Trigger] OpenHAB triggers
@@ -51,7 +51,7 @@ module OpenHAB
           # Create a TriggerDelay for for an item or group that is changed for a specific duration
           #
           # @param [Object] item to create trigger delay for
-          # @param [java.time.Duration] duration to delay trigger for until condition is met
+          # @param [Duration] duration to delay trigger for until condition is met
           # @param [Item State] to OpenHAB Item State item or group needs to change to
           # @param [Item State] from OpenHAB Item State item or group needs to be coming from
           # @param [Object] attach object to be attached to the trigger

@@ -9,11 +9,11 @@ RSpec.describe OpenHAB::Core::Items::DateTimeItem do
 
   it "accepts ZonedDateTime" do
     DateOne << ZonedDateTime.of(1999, 12, 31, 0, 0, 0, 0, ZoneId.of("UTC"))
-    expect(DateOne.state).to eq "1999-12-31T00:00:00.000+0000"
+    expect(DateOne.state).to eq Time.parse("1999-12-31T00:00:00.000+0000")
   end
 
   it "can be updated by Ruby Time objects" do
     DateOne << Time.at(60 * 60 * 24).utc
-    expect(DateOne.state).to eq "1970-01-02T00:00:00.000+0000"
+    expect(DateOne.state).to eq Time.parse("1970-01-02T00:00:00.000+0000")
   end
 end

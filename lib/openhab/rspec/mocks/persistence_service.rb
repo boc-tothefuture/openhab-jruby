@@ -66,7 +66,7 @@ module OpenHAB
             return result if filter.page_number.zero? && result.length == filter.page_size && filter.item_name
           end
 
-          result.sort_by! { |hi| hi.timestamp.to_instant.to_epoch_milli } unless filter.item_name
+          result.sort_by!(&:timestamp) unless filter.item_name
 
           result = result.slice(filter.page_number * filter.page_size, filter.page_size) unless filter.page_number.zero?
 

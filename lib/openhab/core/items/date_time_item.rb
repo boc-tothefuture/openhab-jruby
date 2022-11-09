@@ -27,17 +27,17 @@ module OpenHAB
       #
       # @example Comparisons between different time objects can be performed
       #   Example_DateTimeItem.state == Example_DateTimeItem2.state # Equality, works across time zones
-      #   Example_DateTimeItem.state > '2021-01-31' # After midnight jan 31st 2021
+      #   Example_DateTimeItem.state > Date.parse('2021-01-31') # After midnight jan 31st 2021
       #   Example_DateTimeItem.state <= Time.now # Before or equal to now
-      #   Example_DateTimeItem.state < TimeOfDay.noon # Before noon
+      #   Example_DateTimeItem.state < LocalTime::NOON # Before noon
       #
-      # @example TimeOfDay ranges created with the {DSL#between} method also works
+      # @example LocalTime ranges created also work
       #   case Example_DateTimeItem.state
-      #   when between('00:00'...'08:00')
+      #   when LocalTime.parse('00:00')...LocalTime.parse('08:00')
       #     logger.info('Example_DateTimeItem is between 00:00..08:00')
-      #   when between('08:00'...'16:00')
+      #   when LocalTime.parse('08:00')...LocalTime.parse('16:00')
       #     logger.info('Example_DateTimeItem is between 08:00..16:00')
-      #   when between('16:00'..'23:59')
+      #   when LocalTime.parse('16:00')..LocalTime.parse'23:59')
       #     logger.info('Example_DateTimeItem is between 16:00...23:59')
       #   end
       #

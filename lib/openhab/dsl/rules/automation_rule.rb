@@ -27,9 +27,7 @@ module OpenHAB
           @run_context = config.caller
           @run_queue = config.run
           @guard = config.guard
-          # Convert between to correct range or nil if not set
-          between = config.between&.then { between(config.between) }
-          @between = between
+          @between = config.between && DSL.between(config.between)
           @trigger_conditions = config.trigger_conditions
           @attachments = config.attachments
         end

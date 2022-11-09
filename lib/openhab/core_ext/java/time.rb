@@ -3,28 +3,30 @@
 module OpenHAB
   module CoreExt
     module Java
-      # Common extensions to Java date/time classes
+      # Common extensions to Java Date/Time classes
       module Time
-        #
-        # Add other TemporalAmount or Duration object
-        #
-        # @param [TemporalAmount] other the TemporalAmount to be added to this ZonedDateTime object
-        #
-        # @return [ZonedDateTime] The resulting ZonedDateTime object after adding {other}
-        #
-        def +(other)
-          plus(other)
+        # @!parse include Comparable
+
+        # @!visibility private
+        module ClassMethods
+          # The method used to convert another object to this class
+          def coercion_method
+            @coercion_method ||= :"to_#{java_class.simple_name.gsub(/[A-Z]/, "_\\0").downcase[1..]}"
+          end
+
+          # Translate java.time.format.DateTimeParseException to ArgumentError
+          def parse(*)
+            super
+          rescue java.time.format.DateTimeParseException => e
+            raise ArgumentError, e.message
+          end
         end
 
-        #
-        # Subtract other TemporalAmount or Duration object
-        #
-        # @param [TemporalAmount] other the TemporalAmount to be subtracted from this ZonedDateTime object
-        #
-        # @return [ZonedDateTime] The resulting ZonedDateTime object after subtracting {other}
-        #
-        def -(other)
-          minus(other)
+        # @!visibility private
+        def self.included(klass)
+          klass.singleton_class.include(ClassMethods)
+          klass.remove_method(:==)
+          klass.alias_method(:inspect, :to_s)
         end
 
         #
@@ -36,9 +38,18 @@ module OpenHAB
         #   less than, equal to, or greater than self
         #
         def <=>(other)
-          compare_to(other)
-        rescue
-          nil
+          if other.is_a?(self.class)
+            compare_to(other)
+          elsif other.respond_to?(:coerce)
+            return nil unless (lhs, rhs = other.coerce(self))
+
+            lhs <=> rhs
+          end
+        end
+
+        # Convert `other` to this class, if possible
+        def coerce(other)
+          [other.send(self.class.coercion_method), self] if other.respond_to?(self.class.coercion_method)
         end
       end
     end

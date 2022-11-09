@@ -78,6 +78,16 @@ here is a non-exhaustive list of significant departures from the original gem:
    distinguish between
    {OpenHAB::Core::Items::GroupItem::Members GroupItem::Members} and other
    types of collections of items.
+ * Date and time objects have been reworked:
+   * `TimeOfDay` has been replaced with {java.time.LocalTime}
+   * Date/time objects are no longer comparable to strings.
+     Please use the correct type.
+   * Comparisons among the varying date/time classes all work.
+   * The global `between` method is gone. Just form your range
+     with the proper underlying type.
+   * `between?` method is gone. Use `Range#cover?`: `my_range.cover?(date)`
+     instead of `date.between?(my_range)`.
+   * See also [Working With Time](docs/usage/time.md)
  * Logging has been reworked. There's generally no need to
    `include OpenHAB::Log` in your classes. {OpenHAB::Log.logger} method now
    accepts a String to explicitly find whichever logger you would like, and

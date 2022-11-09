@@ -54,13 +54,12 @@ module OpenHAB
     # @see docs/usage/triggers/changed.md#changed-duration Changed Duration
     # @see Items::TimedCommand
     #
-    # @param [java.time.Duration] duration after which to execute the block
+    # @param [java.time.temporal.TemporalAmount, #to_zoned_date_time, Proc] duration after which to execute the block
     # @param [Object] id to associate with timer. The timer can be accessed with the {timers} hash.
     # @param [Block] block to execute, block is passed a Timer object
+    # @yieldparam [Core::Timer] timer
     #
-    # @yieldparam [Timer] timer Timer object
-    #
-    # @return [Timer] Timer object
+    # @return [Core::Timer]
     #
     # @example Create a simple timer
     #   after 5.seconds do
@@ -112,14 +111,13 @@ module OpenHAB
     #     logger.info("The timer :foo is not active")
     #   end
     #
-
     def after(duration, id: nil, &block)
-      # Carry rule name to timer thread
+      # Carry rule name to timer
       thread_locals = { OPENHAB_RULE_UID: Thread.current[:OPENHAB_RULE_UID] } if Thread.current[:OPENHAB_RULE_UID]
       thread_locals ||= {}
-      return Timer::Manager.reentrant_timer(duration: duration, thread_locals: thread_locals, id: id, &block) if id
+      return DSL::TimerManager.reentrant_timer(duration, thread_locals: thread_locals, id: id, &block) if id
 
-      OpenHAB::DSL::Timer.new(duration: duration, thread_locals: thread_locals, &block)
+      Core::Timer.new(duration, thread_locals: thread_locals, &block)
     end
 
     #
@@ -131,9 +129,9 @@ module OpenHAB
     def between(range)
       raise ArgumentError, "Supplied object must be a range" unless range.is_a?(Range)
 
-      return :MonthDayRange.range(range) if MonthDayRange.range?(range)
-
-      TimeOfDay.between(range)
+      start = try_parse_time_like(range.begin)
+      finish = try_parse_time_like(range.end)
+      Range.new(start, finish, range.exclude_end?)
     end
 
     #
@@ -439,7 +437,7 @@ module OpenHAB
     #
     # @return [Hash] hash of user specified ids to {Timer::TimerSet}
     def timers
-      Timer::Manager.instance.timer_ids
+      TimerManager.instance.timer_ids
     end
 
     # @overload unit
@@ -490,6 +488,22 @@ module OpenHAB
       ensure
         Thread.current[:unit] = old_unit
       end
+    end
+
+    private
+
+    def try_parse_time_like(string)
+      return string unless string.is_a?(String)
+
+      exception = nil
+      [java.time.LocalTime, java.time.LocalDate, java.time.MonthDay, java.time.ZonedDateTime].each do |klass|
+        return klass.parse(string)
+      rescue ArgumentError => e
+        exception ||= e
+        next
+      end
+
+      raise exception
     end
   end
 end

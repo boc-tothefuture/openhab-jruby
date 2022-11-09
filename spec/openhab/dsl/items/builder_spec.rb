@@ -181,7 +181,7 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
 
   it "sets initial state on a date time item with a string" do
     items.build { date_time_item "DateTimeItem1", state: "1970-01-01T00:00:00+00:00" }
-    expect(DateTimeItem1.state).to eq "1970-01-01T00:00:00+00:00"
+    expect(DateTimeItem1.state).to eq Time.parse("1970-01-01T00:00:00+00:00")
   end
 
   it "can reference a group item directly" do
