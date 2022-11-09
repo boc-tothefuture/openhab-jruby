@@ -36,6 +36,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     OpenHAB::Logger.gem_root.level = :trace
+    OpenHAB::Log.logger("org.openhab.automation.jrubyscripting.internal").level = :warn
   end
 
   Kernel.srand config.seed

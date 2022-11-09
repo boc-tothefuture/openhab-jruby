@@ -7,8 +7,6 @@ RSpec.describe OpenHAB::DSL do
 
   describe "#profile" do
     it "works" do
-      OpenHAB::Log.logger("org.openhab.core.thing.internal.CommunicationManager").level = :trace
-
       install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
 
       things.build do
