@@ -254,13 +254,14 @@ module OpenHAB
     #
     # Create a new rule
     #
-    # @see Rules::Terse Terse Rules
-    #
     # @param [String] name The rule name
     # @yield Block executed in context of a {Rules::Builder}
     # @yieldparam [Rules::Builder] rule
     #   Optional parameter to access the rule configuration from within execution blocks and guards.
-    # @return [void]
+    # @return [org.openhab.core.automation.Rule] The OpenHAB Rule object
+    #
+    # @see OpenHAB::DSL::Rules::Builder Rule builder for details on rule triggers, guards and execution blocks
+    # @see Rules::Terse Terse Rules
     #
     # @example
     #   require "openhab/dsl"
@@ -376,12 +377,21 @@ module OpenHAB
     #
     # Remove a rule
     #
+    # @param [String, org.openhab.core.automation.Rule] uid The rule UID or the Rule object to remove.
     # @return [void]
+    #
+    # @example
+    #   my_rule = rule do
+    #     every :day
+    #     run { nil }
+    #   end
+    #
+    #   remove_rule(my_rule)
     #
     def remove_rule(uid)
       uid = uid.uid if uid.respond_to?(:uid)
       automation_rule = Rules.script_rules.delete(uid)
-      raise "Rule #{rule_uid} doesn't exist to remove" unless automation_rule
+      raise "Rule #{uid} doesn't exist to remove" unless automation_rule
 
       automation_rule.cleanup
       # automation_manager doesn't have a remove method, so just have to
