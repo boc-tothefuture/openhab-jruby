@@ -23,6 +23,18 @@ module OpenHAB
       #
       # The core class that bindings use to represent connected devices.
       #
+      # @example
+      #   thing = things["chromecast:audiogroup:dd9f8622-eee-4eaf-b33f-cdcdcdeee001121"]
+      #   logger.info("Audiogroup Status: #{thing&.status}")
+      #   logger.info("Audiogroup Online? #{thing&.online?}")
+      #   logger.info("Channel ids: #{thing.channels.map(&:uid)}")
+      #   logger.info("Items linked to volume channel: #{thing.channels['volume']&.items&.map(&:name)&.join(', ')}")
+      #   logger.info("Item linked to volume channel: #{thing.channels['volume']&.item&.name}")
+      #
+      # @example Thing actions can be called directly through a Thing object
+      #   things["mqtt:broker:mosquitto"].publishMQTT("zigbee2mqttt/bridge/config/permit_join", "true")
+      #   things["mail:smtp:local"].sendMail("me@example.com", "Subject", "Email body")
+      #
       class Thing < SimpleDelegator
         # Array wrapper class to allow searching a list of channels
         # by channel id
@@ -44,6 +56,55 @@ module OpenHAB
           define_action_methods
         end
 
+        #
+        # @!method status
+        #   Return the {https://www.openhab.org/docs/concepts/things.html#thing-status thing status}
+        #   @return [org.openhab.core.thing.ThingStatus] Thing status
+        #
+
+        #
+        # @!method uninitialized?
+        #   Check if thing status == UNINITIALIZED
+        #   @return [true,false]
+        #
+
+        #
+        # @!method initialized?
+        #   Check if thing status == INITIALIZED
+        #   @return [true,false]
+        #
+
+        #
+        # @!method unknown?
+        #   Check if thing status == UNKNOWN
+        #   @return [true,false]
+        #
+
+        #
+        # @!method online?
+        #   Check if thing status == ONLINE
+        #   @return [true,false]
+        #
+
+        #
+        # @!method offline?
+        #   Check if thing status == OFFLINE
+        #   @return [true,false]
+        #
+
+        #
+        # @!method removing?
+        #   Check if thing status == REMOVING
+        #   @return [true,false]
+        #
+
+        #
+        # @!method removed?
+        #   Check if thing status == REMOVED
+        #   @return [true,false]
+        #
+
+        # @!visibility private
         #
         # Defines boolean thing status methods
         #   uninitialized?
