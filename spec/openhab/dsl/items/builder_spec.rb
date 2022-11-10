@@ -19,13 +19,16 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
 
   it "can create items in a group" do
     items.build do
+      group_item "Group1"
       group_item "MyGroupItem" do
         switch_item "MySwitchItem"
+        switch_item "MySwitch2", groups: [Group1]
       end
     end
 
-    expect(MyGroupItem.members.to_a).to eq [MySwitchItem]
+    expect(MyGroupItem.members.to_a).to match_array [MySwitchItem, MySwitch2]
     expect(MySwitchItem.groups).to eq [MyGroupItem]
+    expect(MySwitch2.groups).to match_array [Group1, MyGroupItem]
   end
 
   it "can add items to groups" do

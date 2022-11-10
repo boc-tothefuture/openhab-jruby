@@ -327,7 +327,7 @@ module OpenHAB
         end
 
         #
-        # The item's label if one is defined, otherwise it's name.
+        # The item's label if one is defined, otherwise its name.
         #
         # @return [String]
         #
@@ -454,6 +454,7 @@ module OpenHAB
           item.label = label
           item.category = icon.to_s if icon
           groups.each do |group|
+            group = group.name if group.respond_to?(:name)
             item.add_group_name(group.to_s)
           end
           tags.each do |tag|
@@ -472,6 +473,26 @@ module OpenHAB
             item.state = state
           end
           item
+        end
+
+        # @return [String]
+        def inspect
+          s = "#<OpenHAB::Core::Items::#{inspect_type}ItemBuilder#{type_details} #{name} #{label.inspect}"
+          s += " category=#{icon.inspect}" if icon
+          s += " tags=#{tags.inspect}" unless tags.empty?
+          s += " groups=#{groups.map { |g| g.respond_to?(:name) ? g.name : g }.inspect}" unless groups.empty?
+          s += " metadata=#{metadata.to_h.inspect}" unless metadata.empty?
+          "#{s}>"
+        end
+
+        protected
+
+        def inspect_type
+          type.to_s.capitalize
+        end
+
+        def type_details
+          ":#{dimension}" if dimension
         end
 
         private
@@ -552,6 +573,18 @@ module OpenHAB
         # @!visibility private
         def add(child_item)
           @members << child_item
+        end
+
+        protected
+
+        def inspect_type
+          "Group"
+        end
+
+        def type_details
+          r = super
+          r += ":#{function}" if function
+          r
         end
 
         private

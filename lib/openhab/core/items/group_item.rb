@@ -99,7 +99,7 @@ module OpenHAB
 
           # @return [String]
           def inspect
-            "#<OpenHAB::Core::Items::GroupItems::Members #{name} #{super}>"
+            "#<OpenHAB::Core::Items::GroupItems::Members #{name} #{map(&:name).inspect}>"
           end
           alias_method :to_s, :inspect
         end
@@ -138,7 +138,7 @@ module OpenHAB
         # Add base type and function details
         def type_details
           r = ""
-          r += ":#{base_item.type}#{base_item.type_details}" if base_item
+          r += ":#{base_item.type}#{base_item.__send__(:type_details)}" if base_item
           if function && (fn = function.class.java_class.simple_name.upcase) != "EQUALITY"
             r += ":#{fn}"
             r += "(#{function.parameters.map(&:inspect).join(",")})" unless function.parameters.empty?
