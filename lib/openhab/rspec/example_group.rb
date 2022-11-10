@@ -33,9 +33,49 @@ module OpenHAB
         # explicitly defined, or defaults to `true` if none are.
         #
         # @return [true, false]
+        #
         def mock_timers?
           return @mock_timers if instance_variable_defined?(:@mock_timers) && !@mock_timers.nil?
           return superclass.mock_timers? if superclass.is_a?(ClassMethods)
+
+          true
+        end
+
+        # @!attribute [w] consistent_proxies
+        #
+        # Set if Items and Thing proxies should return consistent objects.
+        #
+        # @param value [true, false, nil]
+        # @return [true, false, nil]
+        #
+        # @example
+        #   describe "my_rule" do
+        #     self.consistent_proxies = false
+        #
+        #     it "does something" do
+        #       expect(self.class.consistent_proxies?).to be false
+        #     end
+        #   end
+        #
+        # @see #consistent_proxies?
+        #
+        def consistent_proxies=(value)
+          @consistent_proxies = value
+        end
+
+        #
+        # If Item and Thing proxies will consistently return the same object.
+        #
+        # Useful for mocking and using the `be` matcher.
+        #
+        # It will search through parent groups until it finds one where it's
+        # explicitly defined, or defaults to `true` if none are.
+        #
+        # @return [true, false]
+        #
+        def consistent_proxies?
+          return @consistent_proxies if instance_variable_defined?(:@consistent_proxies) && !@consistent_proxies.nil?
+          return superclass.consistent_proxies? if superclass.is_a?(ClassMethods)
 
           true
         end
