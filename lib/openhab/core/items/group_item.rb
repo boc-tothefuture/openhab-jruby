@@ -10,7 +10,7 @@ module OpenHAB
       java_import org.openhab.core.items.GroupItem
 
       #
-      # A group behaves like a regular item, but also has {#members} of are
+      # A group behaves like a regular item, but also has {#members} which are
       # nested items that can be enumerated.
       #
       # If the group has a particular type, the methods from that type are
@@ -117,6 +117,8 @@ module OpenHAB
         # @!attribute [r] members
         # @return [Members] Get an Array-like object representing the members of the group
         #
+        # @see Enumerable
+        #
         def members
           Members.new(self)
         end
@@ -124,6 +126,8 @@ module OpenHAB
         #
         # @!attribute [r] all_members
         # @return [Array] Get all non-group members of the group recursively.
+        #
+        # @see Enumerable
         #
         def all_members
           getAllMembers.map { |m| Proxy.new(m) }

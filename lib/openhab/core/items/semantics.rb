@@ -9,7 +9,9 @@ require_relative "semantics/enumerable"
 module OpenHAB
   module Core
     module Items
-      # Module for implementing semantics helper methods on {GenericItem}
+      # Module for implementing semantics helper methods on {GenericItem} in order to easily navigate
+      # the {https://www.openhab.org/docs/tutorial/model.html Semantic Model} in your scripts.
+      # This can be extremely useful to find related items in rules that are executed for any member of a group.
       #
       # Wraps https://www.openhab.org/javadoc/latest/org/openhab/core/model/script/actions/semantics,
       # as well as adding a few additional convenience methods.
@@ -19,7 +21,140 @@ module OpenHAB
       # described by tags and groups on an Item. It makes assumptions that any
       # given item only belongs to one semantic type (Location, Equipment, Point).
       #
+      # ## Enumerable helper methods
+      #
+      # {Enumerable Enumerable helper methods} are also provided to complement the semantic model. These methods can be
+      # chained together to find specific item(s) based on custom tags or group memberships that are outside
+      # the semantic model.
+      #
+      # The Enumerable helper methods apply to:
+      #
+      # * {GroupItem#members} and {GroupItem#all_members}. This includes semantic
+      #   {#location} and {#equipment} because they are also group items.
+      #   An exception is for Equipments that are an item (not a group)
+      # * Array of items, such as the return value of {Enumerable#equipments}, {Enumerable#locations},
+      #   {Enumerable#points}, {Enumerable#tagged}, {Enumerable#not_tagged}, {Enumerable#member_of},
+      #   {Enumerable#not_member_of}, {Enumerable#members} methods, etc.
+      # * {DSL.items items[]} hash which contains all items in the system.
+      #
+      # ## Semantic Classes
+      #
+      # Each [Semantic
+      # Tag](https://github.com/openhab/openhab-core/blob/main/bundles/org.openhab.core.semantics/model/SemanticTags.csv)
+      # has a corresponding class within the `org.openhab.core.semantics.model` class hierarchy.
+      # These `semantic classes` are available as constants in the `Semantics` module with the corresponding name.
+      # The following table illustrates the semantic constants:
+      #
+      # | Semantic Constant       | openHAB's Semantic Class                               |
+      # | ----------------------- | ------------------------------------------------------ |
+      # | `Semantics::LivingRoom` | `org.openhab.core.semantics.model.location.LivingRoom` |
+      # | `Semantics::Lightbulb`  | `org.openhab.core.semantics.model.equipment.Lightbulb` |
+      # | `Semantics::Control`    | `org.openhab.core.semantics.model.point.Control`       |
+      # | `Semantics::Switch`     | `org.openhab.core.semantics.model.point.Switch`        |
+      # | `Semantics::Power`      | `org.openhab.core.semantics.model.property.Power`      |
+      # | ...                     | ...                                                    |
+      #
+      # These constants can be used as arguments to the `#points`, `#locations` and `#equipments` methods to filter
+      # their results. They can also be compared against the return value of `semantic_type`, `location_type`,
+      # `equipment_type`, `point_type`, and `property_type`.
+      #
       # @see https://github.com/openhab/openhab-core/blob/main/bundles/org.openhab.core.semantics/model/SemanticTags.csv
+      #
+      # @example Working with tags
+      #   # Return an array of sibling points with a "Switch" tag
+      #   Light_Color.points(Semantics::Switch)
+      #
+      #   # check semantic type
+      #   LoungeRoom_Light.equipment_type == Semantics::Lightbulb
+      #   Light_Color.property_type == Semantics::Light
+      #
+      # @example switches.items
+      #   Group   gFullOn
+      #   Group   gRoomOff
+      #
+      #   Group   eGarageLights        "Garage Lights"             (lGarage)                 [ "Lightbulb" ]
+      #   Dimmer  GarageLights_Dimmer  "Garage Lights"    <light>  (eGarageLights)           [ "Switch" ]
+      #   Number  GarageLights_Scene   "Scene"                     (eGarageLights, gFullOn, gRoomOff)
+      #
+      #   Group   eMudLights           "Mud Room Lights"           (lMud)                    [ "Lightbulb" ]
+      #   Dimmer  MudLights_Dimmer     "Garage Lights"    <light>  (eMudLights)              [ "Switch" ]
+      #   Number  MudLights_Scene      "Scene"                     (eMudLights, gFullOn, gRoomOff)
+      #
+      # @example Find the switch item for a scene channel on a zwave dimmer
+      #   rule "turn dimmer to full on when switch double-tapped up" do
+      #     changed gFullOn.members, to: 1.3
+      #     run do |event|
+      #       dimmer_item = event.item.points(Semantics::Switch).first
+      #       dimmer_item.ensure << 100
+      #     end
+      #   end
+      #
+      # @example Turn off all the lights in a room
+      #   rule "turn off all lights in the room when switch double-tapped down" do
+      #     changed gRoomOff.members, to: 2.3
+      #     run do |event|
+      #       event
+      #         .item
+      #         .location
+      #         .equipments(Semantics::Lightbulb)
+      #         .members
+      #         .points(Semantics::Switch)
+      #         .ensure.off
+      #     end
+      #   end
+      #
+      # @example Finding a related item that doesn't fit in the semantic model
+      #   # We can use custom tags to identify certain items that don't quite fit in the semantic model.
+      #   # The extensions to the Enumerable mentioned above can help in this scenario.
+      #
+      #   # In the following example, the TV `Equipment` has three `Points`. However, we are using custom tags
+      #   # `Application` and `Channel` to identify the corresponding points, since the semantic model
+      #   # doesn't have a specific property for them.
+      #
+      #   # Here, we use Enumerable#tagged
+      #   # to find the point with the custom tag that we want.
+      #
+      #   # Item model:
+      #   Group   gTVPower
+      #   Group   lLivingRoom                                 [ "LivingRoom" ]
+      #
+      #   Group   eTV             "TV"       (lLivingRoom)    [ "Television" ]
+      #   Switch  TV_Power        "Power"    (eTV, gTVPower)  [ "Switch", "Power" ]
+      #   String  TV_Application  "App"      (eTV)            [ "Control", "Application" ]
+      #   String  TV_Channel      "Channel"  (eTV)            [ "Control", "Channel" ]
+      #
+      #   # Rule:
+      #   rule 'Switch TV to Netflix on startup' do
+      #     changed gTVPower.members, to: ON
+      #     run do |event|
+      #       application = event.item.points.tagged('Application').first
+      #       application << 'netflix'
+      #     end
+      #   end
+      #
+      # @example Find all semantic entities regardless of hierarchy
+      #   # All locations
+      #   items.locations
+      #
+      #   # All rooms
+      #   items.locations(Semantics::Room)
+      #
+      #   # All equipments
+      #   items.equipments
+      #
+      #   # All lightbulbs
+      #   items.equipments(Semantics::Lightbulb)
+      #
+      #   # All blinds
+      #   items.equipments(Semantics::Blinds)
+      #
+      #   # Turn off all "Power control"
+      #   items.points(Semantics::Control, Semantics::Power).off
+      #
+      #   # All items tagged "SmartLightControl"
+      #   items.tagged("SmartLightControl")
+      #
+      #
       module Semantics
         GenericItem.include(self)
         GroupItem.extend(Forwardable)
