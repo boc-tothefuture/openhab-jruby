@@ -56,7 +56,8 @@ module OpenHAB
       #
       # These constants can be used as arguments to the `#points`, `#locations` and `#equipments` methods to filter
       # their results. They can also be compared against the return value of `semantic_type`, `location_type`,
-      # `equipment_type`, `point_type`, and `property_type`.
+      # `equipment_type`, `point_type`, and `property_type`. They can even be used with
+      # {DSL::Items::ItemBuilder#tag}.
       #
       # @see https://github.com/openhab/openhab-core/blob/main/bundles/org.openhab.core.semantics/model/SemanticTags.csv
       #
