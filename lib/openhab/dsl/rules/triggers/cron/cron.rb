@@ -161,7 +161,7 @@ module OpenHAB
           #
           def self.at_condition(expression_map, at_time)
             if at_time
-              tod = at_time.is_a?(LocalTime) ? at_time : Localtime.parse(at_time)
+              tod = at_time.is_a?(LocalTime) ? at_time : LocalTime.parse(at_time)
               expression_map = expression_map.merge(hour: tod.hour, minute: tod.minute, second: tod.second)
             end
             expression_map

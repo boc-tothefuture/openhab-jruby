@@ -76,7 +76,7 @@ here is a non-exhaustive list of significant departures from the original gem:
    previously took a splat _or_ an Array of Items now _only_ take a splat.
    This just means instead of `changed [Item1, Item2]` you write
    `changed Item1, Item2`, or if you have an actual array you write
-   `changed *item_array`. This greatly simplifies the internal code that has to
+   `changed(*item_array)`. This greatly simplifies the internal code that has to
    distinguish between
    {OpenHAB::Core::Items::GroupItem::Members GroupItem::Members} and other
    types of collections of items.

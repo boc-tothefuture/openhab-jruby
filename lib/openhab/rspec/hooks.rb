@@ -60,7 +60,9 @@ module OpenHAB
           @profile_factory_registration = OSGi.register_service(profile_factory)
           allow(Core::ProfileFactory).to receive(:instance).and_return(profile_factory)
           stub_const("OpenHAB::Core::Timer", Mocks::Timer) if self.class.mock_timers?
-          logger.info("rspec #{example.location} # #{example.full_description}")
+          log_line = "rspec #{example.location} # #{example.full_description}"
+          logger.info(log_line)
+          Logger.events.info(log_line)
         end
 
         config.after do

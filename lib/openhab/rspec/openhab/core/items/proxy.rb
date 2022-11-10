@@ -10,7 +10,7 @@ module OpenHAB
           # ensure each item only has a single proxy, so that
           # expect(item).to receive(:method) works
           def new(item)
-            return super unless ::RSpec.current_example.example_group.consistent_proxies?
+            return super unless defined?(::RSpec) && ::RSpec.current_example&.example_group&.consistent_proxies?
 
             @proxies.fetch(item.name) do
               @proxies[item.name] = super
