@@ -20,6 +20,9 @@ module OpenHAB
 
     if defined?(::RSpec)
       ::RSpec.configure do |config|
+        require_relative "example_group"
+        config.include ExampleGroup
+
         config.before(:suite) do
           Helpers.autorequires unless Configuration.private_confdir
           Helpers.send(:set_up_autoupdates)
@@ -56,7 +59,7 @@ module OpenHAB
           profile_factory = Core::ProfileFactory.send(:new)
           @profile_factory_registration = OSGi.register_service(profile_factory)
           allow(Core::ProfileFactory).to receive(:instance).and_return(profile_factory)
-          stub_const("OpenHAB::Core::Timer", Mocks::Timer)
+          stub_const("OpenHAB::Core::Timer", Mocks::Timer) if self.class.mock_timers?
           logger.info("rspec #{example.location} # #{example.full_description}")
         end
 

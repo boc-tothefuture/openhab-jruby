@@ -12,8 +12,7 @@ module OpenHAB
             mocked_time_stack_item = Timecop.top_stack_item
             return super unless mocked_time_stack_item
 
-            instant = java.time.Instant.of_epoch_milli((Time.now.to_f * 1000).to_i)
-            ZonedDateTime.of_instant(instant, java.time.ZoneId.system_default)
+            mocked_time_stack_item.time.to_zoned_date_time
           end
         end
         ZonedDateTime.singleton_class.prepend(MockedZonedDateTime)
@@ -22,8 +21,17 @@ module OpenHAB
         # @!visibility private
         module TimeCopStackItem
           def parse_time(*args)
-            if args.length == 1 && args.first.is_a?(java.time.temporal.TemporalAmount)
-              return time_klass.at((ZonedDateTime.now + args.first).to_f)
+            if args.length == 1
+              arg = args.first
+              if arg.is_a?(Time) ||
+                 (defined?(DateTime) && arg.is_a?(DateTime)) ||
+                 (defined?(Date) && arg.is_a?(Date))
+                return super
+              elsif arg.respond_to?(:to_zoned_date_time)
+                return arg.to_zoned_date_time.to_time
+              elsif arg.is_a?(java.time.temporal.TemporalAmount)
+                return (ZonedDateTime.now + arg).to_time
+              end
             end
 
             super

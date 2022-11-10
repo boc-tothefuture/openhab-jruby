@@ -101,9 +101,28 @@ module OpenHAB
       # @return [void]
       #
       def execute_timers
+        raise "Cannot execute timers when timers aren't mocked" unless self.class.mock_timers?
+
         now = ZonedDateTime.now
         DSL::TimerManager.instance.instance_variable_get(:@timers).each do |t|
           t.execute if t.active? && t.execution_time <= now
+        end
+      end
+
+      #
+      # Wait `duration` seconds, then execute any pending timers
+      #
+      # If timers are mocked, it will use Timecop. If they're not mocked, it
+      # will just sleep for `duration`
+      #
+      # @return [void]
+      #
+      def time_travel_and_execute_timers(duration)
+        if self.class.mock_timers?
+          Timecop.travel(duration)
+          execute_timers
+        else
+          sleep duration
         end
       end
 
