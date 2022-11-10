@@ -143,7 +143,7 @@ module OpenHAB
         #
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
-          return [zoned_date_time, self] if other.respond_to?(:to_zoned_date_time)
+          return [other, zoned_date_time] if other.respond_to?(:to_zoned_date_time)
           return [DateTimeType.new(other), self] if other.respond_to?(:to_time)
         end
 
