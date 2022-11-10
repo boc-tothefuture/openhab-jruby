@@ -551,7 +551,7 @@ after 3.minutes do
 end
 ```
 
-See {OpenHAB::DSL.after after}
+See {OpenHAB::DSL.after after}, [duration](../usage/misc/time.md#Durations)
 
 ### Reschedule a Timer
 
@@ -658,7 +658,7 @@ See {OpenHAB::Core::Items::GenericItem.metadata}
 ## Use Persistence
 
 ```ruby
-daily_max = My_Item.maximum_since(24.hours)
+daily_max = My_Item.maximum_since(24.hours.ago)
 ```
 
 See {OpenHAB::Core::Items::Persistence}
@@ -718,15 +718,18 @@ Exec.executeCommandLine('/path/to/program')
 
 ```ruby
 ZonedDateTime.now.plus_minutes(30)
-
 # or
 ZonedDateTime.now + 30.minutes
+# or
+30.minutes.from_now # Return a ZonedDateTime
 ```
 
 ### Convert ZonedDateTime to Ruby Time
 
 ```ruby
 Time.at(ZonedDateTime.now.to_epoch_second)
+# or
+Time.at(ZonedDateTime.now.to_i)
 ```
 
 ### Convert Ruby Time to ZonedDateTime
@@ -734,34 +737,38 @@ Time.at(ZonedDateTime.now.to_epoch_second)
 ```ruby
 ruby_time = Time.now
 ruby_time.to_java(ZonedDateTime)
+# or
+ruby_time.to_zoned_date_time
 ```
 
-### Work with Time of Day
+### Work with LocalTime
 
 ```ruby
-if TimeOfDay.now > '7am'
+if LocalTime.now > LocalTime.parse('7am')
   logger.info 'Wake up!'
 end
 ```
 
 ```ruby
 # The range can cross midnight
-if TimeOfDay.now.between?('10pm'..'5am')
+if between('10pm'..'5am').cover?(LocalTime.now)
   logger.info 'Sleep time'
 end
 ```
 
-See [TimeOfDay](../usage/misc/time_of_day.md)
+See {OpenHAB::CoreExt::Java::LocalTime LocalTime}
 
 ### Work with MonthDay
 
 ```ruby
-if MonthDay.now == '02-14'
+if MonthDay.now == MonthDay.parse('02-14')
   logger.info "Happy Valentine's Day!"
 end
 ```
 
-See [MonthDay](../usage/misc/month_day.md)
+See {OpenHAB::CoreExt::Java::MonthDay MonthDay}
+
+For more examples, see [Working With Time](../usage/misc/time.md)
 
 ## Ruby
 

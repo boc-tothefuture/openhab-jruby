@@ -90,6 +90,8 @@ here is a non-exhaustive list of significant departures from the original gem:
    * `between?` method is gone. Use `Range#cover?`: `my_range.cover?(date)`
      instead of `date.between?(my_range)`.
    * See also [Working With Time](docs/usage/time.md)
+   * Add `#ago` and `#from_now` methods to Java {Duration}
+ * Persistence methods no longer accept a Duration. Please use `Duration#ago` instead.
  * Logging has been reworked. There's generally no need to
    `include OpenHAB::Log` in your classes. {OpenHAB::Log.logger} method now
    accepts a String to explicitly find whichever logger you would like, and

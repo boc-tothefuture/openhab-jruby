@@ -64,8 +64,8 @@ as the time.
 ### Examples
 
 ```ruby
-# Comparing localtime against LocalTime with `<`
-max_time = Solar_Power.maximum_since(24.hours)
+# Comparing ZonedDateTime against LocalTime with `<`
+max_time = Solar_Power.maximum_since(24.hours.ago)
 if max_time < LocalTime::NOON
   logger.info 'Max solar power happened before noon'
 end
@@ -78,6 +78,8 @@ end
 
 # Subtracting Duration from Time and comparing Time against ZonedDateTime
 Motion_Sensor.last_update < Time.now - 10.minutes
+# Alternatively:
+Motion_Sensor.last_update < 10.minutes.ago
 
 # Using `-` operator with ZonedDateTime
 # Comparing two ZonedDateTime using `<` 

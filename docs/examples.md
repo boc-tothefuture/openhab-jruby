@@ -100,7 +100,7 @@ end
 ### Use timers
 
 Timers are created using {after after} with an easier way to specify when it should execute, 
-based on [duration](docs/usage/misc/duration.md) syntax, e.g. `10.minutes` instead of using ZonedDateTime.
+based on [duration](docs/usage/misc/time.md#Durations) syntax, e.g. `10.minutes` instead of using ZonedDateTime.
 
 ```ruby
 rule 'simple timer' do
@@ -172,8 +172,8 @@ end
 
 ### Automatic activation of exhaust fan based on humidity sensor
 
-This uses the `evolution_rate` [persistence](docs/usage/misc/persistence.md) feature, 
-coupled with an easy way to specify [duration](docs/usage/misc/duration.md).
+This uses the `evolution_rate` {OpenHAB::Core::Items::Persistence persistence} feature, 
+coupled with an easy way to specify [duration](docs/usage/misc/time.md#Durations).
 It is accessed simply through `ItemName.persistence_function`.
 
 ```ruby

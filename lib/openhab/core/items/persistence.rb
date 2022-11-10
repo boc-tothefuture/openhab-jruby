@@ -27,13 +27,13 @@ module OpenHAB
       #   # Because Power_Usage has a unit, the return value
       #   # from average_since is a QuantityType which can be
       #   # compared against a string with quantity
-      #   if Power_Usage.average_since(15.minutes.ago) > '5 kW'
+      #   if Power_Usage.average_since(15.minutes.ago) > 5 | "kW"
       #     logger.info("The power usage exceeded its 15 min average)
       #   end
       #
       # @example HistoricState
-      #   max = Power_Usage.maximum_since(24.hours.ago)
-      #   logger.info("Max power usage: #{max}, at: #{max.timestamp})
+      #   max = Power_Usage.maximum_since(LocalTime.MIDNIGHT)
+      #   logger.info("Max power usage today: #{max}, at: #{max.timestamp})
       #
       module Persistence
         GenericItem.prepend(self)

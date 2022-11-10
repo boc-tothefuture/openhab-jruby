@@ -121,10 +121,10 @@ module OpenHAB
     end
 
     #
-    # Creates a range that can be compared against time of day/month days or strings
-    # to see if they are within the range
+    # Convert a string based range into a range of LocalTime, LocalDate, MonthDay, or ZonedDateTime
+    # depending on the format of the string.
     #
-    # @return [Range] object representing a TimeOfDay Range
+    # @return [Range] converted range object
     #
     # @example Range#cover?
     #   logger.info("Within month-day range") if between('02-20'..'06-01').cover?(MonthDay.now)
@@ -136,6 +136,9 @@ module OpenHAB
     #   when between('04-01'..'06-30')
     #    logger.info("Second quarter")
     #   end
+    #
+    # @example Create a time range
+    #   between('7am'..'12pm').cover?(LocalTime.now)
     #
     def between(range)
       raise ArgumentError, "Supplied object must be a range" unless range.is_a?(Range)
@@ -493,9 +496,9 @@ module OpenHAB
     #     # Number:Temperature NumberF = 70 °F
     #     # Number Dimensionless = 2
     #     unit('°F') { NumberC.state - NumberF.state < 4 }                                      # => true
-    #     unit('°F') { NumberC.state - '24 °C' < 4 }                                            # => true
+    #     unit('°F') { NumberC.state - 24 | '°C' < 4 }                                          # => true
     #     unit('°F') { (24 | '°C') - NumberC.state < 4 }                                        # => true
-    #     unit('°C') { NumberF.state - '20 °C' < 2 }                                            # => true
+    #     unit('°C') { NumberF.state - 20 < 2 }                                                 # => true
     #     unit('°C') { NumberF.state - Dimensionless.state }                                    # => 19.11 °C
     #     unit('°C') { NumberF.state - Dimensionless.state < 20 }                               # => true
     #     unit('°C') { Dimensionless.state + NumberC.state == 25 }                              # => true
