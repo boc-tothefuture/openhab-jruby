@@ -55,7 +55,7 @@ RSpec.describe java.time.LocalDate do
 
   describe "#to_month_day" do
     it "works" do
-      expect(date.to_month_day).to eql java.time.MonthDay.parse("11-09")
+      expect(date.to_month_day).to eql MonthDay.parse("11-09")
     end
   end
 
@@ -140,7 +140,7 @@ RSpec.describe java.time.LocalDate do
     end
 
     context "with a MonthDay" do
-      let(:other) { java.time.MonthDay.parse("11-09") }
+      let(:other) { MonthDay.parse("11-09") }
 
       specify { expect(date).to eq other }
       specify { expect(date).not_to eql other }

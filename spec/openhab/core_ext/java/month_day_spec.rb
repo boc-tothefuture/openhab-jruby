@@ -1,35 +1,35 @@
 # frozen_string_literal: true
 
 RSpec.describe java.time.MonthDay do
-  let(:date) { java.time.MonthDay.parse("11-09") }
+  let(:date) { MonthDay.parse("11-09") }
 
   describe "#+" do
     it "works with a Period" do
-      expect(date + 1.year).to eql java.time.MonthDay.parse("11-09")
-      expect(date + 1.day).to eql java.time.MonthDay.parse("11-10")
+      expect(date + 1.year).to eql MonthDay.parse("11-09")
+      expect(date + 1.day).to eql MonthDay.parse("11-10")
     end
 
     it "works with Duration" do
-      expect(date + 24.hours).to eql java.time.MonthDay.parse("11-10")
+      expect(date + 24.hours).to eql MonthDay.parse("11-10")
     end
 
     it "works with integers" do
-      expect(date + 1).to eql java.time.MonthDay.parse("11-10")
+      expect(date + 1).to eql MonthDay.parse("11-10")
     end
   end
 
   describe "#-" do
     it "works with a Period" do
-      expect(date - 1.year).to eql java.time.MonthDay.parse("11-09")
-      expect(date - 1.day).to eql java.time.MonthDay.parse("11-08")
+      expect(date - 1.year).to eql MonthDay.parse("11-09")
+      expect(date - 1.day).to eql MonthDay.parse("11-08")
     end
 
     it "works with Duration" do
-      expect(date - 24.hours).to eql java.time.MonthDay.parse("11-08")
+      expect(date - 24.hours).to eql MonthDay.parse("11-08")
     end
 
     it "works with integers" do
-      expect(date - 1).to eql java.time.MonthDay.parse("11-08")
+      expect(date - 1).to eql MonthDay.parse("11-08")
     end
 
     it "returns a Period for another MonthDay instance" do
@@ -68,23 +68,23 @@ RSpec.describe java.time.MonthDay do
 
   describe "#succ" do
     it "works" do
-      expect(date.succ).to eql java.time.MonthDay.parse("11-10")
+      expect(date.succ).to eql MonthDay.parse("11-10")
     end
 
     it "rolls to the next month" do
-      expect(java.time.MonthDay.parse("11-30").succ).to eql java.time.MonthDay.parse("12-01")
-      expect(java.time.MonthDay.parse("02-28").succ).to eql java.time.MonthDay.parse("02-29")
-      expect(java.time.MonthDay.parse("02-29").succ).to eql java.time.MonthDay.parse("03-01")
+      expect(MonthDay.parse("11-30").succ).to eql MonthDay.parse("12-01")
+      expect(MonthDay.parse("02-28").succ).to eql MonthDay.parse("02-29")
+      expect(MonthDay.parse("02-29").succ).to eql MonthDay.parse("03-01")
     end
 
     it "rolls to the next year" do
-      expect(java.time.MonthDay.parse("12-31").succ).to eql java.time.MonthDay.parse("01-01")
+      expect(MonthDay.parse("12-31").succ).to eql MonthDay.parse("01-01")
     end
   end
 
   describe "#<=>" do
     context "with a MonthDay" do
-      let(:other) { java.time.MonthDay.parse("11-09") }
+      let(:other) { MonthDay.parse("11-09") }
 
       specify { expect(date).to eq other }
       specify { expect(date).to eql other }

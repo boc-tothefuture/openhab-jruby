@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe java.time.LocalTime do
-  let(:time) { java.time.LocalTime.parse("03:22:01") }
+  let(:time) { LocalTime.parse("03:22:01") }
 
   describe ".parse" do
     specify { expect(described_class.parse("1").to_s).to eql "01:00" }
@@ -24,11 +24,11 @@ RSpec.describe java.time.LocalTime do
     end
 
     it "works with a Duration" do
-      expect(time + 2.hours).to eql java.time.LocalTime.parse("05:22:01")
+      expect(time + 2.hours).to eql LocalTime.parse("05:22:01")
     end
 
     it "works with integers" do
-      expect(time + 1).to eql java.time.LocalTime.parse("03:22:02")
+      expect(time + 1).to eql LocalTime.parse("03:22:02")
     end
   end
 
@@ -39,11 +39,11 @@ RSpec.describe java.time.LocalTime do
     end
 
     it "works with a Duration" do
-      expect(time - 2.hours).to eql java.time.LocalTime.parse("01:22:01")
+      expect(time - 2.hours).to eql LocalTime.parse("01:22:01")
     end
 
     it "works with integers" do
-      expect(time - 1).to eql java.time.LocalTime.parse("03:22:00")
+      expect(time - 1).to eql LocalTime.parse("03:22:00")
     end
   end
 
@@ -57,17 +57,17 @@ RSpec.describe java.time.LocalTime do
 
   describe "#succ" do
     it "works" do
-      expect(time.succ).to eql java.time.LocalTime.parse("03:22:02")
+      expect(time.succ).to eql LocalTime.parse("03:22:02")
     end
 
     it "rolls across midnight" do
-      expect(java.time.LocalTime.parse("23:59:59").succ).to eql java.time.LocalTime.parse("00:00:00")
+      expect(LocalTime.parse("23:59:59").succ).to eql LocalTime.parse("00:00:00")
     end
   end
 
   describe "#<=>" do
     context "with a LocalTime" do
-      let(:other) { java.time.LocalTime.parse("03:22:01") }
+      let(:other) { LocalTime.parse("03:22:01") }
 
       specify { expect(time).to eq other }
       specify { expect(time).to eql other }

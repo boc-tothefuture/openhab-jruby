@@ -62,7 +62,7 @@ RSpec.describe java.time.ZonedDateTime do
   describe "#to_local_time" do
     it "works" do
       expect(ZonedDateTime.parse("2022-11-09T02:09:05+00:00").to_local_time)
-        .to eql java.time.LocalTime.parse("02:09:05")
+        .to eql LocalTime.parse("02:09:05")
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.describe java.time.ZonedDateTime do
 
   describe "#to_month_day" do
     it "works" do
-      expect(ZonedDateTime.parse("2022-11-09T00:00:00+00:00").to_month_day).to eql java.time.MonthDay.parse("11-09")
+      expect(ZonedDateTime.parse("2022-11-09T00:00:00+00:00").to_month_day).to eql MonthDay.parse("11-09")
     end
   end
 
@@ -134,7 +134,7 @@ RSpec.describe java.time.ZonedDateTime do
     end
 
     context "with a LocalTime" do
-      let(:time) { java.time.LocalTime.parse("02:09:05") }
+      let(:time) { LocalTime.parse("02:09:05") }
 
       specify { expect(zdt).to eq time }
       specify { expect(zdt).not_to eql time }
@@ -166,7 +166,7 @@ RSpec.describe java.time.ZonedDateTime do
     end
 
     context "with a MonthDay" do
-      let(:date) { java.time.MonthDay.parse("11-09") }
+      let(:date) { MonthDay.parse("11-09") }
 
       specify { expect(zdt).not_to eq date }
       specify { expect(zdt).not_to eql date }

@@ -108,7 +108,7 @@ helper.
 ```ruby
 between('10:00'..'14:00').cover?(Time.now)
 between('11pm'..'1am').cover?(Time.now)
-Time.now < java.time.LocalTime::NOON
+Time.now < LocalTime::NOON
  
 case Time.now
 when between('6:00'...'12:00')
