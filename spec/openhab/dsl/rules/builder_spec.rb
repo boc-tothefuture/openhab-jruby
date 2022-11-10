@@ -8,6 +8,20 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
     expect(spec_log_lines).to include(include("has no execution blocks, not creating rule"))
   end
 
+  it "can access items from the rule block" do
+    items.build do
+      switch_item "lowerCaseSwitchItem"
+      switch_item "UpperCaseSwitchItem"
+    end
+
+    rspec = self
+    rule do
+      rspec.expect(lowerCaseSwitchItem).not_to be_nil
+      rspec.expect(UpperCaseSwitchItem).not_to be_nil
+      rspec.expect(items["lowerCaseSwitchItem"]).not_to be_nil
+    end
+  end
+
   describe "triggers" do
     before do
       install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"

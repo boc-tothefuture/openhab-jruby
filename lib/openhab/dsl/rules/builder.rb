@@ -20,6 +20,7 @@ module OpenHAB
       # Rule configuration for OpenHAB Rules engine
       #
       class Builder
+        include Core::EntityLookup
         include DSL
         prepend Triggers
         extend Property
