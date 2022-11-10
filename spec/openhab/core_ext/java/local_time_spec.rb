@@ -3,6 +3,20 @@
 RSpec.describe java.time.LocalTime do
   let(:time) { java.time.LocalTime.parse("03:22:01") }
 
+  describe ".parse" do
+    specify { expect(described_class.parse("1").to_s).to eql "01:00" }
+    specify { expect(described_class.parse("02").to_s).to eql "02:00" }
+    specify { expect(described_class.parse("1pm").to_s).to eql "13:00" }
+    specify { expect(described_class.parse("12:30").to_s).to eql "12:30" }
+    specify { expect(described_class.parse("12 am").to_s).to eql "00:00" }
+    specify { expect(described_class.parse("7:00 AM").to_s).to eql "07:00" }
+    specify { expect(described_class.parse("7:00 pm").to_s).to eql "19:00" }
+    specify { expect(described_class.parse("7:30:20am").to_s).to eql "07:30:20" }
+    specify { expect { described_class.parse("12  am") }.to raise_error ArgumentError }
+    specify { expect { described_class.parse("17:00pm") }.to raise_error ArgumentError }
+    specify { expect { described_class.parse("17:00am") }.to raise_error ArgumentError }
+  end
+
   describe "#+" do
     it "works with a Period" do
       expect(time + 1.year).to be time
@@ -95,6 +109,25 @@ RSpec.describe java.time.LocalTime do
       specify { expect(time).to be < (other + 1) }
       specify { expect(time).not_to be > other }
       specify { expect(time).to be > (other - 1) }
+    end
+  end
+
+  describe "in a range" do
+    let(:minus5) { (Time.now - 5.minutes).to_local_time }
+    let(:plus5) { (Time.now + 5.minutes).to_local_time }
+    let(:plus10) { (Time.now + 10.minutes).to_local_time }
+
+    specify { expect((minus5..plus5).cover?(Time.now)).to be true }
+    specify { expect((plus5..plus10).cover?(Time.now)).to be false }
+    specify { expect((minus5..plus5).cover?(LocalTime.now)).to be true }
+    specify { expect((plus5..plus10).cover?(LocalTime.now)).to be false }
+
+    it "can be used in a case statement" do
+      r = case Time.now
+          when minus5..plus5 then 1
+          when plus5..plus10 then 2
+          end
+      expect(r).to be 1
     end
   end
 end

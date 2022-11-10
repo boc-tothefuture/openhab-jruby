@@ -51,7 +51,7 @@ module OpenHAB
 
         # @param [java.time.ZonedDateTime, nil] context
         #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
-        #   during conversion. {java.time.ZonedDateTime#now} is assumed if not given.
+        #   during conversion. {java.time.ZonedDateTime.now} is assumed if not given.
         # @return [java.time.ZonedDateTime]
         def to_zoned_date_time(context = nil)
           to_local_date.to_zoned_date_time(context)
@@ -61,6 +61,8 @@ module OpenHAB
         def <=>(other)
           return super if other.is_a?(self.class)
 
+          return self <=> other.to_date(self) if other.is_a?(java.time.MonthDay)
+
           if other.respond_to?(:coerce) && (lhs, rhs = coerce(self))
             return lhs <=> rhs
           end
@@ -69,13 +71,16 @@ module OpenHAB
         end
 
         #
-        # Convert `other` to date, if possible.
+        # Convert `other` to Date, if possible.
         #
         # @param [#to_date] other
         # @return [Array, nil]
         #
         def coerce(other)
-          return [other.to_date, self] if other.respond_to?(:to_date)
+          return nil unless other.respond_to?(:to_date)
+          return [other.to_date(self), self] if other.method(:to_date).arity == 1
+
+          [other.to_date, self]
         end
 
         alias_method :inspect, :to_s

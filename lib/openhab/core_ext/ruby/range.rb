@@ -53,7 +53,7 @@ module OpenHAB
         #
         def circular?
           return false if self.begin.nil? || self.end.nil?
-          return false if self.begin < self.end
+          return false if self.begin <= self.end
 
           case self.begin || self.end
           when java.time.LocalTime, java.time.MonthDay, java.time.Month

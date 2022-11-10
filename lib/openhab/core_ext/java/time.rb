@@ -24,7 +24,7 @@ module OpenHAB
 
         # @!visibility private
         def self.included(klass)
-          klass.singleton_class.include(ClassMethods)
+          klass.singleton_class.prepend(ClassMethods)
           klass.remove_method(:==)
           klass.alias_method(:inspect, :to_s)
         end
@@ -48,6 +48,7 @@ module OpenHAB
         end
 
         # Convert `other` to this class, if possible
+        # @return [Array, nil]
         def coerce(other)
           [other.send(self.class.coercion_method), self] if other.respond_to?(self.class.coercion_method)
         end

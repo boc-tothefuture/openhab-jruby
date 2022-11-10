@@ -19,6 +19,8 @@ module OpenHAB
           case other
           when Date
             Period.of_days(day_of_year - other.yday)
+          when MonthDay
+            self - other.at_year(year)
           when LocalDate
             Period.of_days(day_of_year - other.day_of_year)
           when Duration
@@ -72,7 +74,7 @@ module OpenHAB
 
         # @param [ZonedDateTime, nil] context
         #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
-        #   during conversion. {ZonedDateTime#now} is assumed if not given.
+        #   during conversion. {ZonedDateTime.now} is assumed if not given.
         # @return [ZonedDateTime]
         def to_zoned_date_time(context = nil)
           zone = context&.zone || java.time.ZoneId.system_default

@@ -39,9 +39,12 @@ module OpenHAB
           (LocalDate.of(1900, month, day_of_month) + other).to_month_day
         end
 
-        # @return [MonthDay]
+        # @return [MonthDay, Period]
         def -(other)
-          (LocalDate.of(1900, month, day_of_month) - other).to_month_day
+          d = (LocalDate.of(1900, month, day_of_month) - other)
+          return d if d.is_a?(java.time.Period)
+
+          d.to_month_day
         end
 
         #
@@ -52,7 +55,7 @@ module OpenHAB
         # @return [MonthDay]
         #
         def succ
-          if day == month.max_length
+          if day_of_month == month.max_length
             return MonthDay.of(1, 1) if month_value == 12
 
             return MonthDay.of(month_value + 1, 1)
@@ -61,11 +64,25 @@ module OpenHAB
           MonthDay.of(month_value, day_of_month + 1)
         end
 
+        # @param [java.time.TemporalAmount, nil] context
+        #   A {java.time.TemporalAmount TemporalAmount} used to fill in missing
+        #   fields during conversion. {LocalDate.now} is assumed if not given.
         # @return [LocalDate]
         def to_local_date(context = nil)
           context ||= java.time.Year.now
           year = java.time.Year.from(context)
           year.at_month_day(self)
+        end
+
+        alias_method :to_month, :month
+
+        # @param [Date, nil] context
+        #   A {Date} used to fill in missing fields
+        #   during conversion. {Date.today} is assumed if not given.
+        # @return [Date]
+        def to_date(context = nil)
+          context ||= Date.today
+          Date.new(context.year, month_value, day_of_month)
         end
 
         # @return [self]
@@ -75,7 +92,7 @@ module OpenHAB
 
         # @param [ZonedDateTime, nil] context
         #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
-        #   during conversion. {ZonedDateTime#now} is assumed if not given.
+        #   during conversion. {ZonedDateTime.now} is assumed if not given.
         # @return [ZonedDateTime]
         def to_zoned_date_time(context = nil)
           to_local_date(context).to_zoned_date_time(context)
