@@ -5,6 +5,10 @@ RSpec.describe OpenHAB::DSL do
     expect { 5.rule }.to raise_error(NoMethodError)
   end
 
+  it "makes included methods available as class methods" do
+    expect(described_class).to respond_to(:changed)
+  end
+
   describe "#profile" do
     it "works" do
       install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"

@@ -24,9 +24,12 @@ module OpenHAB
   # inside of other classes, or include the module.
   #
   module DSL
-    include Actions
-    include Rules::Terse
-    include ScriptHandling
+    [Actions, Rules::Terse, ScriptHandling].each do |mod|
+      # make these available both as regular and class methods
+      include mod
+      singleton_class.include mod
+      public_class_method(*mod.private_instance_methods)
+    end
     include Core::EntityLookup
 
     module_function
