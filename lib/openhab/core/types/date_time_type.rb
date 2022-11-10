@@ -76,26 +76,21 @@ module OpenHAB
         #
         # Create a new instance of DateTimeType
         #
-        # @param value [ZonedDateTime, Time, String, Numeric]
+        # @param value [#to_zoned_date_time, #to_time, #to_str, #to_d, nil]
         #
         def initialize(value = nil)
-          if value.respond_to?(:to_time)
-            time = value.to_time
-            instant = java.time.Instant.of_epoch_second(time.to_i, time.nsec)
-            zone_id = java.time.ZoneId.of_offset("UTC", java.time.ZoneOffset.of_total_seconds(time.utc_offset))
-            super(ZonedDateTime.of_instant(instant, zone_id))
+          if value.respond_to?(:to_zoned_date_time)
+            super(value.to_zoned_date_time)
+            return
+          elsif value.respond_to?(:to_time)
+            super(value.to_time.to_zoned_date_time)
             return
           elsif value.respond_to?(:to_str)
             # strings respond_do?(:to_d), but we want to avoid that conversion
             super(value.to_str)
             return
           elsif value.respond_to?(:to_d)
-            time = value.to_d
-            super(ZonedDateTime.of_instant(
-              java.time.Instant.of_epochSecond(time.to_i,
-                                               ((time % 1) * 1_000_000_000).to_i),
-              java.time.ZoneId.system_default
-            ))
+            super(Time.at(value.to_d).to_zoned_date_time)
             return
           end
 
