@@ -286,13 +286,13 @@ module OpenHAB
     #     <zero or more guards>
     #   end
     #
-    def rule(name = nil, id: nil, script: nil, &block)
+    def rule(name = nil, id: nil, script: nil, binding: nil, &block)
       id ||= Rules::NameInference.infer_rule_id_from_block(block)
       script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
       builder = nil
       ThreadLocal.thread_local(OPENHAB_RULE_UID: id) do
-        builder = Rules::Builder.new(block.binding)
+        builder = Rules::Builder.new(binding || block.binding)
         builder.uid(id)
         builder.instance_exec(&block)
         builder.guard = Rules::Guard.new(run_context: builder.caller, only_if: builder.only_if,
