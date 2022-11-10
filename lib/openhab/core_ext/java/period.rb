@@ -99,3 +99,5 @@ module OpenHAB
     end
   end
 end
+
+java_import java.time.Period
