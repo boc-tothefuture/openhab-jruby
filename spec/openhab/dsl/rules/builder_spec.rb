@@ -558,6 +558,129 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         test_thing_status_trigger(:updated, to: :uninitialized)
         test_thing_status_trigger(:updated, to: :unknown, expect_triggered: false)
       end
+
+      context "with items" do
+        before do
+          items.build do
+            group_item "AlarmModes" do
+              number_item "Alarm_Mode", state: 7
+              number_item "Alarm_Mode_Other", state: 7
+            end
+          end
+        end
+
+        it "triggers when updated" do
+          executed = 0
+          rule do
+            updated Alarm_Mode
+            run { executed += 1 }
+          end
+
+          Alarm_Mode.update(7)
+          expect(executed).to be 1
+
+          Alarm_Mode.update(14)
+          expect(executed).to be 2
+        end
+
+        it "triggers when updated to a specific value" do
+          executed = 0
+          rule do
+            updated Alarm_Mode, to: 7
+            run { executed += 1 }
+          end
+
+          Alarm_Mode.update(14)
+          expect(executed).to be 0
+
+          Alarm_Mode.update(7)
+          expect(executed).to be 1
+        end
+
+        it "triggers when updated to a one of several values" do
+          executed = 0
+          rule do
+            updated Alarm_Mode, to: [7, 14]
+            run { executed += 1 }
+          end
+
+          Alarm_Mode.update(10)
+          expect(executed).to be 0
+
+          Alarm_Mode.update(14)
+          expect(executed).to be 1
+
+          Alarm_Mode.update(7)
+          expect(executed).to be 2
+        end
+
+        it "triggers when a group is updated" do
+          items = []
+          rule do
+            updated AlarmModes
+            run { |event| items << event.item }
+          end
+
+          AlarmModes.update(7)
+          expect(items).to eql [AlarmModes]
+        end
+
+        it "works with group members" do
+          items = []
+          rule do
+            updated AlarmModes.members
+            run { |event| items << event.item }
+          end
+
+          Alarm_Mode.update(7)
+          expect(items).to eql [Alarm_Mode]
+        end
+
+        it "works with group members to specific states" do
+          items = []
+          rule do
+            updated AlarmModes.members, to: [7, 14]
+            run { |event| items << event.item }
+          end
+
+          Alarm_Mode.update(10)
+          expect(items).to be_empty
+
+          Alarm_Mode.update(7)
+          expect(items).to eql [Alarm_Mode]
+
+          Alarm_Mode.update(14)
+          expect(items).to eql [Alarm_Mode, Alarm_Mode]
+        end
+
+        it "triggers when updated to a range of values" do
+          executed = 0
+          rule do
+            updated Alarm_Mode, to: 7..14
+            run { executed += 1 }
+          end
+
+          Alarm_Mode.update(5)
+          expect(executed).to be 0
+
+          Alarm_Mode.update(10)
+          expect(executed).to be 1
+        end
+
+        it "triggers when updated to a proc" do
+          executed = 0
+          rule do
+            updated Alarm_Mode, to: ->(v) { (7..14).cover?(v) }
+            run { executed += 1 }
+          end
+
+          Alarm_Mode.update(5)
+          expect(executed).to be 0
+
+          Alarm_Mode.update(10)
+          expect(executed).to be 1
+        end
+      end
     end
   end
 
@@ -605,6 +728,66 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         expect(executed).to be 1
         time_travel_and_execute_timers(10.seconds)
         expect(executed).to be 2
+      end
+    end
+
+    describe "triggered" do
+      before do
+        items.build do
+          group_item "Switches" do
+            switch_item "Switch1", state: OFF
+            switch_item "Switch2", state: OFF
+          end
+        end
+      end
+
+      it "works" do
+        item = nil
+        rule do
+          changed Switch1
+          triggered { |i| item = i }
+        end
+
+        Switch1.on
+        expect(item).to be Switch1
+      end
+
+      it "triggers the item from the group" do
+        item = nil
+        rule do
+          changed Switches.members
+          triggered { |i| item = i }
+        end
+
+        Switch1.on
+        expect(item).to be Switch1
+      end
+
+      it "works with the & operator" do
+        rule do
+          changed Switches.members
+          triggered(&:off)
+        end
+
+        Switch1.on
+        expect(Switch1).to be_off
+      end
+
+      it "supports multiple execution blocks" do
+        item = nil
+        rule "turn a switch off five seconds after turning it on" do
+          changed Switches.members, to: ON
+          delay 5.seconds
+          triggered(&:off)
+          triggered { |i| item = i }
+        end
+
+        Switch1.on
+        expect(item).to be_nil
+
+        time_travel_and_execute_timers(10.seconds)
+        expect(item).to be Switch1
+        expect(Switch1).to be_off
       end
     end
 
