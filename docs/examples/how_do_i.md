@@ -653,7 +653,7 @@ end
 metadata = My_Item.metadata['namespace'].value
 ```
 
-See [Metadata](docs/usage/misc/metadata.md)
+See {OpenHAB::Core::Items::GenericItem.metadata}
 
 ## Use Persistence
 
@@ -661,7 +661,7 @@ See [Metadata](docs/usage/misc/metadata.md)
 daily_max = My_Item.maximum_since(24.hours)
 ```
 
-See [Persistence](docs/usage/misc/persistence.md)
+See {OpenHAB::Core::Items::Persistence}
 
 ## Use Semantic Model
 
@@ -674,7 +674,7 @@ light_switches = room_lights.members.points(Semantics::Switch)
 light_switches.ensure.on
 ```
 
-See [Semantics](docs/usage/misc/semantics.md)
+See {OpenHAB::Core::Items::Semantics}
 
 ## Use Logging
 
