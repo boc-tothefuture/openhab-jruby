@@ -19,8 +19,8 @@ RSpec.describe OpenHAB::Core::Items::Registry do
   end
 
   it "can check for existence" do
-    expect(items.include?("DimmerTest")).to be true
-    expect(items.include?("SimmerTest")).to be false
+    expect(items).to include("DimmerTest")
+    expect(items).not_to include("SimmerTest")
     expect(items["SimmerTest"]).to be_nil
   end
 end

@@ -82,7 +82,7 @@ RSpec.describe OpenHAB::Core::Types::DecimalType do
   end
 
   it "is comparable to floats" do
-    expect((0.0...50.0).include?(state)).to be true # rubocop:disable Performance/RangeInclude
+    expect((0.0...50.0).cover?(state)).to be true
   end
 
   describe "comparisons" do
