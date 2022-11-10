@@ -115,6 +115,8 @@ module OpenHAB
     #   end
     #
     def after(duration, id: nil, &block)
+      raise ArgumentError, "Block is required" unless block
+
       # Carry rule name to timer
       thread_locals = { OPENHAB_RULE_UID: Thread.current[:OPENHAB_RULE_UID] } if Thread.current[:OPENHAB_RULE_UID]
       thread_locals ||= {}
@@ -290,6 +292,8 @@ module OpenHAB
     #   end
     #
     def rule(name = nil, id: nil, script: nil, binding: nil, &block)
+      raise ArgumentError, "Block is required" unless block
+
       id ||= Rules::NameInference.infer_rule_id_from_block(block)
       script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
@@ -326,6 +330,8 @@ module OpenHAB
     # @yield [] Block executed when the script is executed.
     #
     def script(name = nil, id: nil, script: nil, &block)
+      raise ArgumentError, "Block is required" unless block
+
       id ||= NameInference.infer_rule_id_from_block(block)
       name ||= id
       script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
@@ -386,6 +392,8 @@ module OpenHAB
     #   # Rollershutter MyShade { channel="thing:rollershutter"[profile="ruby:veto_closing_shades"] }
     #
     def profile(id, &block)
+      raise ArgumentError, "Block is required" unless block
+
       uid = org.openhab.core.thing.profiles.ProfileTypeUID.new("ruby", id)
 
       Core::ProfileFactory.instance.register(uid, block)
