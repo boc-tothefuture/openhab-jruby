@@ -717,8 +717,6 @@ Exec.executeCommandLine('/path/to/program')
 ### Use ZonedDateTime
 
 ```ruby
-ZonedDateTime.now.plus_minutes(30)
-# or
 ZonedDateTime.now + 30.minutes
 # or
 30.minutes.from_now # Return a ZonedDateTime
@@ -727,18 +725,13 @@ ZonedDateTime.now + 30.minutes
 ### Convert ZonedDateTime to Ruby Time
 
 ```ruby
-Time.at(ZonedDateTime.now.to_epoch_second)
-# or
-Time.at(ZonedDateTime.now.to_i)
+ZonedDateTime.now.to_time
 ```
 
 ### Convert Ruby Time to ZonedDateTime
 
 ```ruby
-ruby_time = Time.now
-ruby_time.to_java(ZonedDateTime)
-# or
-ruby_time.to_zoned_date_time
+Time.now.to_zoned_date_time
 ```
 
 ### Work with LocalTime
