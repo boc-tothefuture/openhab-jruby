@@ -68,6 +68,8 @@ here is a non-exhaustive list of significant departures from the original gem:
    longer has a `filter` parameter; use `grep` if you want just
    {OpenHAB::Core::Items::GroupItem GroupItem}s.
  * `create_timer` no longer exists as an alias for {after after}.
+ * `GenericItem#meta` is no longer a supported alias for
+   {OpenHAB::Core::Items::GenericItem#metadata GenericItem#metadata}.
  * Triggers (such as {OpenHAB::DSL::Rules::Builder#changed changed},
    {OpenHAB::DSL::Rules::Builder#updated updated}, and
    {OpenHAB::DSL::Rules::Builder#received_command received_command} that
