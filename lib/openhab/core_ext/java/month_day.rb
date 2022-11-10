@@ -73,6 +73,9 @@ module OpenHAB
           self
         end
 
+        # @param [ZonedDateTime, nil] context
+        #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
+        #   during conversion. {ZonedDateTime#now} is assumed if not given.
         # @return [ZonedDateTime]
         def to_zoned_date_time(context = nil)
           to_local_date(context).to_zoned_date_time(context)

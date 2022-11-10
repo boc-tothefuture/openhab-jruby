@@ -49,6 +49,9 @@ module OpenHAB
           java.time.MonthDay.of(month, day)
         end
 
+        # @param [java.time.ZonedDateTime, nil] context
+        #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
+        #   during conversion. {java.time.ZonedDateTime#now} is assumed if not given.
         # @return [java.time.ZonedDateTime]
         def to_zoned_date_time(context = nil)
           to_local_date.to_zoned_date_time(context)

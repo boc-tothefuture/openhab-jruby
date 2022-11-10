@@ -12,6 +12,7 @@ module OpenHAB
         #
         # @param [java.time.temporal.TemporalAmount] other
         # @return [java.time.ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+        # @return [Time] If other is a Numeric
         #
         def +(other)
           return to_zoned_date_time + other if other.is_a?(java.time.temporal.TemporalAmount)
@@ -24,6 +25,7 @@ module OpenHAB
         #
         # @param [java.time.temporal.TemporalAmount] other
         # @return [java.time.ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+        # @return [Time] If other is a Numeric
         #
         def -(other)
           return to_zoned_date_time - other if other.is_a?(java.time.temporal.TemporalAmount)
@@ -51,6 +53,9 @@ module OpenHAB
           java.time.MonthDay.of(month, day)
         end
 
+        # @param [java.time.ZonedDateTime, nil] context
+        #   A {java.time.ZonedDateTime ZonedDateTime} used to fill in missing fields
+        #   during conversion. Not used in this class.
         # @return [java.time.ZonedDateTime]
         def to_zoned_date_time(_context = nil)
           to_java(ZonedDateTime)

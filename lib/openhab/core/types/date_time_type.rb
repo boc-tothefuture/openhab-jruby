@@ -53,6 +53,9 @@ module OpenHAB
           end
         end
 
+        # @param [java.time.ZonedDateTime, nil] context
+        #   A {java.time.ZonedDateTime ZonedDateTime} used to fill in missing
+        #   fields during conversion. Not used in this class.
         # @return [java.time.ZonedTimeTime]
         def to_zoned_date_time(_context = nil)
           zoned_date_time
@@ -66,6 +69,7 @@ module OpenHAB
         def_delegator :zoned_date_time, :second, :sec
         def_delegator :zoned_date_time, :nano, :nsec
         def_delegator :zoned_date_time, :to_epoch_second, :to_i
+        def_delegator :zoned_date_time, :to_time
 
         alias_method :day, :mday
 
@@ -145,15 +149,6 @@ module OpenHAB
           logger.trace("Coercing #{self} as a request from #{other.class}")
           return [other, zoned_date_time] if other.respond_to?(:to_zoned_date_time)
           return [DateTimeType.new(other), self] if other.respond_to?(:to_time)
-        end
-
-        #
-        # Convert this DateTimeType to a ruby Time object
-        #
-        # @return [Time] A Time object representing the same instant and timezone
-        #
-        def to_time
-          ::Time.at(to_i, nsec, :nsec).localtime(utc_offset)
         end
 
         #

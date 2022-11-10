@@ -69,6 +69,14 @@ module OpenHAB
           MonthDay.of(month, day_of_month)
         end
 
+        # This comes from JRuby
+
+        # @!method to_time
+        #   @return [Time]
+
+        # @param [ZonedDateTime, nil] context
+        #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
+        #   during conversion. Not used in this class.
         # @return [self]
         def to_zoned_date_time(_context = nil)
           self
