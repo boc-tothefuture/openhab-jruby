@@ -126,6 +126,17 @@ module OpenHAB
     #
     # @return [Range] object representing a TimeOfDay Range
     #
+    # @example Range#cover?
+    #   logger.info("Within month-day range") if between('02-20'..'06-01').cover?(MonthDay.now)
+    #
+    # @example Use in a Case
+    #   case MonthDay.now
+    #   when between('01-01'..'03-31')
+    #     logger.info("First quarter")
+    #   when between('04-01'..'06-30')
+    #    logger.info("Second quarter")
+    #   end
+    #
     def between(range)
       raise ArgumentError, "Supplied object must be a range" unless range.is_a?(Range)
 
