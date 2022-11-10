@@ -593,6 +593,21 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       end
     end
 
+    describe "#delay" do
+      it "works" do
+        executed = 0
+        rule do
+          on_start
+          run { executed += 1 }
+          delay 5.seconds
+          run { executed += 1 }
+        end
+        expect(executed).to be 1
+        time_travel_and_execute_timers(10.seconds)
+        expect(executed).to be 2
+      end
+    end
+
     # rubocop:disable RSpec/InstanceVariable
     context "with guards" do
       def run_rule
