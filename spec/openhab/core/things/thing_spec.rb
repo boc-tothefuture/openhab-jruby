@@ -5,7 +5,7 @@ RSpec.describe OpenHAB::Core::Things::Thing do
     install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
 
     things.build do
-      thing "astro:sun:home", "Astro Sun Data", config: { "geolocation" => "0,0" }, enabled: true
+      thing "astro:sun:home", "Astro Sun Data", config: { "geolocation" => "0,0" }
     end
   end
 
