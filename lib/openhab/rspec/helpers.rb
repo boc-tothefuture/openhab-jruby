@@ -88,9 +88,9 @@ module OpenHAB
         @autoupdated_items = []
 
         $ir.for_each do |_provider, item|
-          if item.meta.key?("autoupdate")
-            @autoupdated_items << item.meta.delete("autoupdate")
-            item.metadata["autoupdate"] = true
+          if (hash = item.metadata.delete("autoupdate"))
+            @autoupdated_items << hash
+            item.metadata["autoupdate"] = "true"
           end
         end
       end
@@ -392,39 +392,31 @@ module OpenHAB
       # so that we can mutate it in the future
       def set_up_autoupdates
         gmp = OSGi.service("org.openhab.core.model.item.internal.GenericMetadataProvider")
-        mr = OSGi.service("org.openhab.core.items.MetadataRegistry")
+        mr = Core::Items::Metadata::NamespaceHash.registry
         mmp = mr.managed_provider.get
         to_add = []
         gmp.all.each do |metadata|
           next unless metadata.uid.namespace == "autoupdate"
 
           to_add << metadata
-
-          # 3.2.0 can't remove single namespaces from the GenericMetadataProvider, so
-          # we have to remove everything from the item
-          unless gmp.respond_to?(:remove_metadata_by_namespace)
-            to_add.concat(gmp.all.select { |m2| m2.uid.item_name == metadata.uid.item_name })
-            gmp.remove_metadata(metadata.uid.item_name)
-          end
         end
-        gmp.remove_metadata_by_namespace("autoupdate") if gmp.respond_to?(:remove_metadata_by_namespace)
+        gmp.remove_metadata_by_namespace("autoupdate")
 
         to_add.each do |m|
-          if mmp.get(m.uid)
-            mmp.update(m)
-          else
-            mmp.add(m)
-          end
+          # we can't just update; we need to remove and add
+          # because this was a duplicate key, so the ManagedProvider
+          # knows about it, but the registry does not. So
+          # removing and adding gets it to notify the registry
+          # that it has it
+          mmp.remove(m.uid) if mmp.get(m.uid)
+          mmp.add(m)
         end
       end
 
       def restore_autoupdate_items
         return unless instance_variable_defined?(:@autoupdated_items)
 
-        mr = OSGi.service("org.openhab.core.items.MetadataRegistry")
-        @autoupdated_items&.each do |meta|
-          mr.update(meta)
-        end
+        @autoupdated_items&.each(&:commit)
         @autoupdated_items = nil
       end
     end

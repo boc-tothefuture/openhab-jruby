@@ -176,9 +176,9 @@ module OpenHAB
             return @hash.delete(namespace, &block) unless attached?
 
             r = self.class.registry.remove(MetadataKey.new(namespace, @item_name))
-            return yield(namespace) unless r
+            return yield(namespace) if block && !r
 
-            Hash.new(r)
+            Hash.new(r) if r
           end
 
           # @!visibility private

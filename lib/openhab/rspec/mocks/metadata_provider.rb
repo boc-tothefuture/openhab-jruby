@@ -7,9 +7,11 @@ module OpenHAB
         org.openhab.core.common.registry.Identifiable
         include org.openhab.core.items.ManagedMetadataProvider
 
-        def initialize
+        def initialize(parent)
           @metadata = {}
           @listeners = []
+          @parent = parent
+          @removed_from_parent = []
         end
 
         def addProviderChangeListener(listener) # rubocop:disable Naming/MethodName required by java interface
@@ -38,9 +40,17 @@ module OpenHAB
         end
 
         def remove(key)
+          m = @parent.remove(key)
+          @removed_from_parent << m if m
           m = @metadata.delete(key)
           @listeners.each { |l| l.removed(self, m) } if m
           m
+        end
+
+        def restore_parent
+          @removed_from_parent.each do |m|
+            @parent.add(m)
+          end
         end
 
         def get(key)

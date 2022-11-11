@@ -48,8 +48,8 @@ module OpenHAB
           allow(DSL::Things::ThingProvider).to receive(:instance).and_return(@thing_provider)
           @item_channel_link_provider = DSL::Items::ItemChannelLinkProvider.send(:new)
           allow(DSL::Items::ItemChannelLinkProvider).to receive(:instance).and_return(@item_channel_link_provider)
-          @metadata_provider = Mocks::MetadataProvider.new
           mr = Core::Items::Metadata::NamespaceHash.registry
+          @metadata_provider = Mocks::MetadataProvider.new(mr.managed_provider.get)
           mr.add_provider(@metadata_provider)
           mr.set_managed_provider(@metadata_provider)
           tm = OSGi.service("org.openhab.core.thing.ThingManager")
@@ -77,6 +77,7 @@ module OpenHAB
           registry = OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           registry.remove_provider(@item_channel_link_provider)
           Core::Items::Metadata::NamespaceHash.registry.remove_provider(@metadata_provider)
+          @metadata_provider.restore_parent
           @profile_factory_registration.unregister
           DSL::TimerManager.instance.cancel_all
           Timecop.return
