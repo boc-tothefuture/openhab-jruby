@@ -11,9 +11,9 @@ This code is under the [Eclipse v2 license](https://www.eclipse.org/legal/epl-2.
 JRuby Scripting OpenHAB is hosted on [GitHub](https://github.com/ccutrer/openhab-jrubyscripting). 
 
 # Development Environment Setup
-The development process has been tested on MacOS, and Ubunut. Other operating systems may work. 
+The development process has been tested on MacOS, and Ubuntu. Other operating systems may work. 
 
-1. Install Ruby 2.6.8
+1. Install Ruby 2.6.8 and JRuby 9.3.8.0 (or later)
 2. Fork [the repo](https://github.com/ccutrer/openhab-jrubyscripting) and clone it
 3. Install [bundler](https://bundler.io/)
 4. Run `bundler install` from inside of the repo directory
@@ -32,9 +32,9 @@ Code documentation is written in [Yard](https://yardoc.org/) and the current doc
 1. Create a branch for your contribution.
 2. Write your tests the project uses [Behavior Driven Development](https://en.wikipedia.org/wiki/Behavior-driven_development) with [RSpec](https://rspec.info/). The spec directory has many examples.  Feel free ask in your PR if you need help.
 3. Write your code.
-4. Verify your tests now pass by running `bin/rspec spec/<your spec file>_spec.rb`
+4. Verify your tests now pass by running `bin/rspec spec/<your spec file>_spec.rb`. This requires JRuby.
 5. Update the documentation, run `bin/yardoc` to view the rendered documentation locally
-6. Lint your code with `bundle exec rake lint` and ensure you have not created any [Rubocop](https://github.com/rubocop-hq/rubocop)  or [cuke lint](https://github.com/enkessler/cuke_linter) violations.
+6. Lint your code with `bundle exec rake lint:rubocop` and ensure you have not created any [Rubocop](https://github.com/rubocop-hq/rubocop) violations.
 7. Submit your PR(s)!
 
 If you get stuck or need help along the way, please open an issue.
