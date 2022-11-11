@@ -9,7 +9,7 @@ module OpenHAB
 
         # re-link files in docs/*.md. They're written so they work on github without any
         # processing
-        result.gsub!(%r{<a href="(?:[A-Za-z0-9_/-]+/)*([A-Za-z0-9_-]+).md(#[A-Za-z0-9_/-]+)"},
+        result.gsub!(%r{<a href="(?:[A-Za-z0-9_/-]+/)*([A-Za-z0-9_-]+).md(#[A-Za-z0-9_/-]+)?"},
                      "<a href=\"file.\\1.html\\2\"")
         result
       end
