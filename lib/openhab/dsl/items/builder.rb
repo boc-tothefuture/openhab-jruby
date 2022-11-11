@@ -487,10 +487,12 @@ module OpenHAB
 
         protected
 
+        # @return [String]
         def inspect_type
           type.to_s.capitalize
         end
 
+        # @return [String, nil]
         def type_details
           ":#{dimension}" if dimension
         end
@@ -577,13 +579,15 @@ module OpenHAB
 
         protected
 
+        # @return [String]
         def inspect_type
           "Group"
         end
 
+        # @return [String, nil]
         def type_details
           r = super
-          r += ":#{function}" if function
+          r = "#{r}:#{function}" if function
           r
         end
 
