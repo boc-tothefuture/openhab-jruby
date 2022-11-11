@@ -104,7 +104,7 @@ if My_Item.on?
   # do something
 end
 
-if Indoor_Temperature.state > '20 °C' || Indoor_Temperature.state > Outdoor_Temperature.state
+if Indoor_Temperature.state > 20 | '°C' || Indoor_Temperature.state > Outdoor_Temperature.state
   # do something
 end
 ```
@@ -127,11 +127,10 @@ String_Item.state == 'test string'
 Number_Item.state > 5.3
 items['Number_Item'].state == 10
 
-Temperature_Item.state > '24 °C'
-Temperature_Item.state > 24| '°C'
+Temperature_Item.state > 24 | '°C'
 Indoor_Temperature.state > Outdoor_Temperature.state 
-Indoor_Temperature.state > Outdoor_Temperature.state + '5 °C'
-Indoor_Temperature.state - Outdoor_Temperature.state > '5 °C'
+Indoor_Temperature.state > Outdoor_Temperature.state + 5 | '°C'
+Indoor_Temperature.state - Outdoor_Temperature.state > 5 | '°C'
 ```
 
 ### Get the Thing Linked to an Item
@@ -194,7 +193,7 @@ members_that_are_on = gTest.members.select(&:on?)
 members_that_are_not_on = gTest.members.reject(&:on?)
 
 # Filter with code:
-high_temperatures = gTemperatures.members.select(&:state?).select { |item| item.state > '30 °C' }
+high_temperatures = gTemperatures.members.select(&:state?).select { |item| item.state > 30 | '°C' }
 ```
 
 See [Accessing elements in a Ruby array](https://ruby-doc.org/core-2.6/Array.html#class-Array-label-Accessing+Elements).
