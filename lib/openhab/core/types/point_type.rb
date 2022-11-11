@@ -9,7 +9,7 @@ module OpenHAB
 
       # {PointType} can be used for items that are dealing with GPS or location awareness functionality.
       class PointType
-        # @!parse include PrimitiveType
+        # @!parse include Command, State
 
         # @overload initialize(latitude, longitude, altitude)
         #   @param [DecimalType, QuantityType, StringType, Numeric] latitude
@@ -169,3 +169,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse PointType = OpenHAB::Core::Types::PointType

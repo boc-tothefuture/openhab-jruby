@@ -12,7 +12,7 @@ module OpenHAB
 
       # {StringType} represents a {String} as a {Type} and a {Command}.
       class StringType
-        # @!parse include Type
+        # @!parse include Command, State
 
         extend Forwardable
         include Comparable
@@ -72,3 +72,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse StringType = OpenHAB::Core::Types::StringType

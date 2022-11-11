@@ -9,7 +9,12 @@ module OpenHAB
 
       # Implements the {STOP} and {MOVE} commands.
       class StopMoveType # rubocop:disable Lint/EmptyClass
-        # @!parse include Type
+        # @!parse include Command
+
+        # @!constant STOP
+        #   Stop Command
+        # @!constant MOVE
+        #   Move Command
 
         # @!method stop?
         #   Check if `self == STOP`
@@ -22,3 +27,8 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   StopMoveType = OpenHAB::Core::Types::StopMoveType
+#   STOP = OpenHAB::Core::Types::StopMoveType::STOP
+#   MOVE = OpenHAB::Core::Types::StopMoveType::MOVE

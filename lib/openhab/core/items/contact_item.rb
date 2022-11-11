@@ -14,7 +14,7 @@ module OpenHAB
       # This is useful for doors, windows, etc.
       #
       # @!attribute [r] state
-      #   @return [Types::OpenClosedType, nil]
+      #   @return [OpenClosedType, nil]
       #
       # @example
       #   rule 'Log state of all doors on system startup' do
@@ -32,14 +32,14 @@ module OpenHAB
       #
       class ContactItem < GenericItem
         # @!method open?
-        #   Check if the item state == `OPEN`
+        #   Check if the item state == {OPEN}
         #   @return [true,false]
         #
         # @example Log open contacts
         #   Contacts.select(&:open?).each { |contact| logger.info("Contact #{contact.name} is open")}
 
         # @!method closed?
-        #   Check if the item state == `CLOSED`
+        #   Check if the item state == {CLOSED}
         #   @return [true,false]
         #
         # @example Log closed contacts
@@ -48,3 +48,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse ContactItem = OpenHAB::Core::Items::ContactItem

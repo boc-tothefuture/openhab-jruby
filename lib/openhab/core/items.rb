@@ -20,12 +20,11 @@ module OpenHAB
         # Imports all of the item classes into the global namespace
         # for convenient access.
         def import_into_global_namespace
-          constants.map { |c| const_get(c) }
-                   .grep(Module)
-                   .select { |k| k <= GenericItem }
-                   .each do |k|
-            Object.const_set(k.java_class.simple_name, k)
+          concrete_item_classes.each do |k|
+            const_name = k.java_class.simple_name
+            Object.const_set(const_name, k) unless Object.const_defined?(const_name)
           end
+          Object.const_set(:GenericItem, GenericItem) unless Object.const_defined?(:GenericItem)
         end
 
         private
@@ -89,6 +88,12 @@ module OpenHAB
             RUBY
           end
         end
+
+        def concrete_item_classes
+          constants.map { |c| const_get(c) }
+                   .grep(Module)
+                   .select { |k| k < GenericItem }
+        end
       end
 
       # sort classes by hierarchy so we define methods on parent classes first
@@ -102,6 +107,8 @@ module OpenHAB
         def_predicate_methods(klass)
         def_command_methods(klass)
       end
+
+      prepend_accepted_data_types
     end
   end
 end

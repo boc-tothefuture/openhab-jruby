@@ -11,7 +11,7 @@ module OpenHAB
       # This type can be used for all binary data such as images, documents, sounds etc.
       #
       class RawType # rubocop:disable Lint/EmptyClass
-        # @!parse include Type
+        # @!parse include State
 
         # @!method mime_type
         #   @return [String]
@@ -22,3 +22,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse RawType = OpenHAB::Core::Types::RawType

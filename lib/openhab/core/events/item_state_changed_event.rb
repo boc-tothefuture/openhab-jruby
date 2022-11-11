@@ -41,7 +41,7 @@ module OpenHAB
 
         #
         # @!attribute [r] was
-        # @return [Types::State, nil] The state of the item if it was not {UNDEF} or {NULL}, `nil` otherwise.
+        # @return [State, nil] The state of the item if it was not {UNDEF} or {NULL}, `nil` otherwise.
         #
         def was
           old_item_state if was?

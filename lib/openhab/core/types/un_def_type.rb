@@ -13,7 +13,12 @@ module OpenHAB
       # (e.g. a group item with members whose states do not match will be
       # {NULL}).
       class UnDefType # rubocop:disable Lint/EmptyClass
-        # @!parse include Type
+        # @!parse include State
+
+        # @!constant NULL
+        #   Null State
+        # @!constant UNDEF
+        #   Undef State
 
         # @!method null?
         #   Check if `self == NULL`
@@ -26,3 +31,8 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   UnDefType = OpenHAB::Core::Types::UnDefType
+#   NULL = OpenHAB::Core::Types::UnDefType::NULL
+#   UNDEF = OpenHAB::Core::Types::UnDefType::UNDEF

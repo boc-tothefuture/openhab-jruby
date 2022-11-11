@@ -9,3 +9,12 @@ def init
            :attribute_details, [T("method_details")],
            :method_details_list, [T("method_details")]
 end
+
+def groups(list, type = "Method")
+  return super unless type == "Constant" && object.root?
+
+  # Sort constants in the root
+  super do |items, group|
+    yield(items.sort_by(&:name), group)
+  end
+end

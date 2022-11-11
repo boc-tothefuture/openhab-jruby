@@ -22,7 +22,7 @@ methods to support durations. These methods create a new {Duration} or {Period}
 object that is used by the {OpenHAB::DSL::Rules::Builder#every every} trigger,
 {OpenHAB::DSL::Rules::Builder#delay delay} block, the for option of
 {OpenHAB::DSL::Rules::Builder#changed changed} triggers, and
-{Timer Timer}s.
+{Timer}s.
 
 
 ### Examples
@@ -100,7 +100,7 @@ are smart enough to automatically handle boundary issues.
 Coarse types (like {LocalDate}, {Month}, {MonthDay}) will also work correctly when checking
 against a more specific type.
 
-To easily parse strings into date-time ranges, use the {between between}
+To easily parse strings into date-time ranges, use the {between}
 helper.
 
 ### Examples

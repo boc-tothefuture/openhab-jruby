@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# Automation lookup and injection of OpenHab entities
-
 module OpenHAB
   module Core
     #

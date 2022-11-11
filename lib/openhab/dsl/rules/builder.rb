@@ -896,9 +896,9 @@ module OpenHAB
         # The `event` passed to run blocks will be an
         # {Core::Events::ItemCommandEvent}.
         #
-        # @param [Core::Items::GenericItem, Core::Items::GroupItem::Members] items Items to create trigger for
-        # @param [Core::Types::Command, Array<Core::Types::Command>, Range, Proc] command commands to match for trigger
-        # @param [Array<Core::Types::Command>, Range, Proc] commands Fluent alias for `command`
+        # @param [GenericItem, GroupItem::Members] items Items to create trigger for
+        # @param [Core::TypesCommand, Array<Command>, Range, Proc] command commands to match for trigger
+        # @param [Array<Command>, Range, Proc] commands Fluent alias for `command`
         # @param [Object] attach object to be attached to the trigger
         # @return [void]
         #
@@ -1083,7 +1083,7 @@ module OpenHAB
         # {Core::Events::ThingStatusInfoEvent} depending on if the triggering
         # element was an item or a thing.
         #
-        # @param [Core::Items::GenericItem, Core::Items::GroupItem::Members, Thing] items
+        # @param [GenericItem, GroupItem::Members, Thing] items
         #   Objects to create trigger for.
         # @param [State, Array<State>, Range, Proc, Symbol, String] to
         #   Only execute rule if the state matches `to` state(s). If the

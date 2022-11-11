@@ -100,4 +100,4 @@ module OpenHAB
   end
 end
 
-java_import java.time.Period
+Period = OpenHAB::CoreExt::Java::Period unless Object.const_defined?(:Period)

@@ -15,7 +15,12 @@ module OpenHAB
       # {DOWN}, and anything in-between is neither.
       #
       class UpDownType
-        # @!parse include Type
+        # @!parse include Command, State
+
+        # @!constant UP
+        #   Up Command/State
+        # @!constant DOWN
+        #   Down Command/State
 
         # @!method up?
         #   Check if `self == UP`
@@ -28,7 +33,7 @@ module OpenHAB
         #
         # Invert the type
         #
-        # @return [UpDownType] `UP` if `DOWN`, `DOWN` if `UP`
+        # @return [UpDownType] {UP} if {down?}, {DOWN} if {up?}
         #
         def !
           return UP if down?
@@ -38,3 +43,8 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   UpDownType = OpenHAB::Core::Types::UpDownType
+#   UP = OpenHAB::Core::Types::UpDownType::UP
+#   DOWN = OpenHAB::Core::Types::UpDownType::DOWN

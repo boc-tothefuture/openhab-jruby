@@ -80,7 +80,7 @@ module OpenHAB
           #
           # Create a cron map from a MonthDay
           #
-          # @param [java.time.MonthDay] monthday a {MonthDay} object
+          # @param [MonthDay] monthday a {MonthDay} object
           # @param [Object] at LocalTime or String representing time of day
           #
           # @return [Hash] map describing cron expression

@@ -9,7 +9,12 @@ module OpenHAB
 
       # Implements the {REWIND} and {FASTFORWARD} commands and states.
       class RewindFastforwardType # rubocop:disable Lint/EmptyClass
-        # @!parse include Type
+        # @!parse include Command, State
+
+        # @!constant REWIND
+        #   Rewind Command/Rewinding State
+        # @!constant FASTFORWARD
+        #   Fast Forward Command/Fast Forwarding State
 
         # @!method rewinding?
         #   Check if `self == REWIND`
@@ -26,3 +31,8 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   RewindFastforwardType = OpenHAB::Core::Types::RewindFastforwardType
+#   REWIND = OpenHAB::Core::Types::RewindFastforwardType::REWIND
+#   FASTFORWARD = OpenHAB::Core::Types::RewindFastforwardType::FASTFORWARD

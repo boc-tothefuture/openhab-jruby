@@ -3,11 +3,13 @@
 module OpenHAB
   module Core
     module Types
-      java_import org.openhab.core.types.Type
+      java_import org.openhab.core.types.Command,
+                  org.openhab.core.types.Type,
+                  org.openhab.core.types.State
 
       # This is a parent interface for all {State}s and {Command}s. It
       # was introduced as many states can be commands at the same time and vice
-      # versa. E.g a light can have the state {ON} or {OFF} and one can also
+      # versa. E.g. a light can have the state {ON} or {OFF} and one can also
       # send {ON} and {OFF} as commands to the device. This duality is captured
       # by this marker interface and allows implementing classes to be both
       # state and command at the same time.
@@ -89,6 +91,20 @@ module OpenHAB
           super
         end
       end
+
+      # This is a marker interface for all command types.
+      module Command
+        # @!parse include Type
+      end
+
+      # This is a marker interface for all state types.
+      module State
+        # @!parse include Type
+      end
     end
   end
 end
+
+# @!parse
+#   Command = OpenHAB::Core::Types::Command
+#   State = OpenHAB::Core::Types::State

@@ -15,6 +15,9 @@ end
 
 require_relative "core_ext"
 
+#
+# Main OpenHAB Module
+#
 module OpenHAB
   #
   # The main DSL available to rules.
@@ -360,13 +363,13 @@ module OpenHAB
     #   The callback to be used to customize the action taken.
     # @yieldparam [:command_from_item, :state_from_item, :command_from_handler, :state_from_handler] event
     #   The event that needs to be processed.
-    # @yieldparam [Core::Types::Command, nil] command
+    # @yieldparam [Command, nil] command
     #   The command being sent for `:command_from_item` and `:command_from_handler` events.
-    # @yieldparam [Core::Types::State, nil] state
+    # @yieldparam [State, nil] state
     #   The state being sent for `:state_from_item` and `:state_from_handler` events.
     # @yieldparam [Core::Things::ItemChannelLink] link
     #   The link between the item and the channel, including its configuration.
-    # @yieldparam [Core::Items::GenericItem] item The linked item.
+    # @yieldparam [GenericItem] item The linked item.
     # @yieldparam [org.openhab.core.thing.ChannelUID] channel_uid The linked channel.
     # @yieldparam [Hash] configuration The profile configuration.
     # @yieldparam [org.openhab.core.thing.profiles.ProfileContext] context The profile context.
@@ -431,7 +434,7 @@ module OpenHAB
     # current state of each item. It is implemented by calling OpenHAB's
     # [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
     #
-    # @param [Core::Items::GenericItem] items Items to store states of.
+    # @param [GenericItem] items Items to store states of.
     #
     # @return [Core::Items::StateStorage] item states
     #

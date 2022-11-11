@@ -19,7 +19,7 @@ module OpenHAB
       # @!attribute [r] unit
       #   @return [javax.measure.Unit, nil]
       # @!attribute [r] state
-      #   @return [Types::DecimalType, Types::QuantityType, nil]
+      #   @return [DecimalType, QuantityType, nil]
       #
 
       class NumberItem < GenericItem
@@ -35,3 +35,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse NumberItem = OpenHAB::Core::Items::NumberItem

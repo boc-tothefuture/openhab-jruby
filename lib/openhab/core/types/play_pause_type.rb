@@ -9,7 +9,12 @@ module OpenHAB
 
       # Implements {PLAY} and {PAUSE} commands and states.
       class PlayPauseType # rubocop:disable Lint/EmptyClass
-        # @!parse include Type
+        # @!parse include Command, State
+
+        # @!constant PLAY
+        #   Play Command/Playing State
+        # @!constant PAUSE
+        #   Pause Command/Paused State
 
         # @!method playing?
         #   Check if `self == PLAY`
@@ -26,3 +31,8 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   PlayPauseType = OpenHAB::Core::Types::PlayPauseType
+#   PLAY = OpenHAB::Core::Types::PlayPauseType::PLAY
+#   PAUSE = OpenHAB::Core::Types::PlayPauseType::PAUSE

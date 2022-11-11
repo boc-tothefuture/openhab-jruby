@@ -9,7 +9,7 @@ module OpenHAB
     # has been scheduled to run later with {DSL#after after}.
     #
     # @!attribute [r] execution_time
-    #   @return [java.time.ZonedDateTime] The scheduled execution time, or null if the timer was cancelled
+    #   @return [ZonedDateTime] The scheduled execution time, or null if the timer was cancelled
     class Timer
       extend Forwardable
 
@@ -123,7 +123,7 @@ module OpenHAB
       end
 
       #
-      # @return [java.time.ZonedDateTime]
+      # @return [ZonedDateTime]
       #
       def new_execution_time(time)
         time = time.call if time.is_a?(Proc)

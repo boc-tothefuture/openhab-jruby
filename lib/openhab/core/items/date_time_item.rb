@@ -11,7 +11,7 @@ module OpenHAB
       # A DateTimeItem stores a timestamp including a valid time zone.
       #
       # @!attribute [r] state
-      #   @return [Types::DateTimeType, nil]
+      #   @return [DateTimeType, nil]
       #
       # @example DateTime items can be updated and commanded with Ruby Time objects or Java ZonedDateTime objects
       #   Example_DateTimeItem << Time.now
@@ -56,3 +56,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse DateTimeItem = OpenHAB::Core::Items::DateTimeItem

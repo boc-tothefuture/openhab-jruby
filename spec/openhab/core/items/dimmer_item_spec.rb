@@ -12,6 +12,12 @@ RSpec.describe OpenHAB::Core::Items::DimmerItem do
     end
   end
 
+  describe "#accepted_command_types" do
+    it "returns Ruby classes" do
+      expect(DimmerOne.accepted_data_types).to eql [PercentType, OnOffType, UnDefType]
+    end
+  end
+
   it "sends on/off commands" do
     Dimmers.members.each { |d| d.update(OFF) }
     Dimmers.members.each(&:on)

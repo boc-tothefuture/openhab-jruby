@@ -43,3 +43,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse LocationItem = OpenHAB::Core::Items::LocationItem

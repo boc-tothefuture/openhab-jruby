@@ -6,12 +6,12 @@ module OpenHAB
       java_import org.openhab.core.thing.link.ItemChannelLink
 
       #
-      # Represents the link between an {Items::GenericItem} and Thing's
+      # Represents the link between a {GenericItem} and Thing's
       # Channel.
       #
       class ItemChannelLink
         # @!attribute [r] item
-        # @return [Items::GenericItem]
+        # @return [GenericItem]
         def item
           DSL.items[item_name]
         end

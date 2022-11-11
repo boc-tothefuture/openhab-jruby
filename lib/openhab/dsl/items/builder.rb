@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     #
-    # Contains extensions to simplify working with [Core::Items::GenericItem]s.
+    # Contains extensions to simplify working with [GenericItem]s.
     #
     module Items
       # Stores all items created in scripts, and notifies the ItemRegistry
@@ -139,36 +139,36 @@ module OpenHAB
           end
         end
 
-        # @return [Core::Items::ColorItem]
+        # @return [ColorItem]
         def_item_method(:color)
-        # @return [Core::Items::ContactItem]
+        # @return [ContactItem]
         def_item_method(:contact)
-        # @return [Core::Items::DateTimeItem]
+        # @return [DateTimeItem]
         def_item_method(:date_time)
-        # @return [Core::Items::DimmerItem]
+        # @return [DimmerItem]
         def_item_method(:dimmer)
-        # @return [Core::Items::ImageItem]
+        # @return [ImageItem]
         def_item_method(:image)
-        # @return [Core::Items::LocationItem]
+        # @return [LocationItem]
         def_item_method(:location)
-        # @return [Core::Items::NumberItem]
+        # @return [NumberItem]
         def_item_method(:number)
-        # @return [Core::Items::PlayerItem]
+        # @return [PlayerItem]
         def_item_method(:player)
-        # @return [Core::Items::RollershutterItem]
+        # @return [RollershutterItem]
         def_item_method(:rollershutter)
-        # @return [Core::Items::StringItem]
+        # @return [StringItem]
         def_item_method(:string)
-        # @return [Core::Items::SwitchItem]
+        # @return [SwitchItem]
         def_item_method(:switch)
 
-        # Create a new {Core::Items::GroupItem}
+        # Create a new {GroupItem}
         #
         # @!method group_item(name, label = nil, **kwargs)
         # @param name [String] The name for the new item
         # @param label [String] The item label
         # @yield GroupItemBuilder
-        # @return [Core::Items::GroupItem]
+        # @return [GroupItem]
         # @see GroupItemBuilder#initialize GroupItemBuilder#initialize for additional arguments.
         def group_item(*args, **kwargs, &block)
           item = GroupItemBuilder.new(*args, provider: provider, **kwargs)
@@ -226,7 +226,7 @@ module OpenHAB
         # @return [Symbol, nil]
         attr_accessor :icon
         # Groups to which this item should be added
-        # @return [Array<String, Core::Items::GroupItem>]
+        # @return [Array<String, GroupItem>]
         attr_reader :groups
         # Tags to apply to this item
         # @return [Array<String, Semantics::Tag>]
@@ -237,7 +237,7 @@ module OpenHAB
         # Channel to link the item to
         # @return [String, ChannelUID, nil]
         attr_accessor :channels
-        # @return [Core::Items::Metadata::NamespaceHash]
+        # @return [Metadata::NamespaceHash]
         attr_reader :metadata
         # Initial state
         attr_accessor :state
@@ -253,15 +253,15 @@ module OpenHAB
         # @param format [String, nil] The formatting pattern for the item's state (see {#format})
         # @param icon [Symbol, nil] The icon to be associated with the item (see {#icon})
         # @param group [String,
-        #   Core::Items::GroupItem,
+        #   GroupItem,
         #   GroupItemBuilder,
-        #   Array<String, Core::Items::GroupItem, GroupItemBuilder>,
+        #   Array<String, GroupItem, GroupItemBuilder>,
         #   nil]
         #        Group(s) to which this item should be added (see {#group}).
         # @param groups [String,
-        #   Core::Items::GroupItem,
+        #   GroupItem,
         #   GroupItemBuilder,
-        #   Array<String, Core::Items::GroupItem, GroupItemBuilder>,
+        #   Array<String, GroupItem, GroupItemBuilder>,
         #   nil]
         #        Fluent alias for `group`.
         # @param tag [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
@@ -274,7 +274,7 @@ module OpenHAB
         # @param expire [String] An expiration specification.
         # @param homekit [String, Array, nil] Homekit metadata (see {#alexa})
         # @param metadata [Hash<String, Hash>] Generic metadata (see {#metadata})
-        # @param state [Types::State] Initial state
+        # @param state [State] Initial state
         def initialize(type, name = nil, label = nil,
                        provider:,
                        dimension: nil,
@@ -359,7 +359,7 @@ module OpenHAB
         #
         # Add this item to a group
         #
-        # @param groups [String, GroupItemBuilder, Core::Items::GroupItem]
+        # @param groups [String, GroupItemBuilder, GroupItem]
         # @return [void]
         #
         def group(*groups)
@@ -468,7 +468,8 @@ module OpenHAB
             state = self.state
             state = item.__send__(:format_type, state) unless state.is_a?(org.openhab.core.types.State)
             unless state.is_a?(org.openhab.core.types.State)
-              state = org.openhab.core.types.TypeParser.parse_state(item.accepted_data_types, state.to_s)
+              state = org.openhab.core.types.TypeParser.parse_state(item.accepted_data_types.map(&:java_class),
+                                                                    state.to_s)
             end
             item.state = state
           end

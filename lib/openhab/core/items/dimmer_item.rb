@@ -13,7 +13,7 @@ module OpenHAB
       # percent values to reflect the dimmed state.
       #
       # @!attribute [r] state
-      #   @return [Types::PercentType, nil]
+      #   @return [PercentType, nil]
       #
       # @example
       #   DimmerOne << DimmerOne.state - 5
@@ -126,11 +126,11 @@ module OpenHAB
         end
 
         # @!method increase
-        #   Send the `INCREASE` command to the item
+        #   Send the {INCREASE} command to the item
         #   @return [DimmerItem] `self`
 
         # @!method decrease
-        #   Send the `DECREASE` command to the item
+        #   Send the {DECREASE} command to the item
         #   @return [DimmerItem] `self`
 
         # raw numbers translate directly to PercentType, not a DecimalType
@@ -144,3 +144,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse DimmerItem = OpenHAB::Core::Items::DimmerItem

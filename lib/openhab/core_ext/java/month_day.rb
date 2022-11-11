@@ -64,8 +64,8 @@ module OpenHAB
           MonthDay.of(month_value, day_of_month + 1)
         end
 
-        # @param [java.time.TemporalAmount, nil] context
-        #   A {java.time.TemporalAmount TemporalAmount} used to fill in missing
+        # @param [TemporalAmount, nil] context
+        #   A {TemporalAmount} used to fill in missing
         #   fields during conversion. {LocalDate.now} is assumed if not given.
         # @return [LocalDate]
         def to_local_date(context = nil)
@@ -91,7 +91,7 @@ module OpenHAB
         end
 
         # @param [ZonedDateTime, nil] context
-        #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
+        #   A {ZonedDateTime} used to fill in missing fields
         #   during conversion. {ZonedDateTime.now} is assumed if not given.
         # @return [ZonedDateTime]
         def to_zoned_date_time(context = nil)
@@ -102,4 +102,4 @@ module OpenHAB
   end
 end
 
-java_import java.time.MonthDay
+MonthDay = OpenHAB::CoreExt::Java::MonthDay unless Object.const_defined?(:MonthDay)

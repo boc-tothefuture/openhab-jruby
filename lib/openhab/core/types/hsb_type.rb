@@ -218,3 +218,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse HSBType = OpenHAB::Core::Types::HSBType

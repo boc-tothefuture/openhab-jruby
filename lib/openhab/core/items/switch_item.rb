@@ -12,7 +12,7 @@ module OpenHAB
       # Useful for normal lights, presence detection etc.
       #
       # @!attribute [r] state
-      #   @return [Types::OnOffType, nil]
+      #   @return [OnOffType, nil]
       #
       #
       # @example Turn on all switches in a `Group:Switch` called Switches
@@ -56,21 +56,23 @@ module OpenHAB
         end
 
         # @!method on?
-        #   Check if the item state == `ON`
+        #   Check if the item state == {ON}
         #   @return [true,false]
 
         # @!method off?
-        #   Check if the item state == `OFF`
+        #   Check if the item state == {OFF}
         #   @return [true,false]
 
         # @!method on
-        #   Send the `ON` command to the item
+        #   Send the {ON} command to the item
         #   @return [SwitchItem] `self`
 
         # @!method off
-        #   Send the `OFF` command to the item
+        #   Send the {OFF} command to the item
         #   @return [SwitchItem] `self`
       end
     end
   end
 end
+
+# @!parse SwitchItem = OpenHAB::Core::Items::SwitchItem

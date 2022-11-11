@@ -9,7 +9,12 @@ module OpenHAB
 
       # Implements {NEXT} and {PREVIOUS} commands.
       class NextPreviousType # rubocop:disable Lint/EmptyClass
-        # @!parse include Type
+        # @!parse include Command
+
+        # @!constant NEXT
+        #   Next Command
+        # @!constant PREVIOUS
+        #   Previous Command
 
         # @!method next?
         #   Check if `self == NEXT`
@@ -22,3 +27,8 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   NextPreviousType = OpenHAB::Core::Types::NextPreviousType
+#   NEXT = OpenHAB::Core::Types::NextPreviousType::NEXT
+#   PREVIOUS = OpenHAB::Core::Types::NextPreviousType::PREVIOUS

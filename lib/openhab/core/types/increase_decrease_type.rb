@@ -9,7 +9,12 @@ module OpenHAB
 
       # Represents {INCREASE} and {DECREASE} commands.
       class IncreaseDecreaseType # rubocop:disable Lint/EmptyClass
-        # @!parse include Type
+        # @!parse include Command
+
+        # @!constant INCREASE
+        #   Increase Command
+        # @!constant DECREASE
+        #   Decrease Command
 
         # @!method increase?
         #   Check if `self == INCREASE`
@@ -22,3 +27,8 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   IncreaseDecreaseType = OpenHAB::Core::Types::IncreaseDecreaseType
+#   INCREASE = OpenHAB::Core::Types::IncreaseDecreaseType::INCREASE
+#   DECREASE = OpenHAB::Core::Types::IncreaseDecreaseType::DECREASE

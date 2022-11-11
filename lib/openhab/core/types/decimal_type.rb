@@ -13,7 +13,7 @@ module OpenHAB
       # {DecimalType} uses a {java.lang.BigDecimal} internally and thus can be
       # used for integers, longs and floating point numbers alike.
       class DecimalType
-        # @!parse include Type
+        # @!parse include Command, State
         include NumericType
         include ComparableType
 
@@ -166,3 +166,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse DecimalType = OpenHAB::Core::Types::DecimalType

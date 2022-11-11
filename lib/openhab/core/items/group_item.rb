@@ -171,3 +171,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse GroupItem = OpenHAB::Core::Items::GroupItem

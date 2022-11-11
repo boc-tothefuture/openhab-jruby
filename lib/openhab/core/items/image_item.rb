@@ -16,7 +16,7 @@ module OpenHAB
       # An {ImageItem} holds the binary image data as its state.
       #
       # @!attribute [r] state
-      #   @return [Types::RawType, nil]
+      #   @return [RawType, nil]
       #
       # @example Update from a base 64 encode image string
       #   Image.update("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=")
@@ -105,3 +105,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse ImageItem = OpenHAB::Core::Items::ImageItem

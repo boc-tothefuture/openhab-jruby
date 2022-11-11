@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# OpenHAB main module
 module OpenHAB
   module Core
     #

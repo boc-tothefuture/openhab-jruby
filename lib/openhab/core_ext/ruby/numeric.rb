@@ -7,9 +7,9 @@ class Integer
     # @!macro def_duration_method
     #   @!method $1
     #
-    #   Create {java.time.Duration Duration} of `self` $1
+    #   Create {Duration} of `self` $1
     #
-    #   @return [java.time.Duration]
+    #   @return [Duration]
     #
     # @!visibility private
     def def_duration_method(unit)
@@ -24,9 +24,9 @@ class Integer
     # @!macro def_period_method
     #   @!method $1
     #
-    #   Create {java.time.Period Period} of `self` $1
+    #   Create {Period} of `self` $1
     #
-    #   @return [java.time.Period]
+    #   @return [Period]
     #
     # @!visibility private
     def def_period_method(unit)
@@ -39,9 +39,9 @@ class Integer
   end
 
   #
-  # Create {java.time.Duration Duration} of `self` milliseconds
+  # Create {Duration} of `self` milliseconds
   #
-  # @return [java.time.Duration]
+  # @return [Duration]
   #
   def in_milliseconds
     Duration.of_millis(self)
@@ -63,18 +63,18 @@ end
 # Extensions to Float
 class Float
   #
-  # Create {java.time.Duration Duration} of `self` milliseconds
+  # Create {Duration} of `self` milliseconds
   #
-  # @return [java.time.Duration]
+  # @return [Duration]
   #
   def in_milliseconds
     java.time.Duration.of_nanos((self * 1_000_000).to_i)
   end
 
   #
-  # Create {java.time.Duration Duration} of `self` seconds
+  # Create {Duration} of `self` seconds
   #
-  # @return [java.time.Duration]
+  # @return [Duration]
   #
   def seconds
     (self * 1000).in_milliseconds
@@ -82,9 +82,9 @@ class Float
   alias_method :second, :seconds
 
   #
-  # Create {java.time.Duration Duration} of `self` minutes
+  # Create {Duration} of `self` minutes
   #
-  # @return [java.time.Duration]
+  # @return [Duration]
   #
   def minutes
     (self * 60).seconds
@@ -92,9 +92,9 @@ class Float
   alias_method :minute, :minutes
 
   #
-  # Create {java.time.Duration Duration} of `self` hours
+  # Create {Duration} of `self` hours
   #
-  # @return [java.time.Duration]
+  # @return [Duration]
   #
   def hours
     (self * 60).minutes
@@ -102,9 +102,9 @@ class Float
   alias_method :hour, :hours
 
   #
-  # Create {java.time.Duration Duration} of `self` days
+  # Create {Duration} of `self` days
   #
-  # @return [java.time.Duration]
+  # @return [Duration]
   #
   def days
     (self * 24).hours
@@ -112,9 +112,9 @@ class Float
   alias_method :day, :days
 
   #
-  # Create {java.time.Duration Duration} of `self` months
+  # Create {Duration} of `self` months
   #
-  # @return [java.time.Duration]
+  # @return [Duration]
   #
   def months
     (self * java.time.temporal.ChronoUnit::MONTHS.duration.to_i).seconds
@@ -122,9 +122,9 @@ class Float
   alias_method :month, :months
 
   #
-  # Create {java.time.Duration Duration} of `self` years
+  # Create {Duration} of `self` years
   #
-  # @return [java.time.Duration]
+  # @return [Duration]
   #
   def years
     (self * java.time.temporal.ChronoUnit::YEARS.duration.to_i).seconds
@@ -144,7 +144,7 @@ module OpenHAB
         #
         # @param [String, javax.measure.Unit] unit
         #
-        # @return [Core::Types::QuantityType] `self` as a {Types::QuantityType} of the supplied Unit
+        # @return [QuantityType] `self` as a {Types::QuantityType} of the supplied Unit
         #
         def |(unit) # rubocop:disable Naming/BinaryOperatorParameterName
           unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit.to_str) if unit.respond_to?(:to_str)

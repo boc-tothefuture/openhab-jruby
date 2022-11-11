@@ -12,7 +12,7 @@ module OpenHAB
 
       # {DateTimeType} uses a {ZonedDateTime} internally.
       class DateTimeType
-        # @!parse include Type
+        # @!parse include Command, State
 
         # remove the JRuby default == so that we can inherit the Ruby method
         remove_method :==
@@ -53,10 +53,10 @@ module OpenHAB
           end
         end
 
-        # @param [java.time.ZonedDateTime, nil] context
-        #   A {java.time.ZonedDateTime ZonedDateTime} used to fill in missing
+        # @param [ZonedDateTime, nil] context
+        #   A {ZonedDateTime} used to fill in missing
         #   fields during conversion. Not used in this class.
-        # @return [java.time.ZonedTimeTime]
+        # @return [ZonedTimeTime]
         def to_zoned_date_time(_context = nil)
           zoned_date_time
         end
@@ -255,3 +255,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse DateTimeType = OpenHAB::Core::Types::DateTimeType

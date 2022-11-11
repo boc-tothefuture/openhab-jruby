@@ -35,7 +35,7 @@ module OpenHAB
 
         #
         # @!attribute [r] state
-        # @return [Types::State, nil] The state of the item if it is not {UNDEF} or {NULL}, `nil` otherwise.
+        # @return [State, nil] The state of the item if it is not {UNDEF} or {NULL}, `nil` otherwise.
         #
         def state
           item_state if state?

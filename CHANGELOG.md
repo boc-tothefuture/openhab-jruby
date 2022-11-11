@@ -14,8 +14,8 @@ waiting for full review from other contributors with limited time. That said,
 here is a non-exhaustive list of significant departures from the original gem:
 
  * Significant new features! In particular, see {OpenHAB::DSL::Items::Builder},
-   {OpenHAB::DSL::Things::Builder}, and several new triggers in
-   {OpenHAB::DSL::Rules::Builder}.
+   {OpenHAB::DSL::Things::Builder}, several new triggers in
+   {OpenHAB::DSL::Rules::Builder}, and {OpenHAB::DSL.profile}.
  * Dropping support for OpenHAB < 3.3.
  * The main require is now `require "openhab/dsl"` instead of just
    `require "openhab"`. The reason being to avoid conflicts if a gem gets
@@ -23,8 +23,8 @@ here is a non-exhaustive list of significant departures from the original gem:
    [configure automatic requires](docs/installation.md) for this file anyway.
  * Major re-organization of class structures. {OpenHAB::Core} now contains any
    classes that are mostly wrappers or extensions of OpenHAB::Core Java
-   classes, while {OpenHAB::DSL} contains novel Ruby-only classes to that
-   implement a Ruby-first manner of creating rules, items, and things.
+   classes, while {OpenHAB::DSL} contains novel Ruby-only classes that implment
+   a Ruby-first manner of creating rules, items, and things.
  * As part of the re-organization from above, the definition of a "DSL method"
    that is publicly exposed and available for use has been greatly refined.
    Top-level DSL methods are only available on `main` (the top-level {Object}
@@ -34,7 +34,7 @@ here is a non-exhaustive list of significant departures from the original gem:
    to explicitly call them on {OpenHAB::DSL}, or mix that module into your
    class yourself. Additional internal and Java constants and methods should
    no longer be leaking out of the gem's public API.
- * {OpenHAB::Core::Items::GenericItem GenericItem} and descendants can no
+ * {GenericItem} and descendants can no
    longer be treated as the item's state. While convenient at times, it
    introduces many ambiguities on if the intention is to interact with the item
    or its state, and contortionist code attempting to support both use cases.
@@ -49,27 +49,24 @@ here is a non-exhaustive list of significant departures from the original gem:
    {OpenHAB::DSL::Rules::Builder#not_if not_if} guards now _only_ take blocks.
    This just means where you previously had `only_if Item` you now write
    `only_if { Item.on? }`.
- * {OpenHAB::Core::Types::QuantityType QuantityType} is no longer implicitly
+ * {QuantityType} is no longer implicitly
    convertible and comparable against Strings. Use the `|` operator for easy
-   construction of {OpenHAB::Core::Types::QuantityType QuantityType}s:
-   `10 | "°F"`.
- * The top-level `groups` method providing access to only
-   {OpenHAB::Core::Items::GroupItem GroupItem}s has been removed. Use
-   `items.grep(GroupItem)` if you would like to filter to only groups.
+   construction of {QuantityType}s: `10 | "°F"`.
+ * The top-level `groups` method providing access to only {GroupItem}s has been
+   removed. Use `items.grep(GroupItem)` if you would like to filter to only
+   groups.
  * `GenericItem#id` no longer exists; just use
-   {OpenHAB::Core::Items::GenericItem#to_s GenericItem#to_s} which does what
-   `#id` used to do.
+   {GenericItem#to_s GenericItem#to_s} which does what `#id` used to do.
  * `states?(*items)` helper is gone. Just use `items.all?(:state?)`, or in
    the rare cased you used `states?(*items, things: true)`, use
    `items.all? { |i| i.state? && i.things.all?(&:online?) }`.
- * {OpenHAB::Core::Items::GroupItem GroupItem} is no longer {Enumerable}, and
-   you must use {OpenHAB::Core::Items::GroupItem#members GroupItem#members}.
- * {OpenHAB::Core::Items::GroupItem#all_members GroupItem#all_members} no
-   longer has a `filter` parameter; use `grep` if you want just
-   {OpenHAB::Core::Items::GroupItem GroupItem}s.
- * `create_timer` no longer exists as an alias for {after after}.
+ * {GroupItem} is no longer {Enumerable}, and you must use
+   {GroupItem#members GroupItem#members}.
+ * {GroupItem#all_members} no
+   longer has a `filter` parameter; use `grep` if you want just {GroupItem}s.
+ * `create_timer` no longer exists as an alias for {after}.
  * `GenericItem#meta` is no longer a supported alias for
-   {OpenHAB::Core::Items::GenericItem#metadata GenericItem#metadata}.
+   {GenericItem#metadata GenericItem#metadata}.
  * Triggers (such as {OpenHAB::DSL::Rules::Builder#changed changed},
    {OpenHAB::DSL::Rules::Builder#updated updated}, and
    {OpenHAB::DSL::Rules::Builder#received_command received_command} that
@@ -78,10 +75,10 @@ here is a non-exhaustive list of significant departures from the original gem:
    `changed Item1, Item2`, or if you have an actual array you write
    `changed(*item_array)`. This greatly simplifies the internal code that has to
    distinguish between
-   {OpenHAB::Core::Items::GroupItem::Members GroupItem::Members} and other
+   {GroupItem::Members GroupItem::Members} and other
    types of collections of items.
  * Date and time objects have been reworked:
-   * `TimeOfDay` has been replaced with {java.time.LocalTime}
+   * `TimeOfDay` has been replaced with {LocalTime}
    * Date/time objects are no longer comparable to strings.
      Please use the correct type.
    * Comparisons among the varying date/time classes all work.
@@ -90,8 +87,9 @@ here is a non-exhaustive list of significant departures from the original gem:
    * `between?` method is gone. Use `Range#cover?`: `my_range.cover?(date)`
      instead of `date.between?(my_range)`.
    * See also [Working With Time](docs/usage/time.md)
-   * Add `#ago` and `#from_now` methods to {java.time.Duration}
- * Persistence methods no longer accept a Duration. Please use `Duration#ago` instead.
+   * Add `#ago` and `#from_now` methods to {Duration}
+ * Persistence methods no longer accept a {Duration}. Please use `Duration#ago`
+   instead.
  * Logging has been reworked. There's generally no need to
    `include OpenHAB::Log` in your classes. {OpenHAB::Log.logger} method now
    accepts a String to explicitly find whichever logger you would like, and

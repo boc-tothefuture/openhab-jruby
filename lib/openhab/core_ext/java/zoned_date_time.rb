@@ -75,7 +75,7 @@ module OpenHAB
         #   @return [Time]
 
         # @param [ZonedDateTime, nil] context
-        #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
+        #   A {ZonedDateTime} used to fill in missing fields
         #   during conversion. Not used in this class.
         # @return [self]
         def to_zoned_date_time(_context = nil)
@@ -107,3 +107,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse ZonedDateTime = OpenHAB::CoreExt::Java::ZonedDateTime

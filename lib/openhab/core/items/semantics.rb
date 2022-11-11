@@ -317,7 +317,7 @@ end
 # Additions to Enumerable to allow easily filtering groups of items based on the semantic model
 module Enumerable
   # Returns a new array of items that are a semantics Location (optionally of the given type)
-  # @return [Array<OpenHAB::Core::Items::GenericItem>]
+  # @return [Array<GenericItem>]
   def locations(type = nil)
     if type && (!type.is_a?(Module) || !(type < OpenHAB::Core::Items::Semantics::Location))
       raise ArgumentError, "type must be a subclass of Location"
@@ -331,7 +331,7 @@ module Enumerable
 
   # Returns a new array of items that are a semantics equipment (optionally of the given type)
   #
-  # @return [Array<OpenHAB::Core::Items::GenericItem>]
+  # @return [Array<GenericItem>]
   #
   # @example Get all TVs in a room
   #   lGreatRoom.equipments(Semantics::Screen)
@@ -348,7 +348,7 @@ module Enumerable
 
   # Returns a new array of items that are semantics points (optionally of a given type)
   #
-  # @return [Array<OpenHAB::Core::Items::GenericItem>]
+  # @return [Array<GenericItem>]
   #
   # @example Get all the power switch items for every equipment in a room
   #   lGreatRoom.equipments.points(Semantics::Switch)

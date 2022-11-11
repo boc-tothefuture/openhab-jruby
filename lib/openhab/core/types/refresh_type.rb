@@ -9,7 +9,10 @@ module OpenHAB
 
       # Implements the {REFRESH} command.
       class RefreshType # rubocop:disable Lint/EmptyClass
-        # @!parse include Type
+        # @!parse include Command
+
+        # @!constant REFRESH
+        #   Refresh Command
 
         # @!method refresh?
         #   Check if `self == REFRESH`
@@ -18,3 +21,7 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   RefreshType = OpenHAB::Core::Types::RefreshType
+#   REFRESH = OpenHAB::Core::Types::RefreshType::REFRESH

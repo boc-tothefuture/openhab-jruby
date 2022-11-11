@@ -11,7 +11,7 @@ module OpenHAB
       # {ColorItem} represents a color values, e.g. for LED lights.
       #
       # Note that it inherits from {DimmerItem}, so you can call {#on}, {#off},
-      # {#on?}, {#off?}, etc. on it. Its state type is an {Types::HSBType},
+      # {#on?}, {#off?}, etc. on it. Its state type is an {HSBType},
       # which is stored as Hue, Saturation, and Brightness, but has easy
       # helpers for working with RGB values of various forms.
       #
@@ -41,7 +41,7 @@ module OpenHAB
       #   HueBulb.state.to_a(:rgb) # => [255, 0, 0]
       #
       # @!attribute [r] state
-      #   @return [Types::HSBType, nil]
+      #   @return [HSBType, nil]
       #
       class ColorItem < DimmerItem
         # string commands aren't allowed on ColorItems, so try to implicitly
@@ -74,3 +74,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse ColorItem = OpenHAB::Core::Items::ColorItem

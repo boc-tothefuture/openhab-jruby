@@ -8,7 +8,7 @@ class Time
   # Extends {#+} to allow adding a {java.time.temporal.TemporalAmount TemporalAmount}
   #
   # @param [java.time.temporal.TemporalAmount] other
-  # @return [java.time.ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+  # @return [ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
   # @return [Time] If other is a Numeric
   #
   def plus_with_temporal(other)
@@ -25,7 +25,7 @@ class Time
   # Extends {#-} to allow subtracting a {java.time.temporal.TemporalAmount TemporalAmount}
   #
   # @param [java.time.temporal.TemporalAmount] other
-  # @return [java.time.ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+  # @return [ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
   # @return [Time] If other is a Numeric
   #
   def minus_with_temporal(other)
@@ -36,36 +36,36 @@ class Time
   alias_method :minus_without_temporal, :-
   alias_method :-, :minus_with_temporal
 
-  # @return [java.time.LocalDate]
+  # @return [LocalDate]
   def to_local_date(_context = nil)
     java.time.LocalDate.of(year, month, day)
   end
 
-  # @return [java.time.LocalTime]
+  # @return [LocalTime]
   def to_local_time
     java.time.LocalTime.of(hour, min, sec, nsec)
   end
 
-  # @return [java.time.Month]
+  # @return [Month]
   def to_month
     java.time.Month.of(month)
   end
 
-  # @return [java.time.MonthDay]
+  # @return [MonthDay]
   def to_month_day
     java.time.MonthDay.of(month, day)
   end
 
-  # @param [java.time.ZonedDateTime, nil] context
-  #   A {java.time.ZonedDateTime ZonedDateTime} used to fill in missing fields
+  # @param [ZonedDateTime, nil] context
+  #   A {ZonedDateTime} used to fill in missing fields
   #   during conversion. Not used in this class.
-  # @return [java.time.ZonedDateTime]
+  # @return [ZonedDateTime]
   def to_zoned_date_time(_context = nil)
     to_java(ZonedDateTime)
   end
 
   #
-  # Converts to a {java.time.ZonedDateTime ZonedDateTime} if `other`
+  # Converts to a {ZonedDateTime} if `other`
   # is also convertible to a ZonedDateTime.
   #
   # @param [#to_zoned_date_time] other

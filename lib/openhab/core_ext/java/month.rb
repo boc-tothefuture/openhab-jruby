@@ -45,7 +45,7 @@ module OpenHAB
         end
 
         # @param [ZonedDateTime, nil] context
-        #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
+        #   A {ZonedDateTime} used to fill in missing fields
         #   during conversion. {ZonedDateTime.now} is assumed if not given.
         # @return [ZonedDateTime]
         def to_zoned_date_time(context = nil)
@@ -56,4 +56,4 @@ module OpenHAB
   end
 end
 
-java_import java.time.Month
+Month = OpenHAB::CoreExt::Java::Month unless Object.const_defined?(:Month)

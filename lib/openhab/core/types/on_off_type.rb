@@ -15,7 +15,12 @@ module OpenHAB
       # else if {ON}.
       #
       class OnOffType
-        # @!parse include Type
+        # @!parse include Command, State
+
+        # @!constant ON
+        #   On Command/State
+        # @!constant OFF
+        #   Off Command/State
 
         # @!method on?
         #   Check if `self == ON`
@@ -26,7 +31,7 @@ module OpenHAB
         #   @return [true,false]
 
         # Invert the type
-        # @return [OnOffType] `OFF` if `ON`, `ON` if `OFF`
+        # @return [OnOffType] {OFF} if {on?}, {ON} if {off?}
         def !
           on? ? OFF : ON
         end
@@ -34,3 +39,8 @@ module OpenHAB
     end
   end
 end
+
+# @!parse
+#   OnOffType = OpenHAB::Core::Types::OnOffType
+#   ON = OpenHAB::Core::Types::OnOffType::ON
+#   OFF = OpenHAB::Core::Types::OnOffType::OFF

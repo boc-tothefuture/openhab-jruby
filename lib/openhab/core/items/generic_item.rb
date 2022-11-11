@@ -36,11 +36,19 @@ module OpenHAB
         end
         # rubocop:enable Naming/MethodName
 
+        # @!attribute [r] accepted_command_types
+        #   @return [Array<Class>] An array of {Command}s that can be sent as commands to this item
+
+        # @!attribute [r] accepted_data_types
+        #   @return [Array<Class>] An array of {State}s that can be sent as commands to this item
+
         alias_method :hash, :hash_code
 
+        # @!attribute [r] raw_state
+        #
         # Get the raw item state.
         #
-        # The state of the item, including possibly `NULL` or `UNDEF`
+        # The state of the item, including possibly {NULL} or {UNDEF}
         #
         # @return [Types::Type]
         #
@@ -82,7 +90,7 @@ module OpenHAB
         end
 
         #
-        # Check if the item has a state (not `UNDEF` or `NULL`)
+        # Check if the item has a state (not {UNDEF} or {NULL})
         #
         # @return [true, false]
         #
@@ -93,7 +101,7 @@ module OpenHAB
         #
         # @!attribute [r] state
         # @return [Types::Type, nil]
-        #   OpenHAB item state if state is not `UNDEF` or `NULL`, nil otherwise.
+        #   OpenHAB item state if state is not {UNDEF} or {NULL}, nil otherwise.
         #   This makes it easy to use with the
         #   [Ruby safe navigation operator `&.`](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html)
         #   Use {#undef?} or {#null?} to check for those states.
@@ -262,15 +270,15 @@ module OpenHAB
         alias_method :all_linked_things, :things
 
         # @!method null?
-        #   Check if the item state == `NULL`
+        #   Check if the item state == {NULL}
         #   @return [true,false]
 
         # @!method undef?
-        #   Check if the item state == `UNDEF`
+        #   Check if the item state == {UNDEF}
         #   @return [true,false]
 
         # @!method refresh
-        #   Send the `REFRESH` command to the item
+        #   Send the {REFRESH} command to the item
         #   @return [GenericItem] `self`
 
         # formats a {Types::Type} to send to the event bus
@@ -302,3 +310,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse GenericItem = OpenHAB::Core::Items::GenericItem

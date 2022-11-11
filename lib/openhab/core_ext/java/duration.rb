@@ -111,3 +111,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse Duration = OpenHAB::CoreExt::Java::Duration

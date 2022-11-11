@@ -11,7 +11,7 @@ module OpenHAB
       # A {PlayerItem} allows control of a player, e.g. an audio player.
       #
       # @!attribute [r] state
-      #   @return [Types::PlayPauseType, Types;:RewindFastforwardType, nil]
+      #   @return [PlayPauseType, RewindFastforwardType, nil]
       #
       # @example Start playing on a player item
       #   Chromecast.play
@@ -20,45 +20,47 @@ module OpenHAB
       #
       class PlayerItem < GenericItem
         # @!method play?
-        #   Check if the item state == `PLAYING`
+        #   Check if the item state == {PLAYING}
         #   @return [true,false]
 
         # @!method paused?
-        #   Check if the item state == `PAUSED`
+        #   Check if the item state == {PAUSED}
         #   @return [true,false]
 
         # @!method rewinding?
-        #   Check if the item state == `REWIND`
+        #   Check if the item state == {REWIND}
         #   @return [true,false]
 
         # @!method fast_forwarding?
-        #   Check if the item state == `FASTFORWARD`
+        #   Check if the item state == {FASTFORWARD}
         #   @return [true,false]
 
         # @!method play
-        #   Send the `PLAY` command to the item
+        #   Send the {PLAY} command to the item
         #   @return [PlayerItem] `self`
 
         # @!method pause
-        #   Send the `PAUSE` command to the item
+        #   Send the {PAUSE} command to the item
         #   @return [PlayerItem] `self`
 
         # @!method rewind
-        #   Send the `REWIND` command to the item
+        #   Send the {REWIND} command to the item
         #   @return [PlayerItem] `self`
 
         # @!method fast_forward
-        #   Send the `FASTFORWARD` command to the item
+        #   Send the {FASTFORWARD} command to the item
         #   @return [PlayerItem] `self`
 
         # @!method next
-        #   Send the `NEXT` command to the item
+        #   Send the {NEXT} command to the item
         #   @return [PlayerItem] `self`
 
         # @!method previous
-        #   Send the `PREVIOUS` command to the item
+        #   Send the {PREVIOUS} command to the item
         #   @return [PlayerItem] `self`
       end
     end
   end
 end
+
+# @!parse PlayerItem = OpenHAB::Core::Items::PlayerItem

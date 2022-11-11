@@ -14,7 +14,7 @@ module OpenHAB
       # percentage.
       #
       # @!attribute [r] state
-      #   @return [Types::PercentType, Types::UpDownType, nil]
+      #   @return [PercentType, UpDownType, nil]
       #
       # @example Roll up all Rollershutters in a group
       #   Shutters.up
@@ -30,27 +30,27 @@ module OpenHAB
         include NumericItem
 
         # @!method up?
-        #   Check if the item state == `UP`
+        #   Check if the item state == {UP}
         #   @return [true,false]
 
         # @!method down?
-        #   Check if the item state == `DOWN`
+        #   Check if the item state == {DOWN}
         #   @return [true,false]
 
         # @!method up
-        #   Send the `UP` command to the item
+        #   Send the {UP} command to the item
         #   @return [RollershutterItem] `self`
 
         # @!method down
-        #   Send the `DOWN` command to the item
+        #   Send the {DOWN} command to the item
         #   @return [RollershutterItem] `self`
 
         # @!method stop
-        #   Send the `STOP` command to the item
+        #   Send the {STOP} command to the item
         #   @return [RollershutterItem] `self`
 
         # @!method move
-        #   Send the `MOVE` command to the item
+        #   Send the {MOVE} command to the item
         #   @return [RollershutterItem] `self`
 
         # raw numbers translate directly to PercentType, not a DecimalType
@@ -64,3 +64,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse RollershutterItem = OpenHAB::Core::Items::RollershutterItem

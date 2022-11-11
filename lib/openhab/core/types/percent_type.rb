@@ -13,9 +13,9 @@ module OpenHAB
         remove_method :==
 
         #
-        # Check if `ON`
+        # Check if {ON}
         #
-        # Note that `ON` is defined as any value besides 0%.
+        # Note that {ON} is defined as any value besides 0%.
         #
         # @return [true,false]
         #
@@ -24,9 +24,9 @@ module OpenHAB
         end
 
         #
-        # Check if `OFF`
+        # Check if {OFF}
         #
-        # Note that `OFF` is defined as 0% exactly.
+        # Note that {OFF} is defined as 0% exactly.
         #
         # @return [true,false]
         #
@@ -35,9 +35,9 @@ module OpenHAB
         end
 
         #
-        # Check if `UP`
+        # Check if {UP}
         #
-        # Note that `UP` is defined as 0% exactly.
+        # Note that {UP} is defined as 0% exactly.
         #
         # @return [true,false]
         #
@@ -46,9 +46,9 @@ module OpenHAB
         end
 
         #
-        # Check if `DOWN`
+        # Check if {DOWN}
         #
-        # Note that `DOWN` is defined as 100% exactly.
+        # Note that {DOWN} is defined as 100% exactly.
         #
         # @return [true,false]
         #
@@ -91,3 +91,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse PercentType = OpenHAB::Core::Types::PercentType

@@ -12,7 +12,7 @@ module OpenHAB
       # receive from a device.
       #
       # @!attribute [r] state
-      #   @return [Types::StringType, nil]
+      #   @return [StringType, nil]
       #
       # @example
       #   # StringOne has a current state of "Hello"
@@ -24,3 +24,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse StringItem = OpenHAB::Core::Items::StringItem

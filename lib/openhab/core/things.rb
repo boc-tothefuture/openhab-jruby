@@ -141,7 +141,11 @@ module OpenHAB
         def inspect
           "#<OpenHAB::Core::Things::Thing #{uid}>"
         end
-        alias_method :to_s, :inspect
+
+        # @return [String]
+        def to_s
+          uid.to_s
+        end
 
         private
 

@@ -74,7 +74,7 @@ module OpenHAB
         # @!method last_update(service = nil)
         #   Return the time the item was last updated.
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
-        #   @return [java.time.ZonedDateTime] The timestamp of the last update
+        #   @return [ZonedDateTime] The timestamp of the last update
 
         # @!method average_since(timestamp, service = nil)
         #   Return the average value of the item's state since the given time

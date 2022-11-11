@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Items
-      # Extensions for {Core::Items::GenericItem} to implement timed commands
+      # Extensions for {GenericItem} to implement timed commands
       #
       # All items have an implicit timer associated with them, enabling to
       # easily set an item into a specific state for a specified duration and

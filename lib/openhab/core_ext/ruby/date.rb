@@ -6,7 +6,7 @@ class Date
   # Extends {#+} to allow adding a {java.time.temporal.TemporalAmount TemporalAmount}
   #
   # @param [java.time.temporal.TemporalAmount] other
-  # @return [java.time.LocalDate] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+  # @return [LocalDate] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
   #
   def plus_with_temporal(other)
     return to_local_date + other if other.is_a?(java.time.temporal.TemporalAmount)
@@ -20,7 +20,7 @@ class Date
   # Extends {#-} to allow subtracting a {java.time.temporal.TemporalAmount TemporalAmount}
   #
   # @param [java.time.temporal.TemporalAmount] other
-  # @return [java.time.LocalDate] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+  # @return [LocalDate] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
   #
   def minus_with_temporal(other)
     case other
@@ -33,25 +33,25 @@ class Date
   alias_method :minus_without_temporal, :-
   alias_method :-, :minus_with_temporal
 
-  # @return [java.time.LocalDate]
+  # @return [LocalDate]
   def to_local_date(_context = nil)
     java.time.LocalDate.of(year, month, day)
   end
 
-  # @return [java.time.Month]
+  # @return [Month]
   def to_month
     java.time.Month.of(month)
   end
 
-  # @return [java.time.MonthDay]
+  # @return [MonthDay]
   def to_month_day
     java.time.MonthDay.of(month, day)
   end
 
-  # @param [java.time.ZonedDateTime, nil] context
-  #   A {ZonedDateTime ZonedDateTime} used to fill in missing fields
-  #   during conversion. {java.time.ZonedDateTime.now} is assumed if not given.
-  # @return [java.time.ZonedDateTime]
+  # @param [ZonedDateTime, nil] context
+  #   A {ZonedDateTime} used to fill in missing fields
+  #   during conversion. {ZonedDateTime.now} is assumed if not given.
+  # @return [ZonedDateTime]
   def to_zoned_date_time(context = nil)
     to_local_date.to_zoned_date_time(context)
   end

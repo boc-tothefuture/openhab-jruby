@@ -81,8 +81,8 @@ and then load rules in, then drop you into IRB.
 ### Spec Writing Tips
 
  * See {OpenHAB::RSpec::Helpers} for all helper methods available in specs.
- * All items are reset to `NULL` before each spec.
- * `on_start` triggers are _not_ honored. Items will be reset to `NULL` before
+ * All items are reset to {NULL} before each spec.
+ * `on_start` triggers are _not_ honored. Items will be reset to {NULL} before
    the next spec anyway, so just don't waste the energy running them. You
    can still trigger rules manually.
  * Rule triggers besides item related triggers (such as cron or watchers)

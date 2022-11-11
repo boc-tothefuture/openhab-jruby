@@ -10,7 +10,7 @@ module OpenHAB
 
       # {QuantityType} extends {DecimalType} to handle physical unit measurement.
       class QuantityType
-        # @!parse include Type
+        # @!parse include Command, State
         include NumericType
         include ComparableType
 
@@ -223,3 +223,5 @@ module OpenHAB
     end
   end
 end
+
+# @!parse QuantityType = OpenHAB::Core::Types::QuantityType

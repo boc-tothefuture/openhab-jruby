@@ -3,8 +3,8 @@
 module OpenHAB
   module Core
     module Events
-      java_import org.openhab.core.thing.events.ThingStatusInfoChangedEvent
-      java_import org.openhab.core.thing.events.ThingStatusInfoEvent
+      java_import org.openhab.core.thing.events.ThingStatusInfoChangedEvent,
+                  org.openhab.core.thing.events.ThingStatusInfoEvent
 
       # The {AbstractEvent} sent when a {Things::Thing}'s status has changed.
       class ThingStatusInfoChangedEvent < AbstractEvent

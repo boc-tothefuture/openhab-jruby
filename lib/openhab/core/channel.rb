@@ -4,8 +4,8 @@ require "forwardable"
 
 module OpenHAB
   module Core
-    java_import org.openhab.core.thing.Channel
-    java_import org.openhab.core.thing.ChannelUID
+    java_import org.openhab.core.thing.Channel,
+                org.openhab.core.thing.ChannelUID
 
     # Adds methods to core OpenHAB Channel to make it more natural in Ruby
     class Channel
