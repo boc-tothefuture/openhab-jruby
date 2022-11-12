@@ -10,6 +10,14 @@ module OpenHAB
       #
       # @see https://www.openhab.org/javadoc/latest/org/openhab/core/items/genericitem
       #
+      # @!attribute [r] name
+      #   The item's name.
+      #   @return [String]
+      #
+      # @!attribute [r] label
+      #   The item's descriptive label.
+      #   @return [String, nil]
+      #
       class GenericItem
         # rubocop:disable Naming/MethodName these mimic Java fields, which are
         # actually methods
@@ -50,14 +58,14 @@ module OpenHAB
         #
         # The state of the item, including possibly {NULL} or {UNDEF}
         #
-        # @return [Types::Type]
+        # @return [State]
         #
         alias_method :raw_state, :state
 
         #
         # Send a command to this item
         #
-        # @param [Types::Type] command to send to object
+        # @param [Command] command to send to object
         # @return [self]
         #
         # @see DSL::Items::TimedCommand#command
@@ -79,7 +87,7 @@ module OpenHAB
         #
         # Send an update to this item
         #
-        # @param [Types::Type] update the item
+        # @param [State] update the item
         # @return [self]
         #
         def update(update)
@@ -100,7 +108,7 @@ module OpenHAB
 
         #
         # @!attribute [r] state
-        # @return [Types::Type, nil]
+        # @return [State, nil]
         #   OpenHAB item state if state is not {UNDEF} or {NULL}, nil otherwise.
         #   This makes it easy to use with the
         #   [Ruby safe navigation operator `&.`](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html)
@@ -111,7 +119,7 @@ module OpenHAB
         end
 
         #
-        # The item's label if one is defined, otherwise it's name.
+        # The item's {#label} if one is defined, otherwise it's {#name}.
         #
         # @return [String]
         #
@@ -119,6 +127,8 @@ module OpenHAB
           label || name
         end
 
+        #
+        # @!attribute [r] groups
         #
         # Return all groups that this item is part of
         #
@@ -281,11 +291,11 @@ module OpenHAB
         #   Send the {REFRESH} command to the item
         #   @return [GenericItem] `self`
 
-        # formats a {Types::Type} to send to the event bus
+        # formats a {Command} to send to the event bus
         # @!visibility private
         def format_type(command)
           # actual Type types can be sent directly without conversion
-          return command if command.is_a?(Types::Type)
+          return command if command.is_a?(Command)
 
           command.to_s
         end
@@ -301,7 +311,7 @@ module OpenHAB
           "#{s}>"
         end
 
-        protected
+        private
 
         # Allows sub-classes to append additional details to the type in an inspect string
         # @return [String]

@@ -466,7 +466,7 @@ module OpenHAB
           item.metadata["stateDescription"] = { "pattern" => format } if format
           unless state.nil?
             state = self.state
-            state = item.__send__(:format_type, state) unless state.is_a?(org.openhab.core.types.State)
+            state = item.format_type(state) unless state.is_a?(State)
             unless state.is_a?(org.openhab.core.types.State)
               state = org.openhab.core.types.TypeParser.parse_state(item.accepted_data_types.map(&:java_class),
                                                                     state.to_s)

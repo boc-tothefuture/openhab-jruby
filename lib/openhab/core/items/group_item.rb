@@ -133,7 +133,15 @@ module OpenHAB
           getAllMembers.map { |m| Proxy.new(m) }
         end
 
-        protected
+        # give the base item type a chance to format commands
+        # @!visibility private
+        def format_type(command)
+          return super unless base_item
+
+          base_item.format_type(command)
+        end
+
+        private
 
         # Add base type and function details
         def type_details
@@ -153,19 +161,10 @@ module OpenHAB
           super
         end
 
-        # @!visibility private
         def respond_to_missing?(method, include_private = false)
           return true if base_item&.respond_to?(method) # rubocop:disable Lint/RedundantSafeNavigation
 
           super
-        end
-
-        # give the base item type a chance to format commands
-        # @!visibility private
-        def format_type(command)
-          return super unless base_item
-
-          base_item.format_type(command)
         end
       end
     end
