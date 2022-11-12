@@ -316,6 +316,10 @@ end
 
 # Additions to Enumerable to allow easily filtering groups of items based on the semantic model
 module Enumerable
+  #
+  # @!group Filtering Methods
+  #
+
   # Returns a new array of items that are a semantics Location (optionally of the given type)
   # @return [Array<GenericItem>]
   def locations(type = nil)
