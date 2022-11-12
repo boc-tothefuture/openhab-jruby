@@ -23,6 +23,9 @@ module OpenHAB
       #
       # The core class that bindings use to represent connected devices.
       #
+      # @see DSL.things things[]
+      # @see EntityLookup
+      #
       # @example
       #   thing = things["chromecast:audiogroup:dd9f8622-eee-4eaf-b33f-cdcdcdeee001121"]
       #   logger.info("Audiogroup Status: #{thing&.status}")
@@ -34,6 +37,10 @@ module OpenHAB
       # @example Thing actions can be called directly through a Thing object
       #   things["mqtt:broker:mosquitto"].publishMQTT("zigbee2mqttt/bridge/config/permit_join", "true")
       #   things["mail:smtp:local"].sendMail("me@example.com", "Subject", "Email body")
+      #
+      # @example Thing can be accessed directly through {EntityLookup entity lookup}
+      #   # replace ':' with '_' in thing uid
+      #   mqtt_broker_mosquitto.online? # is mqtt:broker:mosquitto thing online?
       #
       class Thing < SimpleDelegator
         # Array wrapper class to allow searching a list of channels

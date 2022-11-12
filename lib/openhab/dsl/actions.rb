@@ -27,6 +27,8 @@ module OpenHAB
       #
       # @return [Array] of action objects associated with thing_uid, may be empty
       #
+      # @!visibility private
+      #
       def actions_for_thing(thing_uid)
         thing_uid = thing_uid.to_s
         action_keys = $actions.action_keys

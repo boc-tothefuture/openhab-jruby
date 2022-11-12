@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     #
-    # Contains extensions to simplify working with [Core::Things::Thing]s.
+    # Contains extensions to simplify working with {Core::Things::Thing Thing}s.
     #
     module Things
       # Stores all things created in scripts, and notifies the ThingRegistry
