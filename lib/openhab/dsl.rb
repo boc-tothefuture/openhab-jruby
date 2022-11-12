@@ -487,6 +487,17 @@ module OpenHAB
       TimerManager.instance.timer_ids
     end
 
+    #
+    # Manually trigger a rule by ID
+    #
+    # @param [String] uid The rule ID
+    # @param [Object, nil] event The event to pass to the rule's execution blocks.
+    # @return [void]
+    #
+    def trigger_rule(uid, event = nil)
+      Rules.script_rules.fetch(uid).execute(nil, { "event" => event })
+    end
+
     # @overload unit
     #  @return [javax.measure.unit] The current thread unit
     #
