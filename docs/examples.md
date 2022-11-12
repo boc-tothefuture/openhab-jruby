@@ -172,8 +172,9 @@ end
 
 ### Automatic activation of exhaust fan based on humidity sensor
 
-This uses the `evolution_rate` {Persistence persistence} feature, 
-coupled with an easy way to specify [duration](docs/usage/misc/time.md#Durations).
+This uses the `evolution_rate` {OpenHAB::Core::Items::Persistence persistence}
+feature,  coupled with an easy way to specify
+[duration](docs/usage/misc/time.md#Durations).
 It is accessed simply through `ItemName.persistence_function`.
 
 ```ruby

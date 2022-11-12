@@ -20,11 +20,11 @@ module OpenHAB
       #
       class PlayerItem < GenericItem
         # @!method play?
-        #   Check if the item state == {PLAYING}
+        #   Check if the item state == {PLAY}
         #   @return [true,false]
 
         # @!method paused?
-        #   Check if the item state == {PAUSED}
+        #   Check if the item state == {PAUSE}
         #   @return [true,false]
 
         # @!method rewinding?

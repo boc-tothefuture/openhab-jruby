@@ -22,7 +22,7 @@ methods to support durations. These methods create a new {Duration} or {Period}
 object that is used by the {OpenHAB::DSL::Rules::Builder#every every} trigger,
 {OpenHAB::DSL::Rules::Builder#delay delay} block, the for option of
 {OpenHAB::DSL::Rules::Builder#changed changed} triggers, and
-{Timer}s.
+{OpenHAB::Core::Timer timers}.
 
 
 ### Examples

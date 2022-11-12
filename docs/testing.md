@@ -86,7 +86,7 @@ and then load rules in, then drop you into IRB.
    the next spec anyway, so just don't waste the energy running them. You
    can still trigger rules manually.
  * Rule triggers besides item related triggers (such as cron or watchers)
-   are not triggered. You can test them with {OpenHAB::RSpec::Helpers#trigger_rule}.
+   are not triggered. You can test them with {OpenHAB::DSL.trigger_rule}.
  * You can trigger channels directly with {OpenHAB::RSpec::Helpers#trigger_channel}.
  * Timers aren't triggered automatically. Use the {OpenHAB::RSpec::Helpers#execute_timers}
    helper to execute any timers that are ready to run. The `timecop` gem is

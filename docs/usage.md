@@ -15,7 +15,7 @@ and the `event` properties documented for the [Run execution block](docs/usage/e
 1. Place Ruby rules files in `ruby/personal/` subdirectory for OpenHAB scripted automation.  See [OpenHAB documentation](https://www.openhab.org/docs/configuration/jsr223.html#script-locations) for parent directory location.
 2. Put `require 'openhab/dsl'` at the top of any Ruby based rules file.
 
-For details on the rules syntax, see {OpenHAB::DSL::Rules::Rule}.
+For details on the rules syntax, see {OpenHAB::DSL::Rules::Builder}.
 
 ## Creating Rules in Main UI
 

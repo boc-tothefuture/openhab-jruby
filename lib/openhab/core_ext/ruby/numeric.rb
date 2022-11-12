@@ -144,7 +144,7 @@ module OpenHAB
         #
         # @param [String, javax.measure.Unit] unit
         #
-        # @return [QuantityType] `self` as a {Types::QuantityType} of the supplied Unit
+        # @return [QuantityType] `self` as a {QuantityType} of the supplied Unit
         #
         def |(unit) # rubocop:disable Naming/BinaryOperatorParameterName
           unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit.to_str) if unit.respond_to?(:to_str)

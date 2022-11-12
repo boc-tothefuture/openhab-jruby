@@ -608,10 +608,13 @@ module OpenHAB
         end
 
         #
-        # Creates a trigger when an item, member of a group, or a thing changed states.
+        # Creates a trigger when an item, member of a group, or a thing changed
+        # states.
         #
-        # When the changed element is a {Thing}, the `from` and `to` values will accept symbols and strings,
-        # where the symbol matches the [supported status](https://www.openhab.org/docs/concepts/things.html#thing-status).
+        # When the changed element is a {Core::Things::Thing Thing}, the `from`
+        # and `to` values will accept symbols and strings, where the symbol'
+        # matches the
+        # [supported status](https://www.openhab.org/docs/concepts/things.html#thing-status).
         #
         # The `event` passed to run blocks will be an
         # {Core::Events::ItemStateChangedEvent} or a

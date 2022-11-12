@@ -660,7 +660,7 @@ See {GenericItem.metadata}
 daily_max = My_Item.maximum_since(24.hours.ago)
 ```
 
-See {Persistence}
+See {OpenHAB::Core::Items::Persistence}
 
 ## Use Semantic Model
 

@@ -50,14 +50,14 @@ module OpenHAB
     # ### Managing Timers with `id`
     #
     # Timers with `id` can be managed with the built-in {timers} hash. Multiple timer blocks can share
-    # the same `id`, which is why `timers[id]` returns a {Timer::TimerSet} object. It is a descendant of `Set`
+    # the same `id`, which is why `timers[id]` returns a {TimerSet} object. It is a descendant of `Set`
     # and it contains a set of timers associated with that id.
     #
     # When a timer is cancelled, it will be removed from the set. Once the set is empty, it will be removed
     # from `timers[]` hash and `timers[id]` will return nil.
     #
-    # @see timers timers hash
-    # @see docs/usage/triggers/changed.md#changed-duration Changed Duration
+    # @see timers
+    # @see Rules::Builder#changed
     # @see Items::TimedCommand
     #
     # @param [java.time.temporal.TemporalAmount, #to_zoned_date_time, Proc] duration after which to execute the block
@@ -482,7 +482,7 @@ module OpenHAB
     # Provides access to the hash for mapping timer ids created by {after}
     # to the set of active timers associated with that id
     #
-    # @return [Hash] hash of user specified ids to {Timer::TimerSet}
+    # @return [Hash] hash of user specified ids to {TimerSet}
     def timers
       TimerManager.instance.timer_ids
     end
