@@ -665,12 +665,11 @@ See {Persistence}
 ## Use Semantic Model
 
 ```ruby
-# get the lightbulbs (equipment) in the room (location) 
-room_lights = LivingRoom_Motion.location.equipments(Semantics::Lightbulb)
-# get the switches (points)
-light_switches = room_lights.members.points(Semantics::Switch)
-# turn them all on if they're not already on
-light_switches.ensure.on
+LivingRoom_Motion.location                            # Location of the motion sensor
+                 .equipments(Semantics::Lightbulb)    # Get all Lightbulb Equipments in the location
+                 .members                             # Get all the member items of the equipments
+                 .points(Semantics::Switch)           # Select only items that are Switch Points
+                 .on                                  # Send an ON command to the items
 ```
 
 See {Semantics}
