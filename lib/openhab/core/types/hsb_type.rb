@@ -12,11 +12,16 @@ module OpenHAB
       # {HSBType} is a complex type with constituents for hue, saturation and
       #  brightness and can be used for color items.
       class HSBType < PercentType
-        # @!parse BLACK = BLACK # @return [HSBType]
-        # @!parse WHITE = WHITE # @return [HSBType]
-        # @!parse RED = RED # @return [HSBType]
-        # @!parse GREEN = GREEN # @return [HSBType]
-        # @!parse BLUE = BLUE # @return [HSBType]
+        # @!constant BLACK
+        #   @return [HSBType]
+        # @!constant WHITE
+        #   @return [HSBType]
+        # @!constant RED
+        #   @return [HSBType]
+        # @!constant GREEN
+        #   @return [HSBType]
+        # @!constant BLUE
+        #   @return [HSBType]
 
         # conversion to QuantityType doesn't make sense on HSBType
         undef_method :|

@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ccutrer/yard.git
-  revision: c0ac4e666ad840d804964b093af76480b62afd05
+  revision: 1d8fcfeecd21f6ee9e539242ff5c50e15d7ae4c0
   branch: integration
   specs:
     yard (0.9.28)
