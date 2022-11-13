@@ -32,7 +32,7 @@ module OpenHAB
       #   end
       #
       # @example HistoricState
-      #   max = Power_Usage.maximum_since(LocalTime.MIDNIGHT)
+      #   max = Power_Usage.maximum_since(LocalTime::MIDNIGHT)
       #   logger.info("Max power usage today: #{max}, at: #{max.timestamp})
       #
       module Persistence

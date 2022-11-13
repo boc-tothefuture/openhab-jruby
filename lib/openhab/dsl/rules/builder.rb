@@ -336,14 +336,14 @@ module OpenHAB
         #   rule 'Log an entry if started between 3:30:04 and midnight using strings' do
         #     on_start
         #     run { logger.info ("Started at #{LocalTime.now}")}
-        #     between '3:30:04'..MIDNIGHT
+        #     between '3:30:04'..LocalTime::MIDNIGHT
         #   end
         #
         # @example {LocalTime}
         #   rule 'Log an entry if started between 3:30:04 and midnight using LocalTime objects' do
         #     on_start
         #     run { logger.info ("Started at #{LocalTime.now}")}
-        #     between LocalTime.of(3, 30, 4)..MIDNIGHT
+        #     between LocalTime.of(3, 30, 4)..LocalTime::MIDNIGHT
         #   end
         #
         # @example {String} of {MonthDay}
