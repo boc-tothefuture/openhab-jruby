@@ -13,6 +13,7 @@ Several options are available for time related code, including but not limited t
 * Java {Period}
 * Ruby [Date](https://ruby-doc.org/stdlib-2.6.8/libdoc/date/rdoc/Date.html) - represents a date with no time
 * Ruby [Time](https://ruby-doc.org/core/Time.html) - represents a specific instant with a date and time
+* Ruby [DateTime](https://ruby-doc.org/core/DateTime.html) - represents a specific instant with a date and time
 
 ## Durations
 
