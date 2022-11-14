@@ -25,6 +25,20 @@ module OpenHAB
       class NumberItem < GenericItem
         include NumericItem
 
+        # raw numbers translate directly to {DecimalType}, not a string
+        # @!visibility private
+        def format_type(command)
+          if command.is_a?(Numeric)
+            if dimension && (unit = DSL.unit(self.unit.dimension) || self.unit)
+              return Types::QuantityType.new(command, unit)
+            end
+
+            return Types::DecimalType.new(command)
+          end
+
+          super
+        end
+
         protected
 
         # Adds the unit dimension

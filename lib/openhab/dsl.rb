@@ -556,6 +556,7 @@ module OpenHAB
     #     unit('°C') { 2 * NumberC.state == 46 }                                                # => true
     #     unit('°C') { ( (2 * (NumberF.state + NumberC.state) ) / Dimensionless.state ) < 45 }  # => true
     #     unit('°C') { [NumberC.state, NumberF.state, Dimensionless.state].min }                # => 2
+    #     unit('°F') { NumberC << 32 }; NumberC.state                                           # => 0 °C
     #
     def unit(*units)
       return Thread.current[:units]&.[](units.first) if units.length == 1 && units.first.is_a?(javax.measure.Dimension)

@@ -142,6 +142,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 * Fix `ensure` to work with QuantityType
 * Fix scoping of {OpenHAB::DSL::Rules::Terse terse rule} blocks
 * {OpenHAB::DSL.persistence persistence block} now restores the previous setting
+* {OpenHAB::DSL.unit unit} block applies to sending commands to {NumberItem NumberItems}.
 
 ## [4.45.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.1...4.45.2) (2022-10-02)
 

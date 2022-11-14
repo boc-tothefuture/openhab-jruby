@@ -22,4 +22,15 @@ RSpec.describe OpenHAB::Core::Items::NumberItem do
     specify { expect(NumberTwo).to be_positive }
     specify { expect(NumberNull).not_to be_positive }
   end
+
+  it "respects unit block for commands" do
+    items.build do
+      number_item "Feet", dimension: "Length", format: "%d ft"
+    end
+
+    unit("yd") do
+      Feet << 2
+    end
+    expect(Feet.state).to eq(6 | "ft")
+  end
 end
