@@ -4,7 +4,7 @@ module OpenHAB
   module Core
     module Things
       #
-      # Contains methods for {DSL#profile}'s to forward commands between items
+      # Contains methods for {OpenHAB::DSL.profile profile}'s callback to forward commands between items
       # and channels.
       #
       module ProfileCallback
