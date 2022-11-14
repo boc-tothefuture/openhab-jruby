@@ -6,7 +6,7 @@ module OpenHAB
   module Core
     #
     # Timer allows you to administer the block of code that
-    # has been scheduled to run later with {DSL#after after}.
+    # has been scheduled to run later with {OpenHAB::DSL.after after}.
     #
     # @!attribute [r] execution_time
     #   @return [ZonedDateTime] The scheduled execution time, or null if the timer was cancelled

@@ -2,12 +2,12 @@
 
 ## Detailed Examples
 
- * [Rule Conversions](examples/conversions.md)
- * [Gem Cleanup](examples/gem_cleanup.md)
- * [Generated Rules](examples/generated_rule.md)
- * [How Do I...?](examples/how_do_i.md)
+* [Rule Conversions](examples/conversions.md)
+* [Gem Cleanup](examples/gem_cleanup.md)
+* [Generated Rules](examples/generated_rule.md)
+* [How Do I...?](examples/how_do_i.md)
 
-## Quick Examples
+## File-based Rules
 
 The following examples are for file-based rules but most of them are applicable to [GUI rules](usage.md#creating-rules-in-main-ui) as well.
 
@@ -59,18 +59,37 @@ rule 'Generic motion rule' do
 end
 ```
 
+See also: {group::OpenHAB::DSL::Rules::Builder::Triggers Triggers}
+
 ### Various ways of sending a command to an item
 
 ```ruby
+# Using the shovel operator
 Light1 << ON
-Light1.on
-Rollershutter1.up
-ColorItem1.command '#ffff00'
 DimmerItem1 << 100
-Set_Temperature << '24 °C'
+Set_Temperature << '24 °C'     
+
+# Using command predicates
+Light1.on
+Rollershutter1.up  
+Player1.play
+
+# Using .command
+ColorItem1.command '#ffff00'
+ColorItem1.command {r: 255, g: 0xFF, b: 0} 
+
+# Send a command to all the array members
+# Note The << operator doesn't send a command here because it's for appending to the array
+[SwitchItem1, SwitchItem2, SwitchItem3].on           
+[RollerItem1, RollerItem2, RollerItem3].down    
+[NumberItem1, NumberItem2, NumberItem3].command 100  
 ```
 
-### Dealing with Number Items
+Each item type supports command predicates relevant to the type. For example, a 
+{SwitchItem} supports {SwitchItem#on on} and {SwitchItem#off off}. 
+See specific item types under {OpenHAB::Core::Items}
+
+### Dealing with Item States
 
 ```ruby
 # Items:
@@ -80,12 +99,11 @@ temperature_difference = Outside_Temperature.state - Inside_Temperature.state
 logger.info("Temperature difference: #{temperature_difference}") # "Temperature difference: 6 °C"
 ```
 
+Items have predicates to query its state.
+
 ```ruby
-# Items:
-# Number:Power Solar_Panel_Power
-# Number:Power Load_Power
-# Number:Power Excess_Power
-Excess_Power.update(Solar_Panel_Power.state - Load_Power.state)
+Switch1.on?    # => true if Switch1.state == ON
+Shutter1.up?   # => true if Shutter1.state == UP
 ```
 
 ### Detect change duration without creating an explicit timer
@@ -99,7 +117,7 @@ end
 
 ### Use timers
 
-Timers are created using {after} with an easier way to specify when it should execute, 
+Timers are created using {after after} with an easier way to specify when it should execute,
 based on [duration](docs/usage/misc/time.md#Durations) syntax, e.g. `10.minutes` instead of using ZonedDateTime.
 
 ```ruby
@@ -111,7 +129,7 @@ rule 'simple timer' do
 end
 ```
 
-#### Rescheduling timers, the traditional way
+#### Rescheduling timers manually
 
 ```ruby
 @timer = nil # variables starting with @ are instance variables
@@ -136,7 +154,10 @@ end
 
 ```
 
-#### Or use the timer "reentrant" feature to achieve the same thing
+#### Reentrant Timer
+
+Timers with `id` will automatically reschedule itself when executed again, 
+and can be managed through {OpenHAB::DSL.timers timers[]} hash
 
 ```ruby
 rule 'automatic reentrant timer' do
@@ -144,7 +165,6 @@ rule 'automatic reentrant timer' do
   run do
     Light_Item.ensure.on # 'ensure' only sends the command if it's not already on
     # Using a unique ID, this timer automatically reschedules when called again before 5 mins is up
-    # This works similarly to the "expire" item profile
     after(5.minutes, id: Motion_Sensor) { Light_Item.off } 
   end
 end
@@ -154,12 +174,11 @@ rule 'cancel timer' do
   changed Light_Item, to: OFF
   run { timers[Motion_Sensor]&.cancel }
 end
-
 ```
 
-#### Or use the timed command feature to achieve the same thing
+#### Using Timed Command Feature
 
-The two timer examples above required an extra rule to keep track of the Light_Item state, so when it's turned off, 
+The two timer examples above require an extra rule to keep track of the Light_Item state, so when it's turned off,
 the timer is cancelled. However, the {OpenHAB::DSL::Items::TimedCommand timed command} 
 feature in the next example handles that automatically for you.
 
@@ -183,7 +202,7 @@ It is accessed simply through `ItemName.persistence_function`.
 rule 'Humidity: Control ExhaustFan' do
   updated BathRoom_Humidity
   triggered do |humidity|
-    evo_rate = humidity.evolution_rate 4.minutes, :influxdb
+    evo_rate = humidity.evolution_rate(4.minutes.ago, :influxdb)
     logger.info("#{humidity.name} #{humidity.state} evolution_rate: #{evo_rate}")
 
     if (humidity.state > 70 && evo_rate > 15) || humidity.state > 85
@@ -195,24 +214,27 @@ rule 'Humidity: Control ExhaustFan' do
 end
 ```
 
+## UI rules
+
 ### Reset the switch that triggered the rule after 5 seconds
 
 Trigger defined as:
 
-- When: a member of an item group receives a command
-- Group: Reset_5Seconds
-- Command: ON
+* When: a member of an item group receives a command
+* Group: `Reset_5Seconds`
+* Command: `ON`
 
 ```ruby
 logger.info("#{event.item.name} Triggered the rule")
 after 5.seconds do
-  event.item << OFF
+  event.item.off
 end
 ```
 
 ### Update a DateTime Item with the current time when a motion sensor is triggered
 
 Given the following group and items:
+
 ```
 Group MotionSensors
 Switch Sensor1 (MotionSensors)
@@ -224,9 +246,9 @@ DateTime Sensor2_LastMotion
 
 Trigger defined as:
 
-- When: the state of a member of an item group is updated
-- Group: MotionSensors
-- State: ON
+* When: the state of a member of an item group is updated
+* Group: `MotionSensors`
+* State: `ON`
 
 ```ruby
 logger.info("#{event.item.name} Triggered")
