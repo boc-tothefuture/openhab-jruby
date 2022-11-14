@@ -78,8 +78,7 @@ RSpec.describe OpenHAB::Log do
           end
         end
       end
-      Timecop.travel(5.seconds)
-      execute_timers
+      time_travel_and_execute_timers(5.seconds)
       expect(executed).to be true
     end
 
@@ -91,8 +90,7 @@ RSpec.describe OpenHAB::Log do
         expect(logger.name).to eql file_logger_name # rubocop:disable RSpec/ExpectInHook
       end
 
-      Timecop.travel(5.seconds)
-      execute_timers
+      time_travel_and_execute_timers(5.seconds)
       expect(executed).to be true
     end
 

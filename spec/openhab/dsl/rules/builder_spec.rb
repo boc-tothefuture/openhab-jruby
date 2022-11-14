@@ -261,8 +261,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
               items[item].update(new_state)
               execute_timers
               expect(triggered_item).to be_nil
-              Timecop.travel(10.seconds)
-              execute_timers
+              time_travel_and_execute_timers(10.seconds)
               expect(triggered_item).to eql expect_triggered
             end
 
@@ -284,28 +283,24 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
             Alarm_Mode1.update(14)
             execute_timers
             expect(triggered_item).to be_nil
-            Timecop.travel(5.seconds)
-            execute_timers
+            time_travel_and_execute_timers(5.seconds)
             expect(triggered_item).to be_nil
             Alarm_Mode1.update(10)
             execute_timers
             expect(triggered_item).to be_nil
-            Timecop.travel(30.seconds)
-            execute_timers
+            time_travel_and_execute_timers(30.seconds)
             expect(triggered_item).to eql "Alarm_Mode1"
           end
           test_changed_trigger(to: 14, duration: 10.seconds) do
             Alarm_Mode1.update(14)
             execute_timers
             expect(triggered_item).to be_nil
-            Timecop.travel(5.seconds)
-            execute_timers
+            time_travel_and_execute_timers(5.seconds)
             expect(triggered_item).to be_nil
             Alarm_Mode1.update(10)
             execute_timers
             expect(triggered_item).to be_nil
-            Timecop.travel(20.seconds)
-            execute_timers
+            time_travel_and_execute_timers(20.seconds)
             expect(triggered_item).to be_nil
           end
 
@@ -324,11 +319,9 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
                 Alarm_Mode4.update(new_state)
                 execute_timers
                 expect(triggered_item).to be_nil
-                Timecop.travel(3.seconds)
-                execute_timers
+                time_travel_and_execute_timers(3.seconds)
                 expect(triggered_item).to be_nil
-                Timecop.travel(5.seconds)
-                execute_timers
+                time_travel_and_execute_timers(5.seconds)
                 expect(triggered_item).to eql expect_triggered
               end
             end
@@ -356,11 +349,9 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
                 Switch2.update(new_state)
                 execute_timers
                 expect(triggered_item).to be_nil
-                Timecop.travel(3.seconds)
-                execute_timers
+                time_travel_and_execute_timers(3.seconds)
                 expect(triggered_item).to be_nil
-                Timecop.travel(5.seconds)
-                execute_timers
+                time_travel_and_execute_timers(5.seconds)
                 expect(triggered_item).to eql expect_triggered
               end
             end
@@ -388,19 +379,16 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         test_thing_status_trigger(:changed, to: :uninitialized, duration: 10.seconds) do |_triggered|
           execute_timers
           expect(triggered?).to be false
-          Timecop.travel(15.seconds)
-          execute_timers
+          time_travel_and_execute_timers(15.seconds)
           expect(triggered?).to be true
         end
         test_thing_status_trigger(:changed, to: :uninitialized, duration: 20.seconds) do |_triggered|
           execute_timers
           expect(triggered?).to be false
-          Timecop.travel(5.seconds)
           thing.enable
-          execute_timers
+          time_travel_and_execute_timers(5.seconds)
           expect(triggered?).to be false
-          Timecop.travel(20.seconds)
-          execute_timers
+          time_travel_and_execute_timers(20.seconds)
           expect(triggered?).to be false
         end
       end
