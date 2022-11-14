@@ -58,7 +58,7 @@ module OpenHAB
 
       #
       # @!attribute [r] automation_manager
-      # @return [org.openhab.core.automation.rule.script.rulesupport.shared.ScriptedAutomationManager]
+      # @return [org.openhab.core.automation.module.script.rulesupport.shared.ScriptedAutomationManager]
       #   The OpenHAB Automation manager.
       #
       def automation_manager
