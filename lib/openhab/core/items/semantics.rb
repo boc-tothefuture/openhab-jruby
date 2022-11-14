@@ -13,8 +13,7 @@ module OpenHAB
       # the {https://www.openhab.org/docs/tutorial/model.html Semantic Model} in your scripts.
       # This can be extremely useful to find related items in rules that are executed for any member of a group.
       #
-      # Wraps [org.openhab.core.model.script.actions.Semantics](https://www.openhab.org/javadoc/latest/org/openhab/core/model/script/actions/semantics),
-      # as well as adding a few additional convenience methods.
+      # Wraps {org.openhab.core.model.script.actions.Semantics} as well as adding a few additional convenience methods.
       # Also includes classes for each semantic tag.
       #
       # Be warned that the Semantic model is stricter than can actually be
@@ -41,7 +40,7 @@ module OpenHAB
       #
       # Each [Semantic
       # Tag](https://github.com/openhab/openhab-core/blob/main/bundles/org.openhab.core.semantics/model/SemanticTags.csv)
-      # has a corresponding class within the `org.openhab.core.semantics.model` class hierarchy.
+      # has a corresponding class within the {org.openhab.core.semantics} class hierarchy.
       # These "semantic classes" are available as constants in the {Semantics} module with the corresponding name.
       # The following table illustrates the semantic constants:
       #
@@ -188,30 +187,6 @@ module OpenHAB
         #   end
         #
 
-        # @!parse
-        #   # This is a marker interface for all semantic tag classes.
-        #   module Tag; end
-        #
-        #   # This is the super interface for all types that represent a Location.
-        #   module Location
-        #     include Tag
-        #   end
-        #
-        #   # This is the super interface for all types that represent an Equipment.
-        #   module Equipment
-        #     include Tag
-        #   end
-        #
-        #   # This is the super interface for all types that represent a Point.
-        #   module Point
-        #     include Tag
-        #   end
-        #
-        #   # This is the super interface for all property tags.
-        #   module Property
-        #     include Tag
-        #   end
-
         # @!visibility private
         # import the actual semantics action
         SemanticsAction = org.openhab.core.model.script.actions.Semantics
@@ -226,8 +201,26 @@ module OpenHAB
             const_set(tag.simple_name.to_sym, tag.ruby_class)
           end
         end
-        # The base module for all semantic tag modules.
+        # This is a marker interface for all semantic tag classes.
+        # @interface
         Tag = org.openhab.core.semantics.Tag
+
+        # @!parse
+        #   # This is the super interface for all types that represent a Location.
+        #   # @interface
+        #   Location = org.openhab.core.semantics.Location
+        #
+        #   # This is the super interface for all types that represent an Equipment.
+        #   # @interface
+        #   Equipment = org.openhab.core.semantics.Equipment
+        #
+        #   # This is the super interface for all types that represent a Point.
+        #   # @interface
+        #   Point = org.openhab.core.semantics.Point
+        #
+        #   # This is the super interface for all property tags.
+        #   # @interface
+        #   Property = org.openhab.core.semantics.Property
 
         # put ourself into the global namespace, replacing the action
         ::Semantics = self # rubocop:disable Naming/ConstantName

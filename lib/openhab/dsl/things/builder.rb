@@ -8,7 +8,7 @@ module OpenHAB
     module Things
       # Stores all things created in scripts, and notifies the ThingRegistry
       # of their existence
-      # @!visibility private
+      # aa@!visibility private
       class ThingProvider < org.openhab.core.common.registry.AbstractProvider
         include org.openhab.core.thing.ThingProvider
         include Singleton
