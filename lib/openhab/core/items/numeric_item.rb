@@ -10,7 +10,11 @@ module OpenHAB
         # raw numbers translate directly to DecimalType, not a string
         # @!visibility private
         def format_type(command)
-          return Types::DecimalType.new(command) if command.is_a?(Numeric)
+          if command.is_a?(Numeric)
+            return Types::QuantityType.new(command, unit) if unit
+
+            return Types::DecimalType.new(command)
+          end
 
           super
         end

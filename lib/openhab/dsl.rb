@@ -514,7 +514,7 @@ module OpenHAB
     #   division.
     #
     #   @param [String, javax.measure.Unit] unit Unit or String representing unit
-    #   @yield The block will be executed in the context of the specify unit.
+    #   @yield The block will be executed in the context of the specified unit.
     #
     #   @example
     #     # Number:Temperature NumberC = 23 °C

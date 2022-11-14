@@ -129,6 +129,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 ### Bug Fixes
 
 * Fix thing {OpenHAB::Core::EntityLookup#method_missing entity lookup}
+* fix `ensure` to work with QuantityType
 
 ## [4.45.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.1...4.45.2) (2022-10-02)
 
