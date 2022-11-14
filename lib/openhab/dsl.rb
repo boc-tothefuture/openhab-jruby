@@ -513,6 +513,9 @@ module OpenHAB
       Thread.current.thread_variable_set(:persistence_service, old)
     end
 
+    #
+    # @yield
+    #
     # @overload unit(dimension)
     #  @param [javax.measure.Dimension] dimension The dimension to fetch the unit for.
     #  @return [javax.measure.Unit] The current unit for the thread of the specified dimensions
@@ -582,11 +585,12 @@ module OpenHAB
     # {unit!} calls are cumulative - additional calls will not erase the effects
     # previous calls unless they are for the same dimension.
     #
+    # @return [Hash<javax.measure.Dimension=>javax.measure.Unit>]
+    #   the prior unit configuration
+    #
     # @overload unit!(*units)
     #   @param [String, javax.measure.Unit] units
     #     Unit or String representing unit.
-    #   @return [Hash<javax.measure.Dimension=>javax.measure.Unit>]
-    #     the prior unit configuration
     #
     #   @example Set several defaults at once
     #     unit!("°F", "ft", "lbs")
@@ -605,9 +609,6 @@ module OpenHAB
     #
     # @overload unit!
     #   Clear all unit settings
-    #
-    #   @return [Hash<javax.measure.Dimension=>javax.measure.Unit>]
-    #     the prior unit configuration
     #
     #   @example Clear all unit settings
     #     unit!("ft")
