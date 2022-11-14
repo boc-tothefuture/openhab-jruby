@@ -86,6 +86,10 @@ here is a non-exhaustive list of significant departures from the original gem:
   {OpenHAB::DSL::Rules::Builder#not_if not_if} guards now _only_ take blocks.
   This just means where you previously had `only_if Item` you now write
   `only_if { Item.on? }`.
+* Related to the above, {OpenHAB::DSL::Rules::Builder#changed changed for:}
+  guards no longer take items. This just means if you previously had
+  `changed Item, for: OtherItem` you now write
+  `changed Item, for: -> { OtherItem.state }`.
 * {QuantityType} is no longer implicitly
   convertible and comparable against Strings. Use the `|` operator for easy
   construction of {QuantityType}s: `10 | "°F"`.

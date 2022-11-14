@@ -643,11 +643,11 @@ module OpenHAB
         #     run { |event| logger.info("Motion detected by #{event.item.name}") }
         #   end
         #
-        # @example `for` parameter can be an Item too:
+        # @example `for` parameter can be a proc too:
         #   Alarm_Delay << 20
         #
         #   rule "Execute rule when item is changed for specified duration" do
-        #     changed Alarm_Mode, for: Alarm_Delay
+        #     changed Alarm_Mode, for: -> { Alarm_Delay.state }
         #     run { logger.info("Alarm Mode Updated") }
         #   end
         #
