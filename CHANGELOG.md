@@ -84,6 +84,10 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {QuantityType} is no longer implicitly
   convertible and comparable against Strings. Use the `|` operator for easy
   construction of {QuantityType}s: `10 | "°F"`.
+* {QuantityType} can no longer be compared against `Numeric` or {DecimalType} outside
+  a {OpenHAB::DSL.unit unit} block. Either compare it against another QuantityType, or
+  convert it with to_f first, or perform the comparison inside a
+  {OpenHAB::DSL.unit unit} block.
 * The top-level `groups` method providing access to only {GroupItem}s has been
   removed. Use `items.grep(GroupItem)` if you would like to filter to only
   groups.

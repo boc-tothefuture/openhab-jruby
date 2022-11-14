@@ -64,7 +64,7 @@ RSpec.describe OpenHAB::Core::Types::QuantityType do
     expect((23 | "°C") | ImperialUnits::FAHRENHEIT).to eql QuantityType.new("73.4 °F")
   end
 
-  it "supports ranges with string quantity" do
+  it "supports ranges" do
     expect((0 | "W")..(10 | "W")).to cover(0 | "W")
     expect((0 | "W")..(10 | "W")).not_to cover(14 | "W")
     expect((0 | "W")..(10 | "W")).to cover(10 | "W")
@@ -97,16 +97,48 @@ RSpec.describe OpenHAB::Core::Types::QuantityType do
     specify { expect(QuantityType.new("20 °C")).not_to be < ten_c }
     specify { expect(five_c).to be < fifty_f }
 
-    # QuantityType vs Numeric
-    specify { expect(ten_c).not_to eql 10 }
-    specify { expect(ten_c).to be > 3 }
-    specify { expect(ten_c).to eq 10 }
-    specify { expect(QuantityType.new("465.3 lx")).not_to be < 100 }
+    it "is not comparable against String" do
+      expect { ten_c > "10 °F" }.to raise_exception(ArgumentError)
+      expect(ten_f == "10 °F").to be false
+      expect(ten_f == "10 °C").to be false
+      expect(ten_f == "10").to be false
+    end
 
-    # Numeric vs QuantityType
-    specify { expect(100).not_to be > QuantityType.new("465.3 lx") }
+    it "is not comparable against bare Numeric" do
+      expect { ten_c > 3 }.to raise_exception(ArgumentError)
+      expect(ten_c == 10).to be false
+    end
 
-    # QuantityType vs DecimalType
-    specify { expect(ten_f).to eq DecimalType.new(10) }
+    it "is comparable against Numeric inside a unit block" do
+      unit("°F") do
+        expect(ten_c == 50).to be true
+        expect(ten_c != 50).to be false
+        expect(ten_c == 10).to be false
+        expect(ten_c != 10).to be true
+        expect(ten_c > 49).to be true
+        expect(ten_c < 51).to be true
+      end
+
+      unit("°C") do
+        expect(ten_c == 10).to be true
+        expect(ten_c > 9).to be true
+        expect(ten_c < 9).to be false
+        expect(ten_c < 11).to be true
+        expect(ten_c > 11).to be false
+      end
+    end
+
+    it "is not comparable against DecimalType" do
+      expect { ten_c > DecimalType.new(3) }.to raise_exception(ArgumentError)
+    end
+
+    it "is comparable against DecimalType inside a unit block" do
+      unit("°F") do
+        expect(ten_c == DecimalType.new(50)).to be true
+        expect(ten_c == DecimalType.new(10)).to be false
+        expect(ten_c > DecimalType.new(49)).to be true
+        expect(ten_c < DecimalType.new(49)).to be false
+      end
+    end
   end
 end

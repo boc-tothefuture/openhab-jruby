@@ -26,7 +26,11 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [NumericType, Numeric]
+        # Comparisons against Numeric and DecimalType are allowed only within a {DSL.unit}
+        # block to avoid unit ambiguities.
+        # Comparisons against other types may be done if supported by that type's coercion.
+        #
+        # @param [QuantityType, DecimalType, Numeric, Object]
         #   other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether `other` is
@@ -36,18 +40,21 @@ module OpenHAB
         #
         def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
-          if other.is_a?(self.class)
+          case other
+          when self.class
             return unitize(other.unit).compare_to(other) if unit == ONE_UNIT
             return compare_to(other.unitize(unit)) if other.unit == ONE_UNIT
 
-            compare_to(other)
-          elsif other.respond_to?(:to_d)
-            compare_to(QuantityType.new(other.to_d.to_java, DSL.unit || unit))
-          elsif other.respond_to?(:coerce)
-            return nil unless (lhs, rhs = other.coerce(self))
+            return compare_to(other)
+          when Numeric, DecimalType
+            return compare_to(QuantityType.new(other, OpenHAB::DSL.unit)) if OpenHAB::DSL.unit
 
-            lhs <=> rhs
+            return nil # don't allow comparison with numeric outside a unit block
           end
+
+          return nil unless other.respond_to?(:coerce)
+
+          other.coerce(self)&.then { |lhs, rhs| lhs <=> rhs }
         end
 
         #
