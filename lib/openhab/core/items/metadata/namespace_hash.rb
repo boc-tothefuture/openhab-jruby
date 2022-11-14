@@ -10,7 +10,7 @@ module OpenHAB
         # It implements the entire interface of {::Hash}.
         #
         # Keys are namespaces, values are always {Hash}, though assignment allows
-        # using a {Hash}, a {String}, a {::Hash}, or an array of two items:
+        # using a {Hash}, a String, a `::Hash`, or an array of two items:
         # `[String, ::Hash]`.
         #
         # All keys are converted to strings.

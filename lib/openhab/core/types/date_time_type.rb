@@ -57,7 +57,7 @@ module OpenHAB
         #   A {ZonedDateTime} used to fill in missing
         #   fields during conversion. Not used in this class.
         # @return [ZonedTimeTime]
-        def to_zoned_date_time(_context = nil)
+        def to_zoned_date_time(context = nil) # rubocop:disable Lint/UnusedMethodArgument
           zoned_date_time
         end
 

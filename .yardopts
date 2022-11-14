@@ -4,6 +4,7 @@
 --exclude lib/openhab/rspec/karaf.rb
 --exclude lib/openhab/rspec/openhab/
 --exclude lib/openhab/rspec/suspend_rules.rb
+--fail-on-warning
 --load openhab/yard.rb
 --output-dir docs/yard
 --plugin coderay

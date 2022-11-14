@@ -10,7 +10,7 @@ module OpenHAB
     module Types
       StringType = org.openhab.core.library.types.StringType
 
-      # {StringType} represents a {String} as a {Type} and a {Command}.
+      # {StringType} represents a String as a {Type} and a {Command}.
       class StringType
         # @!parse include Command, State
 

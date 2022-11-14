@@ -49,8 +49,9 @@ class Date
   end
 
   # @param [ZonedDateTime, nil] context
-  #   A {ZonedDateTime} used to fill in missing fields
-  #   during conversion. {ZonedDateTime.now} is assumed if not given.
+  #   A {ZonedDateTime} used to fill in missing fields during conversion.
+  #   {OpenHAB::CoreExt::Java::ZonedDateTime.now ZonedDateTime.now} is assumed
+  #   if not given.
   # @return [ZonedDateTime]
   def to_zoned_date_time(context = nil)
     to_local_date.to_zoned_date_time(context)

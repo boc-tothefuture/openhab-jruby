@@ -47,6 +47,7 @@ jobs:
           bundler-cache: true
       - name: Yard Coverage
         run: |
+          bin/yard
           bin/yard stats --list-undoc
           bin/yard stats | grep "100.00% documented"
 

@@ -78,7 +78,7 @@ module OpenHAB
 
         # @param [Date, nil] context
         #   A {Date} used to fill in missing fields
-        #   during conversion. {Date.today} is assumed if not given.
+        #   during conversion. `Date.today` is assumed if not given.
         # @return [Date]
         def to_date(context = nil)
           context ||= Date.today

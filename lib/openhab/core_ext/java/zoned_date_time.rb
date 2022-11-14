@@ -11,6 +11,11 @@ module OpenHAB
       class ZonedDateTime
         include Time
 
+        class << self # rubocop:disable Lint/EmptyClass
+          # @!attribute [r] now
+          #   @return [ZonedDateTime]
+        end
+
         alias_method :to_local_time, :toLocalTime
         alias_method :to_month, :month
 
@@ -78,7 +83,7 @@ module OpenHAB
         #   A {ZonedDateTime} used to fill in missing fields
         #   during conversion. Not used in this class.
         # @return [self]
-        def to_zoned_date_time(_context = nil)
+        def to_zoned_date_time(context = nil) # rubocop:disable Lint/UnusedMethodArgument
           self
         end
 

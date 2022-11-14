@@ -146,7 +146,7 @@ module OpenHAB
         # Access to the item's metadata.
         #
         # Both the return value of this method as well as the individual
-        # namespaces can be treated as {Hash}es.
+        # namespaces can be treated as Hashes.
         #
         # Examples assume the following items:
         #

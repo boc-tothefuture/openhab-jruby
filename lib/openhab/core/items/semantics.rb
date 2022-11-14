@@ -34,7 +34,7 @@ module OpenHAB
       # * Array of items, such as the return value of {Enumerable#equipments}, {Enumerable#locations},
       #   {Enumerable#points}, {Enumerable#tagged}, {Enumerable#not_tagged}, {Enumerable#member_of},
       #   {Enumerable#not_member_of}, {Enumerable#members} methods, etc.
-      # * {DSL.items items[]} hash which contains all items in the system.
+      # * {OpenHAB::DSL.items items[]} hash which contains all items in the system.
       #
       # ## Semantic Classes
       #
@@ -358,8 +358,6 @@ module OpenHAB
           SemanticsAction.get_semantic_type(self)&.ruby_class
         end
 
-        #
-        # @!attribute [r] points
         #
         # Return the related Point Items.
         #

@@ -266,7 +266,7 @@ module OpenHAB
         #        Fluent alias for `group`.
         # @param tag [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
         #        Tag(s) to apply to this item (see {tag}).
-        # @params tags [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
+        # @param tags [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
         #        Fluent alias for `tag`.
         # @param alexa [String, Array, nil] Alexa metadata (see {#alexa})
         # @param autoupdate [true, false, nil] Autoupdate setting (see {#autoupdate})

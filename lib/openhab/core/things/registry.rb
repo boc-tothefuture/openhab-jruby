@@ -15,7 +15,7 @@ module OpenHAB
         #
         # Gets a specific thing
         #
-        # @param [String, ThingUID] Thing UID in the format `binding_id:type_id:thing_id`
+        # @param [String, ThingUID] uid Thing UID in the format `binding_id:type_id:thing_id`
         #   or via the ThingUID
         # @return [Thing, nil]
         #

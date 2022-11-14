@@ -75,9 +75,9 @@ module OpenHAB
       #
       # @!visibility private
       #
-      # @param [String] name of Thing to lookup in Thing registry
+      # @param [String] uid name of Thing to lookup in Thing registry
       #
-      # @return [Thing] if found, nil otherwise
+      # @return [Thing, nil]
       #
       def self.lookup_thing(uid)
         logger.trace("Looking up thing '#{uid}'")

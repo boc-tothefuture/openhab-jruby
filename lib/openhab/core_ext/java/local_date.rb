@@ -11,6 +11,11 @@ module OpenHAB
       class LocalDate
         include Time
 
+        class << self # rubocop:disable Lint/EmptyClass
+          # @!attribute [r] now
+          #   @return [ZonedDateTime]
+        end
+
         # @param [TemporalAmount, LocalDate, Numeric] other
         #   If other is a Numeric, it's interpreted as days.
         # @return [LocalDate] If other is a TemporalAmount or Numeric

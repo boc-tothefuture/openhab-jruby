@@ -22,8 +22,8 @@ module OpenHAB
         #
         # Comparison
         #
-        # Comparisons against Numeric and DecimalType are allowed only within a {DSL.unit}
-        # block to avoid unit ambiguities.
+        # Comparisons against Numeric and DecimalType are allowed only within a
+        # {OpenHAB::DSL.unit unit} block to avoid unit ambiguities.
         # Comparisons against other types may be done if supported by that type's coercion.
         #
         # @param [QuantityType, DecimalType, Numeric, Object]
