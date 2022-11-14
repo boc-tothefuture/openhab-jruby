@@ -60,7 +60,7 @@ module OpenHAB
 
         def initialize(thing)
           super
-          define_action_methods
+          @actions = actions_for_thing(uid)
         end
 
         #
@@ -154,35 +154,26 @@ module OpenHAB
           uid.to_s
         end
 
-        private
+        #
+        # Delegate missing methods to thing actions
+        #
+        def method_missing(method, *args, &block)
+          @actions&.each do |action|
+            next unless action.respond_to?(method)
 
-        #
-        # Define methods from actions mapped to this thing
-        #
-        #
-        def define_action_methods
-          actions_for_thing(uid).each do |action|
-            methods = action.java_class.declared_instance_methods
-            methods.each do |method|
-              if method.annotation_present?(org.openhab.core.automation.annotation.RuleAction.java_class)
-                define_action_method(action: action, method: method.name)
-              end
-            end
+            logger.trace("Calling Thing #{uid} action method #{method}")
+            return action.public_send(method, *args)
           end
+          super
         end
 
-        #
-        # Define a method, delegating to supplied action class
-        #
-        # @param [Object] action object to delegate method to
-        # @param [String] method Name of method to delegate
-        #
-        #
-        def define_action_method(action:, method:)
-          logger.trace("Adding action method '#{method}' to thing '#{uid}'")
-          define_singleton_method(method) do |*args|
-            action.public_send(method, *args)
+        # @!visibility private
+        def respond_to_missing?(method_name, _include_private = false)
+          logger.trace("Checking if Thing #{uid} supports #{method_name} action")
+          @actions&.each do |action|
+            return true if action.respond_to?(method_name)
           end
+          super
         end
       end
     end

@@ -136,6 +136,13 @@ here is a non-exhaustive list of significant departures from the original gem:
   * Persistence methods no longer accept a {Duration}. Please use `Duration#ago`
     instead.
 
+
+### Features
+
+* Support Ruby's method name convention for thing actions, 
+  e.g. `things["mqtt:broker:mosquitto"].publish_mqtt`
+
+
 ### Bug Fixes
 
 * Fix thing {OpenHAB::Core::EntityLookup#method_missing entity lookup}

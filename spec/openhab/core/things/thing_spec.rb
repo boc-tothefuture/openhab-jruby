@@ -50,4 +50,17 @@ RSpec.describe OpenHAB::Core::Things::Thing do
       end
     end
   end
+
+  # These don't work for some reason
+  # it "supports thing actions" do
+  #   expect(thing.respond_to?(:getEventTime)).to be true
+  #   expect(thing.respond_to?(:getElevation)).to be true
+  #   expect(thing.respond_to?(:get_event_time)).to be true
+  #   expect(thing.respond_to?(:get_elevation)).to be true
+
+  #   now = ZonedDateTime.now
+
+  #   expect(thing.get_elevation(now)).to eq thing.getElevation(now)
+  #   expect((-360..360).cover?(thing.get_elevation(now))).to be true
+  # end
 end
