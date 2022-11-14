@@ -506,10 +506,11 @@ module OpenHAB
     # @return [Object] The return value from the block.
     #
     def persistence(service)
+      old = Thread.current[:persistence_service]
       Thread.current.thread_variable_set(:persistence_service, service)
       yield
     ensure
-      Thread.current.thread_variable_set(:persistence_service, nil)
+      Thread.current.thread_variable_set(:persistence_service, old)
     end
 
     # @overload unit(dimension)
