@@ -437,9 +437,6 @@ module OpenHAB
     # all commands sent will check if the item is in the command's state
     # before sending the command.
     #
-    # @note Wrapping an entire rule or file in an ensure_states block will not
-    #   ensure the states during execution of the rules. See examples.
-    #
     # @yield
     # @return [Object] The result of the block.
     #
@@ -458,7 +455,7 @@ module OpenHAB
     #     VirtualSwitch.update(OFF) # No update will be posted
     #   end
     #
-    # @example This will not work
+    # @example
     #   ensure_states do
     #     rule 'Items in an execution block will not have ensure_states applied to them' do
     #       changed VirtualSwitch
@@ -469,7 +466,7 @@ module OpenHAB
     #     end
     #   end
     #
-    # @example This will work
+    # @example
     #   rule 'ensure_states must be in an execution block' do
     #     changed VirtualSwitch
     #     run do
