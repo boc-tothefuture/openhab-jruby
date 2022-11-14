@@ -513,13 +513,13 @@ module OpenHAB
     end
 
     # @overload unit(dimension)
-    #  @param [javax.measure.Dimension] The dimension to fetch the unit for.
+    #  @param [javax.measure.Dimension] dimension The dimension to fetch the unit for.
     #  @return [javax.measure.unit] The current unit for the thread of the specified dimensions
     #
     #  @example
     #    unit(SIUnits::METRE.dimension) # => ImperialUnits::FOOT
     #
-    # @overload unit(units)
+    # @overload unit(*units)
     #   Sets a the implicit unit for this thread such that classes
     #   operating inside the block can perform automatic conversions to the
     #   supplied unit for {QuantityType}.
@@ -569,13 +569,49 @@ module OpenHAB
     #
     # Permanently sets the implicit unit(s) for this thread
     #
-    # @param [String, javax.measure.Unit] units
-    #   Unit or String representing unit. Don't pass any units to clear the current settings.
-    # @return [Hash<javax.measure.Dimension=>javax.measure.Unit>] The prior unit configuration
+    # @note This method is only intended for use at the top level of rule
+    #   scripts. If it's used within library methods, or hap-hazardly within
+    #   rules, things can get very confusing because the prior state won't be
+    #   properly restored.
     #
-    # @example
-    #   unit!("°F", "ft")
-    #   (50 | "°F") == 50 # => true
+    # @note As of now, the state of unit will _not_ be set inside of rule
+    #   execution blocks or timer blocks if {#unit} is called outside of those
+    #   blocks.
+    #
+    # {unit!} calls are cumulative - additional calls will not erase the effects
+    # previous calls unless they are for the same dimension.
+    #
+    # @overload unit!(*units)
+    #   @param [String, javax.measure.Unit] units
+    #     Unit or String representing unit.
+    #   @return [Hash<javax.measure.Dimension=>javax.measure.Unit>]
+    #     the prior unit configuration
+    #
+    #   @example Set several defaults at once
+    #     unit!("°F", "ft", "lbs")
+    #     (50 | "°F") == 50 # => true
+    #
+    #   @example Calls are cumulative
+    #     unit!("°F")
+    #     unit!("ft")
+    #     (50 | "°F") == 50 # => true
+    #     (2 | "yd") == 6 # => true
+    #
+    #   @example Subsequent calls override the same dimension from previous calls
+    #     unit!("yd")
+    #     unit!("ft")
+    #     (2 | "yd") == 6 # => true
+    #
+    # @overload unit!
+    #   Clear all unit settings
+    #
+    #   @return [Hash<javax.measure.Dimension=>javax.measure.Unit>]
+    #     the prior unit configuration
+    #
+    #   @example Clear all unit settings
+    #     unit!("ft")
+    #     unit!
+    #     (2 | "yd") == 6 # => false
     #
     def unit!(*units)
       units = units.each_with_object({}) do |unit, r|

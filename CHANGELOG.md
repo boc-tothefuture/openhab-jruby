@@ -13,9 +13,6 @@ debt that had accumulated from organic growth, and to do so speedily without
 waiting for full review from other contributors with limited time. That said,
 here is a non-exhaustive list of significant departures from the original gem:
 
-* Significant new features! In particular, see {OpenHAB::DSL::Items::Builder},
-  {OpenHAB::DSL::Things::Builder}, several new triggers in
-  {OpenHAB::DSL::Rules::Builder}, and {OpenHAB::DSL.profile}.
 * Logging has been reworked. There's generally no need to
   `include OpenHAB::Log` in your classes. {OpenHAB::Log.logger} method now
   accepts a String to explicitly find whichever logger you would like, and
@@ -58,6 +55,14 @@ here is a non-exhaustive list of significant departures from the original gem:
   to explicitly call them on {OpenHAB::DSL}, or mix that module into your
   class yourself. Additional internal and Java constants and methods should
   no longer be leaking out of the gem's public API.
+
+### Features
+
+* {OpenHAB::DSL::Items::Builder}
+* {OpenHAB::DSL::Things::Builder}
+* Several new triggers in {OpenHAB::DSL::Rules::Builder}
+* {OpenHAB::DSL.profile}
+* {OpenHAB::DSL.unit} can now handle units for multiple dimensions.
 
 ### Breaking Changes
 
