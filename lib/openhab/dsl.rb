@@ -457,7 +457,7 @@ module OpenHAB
     #
     # @example
     #   ensure_states do
-    #     rule 'Items in an execution block will not have ensure_states applied to them' do
+    #     rule 'Items in an execution block will have ensure_states applied to them' do
     #       changed VirtualSwitch
     #       run do
     #         VirtualSwitch.on
