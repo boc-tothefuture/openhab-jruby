@@ -9,6 +9,20 @@ module OpenHAB
     module ThreadLocal
       module_function
 
+      # Keys to persist
+      KNOWN_KEYS = %i[openhab_rule_uid openhab_units openhab_persistence_service openhab_ensure_states].freeze
+
+      #
+      # Fetch all {KNOWN_KEYS} from thread local storage.
+      #
+      # @return [Hash<Symbol=>Object>]
+      #
+      def persist
+        KNOWN_KEYS.to_h do |key|
+          [key, Thread.current[key]]
+        end
+      end
+
       #
       # Execute the supplied block with the supplied values set for the currently running thread
       # The previous values for each key are restored after the block is executed

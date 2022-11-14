@@ -163,11 +163,7 @@ module OpenHAB
             @timed_command_details = timed_command_details
             @block = block
             # Capture rule name if known
-            @thread_locals = if Thread.current[:OPENHAB_RULE_UID]
-                               { OPENHAB_RULE_UID: Thread.current[:OPENHAB_RULE_UID] }
-                             else
-                               {}
-                             end
+            @thread_locals = ThreadLocal.persist
             set_name("Cancels implicit timer for #{timed_command_details.item.name}")
             set_triggers([Rules::RuleTriggers.trigger(
               type: Rules::Triggers::Changed::ITEM_STATE_CHANGE,

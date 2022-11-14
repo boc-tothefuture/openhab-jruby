@@ -67,7 +67,8 @@ module OpenHAB
       script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
       builder = nil
-      ThreadLocal.thread_local(OPENHAB_RULE_UID: id) do
+
+      ThreadLocal.thread_local(openhab_rule_uid: id) do
         builder = Rules::Builder.new(binding || block.binding)
         builder.uid(id)
         builder.instance_exec(&block)
@@ -106,7 +107,7 @@ module OpenHAB
       script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
       builder = nil
-      ThreadLocal.thread_local(RULE_NAME: name) do
+      ThreadLocal.thread_local(openhab_rule_uid: id) do
         builder = Rules::Builder.new(block.binding)
         builder.uid(id)
         builder.tags(["Script"])
@@ -358,9 +359,8 @@ module OpenHAB
       raise ArgumentError, "Block is required" unless block
 
       # Carry rule name to timer
-      thread_locals = { OPENHAB_RULE_UID: Thread.current[:OPENHAB_RULE_UID] } if Thread.current[:OPENHAB_RULE_UID]
-      thread_locals ||= {}
-      return DSL::TimerManager.reentrant_timer(duration, thread_locals: thread_locals, id: id, &block) if id
+      thread_locals = ThreadLocal.persist
+      return TimerManager.reentrant_timer(duration, thread_locals: thread_locals, id: id, &block) if id
 
       Core::Timer.new(duration, thread_locals: thread_locals, &block)
     end
@@ -481,11 +481,11 @@ module OpenHAB
     #   end
     #
     def ensure_states
-      old = Thread.current[:ensure_states]
-      Thread.current[:ensure_states] = true
+      old = Thread.current[:openhab_ensure_states]
+      Thread.current[:openhab_ensure_states] = true
       yield
     ensure
-      Thread.current[:ensure_states] = old
+      Thread.current[:openhab_ensure_states] = old
     end
 
     #
@@ -506,11 +506,11 @@ module OpenHAB
     # @return [Object] The return value from the block.
     #
     def persistence(service)
-      old = Thread.current[:persistence_service]
-      Thread.current.thread_variable_set(:persistence_service, service)
+      old = Thread.current[:openhab_persistence_service]
+      Thread.current[:openhab_persistence_service] = service
       yield
     ensure
-      Thread.current.thread_variable_set(:persistence_service, old)
+      Thread.current[:openhab_persistence_service] = old
     end
 
     #
@@ -559,7 +559,9 @@ module OpenHAB
     #     unit('°F') { NumberC << 32 }; NumberC.state                                           # => 0 °C
     #
     def unit(*units)
-      return Thread.current[:units]&.[](units.first) if units.length == 1 && units.first.is_a?(javax.measure.Dimension)
+      if units.length == 1 && units.first.is_a?(javax.measure.Dimension)
+        return Thread.current[:openhab_units]&.[](units.first)
+      end
 
       raise ArgumentError, "You must give a block to set the unit for the duration of" unless block_given?
 
@@ -567,7 +569,7 @@ module OpenHAB
         old_units = unit!(*units)
         yield
       ensure
-        Thread.current[:units] = old_units
+        Thread.current[:openhab_units] = old_units
       end
     end
 
@@ -578,10 +580,6 @@ module OpenHAB
     #   scripts. If it's used within library methods, or hap-hazardly within
     #   rules, things can get very confusing because the prior state won't be
     #   properly restored.
-    #
-    # @note As of now, the state of unit will _not_ be set inside of rule
-    #   execution blocks or timer blocks if {#unit} is called outside of those
-    #   blocks.
     #
     # {unit!} calls are cumulative - additional calls will not erase the effects
     # previous calls unless they are for the same dimension.
@@ -622,8 +620,8 @@ module OpenHAB
         r[unit.dimension] = unit
       end
 
-      old_units = Thread.current[:units] || {}
-      Thread.current[:units] = units.empty? ? {} : old_units.merge(units)
+      old_units = Thread.current[:openhab_units] || {}
+      Thread.current[:openhab_units] = units.empty? ? {} : old_units.merge(units)
       old_units
     end
 

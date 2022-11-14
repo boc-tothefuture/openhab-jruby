@@ -30,6 +30,7 @@ module OpenHAB
           @between = config.between && DSL.between(config.between)
           @trigger_conditions = config.trigger_conditions
           @attachments = config.attachments
+          @thread_locals = ThreadLocal.persist
         end
 
         #
@@ -41,7 +42,7 @@ module OpenHAB
         #
         def execute(mod = nil, inputs = nil)
           @result = nil
-          ThreadLocal.thread_local(OPENHAB_RULE_UID: uid) do
+          ThreadLocal.thread_local(**@thread_locals) do
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
             trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
@@ -182,7 +183,7 @@ module OpenHAB
         # @param [Task] task task containing otherwise block to execute
         #
         def process_task(inputs, event, task)
-          ThreadLocal.thread_local(OPENHAB_RULE_UID: uid) do
+          ThreadLocal.thread_local(**@thread_locals) do
             case task
             when Builder::Run then process_run_task(event, task)
             when Builder::Script then process_script_task(inputs, task)

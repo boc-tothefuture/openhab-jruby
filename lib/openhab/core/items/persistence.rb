@@ -323,7 +323,7 @@ module OpenHAB
         # @return [Object] Persistence service name as String or Symbol, or nil if not set
         #
         def persistence_service
-          Thread.current.thread_variable_get(:persistence_service)
+          Thread.current[:openhab_persistence_service]
         end
       end
     end

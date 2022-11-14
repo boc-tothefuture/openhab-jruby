@@ -143,6 +143,9 @@ here is a non-exhaustive list of significant departures from the original gem:
 * Fix scoping of {OpenHAB::DSL::Rules::Terse terse rule} blocks
 * {OpenHAB::DSL.persistence persistence block} now restores the previous setting
 * {OpenHAB::DSL.unit unit} block applies to sending commands to {NumberItem NumberItems}.
+* *All* thread locals are carried over to rule executions and timers. This includes
+  {OpenHAB::DSL.unit unit}, {OpenHAB::DSL.persistence persistence}, and
+  {OpenHAB::DSL.ensure_states ensure_states}.
 
 ## [4.45.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.1...4.45.2) (2022-10-02)
 

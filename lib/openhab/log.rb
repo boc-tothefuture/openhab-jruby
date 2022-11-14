@@ -335,7 +335,7 @@ module OpenHAB
 
       # Get the id of the rule from the thread context
       def rule_uid
-        Thread.current[:OPENHAB_RULE_UID]
+        Thread.current[:openhab_rule_uid]
       end
 
       extend Forwardable

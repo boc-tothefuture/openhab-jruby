@@ -15,7 +15,7 @@ module OpenHAB
       class Profile
         include org.openhab.core.thing.profiles.StateProfile
 
-        def initialize(callback, context, uid, block)
+        def initialize(callback, context, uid, thread_locals, block)
           unless callback.class.ancestors.include?(Things::ProfileCallback)
             callback.class.prepend(Things::ProfileCallback)
             callback.class.field_reader :link
@@ -24,6 +24,7 @@ module OpenHAB
           @callback = callback
           @context = context
           @uid = uid
+          @thread_locals = thread_locals
           @block = block
         end
 
@@ -83,7 +84,7 @@ module OpenHAB
             end
           end
 
-          DSL::ThreadLocal.thread_local(OPENHAB_RULE_UID: getProfileTypeUID.id) do
+          DSL::ThreadLocal.thread_local(**@thread_locals) do
             @block.call(event, **kwargs)
           rescue Exception => e
             @block.binding.eval("self").logger.log_exception(e)
@@ -99,11 +100,11 @@ module OpenHAB
 
       # @!visibility private
       def register(uid, block)
-        @profiles[uid] = block
+        @profiles[uid] = [DSL::ThreadLocal.persist, block]
       end
 
       def createProfile(type, callback, context) # rubocop:disable Naming/MethodName
-        @profiles[type].then { |block| Profile.new(callback, context, type, block) }
+        @profiles[type].then { |(thread_locals, block)| Profile.new(callback, context, type, thread_locals, block) }
       end
 
       def getSupportedProfileTypeUIDs # rubocop:disable Naming/MethodName

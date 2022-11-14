@@ -31,7 +31,7 @@ module OpenHAB
           # sending the command
           %i[command update].each do |ensured_method|
             define_method(ensured_method) do |command|
-              return super(command) unless Thread.current[:ensure_states]
+              return super(command) unless Thread.current[:openhab_ensure_states]
 
               logger.trace do
                 "#{name} ensure #{command}, format_type: #{format_type(command)}, current state: #{state}"
