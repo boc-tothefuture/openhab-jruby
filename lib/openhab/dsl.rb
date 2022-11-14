@@ -511,17 +511,12 @@ module OpenHAB
     end
 
     #
+    # Sets the implicit unit(s) for operations inside the block.
+    #
     # @yield
     #
-    # @overload unit(dimension)
-    #  @param [javax.measure.Dimension] dimension The dimension to fetch the unit for.
-    #  @return [javax.measure.Unit] The current unit for the thread of the specified dimensions
-    #
-    #  @example
-    #    unit(SIUnits::METRE.dimension) # => ImperialUnits::FOOT
-    #
     # @overload unit(*units)
-    #   Sets a the implicit unit for this thread such that classes
+    #   Sets the implicit unit(s) for this thread such that classes
     #   operating inside the block can perform automatic conversions to the
     #   supplied unit for {QuantityType}.
     #
@@ -537,7 +532,7 @@ module OpenHAB
     #   @yield [] The block will be executed in the context of the specified unit(s).
     #   @return [Object] the result of the block
     #
-    #   @example
+    #   @example Arithmetic Operations Between QuantityType and Numeric
     #     # Number:Temperature NumberC = 23 °C
     #     # Number:Temperature NumberF = 70 °F
     #     # Number Dimensionless = 2
@@ -553,7 +548,28 @@ module OpenHAB
     #     unit('°C') { 2 * NumberC.state == 46 }                                                # => true
     #     unit('°C') { ( (2 * (NumberF.state + NumberC.state) ) / Dimensionless.state ) < 45 }  # => true
     #     unit('°C') { [NumberC.state, NumberF.state, Dimensionless.state].min }                # => 2
+    #
+    #   @example Commands and Updates inside a unit block
     #     unit('°F') { NumberC << 32 }; NumberC.state                                           # => 0 °C
+    #     # Equivalent to
+    #     NumberC << "32 °F"
+    #     # or
+    #     NumberC << 32 | "°F"
+    #
+    #   @example Specifying Multiple Units
+    #     unit("°C", "kW") do
+    #       TemperatureItem.update("50 °F")
+    #       TemperatureItem.state < 20          # => true. TemperatureItem.state < 20 °C
+    #       PowerUsage.update("3000 W")
+    #       PowerUsage.state < 10               # => true. PowerUsage.state < 10 kW
+    #     end
+    #
+    # @overload unit(dimension)
+    #   @param [javax.measure.Dimension] dimension The dimension to fetch the unit for.
+    #   @return [javax.measure.Unit] The current unit for the thread of the specified dimensions
+    #
+    #   @example
+    #     unit(SIUnits::METRE.dimension) # => ImperialUnits::FOOT
     #
     def unit(*units)
       if units.length == 1 && units.first.is_a?(javax.measure.Dimension)
