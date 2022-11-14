@@ -37,6 +37,243 @@ module OpenHAB
 
     module_function
 
+    # @!group Rule Creation
+
+    #
+    # Create a new rule
+    #
+    # @param [String] name The rule name
+    # @yield Block executed in context of a {Rules::Builder}
+    # @yieldparam [Rules::Builder] rule
+    #   Optional parameter to access the rule configuration from within execution blocks and guards.
+    # @return [org.openhab.core.automation.Rule] The OpenHAB Rule object
+    #
+    # @see OpenHAB::DSL::Rules::Builder Rule builder for details on rule triggers, guards and execution blocks
+    # @see Rules::Terse Terse Rules
+    #
+    # @example
+    #   require "openhab/dsl"
+    #
+    #   rule "name" do
+    #     <zero or more triggers>
+    #     <zero or more execution blocks>
+    #     <zero or more guards>
+    #   end
+    #
+    def rule(name = nil, id: nil, script: nil, binding: nil, &block)
+      raise ArgumentError, "Block is required" unless block
+
+      id ||= Rules::NameInference.infer_rule_id_from_block(block)
+      script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
+
+      builder = nil
+      ThreadLocal.thread_local(OPENHAB_RULE_UID: id) do
+        builder = Rules::Builder.new(binding || block.binding)
+        builder.uid(id)
+        builder.instance_exec(&block)
+        builder.guard = Rules::Guard.new(run_context: builder.caller, only_if: builder.only_if,
+                                         not_if: builder.not_if)
+
+        name ||= Rules::NameInference.infer_rule_name(builder)
+        name ||= id
+
+        builder.name(name)
+        logger.trace { builder.inspect }
+        builder.build(script)
+      rescue Exception => e
+        builder.send(:logger).log_exception(e)
+      end
+    end
+
+    #
+    # Create a new script
+    #
+    # A script is a rule with no triggers. It can be called by various other actions,
+    # such as the Run Rules action, or the script channel profile.
+    #
+    # Input variables are sent as keyword arguments to the block.
+    # The result of the block may be significant (like for the script channel profile).
+    #
+    # @param [String] id The script's ID
+    # @param [String] name A descriptive name
+    # @yield [] Block executed when the script is executed.
+    #
+    def script(name = nil, id: nil, script: nil, &block)
+      raise ArgumentError, "Block is required" unless block
+
+      id ||= NameInference.infer_rule_id_from_block(block)
+      name ||= id
+      script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
+
+      builder = nil
+      ThreadLocal.thread_local(RULE_NAME: name) do
+        builder = Rules::Builder.new(block.binding)
+        builder.uid(id)
+        builder.tags(["Script"])
+        builder.name(name)
+        builder.script(&block)
+        logger.trace { builder.inspect }
+        builder.build(script)
+      end
+    rescue Exception => e
+      builder.send(:logger).log_exception(e)
+    end
+
+    # @!group Rule Support
+
+    #
+    # Defines a new profile that can be applied to item channel links.
+    #
+    # @param [String, Symbol] id The id for the profile.
+    # @yield [event, command: nil, state: nil, link:, item:, channel_uid:, configuration:, context:]
+    #   All keyword params are optional. Any that aren't defined won't be passed.
+    # @yieldparam [Core::Things::ProfileCallback] callback
+    #   The callback to be used to customize the action taken.
+    # @yieldparam [:command_from_item, :state_from_item, :command_from_handler, :state_from_handler] event
+    #   The event that needs to be processed.
+    # @yieldparam [Command, nil] command
+    #   The command being sent for `:command_from_item` and `:command_from_handler` events.
+    # @yieldparam [State, nil] state
+    #   The state being sent for `:state_from_item` and `:state_from_handler` events.
+    # @yieldparam [Core::Things::ItemChannelLink] link
+    #   The link between the item and the channel, including its configuration.
+    # @yieldparam [GenericItem] item The linked item.
+    # @yieldparam [org.openhab.core.thing.ChannelUID] channel_uid The linked channel.
+    # @yieldparam [Hash] configuration The profile configuration.
+    # @yieldparam [org.openhab.core.thing.profiles.ProfileContext] context The profile context.
+    # @yieldreturn [Boolean] Return true from the block in order to have default processing.
+    # @return [void]
+    #
+    # @see org.openhab.thing.Profile
+    # @see org.openhab.thing.StateProfile
+    #
+    # @example
+    #   profile(:veto_closing_shades) do |event, item:, command: nil|
+    #     next false if command&.down?
+    #
+    #     true
+    #   end
+    #
+    #   items.build do
+    #     rollershutter_item "MyShade" do
+    #       channel "thing:rollershutter", profile: "ruby:veto_closing_shades"
+    #     end
+    #   end
+    #   # can also be referenced from an `.items` file:
+    #   # Rollershutter MyShade { channel="thing:rollershutter"[profile="ruby:veto_closing_shades"] }
+    #
+    def profile(id, &block)
+      raise ArgumentError, "Block is required" unless block
+
+      uid = org.openhab.core.thing.profiles.ProfileTypeUID.new("ruby", id)
+
+      Core::ProfileFactory.instance.register(uid, block)
+    end
+
+    #
+    # Remove a rule
+    #
+    # @param [String, org.openhab.core.automation.Rule] uid The rule UID or the Rule object to remove.
+    # @return [void]
+    #
+    # @example
+    #   my_rule = rule do
+    #     every :day
+    #     run { nil }
+    #   end
+    #
+    #   remove_rule(my_rule)
+    #
+    def remove_rule(uid)
+      uid = uid.uid if uid.respond_to?(:uid)
+      automation_rule = Rules.script_rules.delete(uid)
+      raise "Rule #{uid} doesn't exist to remove" unless automation_rule
+
+      automation_rule.cleanup
+      # automation_manager doesn't have a remove method, so just have to
+      # remove it directly from the provider
+      Rules.scripted_rule_provider.remove_rule(uid)
+    end
+
+    #
+    # Manually trigger a rule by ID
+    #
+    # @param [String] uid The rule ID
+    # @param [Object, nil] event The event to pass to the rule's execution blocks.
+    # @return [void]
+    #
+    def trigger_rule(uid, event = nil)
+      Rules.script_rules.fetch(uid).execute(nil, { "event" => event })
+    end
+
+    # @!group Object Access
+
+    #
+    # Fetches all items from the item registry
+    #
+    # @return [Core::Items::Registry]
+    #
+    # The examples all assume the following items exist.
+    #
+    # ```xtend
+    # Dimmer DimmerTest "Test Dimmer"
+    # Switch SwitchTest "Test Switch"
+    # ```
+    #
+    # @example
+    #   logger.info("Item Count: #{items.count}")  # Item Count: 2
+    #   logger.info("Items: #{items.map(&:label).sort.join(', ')}")  # Items: Test Dimmer, Test Switch'
+    #   logger.info("DimmerTest exists? #{items.key?('DimmerTest')}") # DimmerTest exists? true
+    #   logger.info("StringTest exists? #{items.key?('StringTest')}") # StringTest exists? false
+    #
+    # @example
+    #   rule 'Use dynamic item lookup to increase related dimmer brightness when switch is turned on' do
+    #     changed SwitchTest, to: ON
+    #     triggered { |item| items[item.name.gsub('Switch','Dimmer')].brighten(10) }
+    #   end
+    #
+    # @example
+    #   rule 'search for a suitable item' do
+    #     on_start
+    #     triggered do
+    #       # Send ON to DimmerTest if it exists, otherwise send it to SwitchTest
+    #       (items['DimmerTest'] || items['SwitchTest'])&.on
+    #     end
+    #   end
+    #
+    def items
+      Core::Items::Registry.instance
+    end
+
+    #
+    # Get all things known to OpenHAB
+    #
+    # @return [Core::Things::Registry] all Thing objects known to OpenHAB
+    #
+    # @example
+    #   things.each { |thing| logger.info("Thing: #{thing.uid}")}
+    #   logger.info("Thing: #{things['astro:sun:home'].uid}")
+    #   homie_things = things.select { |t| t.thing_type_uid == "mqtt:homie300" }
+    #   zwave_things = things.select { |t| t.binding_id == "zwave" }
+    #   homeseer_dimmers = zwave_things.select { |t| t.thing_type_uid.id == "homeseer_hswd200_00_000" }
+    #   things['zwave:device:512:node90'].uid.bridge_ids # => ["512"]
+    #   things['mqtt:topic:4'].uid.bridge_ids # => []
+    #
+    def things
+      Core::Things::Registry.instance
+    end
+
+    #
+    # Provides access to the hash for mapping timer ids created by {after}
+    # to the set of active timers associated with that id
+    #
+    # @return [Hash] hash of user specified ids to {TimerSet}
+    def timers
+      TimerManager.instance.timer_ids
+    end
+
+    # @!group Utilities
+
     #
     # Create a timer and execute the supplied block after the specified duration
     #
@@ -157,6 +394,45 @@ module OpenHAB
     end
 
     #
+    # Store states of supplied items
+    #
+    # Takes one or more items and returns a map `{Item => State}` with the
+    # current state of each item. It is implemented by calling OpenHAB's
+    # [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
+    #
+    # @param [GenericItem] items Items to store states of.
+    #
+    # @return [Core::Items::StateStorage] item states
+    #
+    # @example
+    #   states = store_states Item1, Item2
+    #   ...
+    #   states.restore
+    #
+    # @example With a block
+    #   store_states Item1, Item2 do
+    #     ...
+    #   end # the states will be restored here
+    #
+    def store_states(*items)
+      items = items.flatten.map do |item|
+        item.respond_to?(:__getobj__) ? item.__getobj__ : item
+      end
+      states = Core::Items::StateStorage.from_items(*items)
+      if block_given?
+        yield
+        states.restore
+      end
+      states
+    end
+
+    #
+    # @!group Block Modifiers
+    #   These methods allow certain operations to be grouped inside the given block
+    #   to reduce repetitions
+    #
+
+    #
     # Global method that takes a block and for the duration of the block
     # all commands sent will check if the item is in the command's state
     # before sending the command.
@@ -213,43 +489,6 @@ module OpenHAB
     end
 
     #
-    # Fetches all items from the item registry
-    #
-    # @return [Core::Items::Registry]
-    #
-    # The examples all assume the following items exist.
-    #
-    # ```xtend
-    # Dimmer DimmerTest "Test Dimmer"
-    # Switch SwitchTest "Test Switch"
-    # ```
-    #
-    # @example
-    #   logger.info("Item Count: #{items.count}")  # Item Count: 2
-    #   logger.info("Items: #{items.map(&:label).sort.join(', ')}")  # Items: Test Dimmer, Test Switch'
-    #   logger.info("DimmerTest exists? #{items.key?('DimmerTest')}") # DimmerTest exists? true
-    #   logger.info("StringTest exists? #{items.key?('StringTest')}") # StringTest exists? false
-    #
-    # @example
-    #   rule 'Use dynamic item lookup to increase related dimmer brightness when switch is turned on' do
-    #     changed SwitchTest, to: ON
-    #     triggered { |item| items[item.name.gsub('Switch','Dimmer')].brighten(10) }
-    #   end
-    #
-    # @example
-    #   rule 'search for a suitable item' do
-    #     on_start
-    #     triggered do
-    #       # Send ON to DimmerTest if it exists, otherwise send it to SwitchTest
-    #       (items['DimmerTest'] || items['SwitchTest'])&.on
-    #     end
-    #   end
-    #
-    def items
-      Core::Items::Registry.instance
-    end
-
-    #
     # Sets a thread local variable to set the default persistence service
     # for method calls inside the block
     #
@@ -273,231 +512,6 @@ module OpenHAB
       Thread.current.thread_variable_set(:persistence_service, nil)
     end
 
-    #
-    # Create a new rule
-    #
-    # @param [String] name The rule name
-    # @yield Block executed in context of a {Rules::Builder}
-    # @yieldparam [Rules::Builder] rule
-    #   Optional parameter to access the rule configuration from within execution blocks and guards.
-    # @return [org.openhab.core.automation.Rule] The OpenHAB Rule object
-    #
-    # @see OpenHAB::DSL::Rules::Builder Rule builder for details on rule triggers, guards and execution blocks
-    # @see Rules::Terse Terse Rules
-    #
-    # @example
-    #   require "openhab/dsl"
-    #
-    #   rule "name" do
-    #     <zero or more triggers>
-    #     <zero or more execution blocks>
-    #     <zero or more guards>
-    #   end
-    #
-    def rule(name = nil, id: nil, script: nil, binding: nil, &block)
-      raise ArgumentError, "Block is required" unless block
-
-      id ||= Rules::NameInference.infer_rule_id_from_block(block)
-      script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
-
-      builder = nil
-      ThreadLocal.thread_local(OPENHAB_RULE_UID: id) do
-        builder = Rules::Builder.new(binding || block.binding)
-        builder.uid(id)
-        builder.instance_exec(&block)
-        builder.guard = Rules::Guard.new(run_context: builder.caller, only_if: builder.only_if,
-                                         not_if: builder.not_if)
-
-        name ||= Rules::NameInference.infer_rule_name(builder)
-        name ||= id
-
-        builder.name(name)
-        logger.trace { builder.inspect }
-        builder.build(script)
-      rescue Exception => e
-        builder.send(:logger).log_exception(e)
-      end
-    end
-
-    #
-    # Create a new script
-    #
-    # A script is a rule with no triggers. It can be called by various other actions,
-    # such as the Run Rules action, or the script channel profile.
-    #
-    # Input variables are sent as keyword arguments to the block.
-    # The result of the block may be significant (like for the script channel profile).
-    #
-    # @param [String] id The script's ID
-    # @param [String] name A descriptive name
-    # @yield [] Block executed when the script is executed.
-    #
-    def script(name = nil, id: nil, script: nil, &block)
-      raise ArgumentError, "Block is required" unless block
-
-      id ||= NameInference.infer_rule_id_from_block(block)
-      name ||= id
-      script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
-
-      builder = nil
-      ThreadLocal.thread_local(RULE_NAME: name) do
-        builder = Rules::Builder.new(block.binding)
-        builder.uid(id)
-        builder.tags(["Script"])
-        builder.name(name)
-        builder.script(&block)
-        logger.trace { builder.inspect }
-        builder.build(script)
-      end
-    rescue Exception => e
-      builder.send(:logger).log_exception(e)
-    end
-
-    #
-    # Defines a new profile that can be applied to item channel links.
-    #
-    # @param [String, Symbol] id The id for the profile.
-    # @yield [event, command: nil, state: nil, link:, item:, channel_uid:, configuration:, context:]
-    #   All keyword params are optional. Any that aren't defined won't be passed.
-    # @yieldparam [Core::Things::ProfileCallback] callback
-    #   The callback to be used to customize the action taken.
-    # @yieldparam [:command_from_item, :state_from_item, :command_from_handler, :state_from_handler] event
-    #   The event that needs to be processed.
-    # @yieldparam [Command, nil] command
-    #   The command being sent for `:command_from_item` and `:command_from_handler` events.
-    # @yieldparam [State, nil] state
-    #   The state being sent for `:state_from_item` and `:state_from_handler` events.
-    # @yieldparam [Core::Things::ItemChannelLink] link
-    #   The link between the item and the channel, including its configuration.
-    # @yieldparam [GenericItem] item The linked item.
-    # @yieldparam [org.openhab.core.thing.ChannelUID] channel_uid The linked channel.
-    # @yieldparam [Hash] configuration The profile configuration.
-    # @yieldparam [org.openhab.core.thing.profiles.ProfileContext] context The profile context.
-    # @yieldreturn [Boolean] Return true from the block in order to have default processing.
-    # @return [void]
-    #
-    # @see org.openhab.thing.Profile
-    # @see org.openhab.thing.StateProfile
-    #
-    # @example
-    #   profile(:veto_closing_shades) do |event, item:, command: nil|
-    #     next false if command&.down?
-    #
-    #     true
-    #   end
-    #
-    #   items.build do
-    #     rollershutter_item "MyShade" do
-    #       channel "thing:rollershutter", profile: "ruby:veto_closing_shades"
-    #     end
-    #   end
-    #   # can also be referenced from an `.items` file:
-    #   # Rollershutter MyShade { channel="thing:rollershutter"[profile="ruby:veto_closing_shades"] }
-    #
-    def profile(id, &block)
-      raise ArgumentError, "Block is required" unless block
-
-      uid = org.openhab.core.thing.profiles.ProfileTypeUID.new("ruby", id)
-
-      Core::ProfileFactory.instance.register(uid, block)
-    end
-
-    #
-    # Remove a rule
-    #
-    # @param [String, org.openhab.core.automation.Rule] uid The rule UID or the Rule object to remove.
-    # @return [void]
-    #
-    # @example
-    #   my_rule = rule do
-    #     every :day
-    #     run { nil }
-    #   end
-    #
-    #   remove_rule(my_rule)
-    #
-    def remove_rule(uid)
-      uid = uid.uid if uid.respond_to?(:uid)
-      automation_rule = Rules.script_rules.delete(uid)
-      raise "Rule #{uid} doesn't exist to remove" unless automation_rule
-
-      automation_rule.cleanup
-      # automation_manager doesn't have a remove method, so just have to
-      # remove it directly from the provider
-      Rules.scripted_rule_provider.remove_rule(uid)
-    end
-
-    #
-    # Store states of supplied items
-    #
-    # Takes one or more items and returns a map `{Item => State}` with the
-    # current state of each item. It is implemented by calling OpenHAB's
-    # [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
-    #
-    # @param [GenericItem] items Items to store states of.
-    #
-    # @return [Core::Items::StateStorage] item states
-    #
-    # @example
-    #   states = store_states Item1, Item2
-    #   ...
-    #   states.restore
-    #
-    # @example With a block
-    #   store_states Item1, Item2 do
-    #     ...
-    #   end # the states will be restored here
-    #
-    def store_states(*items)
-      items = items.flatten.map do |item|
-        item.respond_to?(:__getobj__) ? item.__getobj__ : item
-      end
-      states = Core::Items::StateStorage.from_items(*items)
-      if block_given?
-        yield
-        states.restore
-      end
-      states
-    end
-
-    #
-    # Get all things known to OpenHAB
-    #
-    # @return [Core::Things::Registry] all Thing objects known to OpenHAB
-    #
-    # @example
-    #   things.each { |thing| logger.info("Thing: #{thing.uid}")}
-    #   logger.info("Thing: #{things['astro:sun:home'].uid}")
-    #   homie_things = things.select { |t| t.thing_type_uid == "mqtt:homie300" }
-    #   zwave_things = things.select { |t| t.binding_id == "zwave" }
-    #   homeseer_dimmers = zwave_things.select { |t| t.thing_type_uid.id == "homeseer_hswd200_00_000" }
-    #   things['zwave:device:512:node90'].uid.bridge_ids # => ["512"]
-    #   things['mqtt:topic:4'].uid.bridge_ids # => []
-    #
-    def things
-      Core::Things::Registry.instance
-    end
-
-    #
-    # Provides access to the hash for mapping timer ids created by {after}
-    # to the set of active timers associated with that id
-    #
-    # @return [Hash] hash of user specified ids to {TimerSet}
-    def timers
-      TimerManager.instance.timer_ids
-    end
-
-    #
-    # Manually trigger a rule by ID
-    #
-    # @param [String] uid The rule ID
-    # @param [Object, nil] event The event to pass to the rule's execution blocks.
-    # @return [void]
-    #
-    def trigger_rule(uid, event = nil)
-      Rules.script_rules.fetch(uid).execute(nil, { "event" => event })
-    end
-
     # @overload unit(dimension)
     #  @param [javax.measure.Dimension] The dimension to fetch the unit for.
     #  @return [javax.measure.unit] The current unit for the thread of the specified dimensions
@@ -505,7 +519,7 @@ module OpenHAB
     #  @example
     #    unit(SIUnits::METRE.dimension) # => ImperialUnits::FOOT
     #
-    # @overload unit(unit)
+    # @overload unit(units)
     #   Sets a the implicit unit for this thread such that classes
     #   operating inside the block can perform automatic conversions to the
     #   supplied unit for {QuantityType}.
@@ -519,7 +533,7 @@ module OpenHAB
     #
     #   @param [String, javax.measure.Unit] units
     #     Unit or String representing unit
-    #   @yield The block will be executed in the context of the specified unit(s).
+    #   @yield [] The block will be executed in the context of the specified unit(s).
     #   @return [Object] the result of the block
     #
     #   @example
