@@ -498,13 +498,17 @@ module OpenHAB
       Rules.script_rules.fetch(uid).execute(nil, { "event" => event })
     end
 
-    # @overload unit
-    #  @return [javax.measure.unit] The current thread unit
+    # @overload unit(dimension)
+    #  @param [javax.measure.Dimension] The dimension to fetch the unit for.
+    #  @return [javax.measure.unit] The current unit for the thread of the specified dimensions
+    #
+    #  @example
+    #    unit(SIUnits::METRE.dimension) # => ImperialUnits::FOOT
     #
     # @overload unit(unit)
-    #   Sets a thread local variable to the supplied unit such that classes
+    #   Sets a the implicit unit for this thread such that classes
     #   operating inside the block can perform automatic conversions to the
-    #   supplied unit for NumberItems.
+    #   supplied unit for {QuantityType}.
     #
     #   To facilitate conversion of multiple dimensioned and dimensionless
     #   numbers the unit block may be used. The unit block attempts to do the
@@ -513,8 +517,10 @@ module OpenHAB
     #   the supplied unit, except when they are used for multiplication or
     #   division.
     #
-    #   @param [String, javax.measure.Unit] unit Unit or String representing unit
-    #   @yield The block will be executed in the context of the specified unit.
+    #   @param [String, javax.measure.Unit] units
+    #     Unit or String representing unit
+    #   @yield The block will be executed in the context of the specified unit(s).
+    #   @return [Object] the result of the block
     #
     #   @example
     #     # Number:Temperature NumberC = 23 °C
@@ -533,19 +539,39 @@ module OpenHAB
     #     unit('°C') { ( (2 * (NumberF.state + NumberC.state) ) / Dimensionless.state ) < 45 }  # => true
     #     unit('°C') { [NumberC.state, NumberF.state, Dimensionless.state].min }                # => 2
     #
-    def unit(unit = nil)
-      return Thread.current[:unit] if unit.nil? && !block_given?
-      raise "You must specify an argument for the block", ArgumentError if unit.nil? && block_given?
-      raise "You must give a block to set the unit for the duration of", ArgumentError if !unit.nil? && !block_given?
+    def unit(*units)
+      return Thread.current[:units]&.[](units.first) if units.length == 1 && units.first.is_a?(javax.measure.Dimension)
+
+      raise ArgumentError, "You must give a block to set the unit for the duration of" unless block_given?
 
       begin
-        unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit) if unit.is_a?(String)
-        old_unit = Thread.current[:unit]
-        Thread.current[:unit] = unit
+        old_units = unit!(*units)
         yield
       ensure
-        Thread.current[:unit] = old_unit
+        Thread.current[:units] = old_units
       end
+    end
+
+    #
+    # Permanently sets the implicit unit(s) for this thread
+    #
+    # @param [String, javax.measure.Unit] units
+    #   Unit or String representing unit. Don't pass any units to clear the current settings.
+    # @return [Hash<javax.measure.Dimension=>javax.measure.Unit>] The prior unit configuration
+    #
+    # @example
+    #   unit!("°F", "ft")
+    #   (50 | "°F") == 50 # => true
+    #
+    def unit!(*units)
+      units = units.each_with_object({}) do |unit, r|
+        unit = org.openhab.core.types.util.UnitUtils.parse_unit(unit) if unit.is_a?(String)
+        r[unit.dimension] = unit
+      end
+
+      old_units = Thread.current[:units] || {}
+      Thread.current[:units] = units.empty? ? {} : old_units.merge(units)
+      old_units
     end
 
     private

@@ -14,10 +14,6 @@ module OpenHAB
         include NumericType
         include ComparableType
 
-        # private alias
-        ONE_UNIT = org.openhab.core.library.unit.Units::ONE
-        private_constant :ONE_UNIT
-
         #
         # Convert this quantity into a another unit
         #
@@ -42,12 +38,14 @@ module OpenHAB
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           case other
           when self.class
-            return unitize(other.unit).compare_to(other) if unit == ONE_UNIT
-            return compare_to(other.unitize(unit)) if other.unit == ONE_UNIT
+            return unitize(other.unit).compare_to(other) if unit == Units::ONE
+            return compare_to(other.unitize(unit)) if other.unit == Units::ONE
 
             return compare_to(other)
           when Numeric, DecimalType
-            return compare_to(QuantityType.new(other, OpenHAB::DSL.unit)) if OpenHAB::DSL.unit
+            if (unit = OpenHAB::DSL.unit(dimension))
+              return compare_to(QuantityType.new(other, unit))
+            end
 
             return nil # don't allow comparison with numeric outside a unit block
           end
@@ -73,7 +71,7 @@ module OpenHAB
           if other.is_a?(Type)
             [other, as(other.class)]
           elsif other.respond_to?(:to_d)
-            [QuantityType.new(other.to_d.to_java, ONE_UNIT), self]
+            [QuantityType.new(other.to_d.to_java, Units::ONE), self]
           end
         end
 
@@ -84,7 +82,7 @@ module OpenHAB
           add: :+,
           subtract: :-
         }.each do |java_op, ruby_op|
-          convert = "self.class.new(other, DSL.unit || unit)"
+          convert = "self.class.new(other, DSL.unit(dimension) || unit)"
 
           class_eval( # rubocop:disable Style/DocumentDynamicEvalDefinition https://github.com/rubocop/rubocop/issues/10179
             # def +(other)
@@ -93,12 +91,12 @@ module OpenHAB
             #     add_quantity(other)
             #   elsif other.is_a?(DecimalType)
             #     other = other.to_big_decimal
-            #     add_quantity(self.class.new(other, Units.unit || unit))
+            #     add_quantity(self.class.new(other, DSL.unit(dimension) || unit))
             #   elsif other.is_a?(java.math.BigDecimal)
-            #     add_quantity(self.class.new(other, Units.unit || unit))
+            #     add_quantity(self.class.new(other, DSL.unit(dimension) || unit))
             #   elsif other.respond_to?(:to_d)
             #     other = other.to_d.to_java
-            #     add_quantity(self.class.new(other, Units.unit || unit))
+            #     add_quantity(self.class.new(other, DSL.unit(dimension) || unit))
             #   elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             #     lhs + rhs
             #   else
@@ -174,11 +172,11 @@ module OpenHAB
         # @!visibility private
         def unitize(other_unit = unit)
           # prefer converting to the thread-specified unit if there is one
-          other_unit = DSL.unit || other_unit
+          other_unit = DSL.unit(dimension) || other_unit
           logger.trace("Converting #{self} to #{other_unit}")
 
           case unit
-          when ONE_UNIT
+          when Units::ONE
             QuantityType.new(to_big_decimal, other_unit)
           when other_unit
             self
@@ -187,10 +185,10 @@ module OpenHAB
           end
         end
 
-        # if unit is `ONE_UNIT`, return a plain Java BigDecimal
+        # if unit is {Units::ONE}, return a plain Java BigDecimal
         # @!visibility private
         def deunitize
-          return to_big_decimal if unit == ONE_UNIT
+          return to_big_decimal if unit == Units::ONE
 
           self
         end

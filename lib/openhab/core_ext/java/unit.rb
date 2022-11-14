@@ -6,3 +6,10 @@ module Java::JavaxMeasure::Unit # rubocop:disable Style/ClassAndModuleChildren
     to_s
   end
 end
+
+# @!visibility private
+module Java::JavaxMeasure::Dimension # rubocop:disable Style/ClassAndModuleChildren
+  def inspect
+    to_s
+  end
+end

@@ -82,7 +82,7 @@ module OpenHAB
             args[0] = if hue.is_a?(DecimalType)
                         hue
                       elsif hue.is_a?(QuantityType)
-                        DecimalType.new(hue.to_unit(org.openhab.core.library.unit.Units::DEGREE_ANGLE).to_big_decimal)
+                        DecimalType.new(hue.to_unit(Units::DEGREE_ANGLE).to_big_decimal)
                       elsif hue.respond_to?(:to_d)
                         DecimalType.new(hue)
                       end
@@ -146,7 +146,7 @@ module OpenHAB
         # @!attribute [r] hue
         # @return [QuantityType] The color's hue component as a {QuantityType} of unit DEGREE_ANGLE.
         def hue
-          QuantityType.new(raw_hue.to_big_decimal, org.openhab.core.library.unit.Units::DEGREE_ANGLE)
+          QuantityType.new(raw_hue.to_big_decimal, Units::DEGREE_ANGLE)
         end
 
         # Convert to a packed 32-bit RGB value representing the color in the default sRGB color model.
