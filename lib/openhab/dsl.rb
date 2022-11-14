@@ -514,7 +514,7 @@ module OpenHAB
 
     # @overload unit(dimension)
     #  @param [javax.measure.Dimension] dimension The dimension to fetch the unit for.
-    #  @return [javax.measure.unit] The current unit for the thread of the specified dimensions
+    #  @return [javax.measure.Unit] The current unit for the thread of the specified dimensions
     #
     #  @example
     #    unit(SIUnits::METRE.dimension) # => ImperialUnits::FOOT

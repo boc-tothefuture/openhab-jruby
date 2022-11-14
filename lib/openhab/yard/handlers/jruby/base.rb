@@ -11,7 +11,7 @@ module YARD
 
             javadocs = YARD::Config.options.dig(:jruby, "javadocs") || {}
 
-            href_base = javadocs.find { |package, _href| klass.start_with?(package) }&.last
+            href_base = javadocs.find { |package, _href| klass == package || klass.start_with?("#{package}.") }&.last
             return unless href_base
 
             inferred_type = CodeObjects::Java::PackageObject if is_package
