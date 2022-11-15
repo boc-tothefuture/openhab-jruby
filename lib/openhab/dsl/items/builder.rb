@@ -128,7 +128,7 @@ module OpenHAB
           #   Create a new $1 item
           #   @param name [String] The name for the new item
           #   @param label [String] The item label
-          #   @yield [ItemBuilder] Item for further customization
+          #   @yieldparam [ItemBuilder] builder Item for further customization
           #   @see ItemBuilder#initialize ItemBuilder#initialize for additional arguments.
           def def_item_method(method)
             class_eval <<~RUBY, __FILE__, __LINE__ + 1
@@ -167,9 +167,9 @@ module OpenHAB
         # @!method group_item(name, label = nil, **kwargs)
         # @param name [String] The name for the new item
         # @param label [String] The item label
-        # @yield GroupItemBuilder
+        # @param (see GroupItemBuilder#initialize)
+        # @yieldparam [GroupItemBuilder] builder Item for further customization
         # @return [GroupItem]
-        # @see GroupItemBuilder#initialize GroupItemBuilder#initialize for additional arguments.
         def group_item(*args, **kwargs, &block)
           item = GroupItemBuilder.new(*args, provider: provider, **kwargs)
           item.instance_eval(&block) if block
@@ -234,10 +234,10 @@ module OpenHAB
         # Autoupdate setting
         # @return [true, false, nil]
         attr_accessor :autoupdate
-        # Channel to link the item to
-        # @return [String, ChannelUID, nil]
+        # {Core::Things::ChannelUID Channel} to link the item to
+        # @return [String, Core::Things::ChannelUID, nil]
         attr_accessor :channels
-        # @return [Metadata::NamespaceHash]
+        # @return [Core::Items::Metadata::NamespaceHash]
         attr_reader :metadata
         # Initial state
         # @return [Core::Types::State]
@@ -250,15 +250,15 @@ module OpenHAB
           end
         end
 
-        # @param dimension [Symbol, nil] The unit dimension for a {NumberItem} (see {#dimension})
-        # @param format [String, nil] The formatting pattern for the item's state (see {#format})
-        # @param icon [Symbol, nil] The icon to be associated with the item (see {#icon})
+        # @param dimension [Symbol, nil] The unit dimension for a {NumberItem} (see {ItemBuilder#dimension})
+        # @param format [String, nil] The formatting pattern for the item's state (see {ItemBuilder#format})
+        # @param icon [Symbol, nil] The icon to be associated with the item (see {ItemBuilder#icon})
         # @param group [String,
         #   GroupItem,
         #   GroupItemBuilder,
         #   Array<String, GroupItem, GroupItemBuilder>,
         #   nil]
-        #        Group(s) to which this item should be added (see {#group}).
+        #        Group(s) to which this item should be added (see {ItemBuilder#group}).
         # @param groups [String,
         #   GroupItem,
         #   GroupItemBuilder,
@@ -266,16 +266,19 @@ module OpenHAB
         #   nil]
         #        Fluent alias for `group`.
         # @param tag [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
-        #        Tag(s) to apply to this item (see {tag}).
+        #        Tag(s) to apply to this item (see {ItemBuilder#tag}).
         # @param tags [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
         #        Fluent alias for `tag`.
-        # @param autoupdate [true, false, nil] Autoupdate setting (see {#autoupdate})
-        # @param channel [String, Things::ChannelUID, nil] Channel to link the item to
+        # @param autoupdate [true, false, nil] Autoupdate setting (see {ItemBuilder#autoupdate})
+        # @param channel [String, Core::Things::ChannelUID, nil] Channel to link the item to
         # @param expire [String] An expiration specification.
-        # @param alexa [String, Symbol, Array<(String, Hash<String, Object>)>, nil] Alexa metadata (see {#alexa})
-        # @param ga [String, Symbol, Array<(String, Hash<String, Object>)>, nil] Google Assistant metadata (see {#ga})
-        # @param homekit [String, Symbol, Array<(String, Hash<String, Object>)>, nil] Homekit metadata (see {#homekit})
-        # @param metadata [Hash<String, Hash>] Generic metadata (see {#metadata})
+        # @param alexa [String, Symbol, Array<(String, Hash<String, Object>)>, nil]
+        #   Alexa metadata (see {ItemBuilder#alexa})
+        # @param ga [String, Symbol, Array<(String, Hash<String, Object>)>, nil]
+        #   Google Assistant metadata (see {ItemBuilder#ga})
+        # @param homekit [String, Symbol, Array<(String, Hash<String, Object>)>, nil]
+        #   Homekit metadata (see {ItemBuilder#homekit})
+        # @param metadata [Hash<String, Hash>] Generic metadata (see {ItemBuilder#metadata})
         # @param state [State] Initial state
         def initialize(type, name = nil, label = nil,
                        provider:,
@@ -552,7 +555,7 @@ module OpenHAB
         # @return [String, nil]
         attr_accessor :function
         # A thing to be used as the base for the channel of any member items
-        # @return [ThingUID, Thing, String, nil]
+        # @return [Core::Things::ThingUID, Core::Things::Thing, String, nil]
         attr_accessor :thing
         # A prefix to be added to the name of any member items
         # @return [String, nil]
@@ -566,10 +569,9 @@ module OpenHAB
 
         # @param type [Symbol, nil] The base type for the group
         # @param function [String, nil] The combiner function for this group
-        # @param thing [ThingUID, Thing, String, nil]
+        # @param thing [Core::Things::ThingUID, Core::Things::Thing, String, nil]
         #        A Thing to be used as the base for the channel for any contained items.
-        # @param kwargs [] Additional parameters
-        # @see ItemBuilder#initialize ItemBuilder#initialize for additional arguments
+        # @param (see ItemBuilder#initialize)
         def initialize(*args, type: nil, function: nil, thing: nil, **kwargs)
           raise ArgumentError, "invalid function #{function}" if function && !function.match?(FUNCTION_REGEX)
           raise ArgumentError, "state cannot be set on GroupItems" if kwargs[:state]

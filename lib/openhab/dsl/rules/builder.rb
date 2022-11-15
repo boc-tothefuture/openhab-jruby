@@ -475,10 +475,10 @@ module OpenHAB
         # supports one or more channels with one or more triggers. `thing` is an optional
         # parameter that makes it easier to set triggers on multiple channels on the same thing.
         #
-        # @param [String, Channel, ChannelUID] channels
+        # @param [String, Core::Things::Channel, Core::Things::ChannelUID] channels
         #   channels to create triggers for in form of 'binding_id:type_id:thing_id#channel_id'
         #   or 'channel_id' if thing is provided.
-        # @param [String, Thing, ThingUID] thing
+        # @param [String, Core::Things::Thing, Core::Things::ThingUID] thing
         #   Thing(s) to create trigger for if not specified with the channel.
         # @param [String, Array<String>] triggered
         #   Only execute rule if the event on the channel matches this/these event/events.

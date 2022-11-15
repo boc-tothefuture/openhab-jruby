@@ -138,7 +138,7 @@ module OpenHAB
       #
       # Manually send an event to a trigger channel
       #
-      # @param [String, Channel, ChannelUID] channel The channel to trigger.
+      # @param [String, Core::Things::Channel, Core::Things::ChannelUID] channel The channel to trigger.
       # @param [String] event The event data to send to the channel.
       # @return [void]
       #

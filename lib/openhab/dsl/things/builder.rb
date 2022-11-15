@@ -78,13 +78,13 @@ module OpenHAB
         # @return [String, nil]
         attr_accessor :location
         # The id for this thing
-        # @return [ThingUID]
+        # @return [Core::Things::ThingUID]
         attr_reader :uid
         # The type of this thing
         # @return [ThingTypeUID]
         attr_reader :thing_type_uid
         # The bridge of this thing
-        # @return [ThingUID, nil]
+        # @return [Core::Things::ThingUID, nil]
         attr_reader :bridge_uid
         # The config for this thing
         # @return [Hash, nil]

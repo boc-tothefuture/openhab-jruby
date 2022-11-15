@@ -143,7 +143,7 @@ module OpenHAB
     # @yieldparam [Core::Things::ItemChannelLink] link
     #   The link between the item and the channel, including its configuration.
     # @yieldparam [GenericItem] item The linked item.
-    # @yieldparam [org.openhab.core.thing.ChannelUID] channel_uid The linked channel.
+    # @yieldparam [Core::Things::ChannelUID] channel_uid The linked channel.
     # @yieldparam [Hash] configuration The profile configuration.
     # @yieldparam [org.openhab.core.thing.profiles.ProfileContext] context The profile context.
     # @yieldreturn [Boolean] Return true from the block in order to have default processing.
