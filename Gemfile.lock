@@ -189,16 +189,16 @@ PLATFORMS
 DEPENDENCIES
   byebug
   commonmarker
-  cucumber
+  cucumber (~> 7.1)
   cuke_linter (~> 1.2)
-  guard-rubocop
-  guard-shell
-  guard-yard
-  httparty
+  guard-rubocop (~> 1.5)
+  guard-shell (~> 0.7)
+  guard-yard (~> 2.2)
+  httparty (~> 0.20)
   irb (~> 1.4)
   openhab-jrubyscripting!
-  persistent_httparty
-  process_exists
+  persistent_httparty (~> 0.1)
+  process_exists (~> 0.2)
   rake (~> 12.0)
   rspec (~> 3.11)
   rubocop (~> 1.8)
@@ -206,8 +206,8 @@ DEPENDENCIES
   rubocop-rake (~> 0.6)
   rubocop-rspec (~> 2.11)
   timecop (~> 0.9)
-  tty-command
-  yaml-lint
+  tty-command (~> 0.10)
+  yaml-lint (~> 0.0)
   yard!
   yard-coderay
 
