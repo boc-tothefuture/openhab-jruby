@@ -9,7 +9,7 @@ module OpenHAB
       #
       # A {Thing} is a representation of a connected part (e.g. physical device
       # or cloud service) from the real world. It contains a list of
-      # {Channel Channels}, which can be bound to {Items::GenericItem Items}.
+      # {Channel Channels}, which can be bound to {GenericItem Items}.
       #
       # @see OpenHAB::DSL.things things[]
       # @see EntityLookup

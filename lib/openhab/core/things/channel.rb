@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module OpenHAB
   module Core
     module Things
@@ -7,9 +9,25 @@ module OpenHAB
 
       #
       # {Channel} is a part of a {Thing} that represents a functionality of it.
-      # Therefore {Items::GenericItem Items} can be linked a to a channel.
+      # Therefore {GenericItem Items} can be linked a to a channel.
+      #
+      # @!attribute [r] item
+      #   (see ChannelUID#item)
+      #
+      # @!attribute [r] items
+      #   (see ChannelUID#items)
+      #
+      # @!attribute [r] thing
+      #   (see ChannelUID#thing)
+      #
+      # @!attribute [r] uid
+      #   @return [ChannelUID]
       #
       class Channel
+        extend Forwardable
+
+        delegate %i[item items thing] => :uid
+
         # @return [String]
         def inspect
           r = "#<OpenHAB::Core::Things::Channel #{uid}"

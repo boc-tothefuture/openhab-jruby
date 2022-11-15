@@ -28,7 +28,7 @@ module OpenHAB
         # @return [ChannelUID] The UID of the channel that was linked or unlinked.
         #
         def channel_uid
-          ChannelUID.new(channelUID)
+          Things::ChannelUID.new(channelUID)
         end
       end
     end

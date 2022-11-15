@@ -27,7 +27,7 @@ module OpenHAB
       #
       # Automatically looks up OpenHAB items and things in appropriate registries
       #
-      # @return [Items::GenericItem, Things::Thing, nil]
+      # @return [GenericItem, Things::Thing, nil]
       #
       def method_missing(method, *args, &block)
         logger.trace("method missing, performing OpenHab Lookup for: #{method}")
@@ -53,7 +53,7 @@ module OpenHAB
       #
       # @param [String] name of entity to lookup in item or thing registry
       #
-      # @return [Items::GenericItem, Things::Thing, nil]
+      # @return [GenericItem, Things::Thing, nil]
       #
       def self.lookup_entity(name)
         lookup_item(name) || lookup_thing_const(name)
@@ -109,7 +109,7 @@ module OpenHAB
       #
       # @param [String] name of item to lookup
       #
-      # @return [Items::GenericItem, nil]
+      # @return [GenericItem, nil]
       #
       def self.lookup_item(name)
         logger.trace("Looking up item '#{name}'")

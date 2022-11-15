@@ -10,7 +10,7 @@ module OpenHAB
   module Core
     module Items
       #
-      # Provides access to all OpenHAB items, and acts like an array.
+      # Provides access to all OpenHAB {GenericItem items}, and acts like an array.
       #
       class Registry
         include LazyArray
@@ -40,7 +40,7 @@ module OpenHAB
         end
 
         # Enter the Item Builder DSL.
-        # @yield [DSL::Items::Builder] Builder object.
+        # @yieldparam [DSL::Items::Builder] builder
         # @return [Object] The return value of the block.
         def build(&block)
           DSL::Items::BaseBuilderDSL.new.instance_eval(&block)

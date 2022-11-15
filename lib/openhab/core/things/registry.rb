@@ -6,14 +6,14 @@ module OpenHAB
   module Core
     module Things
       #
-      # Wraps all Things in a delegator to underlying set and provides lookup method
+      # Provides access to all OpenHAB {Thing things}, and acts like an array.
       #
       class Registry
         include LazyArray
         include Singleton
 
         #
-        # Gets a specific thing
+        # Gets a specific {Thing}
         #
         # @param [String, ThingUID] uid Thing UID in the format `binding_id:type_id:thing_id`
         #   or via the ThingUID
@@ -35,7 +35,7 @@ module OpenHAB
         end
 
         # Enter the Thing Builder DSL.
-        # @yield [DSL::Things::Builder] Builder object.
+        # @yieldparam [DSL::Things::Builder] builder
         # @return [Object] The result of the block.
         def build(&block)
           DSL::Things::Builder.new.instance_eval(&block)

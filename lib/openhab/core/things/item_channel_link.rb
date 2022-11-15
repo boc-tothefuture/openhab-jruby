@@ -6,15 +6,27 @@ module OpenHAB
       java_import org.openhab.core.thing.link.ItemChannelLink
 
       #
-      # Represents the link between a {GenericItem} and Thing's
-      # Channel.
+      # Represents the link between a {GenericItem} and a {Thing Thing's}
+      # {Channel}.
+      #
+      # @!attribute [r] thing
+      #   @return [Thing]
+      #
+      # @!attribute [r] channel_uid
+      #   @return [ChannelUID]
       #
       class ItemChannelLink
+        extend Forwardable
+
+        def_delegator :linked_uid, :thing
+
         # @!attribute [r] item
         # @return [GenericItem]
         def item
           DSL.items[item_name]
         end
+
+        alias_method :channel_uid, :linked_uid
       end
     end
   end
