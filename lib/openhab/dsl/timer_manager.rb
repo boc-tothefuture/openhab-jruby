@@ -18,7 +18,7 @@ module OpenHAB
 
       def initialize
         # Track timer IDs
-        @timers_by_id = Hash.new { |h, k| h[k] = TimerSet.new }
+        @timers_by_id = {}
 
         @reentrant_timers = Hash.new { |h, k| h[k] = {} }
 
@@ -45,6 +45,7 @@ module OpenHAB
         return unless timer.id
 
         logger.trace("Adding #{timer} with id #{timer.id.inspect} to timer ids")
+        timers_by_id[timer.id] ||= TimerSet.new
         timers_by_id[timer.id] << timer
         @reentrant_timers[timer.id][timer.block.source_location] = timer
       end
@@ -57,9 +58,10 @@ module OpenHAB
         @timers.delete(timer)
         return unless timer.id
 
-        timer_set = timers_by_id[timer.id]
-        timer_set.delete(timer)
-        timers_by_id.delete(timer.id) if timer_set.empty?
+        if (timer_set = timers_by_id[timer.id])
+          timer_set.delete(timer)
+          timers_by_id.delete(timer.id) if timer_set.empty?
+        end
         timer_hash = @reentrant_timers[timer.id]
         timer_hash.delete(timer.block.source_location)
         @reentrant_timers.delete(timer.id) if timer_hash.empty?
