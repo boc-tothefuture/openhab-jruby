@@ -291,13 +291,15 @@ module OpenHAB
         #   Send the {REFRESH} command to the item
         #   @return [GenericItem] `self`
 
-        # formats a {Command} to send to the event bus
+        # formats a {Types::Type} to send to the event bus
         # @!visibility private
-        def format_type(command)
+        def format_type(type)
           # actual Type types can be sent directly without conversion
-          return command if command.is_a?(Command)
+          # make sure to use Type, because this method is use for both
+          # #update and #command
+          return type if type.is_a?(Types::Type)
 
-          command.to_s
+          type.to_s
         end
 
         # @return [String]

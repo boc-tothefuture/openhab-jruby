@@ -111,6 +111,12 @@ RSpec.describe OpenHAB::DSL::Items::Ensure do
       check_command(100, 0, *both) { item.ensure << false }
     end
 
+    it "works with update and UNDEF" do
+      item.update(0)
+      item.ensure.update(UNDEF)
+      expect(item).to be_undef
+    end
+
     it "is available on Enumerable" do
       items = group.members.to_a
       check_group_command(50, 50) { items.ensure.command(50) }
