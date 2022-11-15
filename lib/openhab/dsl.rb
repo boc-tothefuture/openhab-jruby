@@ -270,7 +270,7 @@ module OpenHAB
     #
     # @return [Hash] hash of user specified ids to {TimerSet}
     def timers
-      TimerManager.instance.timer_ids
+      TimerManager.instance.timers_by_id
     end
 
     # @!group Utilities
@@ -360,9 +360,7 @@ module OpenHAB
 
       # Carry rule name to timer
       thread_locals = ThreadLocal.persist
-      return TimerManager.reentrant_timer(duration, thread_locals: thread_locals, id: id, &block) if id
-
-      Core::Timer.new(duration, thread_locals: thread_locals, &block)
+      DSL::TimerManager.instance.create(duration, id: id, thread_locals: thread_locals, block: block)
     end
 
     #

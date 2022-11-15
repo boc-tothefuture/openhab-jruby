@@ -8,7 +8,7 @@ RSpec.describe OpenHAB::Core::Timer do
   shared_examples_for "Timer interface" do
     it "works" do
       fired = false
-      t = after(0.1.second) do |timer|
+      t = after(0.1.seconds) do |timer|
         fired = true
         expect(timer).to be t # rubocop:disable RSpec/ExpectInHook
       end
@@ -120,6 +120,43 @@ RSpec.describe OpenHAB::Core::Timer do
     it "responds to #running?" do
       t = after(5.minutes) { nil }
       expect(t.respond_to?(:running?)).to be true
+    end
+
+    context "with id" do
+      def start_timer(duration)
+        after(duration, id: "id") { nil }
+      end
+
+      it "reuses the same timer if an id is given" do
+        timer1 = start_timer(5.seconds)
+        expect(timer1.execution_time.to_i).to be 5.seconds.from_now.to_i
+        start_timer(5.seconds)
+        expect(timer1).to be_cancelled
+      end
+
+      it "changes its duration to the latest call" do
+        start_timer(10.seconds)
+        timer = start_timer(5.seconds)
+        timer.reschedule
+        expect(timer.execution_time.to_i).to be 5.seconds.from_now.to_i
+      end
+
+      it "can find a timer by id" do
+        timer = start_timer(5.seconds)
+        expect(timers["id"].to_a).to eql [timer]
+      end
+
+      it "removes the timer when canceled" do
+        start_timer(5.seconds)
+        timers["id"].cancel
+        expect(timers).not_to have_key("id")
+      end
+
+      it "can reschedule a set of timers" do
+        start_timer(5.seconds)
+        timers["id"].reschedule(1.second)
+        expect(timers["id"].first.execution_time.to_i).to be 1.second.from_now.to_i
+      end
     end
   end
 

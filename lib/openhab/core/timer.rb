@@ -9,7 +9,7 @@ module OpenHAB
     # has been scheduled to run later with {OpenHAB::DSL.after after}.
     #
     # @!attribute [r] execution_time
-    #   @return [ZonedDateTime] The scheduled execution time, or null if the timer was cancelled
+    #   @return [ZonedDateTime] the scheduled execution time, or null if the timer was cancelled
     class Timer
       extend Forwardable
 
@@ -32,56 +32,38 @@ module OpenHAB
       def_delegator :@timer, :has_terminated, :terminated?
       def_delegators :@timer, :execution_time, :active?, :cancelled?, :running?
 
-      class << self
-        # Create or reschedule a reentrant time
-        #
-        # @param [java.time.temporal.TemporalAmount, #to_zoned_date_time, Proc] time when to execute the block
-        # @param [Object] id to associate with timer
-        # @param [Block] block to execute, block is passed a Timer object
-        # @return [ReentrantTimer] Timer object
-        def reentrant_timer(time, id:, thread_locals: nil, &block)
-          timer = DSL::TimerManager.instance.reentrant_timer(id: id, &block)
-          if timer
-            logger.trace("Reentrant timer found - #{timer}")
-            timer.cancel
-          else
-            logger.trace("No reentrant timer found, creating new timer")
-          end
-          ReentrantTimer.new(time, id: id, thread_locals: thread_locals, &block)
-        end
-      end
+      # @!visibility private
+      attr_reader :id, :block
 
       #
       # Create a new Timer Object
       #
       # @param [java.time.temporal.TemporalAmount, #to_zoned_date_time, Proc] time When to execute the block
       # @yield Block to execute when timer fires
-      # @yieldparam [Timer] timer
+      # @yieldparam [self]
       #
-      def initialize(time, thread_locals: {}, &block)
+      # @!visibility private
+      def initialize(time, id:, thread_locals:, block:)
         @time = time
+        @id = id
+        @thread_locals = thread_locals
         @block = block
         @timer = org.openhab.core.model.script.actions.ScriptExecution.create_timer(
           # create it far enough in the future so it won't execute until we finish setting it up
           1.minute.from_now,
           # when running in rspec, it may have troubles finding this class
           # for auto-conversion of block to interface, so use .impl
-          org.eclipse.xtext.xbase.lib.Procedures::Procedure0.impl do
-            DSL::TimerManager.instance.delete(self)
-            DSL::ThreadLocal.thread_local(**thread_locals) do
-              yield(self)
-            end
-          end
+          org.eclipse.xtext.xbase.lib.Procedures::Procedure0.impl { execute }
         )
-        DSL::TimerManager.instance.add(self)
+        yield self
         @timer.reschedule(new_execution_time(@time))
       end
 
       # @return [String]
       def inspect
-        r = "#<#{self.class.name} #{id}"
+        r = "#<#{self.class.name} #{"#{id} " if id}#{block.source_location.join(":")}"
         if cancelled?
-          r += " (canceled)"
+          r += " (cancelled)"
         else
           r += " @ #{execution_time}"
           r += " (executed)" if terminated?
@@ -114,12 +96,18 @@ module OpenHAB
         @timer.cancel
       end
 
-      protected
+      private
 
-      # Timer ID
-      # @return [String]
-      def id
-        @block.source_location.join(":")
+      #
+      # Calls the block with thread locals set up, and cleans up after itself
+      #
+      # @return [void]
+      #
+      def execute
+        DSL::TimerManager.instance.delete(self)
+        DSL::ThreadLocal.thread_local(**@thread_locals) do
+          @block.call(self)
+        end
       end
 
       #

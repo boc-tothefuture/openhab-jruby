@@ -39,10 +39,11 @@ module OpenHAB
         end
         Timecop::TimeStackItem.prepend(TimeCopStackItem)
 
-        attr_reader :execution_time
+        attr_reader :execution_time, :id, :block
 
-        def initialize(time, thread_locals: {}, &block) # rubocop:disable Lint/MissingSuper
+        def initialize(time, id:, thread_locals:, block:) # rubocop:disable Lint/MissingSuper
           @time = time
+          @id = id
           @block = block
           @thread_locals = thread_locals
           reschedule(time)
@@ -59,10 +60,7 @@ module OpenHAB
           raise "Timer already cancelled" if cancelled?
           raise "Timer already executed" if terminated?
 
-          DSL::ThreadLocal.thread_local(**@thread_locals) do
-            @block.call(self)
-          end
-          DSL::TimerManager.instance.delete(self)
+          super
           @executed = true
         end
 

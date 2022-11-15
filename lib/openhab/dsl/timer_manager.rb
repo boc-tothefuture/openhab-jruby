@@ -14,14 +14,13 @@ module OpenHAB
 
       ScriptHandling.script_unloaded { instance.cancel_all }
 
-      attr_reader :timer_ids
+      attr_reader :timers_by_id
 
       def initialize
         # Track timer IDs
-        @timer_ids = {}
+        @timers_by_id = Hash.new { |h, k| h[k] = TimerSet.new }
 
-        # Reentrant timer lookups
-        @reentrant_timers = {}
+        @reentrant_timers = Hash.new { |h, k| h[k] = {} }
 
         # Tracks active timers
         @timers = Set.new
@@ -30,47 +29,40 @@ module OpenHAB
       #
       # Adds the current timer to the set of rule timers if being tracked
       #
-      # It does not make sense to break this up into seperate components
+      def create(duration, thread_locals:, block:, id: nil)
+        @reentrant_timers[id][block.source_location]&.cancel if id
+
+        Core::Timer.new(duration, id: id, thread_locals: thread_locals, block: block) do |timer|
+          add(timer)
+        end
+      end
+
+      # Add a timer that is now active
       def add(timer)
         logger.trace("Adding #{timer} to timers")
         @timers << timer
 
-        if timer.respond_to? :id
-          logger.trace("Adding #{timer} with id #{timer.id.inspect} timer ids")
-          @timer_ids[timer.id] ||= TimerSet.new
-          @timer_ids[timer.id] << timer
-        end
+        return unless timer.id
 
-        return unless timer.respond_to? :reentrant_id
-
-        logger.trace("Adding reeentrant #{timer} with reentrant id #{timer.reentrant_id} timer ids")
-        @reentrant_timers[timer.reentrant_id] = timer
-      end
-
-      # Fetches the reentrant timer that matches the supplied id and block if it exists
-      #
-      # @param [Object] id Object to associate with timer
-      # @param [Block] block to execute, block is passed a Timer object
-      #
-      # @return [RentrantTimer] Timer object if it exists, nil otherwise
-      #
-      def reentrant_timer(id:, &block)
-        reentrant_key = ReentrantTimer.reentrant_id(id: id, &block)
-        logger.trace("Checking for existing reentrant timer for #{reentrant_key}")
-        @reentrant_timers[reentrant_key]
+        logger.trace("Adding #{timer} with id #{timer.id.inspect} to timer ids")
+        timers_by_id[timer.id] << timer
+        @reentrant_timers[timer.id][timer.block.source_location] = timer
       end
 
       #
-      # Delete the current timer to the set of rule timers if being tracked
+      # Delete a timer that is no longer active
       #
       def delete(timer)
         logger.trace("Removing #{timer} from timers")
         @timers.delete(timer)
-        if timer.respond_to?(:id) && (timers = @timer_ids[timer.id])
-          timers.delete(timer)
-          @timer_ids.delete(timer.id) if timers.empty?
-        end
-        @reentrant_timers.delete(timer.reentrant_id) if timer.respond_to? :reentrant_id
+        return unless timer.id
+
+        timer_set = timers_by_id[timer.id]
+        timer_set.delete(timer)
+        timers_by_id.delete(timer.id) if timer_set.empty?
+        timer_hash = @reentrant_timers[timer.id]
+        timer_hash.delete(timer.block.source_location)
+        @reentrant_timers.delete(timer.id) if timer_hash.empty?
       end
 
       #
@@ -79,9 +71,6 @@ module OpenHAB
       def cancel_all
         logger.trace("Canceling #{@timers.length} timers")
         @timers.each(&:cancel)
-        @timer_ids.clear
-        @reentrant_timers.clear
-        @timers.clear
       end
 
       #
