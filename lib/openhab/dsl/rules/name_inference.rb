@@ -23,6 +23,11 @@ module OpenHAB
         private_constant :KNOWN_TRIGGER_TYPES
 
         class << self
+          # takes a freeform rule name and makes it more palatable as an id
+          def infer_rule_id_from_name(name)
+            name.downcase.delete("'\"").gsub(/\W+/, "_")
+          end
+
           # get the block's source location, and simplify to a simple filename
           def infer_rule_id_from_block(block)
             file = File.basename(block.source_location.first)

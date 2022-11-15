@@ -145,6 +145,8 @@ here is a non-exhaustive list of significant departures from the original gem:
   e.g. `things["mqtt:broker:mosquitto"].publish_mqtt`
 * Global action methods (such as `increase_master_volume`) are now available
   directly from {OpenHAB::DSL}.
+* Rule IDs are now generated from the rule name if a name is given, but not
+  an id.
 
 ### Bug Fixes
 

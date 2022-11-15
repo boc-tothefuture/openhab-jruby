@@ -31,6 +31,8 @@ module OpenHAB
             class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
               def #{trigger}(*args, name: nil, id: nil, **kwargs, &block)     # def changed(*args, name: nil, id: nil, **kwargs, &block)
                 raise ArgumentError, "Block is required" unless block         #   raise ArgumentError, "Block is required" unless block
+                                                                              #
+                id ||= NameInference.infer_rule_id_from_name(name) if name    #   id ||= NameInference.infer_rule_id_from_name(name) if name
                 id ||= NameInference.infer_rule_id_from_block(block)          #   id ||= NameInference.infer_rule_id_from_block(block)
                 script = block.source rescue nil                              #   script = block.source rescue nil
                 caller_binding = block.binding                                #   caller_binding = block.binding
