@@ -23,8 +23,8 @@ module OpenHAB
       #   logger.info("Item linked to volume channel: #{thing.channels['volume']&.item&.name}")
       #
       # @example Thing actions can be called directly through a Thing object
-      #   things["mqtt:broker:mosquitto"].publishMQTT("zigbee2mqttt/bridge/config/permit_join", "true")
-      #   things["mail:smtp:local"].sendMail("me@example.com", "Subject", "Email body")
+      #   things["mqtt:broker:mosquitto"].publish_mqtt("zigbee2mqttt/bridge/config/permit_join", "true")
+      #   things["mail:smtp:local"].send_mail("me@example.com", "Subject", "Email body")
       #
       # @example Thing can be accessed directly through {EntityLookup entity lookup}
       #   # replace ':' with '_' in thing uid
@@ -142,7 +142,11 @@ module OpenHAB
           "#{r}>"
         end
 
+        #
+        # Return Thing's uid as a string
+        #
         # @return [String]
+        #
         def to_s
           uid.to_s
         end

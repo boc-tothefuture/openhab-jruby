@@ -391,7 +391,7 @@ end
 rule 'Anniversary Reminder' do
   every '10-15' # Trigger on 15th of October at midnight
   run do
-    things['mail:smtp:mymailthing'].sendMail('me@example.com', 'Anniversary Reminder!', 'Today is your anniversary!') 
+    things['mail:smtp:mymailthing'].send_mail('me@example.com', 'Anniversary Reminder!', 'Today is your anniversary!') 
   end
 end
 ```
@@ -689,13 +689,13 @@ See [Actions](docs/usage/misc/actions.md)
 ### Publish an MQTT Message
 
 ```ruby
-things['mqtt:broker:mybroker'].publishMQTT('topic/name', 'payload')
+things['mqtt:broker:mybroker'].publish_mqtt('topic/name', 'payload')
 ```
 
 ### Send an Email
 
 ```ruby
-things['mail:smtp:mymailthing'].sendMail('me@example.com', 'Subject', 'message body')
+things['mail:smtp:mymailthing'].send_mail('me@example.com', 'Subject', 'message body')
 ```
 
 ### Play Sound Through the Default Audio Sink
