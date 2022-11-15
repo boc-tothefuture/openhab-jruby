@@ -48,7 +48,7 @@ module OpenHAB
         @id = id
         @thread_locals = thread_locals
         @block = block
-        @timer = Actions::ScriptExecution.create_timer(
+        @timer = org.openhab.core.model.script.actions.ScriptExecution.create_timer(
           # create it far enough in the future so it won't execute until we finish setting it up
           1.minute.from_now,
           # when running in rspec, it may have troubles finding this class

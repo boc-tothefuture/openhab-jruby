@@ -63,7 +63,7 @@ module OpenHAB
           builder = klass.new(*args, **kwargs)
           builder.instance_eval(&block) if block
           thing = ThingProvider.instance.add(builder)
-          thing = Core::Things::Thing.new(thing)
+          thing = Core::Things::Proxy.new(thing)
           thing.enable(enabled: builder.enabled) unless builder.enabled.nil?
           thing
         end

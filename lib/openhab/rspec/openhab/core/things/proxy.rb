@@ -3,7 +3,7 @@
 module OpenHAB
   module Core
     module Things
-      class Thing
+      class Proxy
         @proxies = {}
 
         class << self

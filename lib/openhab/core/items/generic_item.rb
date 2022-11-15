@@ -39,7 +39,7 @@ module OpenHAB
           # Override to support Proxy
           #
           def ===(other)
-            other.instance_of?(self)
+            other.is_a?(self)
           end
         end
         # rubocop:enable Naming/MethodName

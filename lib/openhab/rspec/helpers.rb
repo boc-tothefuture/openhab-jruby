@@ -193,7 +193,7 @@ module OpenHAB
 
         # override several DSL methods
         require_relative "openhab/core/items/proxy"
-        require_relative "openhab/core/things/thing"
+        require_relative "openhab/core/things/proxy"
         require_relative "openhab/dsl/actions"
 
         ps = Mocks::PersistenceService.instance

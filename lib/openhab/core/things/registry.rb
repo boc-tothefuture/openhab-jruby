@@ -31,7 +31,7 @@ module OpenHAB
         # @return [Array<Thing>]
         #
         def to_a
-          $things.getAll.map { |thing| Thing.new(thing) }
+          $things.all.map { |thing| Proxy.new(thing) }
         end
 
         # Enter the Thing Builder DSL.

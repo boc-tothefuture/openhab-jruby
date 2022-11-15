@@ -73,7 +73,7 @@ module OpenHAB
           $ir.remove_provider(@item_provider)
           Core::Items::Proxy.reset_cache
           $things.remove_provider(@thing_provider)
-          Core::Things::Thing.reset_cache
+          Core::Things::Proxy.reset_cache
           registry = OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
           registry.remove_provider(@item_channel_link_provider)
           Core::Items::Metadata::NamespaceHash.registry.remove_provider(@metadata_provider)
