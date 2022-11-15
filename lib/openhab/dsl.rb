@@ -27,13 +27,15 @@ module OpenHAB
   # inside of other classes, or include the module.
   #
   module DSL
-    [Actions, Rules::Terse, ScriptHandling].each do |mod|
+    # include this before Core::Actions so that Core::Action's method_missing
+    # takes priority
+    include Core::EntityLookup
+    [Core::Actions, Rules::Terse, ScriptHandling].each do |mod|
       # make these available both as regular and class methods
       include mod
       singleton_class.include mod
       public_class_method(*mod.private_instance_methods)
     end
-    include Core::EntityLookup
 
     module_function
 
@@ -653,8 +655,6 @@ module OpenHAB
     end
   end
 end
-
-OpenHAB::Core::Things::Thing.include(OpenHAB::DSL::Actions)
 
 OpenHAB::Core.wait_till_openhab_ready
 OpenHAB::Core.add_rubylib_to_load_path

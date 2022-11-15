@@ -56,14 +56,6 @@ here is a non-exhaustive list of significant departures from the original gem:
   class yourself. Additional internal and Java constants and methods should
   no longer be leaking out of the gem's public API.
 
-### Features
-
-* {OpenHAB::DSL::Items::Builder}
-* {OpenHAB::DSL::Things::Builder}
-* Several new triggers in {OpenHAB::DSL::Rules::Builder}
-* {OpenHAB::DSL.profile}
-* {OpenHAB::DSL.unit} can now handle units for multiple dimensions.
-
 ### Breaking Changes
 
 * Dropping support for OpenHAB < 3.3.
@@ -135,13 +127,24 @@ here is a non-exhaustive list of significant departures from the original gem:
   * Add `#ago` and `#from_now` methods to {Duration}
   * Persistence methods no longer accept a {Duration}. Please use `Duration#ago`
     instead.
-
+* Thing actions are no longer available as a top level method. You must use the
+  {OpenHAB::Core::Things::Thing#actions Thing} object.
+* Thing actions whose scope does _not_ match the thing's binding are no longer
+  directly available on {OpenHAB::Core::Things::Thing Thing}; you must
+  explicitly access them via
+  {OpenHAB::Core::Things::Thing#actions Thing#actions}.
 
 ### Features
 
+* {OpenHAB::DSL::Items::Builder}
+* {OpenHAB::DSL::Things::Builder}
+* Several new triggers in {OpenHAB::DSL::Rules::Builder}
+* {OpenHAB::DSL.profile}
+* {OpenHAB::DSL.unit} can now handle units for multiple dimensions.
 * Support Ruby's method name convention for thing actions, 
   e.g. `things["mqtt:broker:mosquitto"].publish_mqtt`
-
+* Global action methods (such as `increase_master_volume`) are now available
+  directly from {OpenHAB::DSL}.
 
 ### Bug Fixes
 

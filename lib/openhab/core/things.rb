@@ -58,11 +58,6 @@ module OpenHAB
           end
         end
 
-        def initialize(thing)
-          super
-          @actions = actions_for_thing(uid)
-        end
-
         #
         # @!method status
         #   Return the {https://www.openhab.org/docs/concepts/things.html#thing-status thing status}
@@ -155,24 +150,42 @@ module OpenHAB
         end
 
         #
-        # Delegate missing methods to thing actions
+        # Fetches the actions available for this thing.
+        #
+        # Default scope actions are available directly on the thing object, via
+        # {#method_missing}.
+        #
+        # @param [String, nil] scope The action scope. Default's to the thing's binding.
+        # @return [Object, nil]
+        #
+        # @example
+        #   things["max:thermostat:mybridge:thermostat"].actions("max-devices").delete_from_cube
+        #
+        # @example (see #method_missing)
+        #
+        def actions(scope = nil)
+          $actions.get(scope || uid.binding_id, uid)
+        end
+
+        #
+        # Delegate missing methods to the thing's default actions scope.
+        #
+        # @example
+        #   things['mail:smtp:local'].send_email('me@example.com', 'subject', 'message')
         #
         def method_missing(method, *args, &block)
-          @actions&.each do |action|
-            next unless action.respond_to?(method)
-
-            logger.trace("Calling Thing #{uid} action method #{method}")
-            return action.public_send(method, *args)
+          if (action = actions).respond_to?(method)
+            return action.public_send(method, *args, &block)
           end
+
           super
         end
 
         # @!visibility private
         def respond_to_missing?(method_name, _include_private = false)
           logger.trace("Checking if Thing #{uid} supports #{method_name} action")
-          @actions&.each do |action|
-            return true if action.respond_to?(method_name)
-          end
+          return true if actions.respond_to?(method_name)
+
           super
         end
       end

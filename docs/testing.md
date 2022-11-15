@@ -111,8 +111,8 @@ OpenHAB::Log.events.level = :info
    JRuby execution context, so changes to globals in one file will affect other
    files.
  * Some actions may not be available; you should stub them out if you use them.
-   Core actions like {OpenHAB::DSL::Actions#notify}, {OpenHAB::DSL::Actions#say},
-   and {OpenHAB::DSL::Actions#play_sound} are stubbed to only log a message
+   Core actions like {OpenHAB::Core::Actions#notify}, {OpenHAB::Core::Actions#say},
+   and {OpenHAB::Core::Actions#play_sound} are stubbed to only log a message
    (at debug level).
  * You may want to avoid rules from firing while setting up the proper state for
    a test. In that case, use the {OpenHAB::RSpec::Helpers#suspend_rules} helper.
