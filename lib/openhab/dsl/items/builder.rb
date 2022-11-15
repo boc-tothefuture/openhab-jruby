@@ -240,6 +240,7 @@ module OpenHAB
         # @return [Metadata::NamespaceHash]
         attr_reader :metadata
         # Initial state
+        # @return [Core::Types::State]
         attr_accessor :state
 
         class << self
@@ -268,11 +269,12 @@ module OpenHAB
         #        Tag(s) to apply to this item (see {tag}).
         # @param tags [String, Symbol, Semantics::Tag, Array<String, Symbol, Semantics::Tag>, nil]
         #        Fluent alias for `tag`.
-        # @param alexa [String, Array, nil] Alexa metadata (see {#alexa})
         # @param autoupdate [true, false, nil] Autoupdate setting (see {#autoupdate})
         # @param channel [String, Things::ChannelUID, nil] Channel to link the item to
         # @param expire [String] An expiration specification.
-        # @param homekit [String, Array, nil] Homekit metadata (see {#alexa})
+        # @param alexa [String, Symbol, Array<(String, Hash<String, Object>)>, nil] Alexa metadata (see {#alexa})
+        # @param ga [String, Symbol, Array<(String, Hash<String, Object>)>, nil] Google Assistant metadata (see {#ga})
+        # @param homekit [String, Symbol, Array<(String, Hash<String, Object>)>, nil] Homekit metadata (see {#homekit})
         # @param metadata [Hash<String, Hash>] Generic metadata (see {#metadata})
         # @param state [State] Initial state
         def initialize(type, name = nil, label = nil,
@@ -284,10 +286,11 @@ module OpenHAB
                        groups: nil,
                        tag: nil,
                        tags: nil,
-                       alexa: nil,
                        autoupdate: nil,
                        channel: nil,
                        expire: nil,
+                       alexa: nil,
+                       ga: nil, # rubocop:disable Naming/MethodParameterName
                        homekit: nil,
                        metadata: nil,
                        state: nil)
@@ -310,10 +313,11 @@ module OpenHAB
           @metadata = Core::Items::Metadata::NamespaceHash.new
           @metadata.merge!(metadata) if metadata
           @autoupdate = autoupdate
-          self.alexa(alexa) if alexa
           @channels = []
           @expire = nil
           self.expire(*Array(expire)) if expire
+          self.alexa(alexa) if alexa
+          self.ga(ga) if ga
           self.homekit(homekit) if homekit
           @state = state
 
@@ -372,26 +376,44 @@ module OpenHAB
           @groups.concat(groups)
         end
 
-        # Shortcut for adding Homekit metadata
         #
-        # @see https://www.openhab.org/addons/integrations/homekit/
+        # @!method alexa(value, config = nil)
+        #   Shortcut for adding Alexa metadata
         #
-        # @param value [String] Type of Homekit accessory or characteristic
-        # @param config [Hash] Additional Homekit configuration
-        def homekit(value = nil, config = nil)
-          value, config = value if value.is_a?(Array)
-          metadata["homekit"] = [value, config]
-        end
+        #   @see https://www.openhab.org/docs/ecosystem/alexa/
+        #
+        #   @param value [String, Symbol] Type of Alexa endpoint
+        #   @param config [Hash, nil] Additional Alexa configuration
+        #   @return [void]
+        #
 
-        # Shortcut for adding Alexa metadata
         #
-        # @see https://www.openhab.org/docs/ecosystem/alexa/
+        # @!method ga(value, config = nil)
+        #   Shortcut for adding Google Assistant metadata
         #
-        # @param value [String] Type of Alexa endpoint
-        # @param config [Hash] Additional Alexa configuration
-        def alexa(value = nil, config = nil)
-          value, config = value if value.is_a?(Array)
-          metadata["alexa"] = [value, config]
+        #   @see https://www.openhab.org/docs/ecosystem/google-assistant/
+        #
+        #   @param value [String, Symbol] Type of Google Assistant endpoint
+        #   @param config [Hash, nil] Additional Google Assistant configuration
+        #   @return [void]
+        #
+
+        #
+        # @!method homekit(value, config = nil)
+        #   Shortcut for adding Homekit metadata
+        #
+        #   @see https://www.openhab.org/addons/integrations/homekit/
+        #
+        #   @param value [String, Symbol] Type of Homekit accessory or characteristic
+        #   @param config [Hash, nil] Additional Homekit configuration
+        #   @return [void]
+        #
+
+        %i[alexa ga homekit].each do |shortcut|
+          define_method(shortcut) do |value = nil, config = nil|
+            value, config = value if value.is_a?(Array)
+            metadata[shortcut] = [value, config]
+          end
         end
 
         #
@@ -411,9 +433,12 @@ module OpenHAB
           @channels << [channel, config]
         end
 
+        #
         # @!method expire(command: nil, state: nil)
         #
         # Configure item expiration
+        #
+        # @return [void]
         #
         # @example Get the current expire setting
         #   expire
@@ -486,7 +511,7 @@ module OpenHAB
           "#{s}>"
         end
 
-        protected
+        private
 
         # @return [String]
         def inspect_type
@@ -497,8 +522,6 @@ module OpenHAB
         def type_details
           ":#{dimension}" if dimension
         end
-
-        private
 
         def create_item
           type = @type.to_s.gsub(/(?:^|_)[a-z]/) { |match| match[-1].upcase }
@@ -578,7 +601,7 @@ module OpenHAB
           @members << child_item
         end
 
-        protected
+        private
 
         # @return [String]
         def inspect_type
@@ -591,8 +614,6 @@ module OpenHAB
           r = "#{r}:#{function}" if function
           r
         end
-
-        private
 
         def provider
           self
