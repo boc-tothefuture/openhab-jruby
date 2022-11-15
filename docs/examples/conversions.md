@@ -108,7 +108,7 @@ rule 'Use supplemental heat in office' do
   only_if { Office_Occupied.on? }
   only_if { OfficeDoor.closed? }
   only_if { Thermostate_Upstairs_Heat_Set.state > Office_Temperature.state }
-  only_if { Thermostat_Upstairs_Temp.state - Office_Temperature.state > '2 °F' }
+  only_if { Thermostat_Upstairs_Temp.state - Office_Temperature.state > 2 | '°F' }
   otherwise { Lights_Office_Outlet << OFF if Lights_Office_Outlet.on? }
 end
 ```
