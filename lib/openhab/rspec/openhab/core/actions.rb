@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module OpenHAB
-  module DSL
+  module Core
     module Actions
       # rubocop:disable Lint/UnusedMethodArgument
       # redefine these to do nothing so that rules won't fail
