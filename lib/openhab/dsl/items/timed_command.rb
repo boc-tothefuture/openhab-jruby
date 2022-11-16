@@ -123,7 +123,7 @@ module OpenHAB
               cancel_timed_command_rule(timed_command_details)
               timed_command_details.expired = true
               if block
-                logger.trace "Invoking block #{block} after timed command for #{id} expired"
+                logger.trace "Invoking block #{block} after timed command for #{name} expired"
                 yield(timed_command_details)
               else
                 command(timed_command_details.on_expire)
@@ -138,7 +138,7 @@ module OpenHAB
         # @param [TimedCommandDetailed] timed_command_details details about the timed command
         def cancel_timed_command_rule(timed_command_details)
           logger.trace "Removing rule: #{timed_command_details.rule_uid}"
-          Rules::Rule.registry.remove(timed_command_details.rule_uid)
+          Rules.scripted_rule_provider.remove_rule(timed_command_details.rule_uid)
         end
 
         #

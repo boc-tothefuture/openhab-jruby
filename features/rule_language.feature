@@ -27,6 +27,6 @@ Feature: rule_language
       """
     When I deploy the rules file
     Then It should log 'For input string: "k" (Java::JavaLang::NumberFormatException)' within 5 seconds
-    And It should log 'In rule: test' within 5 seconds
+    And It should log 'In Rule: test' within 5 seconds
     And It should log "RUBY.test" within 5 seconds
     And It should log "RUBY.<main>" within 5 seconds

@@ -15,13 +15,15 @@ module OpenHAB
 
           # super
           ::OpenHAB::DSL::ThreadLocal.thread_local(**@thread_locals) do
-            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
-            logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
-            trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
-              process_queue(create_queue(inputs), mod, inputs)
+            begin # rubocop:disable Style/RedundantBegin
+              logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
+              logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
+              trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
+                process_queue(create_queue(inputs), mod, inputs)
+              end
+            rescue Exception => e
+              @run_context.logger.log_exception(e)
             end
-          rescue Exception => e
-            @run_context.logger.log_exception(e)
           end
         end
       end

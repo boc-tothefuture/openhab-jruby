@@ -13,14 +13,6 @@ Feature: persistence
       | Number | Number1 | Test_Group |
       | Number | Number2 | Test_Group |
 
-  Scenario: Check that PersistenceExtensions is available
-    Given code in a rules file:
-      """
-      logger.info("Persistence is defined: #{defined? PersistenceExtensions}")
-      """
-    When I deploy the rule
-    Then It should log 'Persistence is defined: constant' within 5 seconds
-
   Scenario: Make calls to various Persistence methods
     Given code in a rules file:
       """
@@ -30,7 +22,7 @@ Feature: persistence
         updated Number1
         triggered do |item|
           @last_update = ZonedDateTime.now
-          logger.info("#{item.name} = #{item.state} at: #{TimeOfDay.now}")
+          logger.info("#{item.name} = #{item.state} at: #{@last_update}")
         end
       end
 
@@ -57,10 +49,8 @@ Feature: persistence
             updated_since?
             variance_since
             ].each do |method|
-              logger.info("#{method}: #{Number1.__send__(method, 1.minute)}")
-              logger.info("#{method}: #{Number1.__send__(method, ZonedDateTime.now.minusMinutes(1))}")
-              logger.info("#{method}: #{Test_Group.__send__(method, 1.minute)}")
-              logger.info("#{method}: #{Test_Group.__send__(method, ZonedDateTime.now.minusMinutes(1))}")
+              logger.info("#{method}: #{Number1.__send__(method, 1.minute.ago)}")
+              logger.info("#{method}: #{Test_Group.__send__(method, 1.minute.ago)}")
             end
 
             %i[
@@ -74,11 +64,9 @@ Feature: persistence
               updated_between?
               variance_between
             ].each do |method|
-              logger.info("#{method}: #{Number1.__send__(method, 2.minute, 1.minute)}")
-              logger.info("#{method}: #{Number1.__send__(method, ZonedDateTime.now.minusMinutes(2), ZonedDateTime.now.minusMinutes(1))}")
-              logger.info("#{method}: #{Test_Group.__send__(method, 2.minute, 1.minute)}")
-              logger.info("#{method}: #{Test_Group.__send__(method, ZonedDateTime.now.minusMinutes(2), ZonedDateTime.now.minusMinutes(1))}")
-            end if PersistenceExtensions.methods.include? :average_between
+              logger.info("#{method}: #{Number1.__send__(method, 2.minute.ago, 1.minute.ago)}")
+              logger.info("#{method}: #{Test_Group.__send__(method, 2.minute.ago, 1.minute.ago)}")
+            end if OpenHAB::Core::Actions::PersistenceExtensions.methods.include? :average_between
             logger.info("Persistence checks done")
           end
         end
@@ -103,8 +91,8 @@ Feature: persistence
         run { Number_Power.update 3 | "kW" }
         delay 3.second
         run do
-          logger.info("Average: #{Number_Power.average_since(10.seconds, :mapdb)}")
-          logger.info("Average Max: #{Max_Power.average_since(10.seconds, :mapdb)}")
+          logger.info("Average: #{Number_Power.average_since(10.seconds.ago, :mapdb)}")
+          logger.info("Average Max: #{Max_Power.average_since(10.seconds.ago, :mapdb)}")
         end
       end
       """
@@ -128,8 +116,8 @@ Feature: persistence
         run { Number_Power.update 3 }
         delay 3.second
         run do
-          logger.info("Average: #{Number_Power.average_since(10.seconds, :mapdb)}")
-          logger.info("Average Max: #{Max_Power.average_since(10.seconds, :mapdb)}")
+          logger.info("Average: #{Number_Power.average_since(10.seconds.ago, :mapdb)}")
+          logger.info("Average Max: #{Max_Power.average_since(10.seconds.ago, :mapdb)}")
         end
       end
       """
@@ -156,10 +144,9 @@ Feature: persistence
     When I deploy the rule
     Then It should log 'Max: 3' within 10 seconds
     Examples:
-      | time                               |
-      | 3.seconds                          |
-      | ZonedDateTime.now.minus_seconds(3) |
-      | Time.now - 3                       |
+      | time          |
+      | 3.seconds.ago |
+      | Time.now - 3  |
 
   Scenario: Check that HistoricState directly returns a state
     Given items:
@@ -173,7 +160,7 @@ Feature: persistence
         run { Number_Power.update 3 | "kW" }
         delay 3.second
         run do
-          max = Number_Power.maximum_since(10.seconds, :mapdb)
+          max = Number_Power.maximum_since(10.seconds.ago, :mapdb)
           logger.info("Max time: #{max.timestamp}") # If this caused an error, the next line won't execute
           logger.info("Max: #{max}") if max == max.state
         end

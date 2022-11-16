@@ -22,8 +22,8 @@ Feature:  every
         (Time.now + 5).strftime('%H:%M:%S')
       end
 
-      def five_seconds_from_now_tod
-        TimeOfDay.parse(five_seconds_from_now_string)
+      def five_seconds_from_now_localtime
+        LocalTime.parse(five_seconds_from_now_string)
       end
 
       rule 'Simple' do | rule |
@@ -35,9 +35,9 @@ Feature:  every
     Then It should log 'Rule Simple executed' within 15 seconds
 
     Examples:
-      | five_seconds_from_now        |
-      | five_seconds_from_now_string |
-      | five_seconds_from_now_tod    |
+      | five_seconds_from_now           |
+      | five_seconds_from_now_string    |
+      | five_seconds_from_now_localtime |
 
   Scenario: Using durations
     Given a rule

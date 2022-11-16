@@ -264,7 +264,7 @@ module OpenHAB
     def log_exception(exception)
       exception = clean_backtrace(exception)
       error do
-        "#{exception.message} (#{exception.class}):\n#{exception.backtrace&.join("\n")}"
+        "#{exception.message} (#{exception.class})\n#{name}#{exception.backtrace&.join("\n")}"
       end
     end
 
@@ -327,15 +327,13 @@ module OpenHAB
       # The current logger - the file logger if rule_uid is nil,
       # otherwise a logger specific to the rule.
       def current_logger
-        return @file_logger unless rule_uid
+        return @file_logger unless (rule_uid = Thread.current[:openhab_rule_uid])
 
-        self.class.rule_loggers[rule_uid] ||= Logger.new("#{Logger::PREFIX}.#{rule_uid.tr_s(":", "_")
+        rule_type = Thread.current[:openhab_rule_type]
+        full_id = "#{rule_type}:#{rule_uid}"
+
+        self.class.rule_loggers[full_id] ||= Logger.new("#{Logger::PREFIX}.#{rule_type}.#{rule_uid.tr_s(":", "_")
             .gsub(/[^A-Za-z0-9_.-]/, "")}")
-      end
-
-      # Get the id of the rule from the thread context
-      def rule_uid
-        Thread.current[:openhab_rule_uid]
       end
 
       extend Forwardable

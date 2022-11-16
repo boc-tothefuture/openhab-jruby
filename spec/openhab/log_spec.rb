@@ -69,16 +69,49 @@ RSpec.describe OpenHAB::Log do
 
     it "uses the rule name inside a timer block inside a rule" do
       executed = false
-      rule "log test", id: "log_test" do
+      rule "log test" do
         on_start
         run do
           after(1.second) do
             executed = true
-            expect(logger.name).to eql "org.openhab.automation.jrubyscripting.log_test" # rubocop:disable RSpec/ExpectInHook
+            expect(logger.name).to eql "org.openhab.automation.jrubyscripting.rule.log_test" # rubocop:disable RSpec/ExpectInHook
           end
         end
       end
       time_travel_and_execute_timers(5.seconds)
+      expect(executed).to be true
+    end
+
+    it "uses the rule name inside a script block" do
+      executed = false
+      script "my script" do
+        executed = true
+        expect(logger.name).to eql "org.openhab.automation.jrubyscripting.script.my_script"
+      end
+      trigger_rule("my_script")
+      expect(executed).to be true
+    end
+
+    it "uses the profile name inside a profile block" do
+      install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
+
+      things.build do
+        thing "astro:sun:home", "Astro Sun Data", config: { "geolocation" => "0,0" }
+      end
+
+      executed = false
+      profile "use_a_different_state" do
+        executed = true
+        expect(logger.name).to eql "org.openhab.automation.jrubyscripting.profile.use_a_different_state"
+      end
+
+      items.build do
+        string_item "MyString",
+                    channel: ["astro:sun:home:season#name", { profile: "ruby:use_a_different_state" }],
+                    autoupdate: false
+      end
+
+      MyString << "foo"
       expect(executed).to be true
     end
 

@@ -224,7 +224,7 @@ module OpenHAB
         %i[persist last_update].each do |method|
           define_method(method) do |service = nil|
             service ||= persistence_service
-            Core::Actions::PersistenceExtensions.public_send(method, self, service&.to_s)
+            Actions::PersistenceExtensions.public_send(method, self, service&.to_s)
           end
         end
 
@@ -241,14 +241,14 @@ module OpenHAB
         #
         def previous_state(service = nil, skip_equal: false)
           service ||= persistence_service
-          result = Core::Actions::PersistenceExtensions.previous_state(self, skip_equal, service&.to_s)
+          result = Actions::PersistenceExtensions.previous_state(self, skip_equal, service&.to_s)
           HistoricState.new(quantify(result.state), result.timestamp)
         end
 
         PERSISTENCE_METHODS.each do |method|
           define_method(method) do |timestamp, service = nil|
             service ||= persistence_service
-            result = PersistenceExtensions.public_send(
+            result = Actions::PersistenceExtensions.public_send(
               method.to_s.delete_suffix("?"),
               self, timestamp.to_zoned_date_time,
               service&.to_s
@@ -261,7 +261,7 @@ module OpenHAB
           between_method = method.to_s.sub("_since", "_between").to_sym
           define_method(between_method) do |start, finish, service = nil|
             service ||= persistence_service
-            result = Core::Actions::PersistenceExtensions.public_send(
+            result = Actions::PersistenceExtensions.public_send(
               between_method.to_s.delete_suffix("?"),
               self,
               start.to_zoned_date_time,

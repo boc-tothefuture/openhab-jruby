@@ -71,21 +71,23 @@ module OpenHAB
 
       builder = nil
 
-      ThreadLocal.thread_local(openhab_rule_uid: id) do
-        builder = Rules::Builder.new(binding || block.binding)
-        builder.uid(id)
-        builder.instance_exec(&block)
-        builder.guard = Rules::Guard.new(run_context: builder.caller, only_if: builder.only_if,
-                                         not_if: builder.not_if)
+      ThreadLocal.thread_local(openhab_rule_type: "rule", openhab_rule_uid: id) do
+        begin # rubocop:disable Style/RedundantBegin
+          builder = Rules::Builder.new(binding || block.binding)
+          builder.uid(id)
+          builder.instance_exec(builder, &block)
+          builder.guard = Rules::Guard.new(run_context: builder.caller, only_if: builder.only_if,
+                                           not_if: builder.not_if)
 
-        name ||= Rules::NameInference.infer_rule_name(builder)
-        name ||= id
+          name ||= Rules::NameInference.infer_rule_name(builder)
+          name ||= id
 
-        builder.name(name)
-        logger.trace { builder.inspect }
-        builder.build(script)
-      rescue Exception => e
-        builder.send(:logger).log_exception(e)
+          builder.name(name)
+          logger.trace { builder.inspect }
+          builder.build(script)
+        rescue Exception => e
+          builder.send(:logger).log_exception(e)
+        end
       end
     end
 
@@ -111,17 +113,19 @@ module OpenHAB
       script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
       builder = nil
-      ThreadLocal.thread_local(openhab_rule_uid: id) do
-        builder = Rules::Builder.new(block.binding)
-        builder.uid(id)
-        builder.tags(["Script"])
-        builder.name(name)
-        builder.script(&block)
-        logger.trace { builder.inspect }
-        builder.build(script)
+      ThreadLocal.thread_local(openhab_rule_type: "script", openhab_rule_uid: id) do
+        begin
+          builder = Rules::Builder.new(block.binding)
+          builder.uid(id)
+          builder.tags(["Script"])
+          builder.name(name)
+          builder.script(&block)
+          logger.trace { builder.inspect }
+          builder.build(script)
+        end
+      rescue Exception => e
+        builder.send(:logger).log_exception(e)
       end
-    rescue Exception => e
-      builder.send(:logger).log_exception(e)
     end
 
     # @!group Rule Support
@@ -172,7 +176,9 @@ module OpenHAB
 
       uid = org.openhab.core.thing.profiles.ProfileTypeUID.new("ruby", id)
 
-      Core::ProfileFactory.instance.register(uid, block)
+      ThreadLocal.thread_local(openhab_rule_type: "profile", openhab_rule_uid: id) do
+        Core::ProfileFactory.instance.register(uid, block)
+      end
     end
 
     #

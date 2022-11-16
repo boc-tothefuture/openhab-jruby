@@ -10,7 +10,13 @@ module OpenHAB
       module_function
 
       # Keys to persist
-      KNOWN_KEYS = %i[openhab_rule_uid openhab_units openhab_persistence_service openhab_ensure_states].freeze
+      KNOWN_KEYS = %i[
+        openhab_rule_uid
+        openhab_rule_type
+        openhab_units
+        openhab_persistence_service
+        openhab_ensure_states
+      ].freeze
 
       #
       # Fetch all {KNOWN_KEYS} from thread local storage.
