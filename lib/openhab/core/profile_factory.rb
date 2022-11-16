@@ -85,11 +85,9 @@ module OpenHAB
           end
 
           DSL::ThreadLocal.thread_local(**@thread_locals) do
-            begin # rubocop:disable Style/RedundantBegin
-              @block.call(event, **kwargs)
-            rescue Exception => e
-              @block.binding.eval("self").logger.log_exception(e)
-            end
+            @block.call(event, **kwargs)
+          rescue Exception => e
+            @block.binding.eval("self").logger.log_exception(e)
           end
         end
       end

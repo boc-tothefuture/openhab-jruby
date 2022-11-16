@@ -42,15 +42,13 @@ module OpenHAB
         #
         def execute(mod = nil, inputs = nil)
           ThreadLocal.thread_local(**@thread_locals) do
-            begin # rubocop:disable Style/RedundantBegin
-              logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
-              logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
-              trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
-                process_queue(create_queue(inputs), mod, inputs)
-              end
-            rescue Exception => e
-              @run_context.send(:logger).log_exception(e)
+            logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
+            logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
+            trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
+              process_queue(create_queue(inputs), mod, inputs)
             end
+          rescue Exception => e
+            @run_context.send(:logger).log_exception(e)
           end
         end
 
