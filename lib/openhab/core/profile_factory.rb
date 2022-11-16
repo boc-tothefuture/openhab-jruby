@@ -114,7 +114,7 @@ module OpenHAB
       end
     end
 
-    # registration = OSGi.register_service(ProfileFactory.instance)
-    # ScriptHandlingCallbacks.script_unloaded_hooks << -> { registration.unregister }
+    registration = OSGi.register_service(ProfileFactory.instance)
+    ScriptHandlingCallbacks.script_unloaded_hooks << -> { registration.unregister }
   end
 end
