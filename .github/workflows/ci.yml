@@ -64,7 +64,7 @@ jobs:
           bundler-cache: true
       - id: set-matrix
         run: |
-          JSON=$(bin/rake github:oh_versions)
+          JSON=$(bin/rake github:oh_versions_matrix)
           echo $JSON
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
 
@@ -132,32 +132,12 @@ jobs:
           path: rspec.html
 
 
-  cucumber-matrix:
+  cucumber:
+    needs: [openhab-matrix, openhab-setup]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
-      - name: Remove env.rb file
-        run: |
-          rm features/support/env.rb
-      - id: set-matrix
-        run: |
-          JSON=$(bin/rake github:matrix[20])
-          echo $JSON
-          echo "matrix=$JSON" >> $GITHUB_OUTPUT
-
-  cucumber:
-    needs: [cucumber-matrix, openhab-setup]
-    runs-on: ubuntu-latest
-    if: "false" # !contains(github.event.head_commit.message, 'ci skip')"
     strategy:
-      matrix: ${{fromJson(needs.cucumber-matrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
@@ -175,7 +155,7 @@ jobs:
           path: tmp/
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: Cucumber
-        run: bin/rake "features[${{ matrix.features }}]"
+        run: bin/rake features
       - name: Generate OpenHAB Dump
         run: bin/rake openhab:dump
         if: failure()
