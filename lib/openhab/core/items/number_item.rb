@@ -29,8 +29,8 @@ module OpenHAB
         # @!visibility private
         def format_type(command)
           if command.is_a?(Numeric)
-            if dimension && (unit = DSL.unit(self.unit.dimension) || self.unit)
-              return Types::QuantityType.new(command, unit)
+            if unit && (target_unit = DSL.unit(unit.dimension) || unit)
+              return Types::QuantityType.new(command, target_unit)
             end
 
             return Types::DecimalType.new(command)

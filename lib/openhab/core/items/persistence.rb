@@ -40,12 +40,13 @@ module OpenHAB
 
         # A state class with an added timestamp attribute. This is used to hold OpenHAB's HistoricItem.
         class HistoricState < SimpleDelegator
-          attr_reader :timestamp, :state
+          attr_reader :timestamp
+
+          alias_method :state, :__getobj__
 
           def initialize(state, timestamp)
-            @state = state
             @timestamp = timestamp
-            super(@state)
+            super(state)
           end
         end
 
@@ -250,7 +251,8 @@ module OpenHAB
             service ||= persistence_service
             result = Actions::PersistenceExtensions.public_send(
               method.to_s.delete_suffix("?"),
-              self, timestamp.to_zoned_date_time,
+              self,
+              timestamp.to_zoned_date_time,
               service&.to_s
             )
             wrap_result(result, method)
@@ -272,11 +274,6 @@ module OpenHAB
           end
         end
 
-        alias_method :changed_since, :changed_since?
-        alias_method :changed_between, :changed_between?
-        alias_method :updated_since, :updated_since?
-        alias_method :updated_between, :updated_between?
-
         private
 
         #
@@ -287,10 +284,9 @@ module OpenHAB
         # @return [Object] QuantityType or the original value
         #
         def quantify(value)
-          if value.is_a?(DecimalType) &&
-             (item_unit = org.openhab.core.types.util.UnitUtils.parse_unit(state_description&.pattern))
-            logger.trace("Unitizing #{value} with unit #{item_unit}")
-            QuantityType.new(value.to_big_decimal, item_unit)
+          if value.is_a?(DecimalType) && unit
+            logger.trace("Unitizing #{value} with unit #{unit}")
+            QuantityType.new(value.to_big_decimal, unit)
           else
             value
           end

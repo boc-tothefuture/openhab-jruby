@@ -133,6 +133,9 @@ here is a non-exhaustive list of significant departures from the original gem:
   directly available on {OpenHAB::Core::Things::Thing Thing}; you must
   explicitly access them via
   {OpenHAB::Core::Things::Thing#actions Thing#actions}.
+* {OpenHAB::Core::Items::Persistence Persistence} predicates are no longer
+  aliased without the `?` (i.e. you must call `#changed_since?`, not
+  `#changed_since`).
 
 ### Features
 
