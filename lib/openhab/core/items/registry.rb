@@ -40,7 +40,7 @@ module OpenHAB
         end
 
         # Enter the Item Builder DSL.
-        # @yieldparam [DSL::Items::Builder] builder
+        # @yield Block executed in the context of a {DSL::Items::Builder}
         # @return [Object] The return value of the block.
         def build(&block)
           DSL::Items::BaseBuilderDSL.new.instance_eval(&block)

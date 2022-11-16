@@ -35,7 +35,7 @@ module OpenHAB
         end
 
         # Enter the Thing Builder DSL.
-        # @yieldparam [DSL::Things::Builder] builder
+        # @yield Block executed in the context of a {DSL::Things::Builder}.
         # @return [Object] The result of the block.
         def build(&block)
           DSL::Things::Builder.new.instance_eval(&block)

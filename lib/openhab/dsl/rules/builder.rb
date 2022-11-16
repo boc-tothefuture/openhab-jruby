@@ -803,7 +803,7 @@ module OpenHAB
         #   end
         #
         # @example The above rule could also be expressed using LocalTime class as below
-        #   rule "Daily" do |rule|
+        #   rule "Daily" do
         #     every :day, at: LocalTime.of(5, 15)
         #     run { Light.on }
         #   end

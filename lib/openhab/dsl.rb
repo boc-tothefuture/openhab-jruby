@@ -45,7 +45,7 @@ module OpenHAB
     # Create a new rule
     #
     # @param [String] name The rule name
-    # @yield Block executed in context of a {Rules::Builder}
+    # @yield Block executed in the context of a {Rules::Builder}
     # @yieldparam [Rules::Builder] rule
     #   Optional parameter to access the rule configuration from within execution blocks and guards.
     # @return [org.openhab.core.automation.Rule] The OpenHAB Rule object
