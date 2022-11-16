@@ -85,7 +85,7 @@ module OpenHAB
       # @return [void]
       #
       def notify(msg, email: nil, icon: nil, severity: nil)
-        unless const_defined?(:NotificationAction)
+        unless Actions.const_defined?(:NotificationAction)
           raise NoMethodError, "NotificationAction is not available. Please install the OpenHAB cloud addon"
         end
 
