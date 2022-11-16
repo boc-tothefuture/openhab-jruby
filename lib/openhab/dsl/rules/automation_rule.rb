@@ -41,7 +41,6 @@ module OpenHAB
         #
         #
         def execute(mod = nil, inputs = nil)
-          @result = nil
           ThreadLocal.thread_local(**@thread_locals) do
             begin # rubocop:disable Style/RedundantBegin
               logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
@@ -53,7 +52,6 @@ module OpenHAB
               @run_context.send(:logger).log_exception(e)
             end
           end
-          @result
         end
 
         #
@@ -173,7 +171,7 @@ module OpenHAB
             if task.is_a?(Builder::Delay)
               process_delay_task(inputs, mod, run_queue, task)
             else
-              process_task(inputs, event, task)
+              process_task(event, task)
             end
           end
         end
@@ -184,11 +182,11 @@ module OpenHAB
         # @param [OpenHab Event] event that triggered the rule
         # @param [Task] task task containing otherwise block to execute
         #
-        def process_task(inputs, event, task)
+        def process_task(event, task)
           ThreadLocal.thread_local(**@thread_locals) do
             case task
             when Builder::Run then process_run_task(event, task)
-            when Builder::Script then process_script_task(inputs, task)
+            when Builder::Script then process_script_task(task)
             when Builder::Trigger then process_trigger_task(event, task)
             when Builder::Otherwise then process_otherwise_task(event, task)
             end
@@ -250,25 +248,11 @@ module OpenHAB
         #
         # Process a script task
         #
-        # @param [Hash] inputs
         # @param [Script] task to execute
         #
-        def process_script_task(inputs, task)
-          kwargs = {}
-          task.block.parameters.each do |(param_type, name)|
-            case param_type
-            when :keyreq, :key
-              kwargs[name] = inputs[name.to_s] if inputs.key?(name.to_s)
-            when :keyrest
-              inputs.each do |k, v|
-                next if k.include?(".")
-
-                kwargs[k.to_sym] = v
-              end
-            end
-          end
-          logger.trace { "Executing script '#{name}' run block with kwargs #{kwargs.inspect}" }
-          @result = @run_context.instance_exec(**kwargs, &task.block)
+        def process_script_task(task)
+          logger.trace { "Executing script '#{name}' run block" }
+          @run_context.instance_exec(&task.block)
         end
 
         #

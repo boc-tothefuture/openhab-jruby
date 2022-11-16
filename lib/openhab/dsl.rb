@@ -95,10 +95,7 @@ module OpenHAB
     # Create a new script
     #
     # A script is a rule with no triggers. It can be called by various other actions,
-    # such as the Run Rules action, or the script channel profile.
-    #
-    # Input variables are sent as keyword arguments to the block.
-    # The result of the block may be significant (like for the script channel profile).
+    # such as the Run Rules action.
     #
     # @param [String] id The script's ID
     # @param [String] name A descriptive name
