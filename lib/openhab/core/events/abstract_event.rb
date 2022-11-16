@@ -9,6 +9,8 @@ module OpenHAB
       class AbstractEvent
         # @return [Object]
         attr_accessor :attachment
+
+        alias_method :inspect, :to_s
       end
     end
   end

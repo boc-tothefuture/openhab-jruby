@@ -136,6 +136,25 @@ module OpenHAB
       end
 
       #
+      # Calls the block repeatedly until the expectations inside pass.
+      #
+      # @param [Duration] how_long how long to keep trying before giving up
+      # @yield
+      # @return [void]
+      def wait(how_long = 2.seconds)
+        now = Time.now
+
+        begin
+          yield
+        rescue ::RSpec::Expectations::ExpectationNotMetError
+          raise if Time.now > now + how_long
+
+          sleep 0.1
+          retry
+        end
+      end
+
+      #
       # Manually send an event to a trigger channel
       #
       # @param [String, Core::Things::Channel, Core::Things::ChannelUID] channel The channel to trigger.

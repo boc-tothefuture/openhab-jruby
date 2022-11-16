@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "tmpdir"
+
 RSpec.describe OpenHAB::DSL::Rules::Builder do
   it "doesn't create a rule if there are no execution blocks" do
     rule(id: "test_rule") { on_start }
@@ -268,8 +270,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
             super(item, initial_state: initial_state, duration: duration, caller: caller, **kwargs, &block)
           end
 
-          test_changed_trigger
-          # test_changed_trigger(duration: Alarm_Delay)
+          test_changed_trigger(duration: -> { Alarm_Delay.state.to_i.seconds })
           test_changed_trigger(to: 14)
           test_changed_trigger(to: 14, new_state: 10, expect_triggered: nil)
           test_changed_trigger(from: 8, to: 14)
@@ -684,6 +685,123 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         end
       end
     end
+
+    # rubocop:disable RSpec/InstanceVariable
+    describe "#watch" do
+      around do |example|
+        Dir.mktmpdir("openhab-rspec") do |dir|
+          @temp_dir = dir
+          example.call
+        end
+      end
+
+      def test_it(filename, watch_args:, expected: true, check: nil)
+        path = type = nil
+        rule do
+          watch(*watch_args)
+          run do |event|
+            path = event.path.basename.to_s
+            type = event.type
+          end
+        end
+
+        file = File.join(@temp_dir, filename)
+        logger.debug("Creating file")
+        File.open(file, "wb") { nil }
+        expected = false unless check.nil?
+        if expected || check&.include?(:created)
+          wait do
+            expect(path).to eql filename
+            expect(type).to be :created
+          end
+        else
+          sleep 2
+          expect(path).to be_nil
+          expect(type).to be_nil
+        end
+
+        return if check.nil?
+
+        path = nil
+        type = nil
+        logger.debug("Modifying file")
+        File.write(file, "bye")
+        if check.include?(:modified)
+          wait do
+            expect(path).to eql "file"
+            expect(type).to be :modified
+          end
+        else
+          sleep 2
+          expect(path).to be_nil
+          expect(type).to be_nil
+        end
+
+        path = nil
+        type = nil
+        logger.debug("Deleting file")
+        File.unlink(file)
+        if check.include?(:deleted)
+          wait do
+            expect(path).to eql "file"
+            expect(type).to be :deleted
+          end
+        else
+          sleep 2
+          expect(path).to be_nil
+          expect(type).to be_nil
+        end
+      end
+
+      it "supports directories" do
+        test_it("file", check: %i[created modified deleted], watch_args: [@temp_dir])
+      end
+
+      it "supports globs" do
+        test_it("file.erb", watch_args: [@temp_dir, { glob: "*.erb" }])
+      end
+
+      it "supports globs in path" do
+        test_it("file.erb", watch_args: ["#{@temp_dir}/*.erb"])
+      end
+
+      it "filters files not matching the glob" do
+        test_it("file.txt", expected: false, watch_args: [@temp_dir, { glob: "*.erb" }])
+      end
+
+      it "filters files not matching the glob in the path" do
+        test_it("file.txt", expected: false, watch_args: ["#{@temp_dir}/*.erb"])
+      end
+
+      it "supports a single file" do
+        test_it("file", watch_args: ["#{@temp_dir}/file"])
+      end
+
+      it "ignores a non-matching file" do
+        test_it("file.txt", expected: false, watch_args: ["#{@temp_dir}/file"])
+      end
+
+      it "can filter by event type :created" do
+        test_it("file", check: [:created], watch_args: [@temp_dir, { for: :created }])
+      end
+
+      it "can filter by event type :modified" do
+        test_it("file", check: [:modified], watch_args: [@temp_dir, { for: :modified }])
+      end
+
+      it "can filter by event type :deleted" do
+        test_it("file", check: [:deleted], watch_args: [@temp_dir, { for: :deleted }])
+      end
+
+      it "can filter by event types :modified or :deleted" do
+        test_it("file", check: %i[modified deleted], watch_args: [@temp_dir, { for: %i[modified deleted] }])
+      end
+
+      it "can filter by event types :modified or :created" do
+        test_it("file", check: %i[modified created], watch_args: [@temp_dir, { for: %i[modified created] }])
+      end
+    end
+    # rubocop:enable RSpec/InstanceVariable
   end
 
   describe "execution blocks" do
@@ -715,6 +833,33 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         end
         expect(spec_log_lines).to include(include("Java::JavaLang::NumberFormatException"))
         expect(spec_log_lines).to include(match(/RUBY.*builder_spec\.rb/))
+      end
+
+      def self.test_event(trigger)
+        it "is passed `event` from #{trigger}", caller: caller do
+          items.build { switch_item "Switch1" }
+          item = nil
+          rule do
+            send(trigger, Switch1)
+            run { |event| item = event.item }
+          end
+          Switch1.on
+          expect(item).to be Switch1
+        end
+      end
+
+      test_event(:changed)
+      test_event(:updated)
+
+      it "runs multiple blocks" do
+        ran = 0
+        rule do
+          on_start
+          run { ran += 1 }
+          run { ran += 1 }
+          run { ran += 1 }
+        end
+        expect(ran).to be 3
       end
     end
 
@@ -795,25 +940,148 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
 
     # rubocop:disable RSpec/InstanceVariable
     context "with guards" do
-      def run_rule
-        rule do
-          on_start
-          run { @ran = :run }
-          otherwise { @ran = :otherwise }
-          only_if { @condition }
+      describe "#only_if" do
+        def run_rule
+          rule do
+            on_start
+            run { @ran = :run }
+            otherwise { @ran = :otherwise }
+            only_if { @condition }
+          end
+        end
+
+        it "executes run blocks if only_if is true" do
+          @condition = true
+          run_rule
+          expect(@ran).to be :run
+        end
+
+        it "executes otherwise blocks if only_if is false" do
+          @condition = false
+          run_rule
+          expect(@ran).to be :otherwise
+        end
+
+        it "supports multiple only_if blocks" do
+          ran = false
+          rule do
+            on_start
+            run { ran = true }
+            only_if { true }
+            only_if { true }
+          end
+          expect(ran).to be true
+        end
+
+        it "supports multiple only_if blocks but doesn't run if any are false" do
+          ran = false
+          rule do
+            on_start
+            run { ran = true }
+            only_if { true }
+            only_if { false }
+          end
+          expect(ran).to be false
         end
       end
 
-      it "executes run blocks if only_if is true" do
-        @condition = true
-        run_rule
-        expect(@ran).to be :run
+      describe "#not_if" do
+        def run_rule
+          rule do
+            on_start
+            run { @ran = :run }
+            otherwise { @ran = :otherwise }
+            not_if { @condition }
+          end
+        end
+
+        it "executes run blocks if not_if is false" do
+          @condition = false
+          run_rule
+          expect(@ran).to be :run
+        end
+
+        it "executes otherwise blocks if not_if is true" do
+          @condition = true
+          run_rule
+          expect(@ran).to be :otherwise
+        end
+
+        it "supports multiple not_if blocks" do
+          ran = false
+          rule do
+            on_start
+            run { ran = true }
+            not_if { false }
+            not_if { false }
+          end
+          expect(ran).to be true
+        end
+
+        it "supports multiple only_if blocks but doesn't run if any are true" do
+          ran = false
+          rule do
+            on_start
+            run { ran = true }
+            not_if { true }
+            not_if { false }
+          end
+          expect(ran).to be false
+        end
       end
 
-      it "executes otherwise blocks if only_if is false" do
-        @condition = false
-        run_rule
-        expect(@ran).to be :otherwise
+      def self.test_combo(only_if_value, not_if_value, result)
+        it "#{result ? "runs" : "doesn't run"} for only_if #{only_if_value} and #{not_if_value}", caller: caller do
+          ran = false
+          rule do
+            on_start
+            run { ran = true }
+            only_if { only_if_value }
+            not_if { not_if_value }
+          end
+          expect(ran).to be result
+        end
+      end
+
+      test_combo(true, false, true)
+      test_combo(false, false, false)
+      test_combo(false, true, false)
+      test_combo(true, true, false)
+
+      it "has access to event info" do
+        items.build { switch_item "Switch1" }
+        item = nil
+        this = nil
+        rule do
+          changed Switch1
+          run { nil }
+          only_if do |event|
+            item = event.item
+            this = self
+          end
+        end
+        Switch1.on
+        expect(item).to be Switch1
+        expect(this).to be self
+      end
+
+      describe "#between" do # rubocop:disable RSpec/EmptyExampleGroup
+        def self.test_it(range, expected)
+          it "works with #{range.inspect} (#{range.begin.class})", caller: caller do
+            ran = false
+            rule do
+              on_start
+              between range
+              run { ran = true }
+            end
+            expect(ran).to be expected
+          end
+        end
+
+        test_it(5.minutes.ago.to_local_time..5.minutes.from_now.to_local_time, true)
+        test_it(5.minutes.ago.to_local_time.to_s..5.minutes.from_now.to_local_time.to_s, true)
+        test_it(10.minutes.ago..5.minutes.ago, false)
+        test_it(1.day.ago.to_local_date..1.day.from_now.to_local_date, true)
       end
     end
     # rubocop:enable RSpec/InstanceVariable
@@ -838,6 +1106,59 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         run { nil }
       end
       expect($rules.get("test_rule").tags).to match_array(%w[tag1 tag2 LivingRoom])
+    end
+  end
+
+  describe "attachments" do
+    let(:item) { items.build { switch_item "Item1" } }
+    let(:thing) do
+      install_addon "binding-astro", ready_markers: "openhab.xmlThingTypes"
+
+      things.build do
+        thing "astro:sun:home", "Astro Sun Data", config: { "geolocation" => "0,0" }
+      end
+    end
+
+    def self.test_it(*trigger, &block)
+      it "passes through attachment for #{trigger.first}", caller: caller do
+        attachment = nil
+        trigger[1] = binding.eval(trigger[1]) if trigger.length == 2 # rubocop:disable Security/Eval
+        kwargs = {}
+        kwargs = trigger.pop if trigger.length == 3
+        kwargs[:attach] = 1
+        rule do
+          send(*trigger, **kwargs)
+          run { |event| attachment = event.attachment }
+        end
+        instance_eval(&block) if block
+        expect(attachment).to be 1
+      end
+    end
+
+    test_it(:changed, "item") { item.on }
+    test_it(:updated, "item") { item.on }
+    test_it(:received_command, "item") { item.on }
+    test_it(:channel, "astro:sun:home:rise#event".inspect) do
+      thing
+      trigger_channel("astro:sun:home:rise#event")
+    end
+    test_it(:on_start)
+    test_it(:trigger, "core.ItemStateUpdateTrigger", itemName: "Item1") { item.on }
+
+    it "passes through attachment for watch" do
+      Dir.mktmpdir("openhab-rspec") do |temp_dir|
+        attachment = nil
+        rule do
+          watch temp_dir, attach: 1
+          run { |event| attachment = event.attachment }
+        end
+
+        file = File.join(temp_dir, "file")
+        File.write(file, "hi")
+        wait do
+          expect(attachment).to be 1
+        end
+      end
     end
   end
 end

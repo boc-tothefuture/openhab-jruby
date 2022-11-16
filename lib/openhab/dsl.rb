@@ -640,8 +640,7 @@ module OpenHAB
       old_units
     end
 
-    private
-
+    # @!visibility private
     def try_parse_time_like(string)
       return string unless string.is_a?(String)
 

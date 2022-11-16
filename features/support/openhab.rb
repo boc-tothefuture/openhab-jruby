@@ -78,19 +78,6 @@ def rules_dir
   File.join(openhab_dir, "conf/automation/jsr223/ruby/personal/")
 end
 
-def conf_dir
-  File.join(openhab_dir, "conf/")
-end
-
-def temp_conf_file(path)
-  @temp_conf_files ||= []
-  @temp_conf_files << path
-end
-
-def delete_temp_conf_files
-  @temp_conf_file&.each { |f| File.rm_r f }
-end
-
 def ruby_lib_dir
   File.join(openhab_dir, "conf/automation/lib/ruby/personal/")
 end
@@ -169,11 +156,6 @@ end
 
 def truncate_log
   File.open(openhab_log, File::TRUNC) {} # rubocop:disable Lint/EmptyBlock
-end
-
-def delete_conf_foo
-  foo_dir = File.join(conf_dir, "foo")
-  FileUtils.rm_r(foo_dir) if File.exist? foo_dir
 end
 
 def delete_things

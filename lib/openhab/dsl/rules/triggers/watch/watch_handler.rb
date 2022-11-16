@@ -70,7 +70,7 @@ module OpenHAB
             # @param [StandardWatchEventKind] kind NIO watch event kind
             # @param [java.nio.Path] path that had an event
             def processWatchEvent(_event, kind, path)
-              @block.call(Events::WatchEvent.new(EVENT_TO_SYMBOL[kind], Pathname.new(path.to_s)).freeze)
+              @block.call(Events::WatchEvent.new(EVENT_TO_SYMBOL[kind], Pathname.new(path.to_s)))
             end
           end
           # rubocop:enable Naming/MethodName
