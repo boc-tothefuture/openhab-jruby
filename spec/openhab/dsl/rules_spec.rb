@@ -40,11 +40,11 @@ RSpec.describe OpenHAB::DSL::Rules do
         run { nil }
       end
 
-      expect(OpenHAB::DSL::TimerManager.instance.active_timer_count).to be 0
+      expect(OpenHAB::DSL::TimerManager.instance.instance_variable_get(:@timers).size).to be 0
       Item1.on
-      expect(OpenHAB::DSL::TimerManager.instance.active_timer_count).to be 1
+      expect(OpenHAB::DSL::TimerManager.instance.instance_variable_get(:@timers).size).to be 1
       remove_rule(my_rule)
-      expect(OpenHAB::DSL::TimerManager.instance.active_timer_count).to be 0
+      expect(OpenHAB::DSL::TimerManager.instance.instance_variable_get(:@timers).size).to be 0
     end
   end
 end

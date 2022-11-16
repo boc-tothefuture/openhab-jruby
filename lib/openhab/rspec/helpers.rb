@@ -104,7 +104,7 @@ module OpenHAB
         raise "Cannot execute timers when timers aren't mocked" unless self.class.mock_timers?
 
         now = ZonedDateTime.now
-        DSL::TimerManager.instance.instance_variable_get(:@timers).each do |t|
+        DSL::TimerManager.instance.instance_variable_get(:@timers).each_key do |t|
           t.execute if t.active? && t.execution_time <= now
         end
       end

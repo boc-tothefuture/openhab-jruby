@@ -158,6 +158,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 * *All* thread locals are carried over to rule executions and timers. This includes
   {OpenHAB::DSL.unit unit}, {OpenHAB::DSL.persistence persistence}, and
   {OpenHAB::DSL.ensure_states ensure_states}.
+* Fix thread safety issue that could cause timers to not be canceled when the script unloads.
 
 ## [4.45.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.1...4.45.2) (2022-10-02)
 

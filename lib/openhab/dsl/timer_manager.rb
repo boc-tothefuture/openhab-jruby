@@ -23,7 +23,7 @@ module OpenHAB
         @reentrant_timers = Hash.new { |h, k| h[k] = {} }
 
         # Tracks active timers
-        @timers = Set.new
+        @timers = java.util.concurrent.ConcurrentHashMap.new
       end
 
       #
@@ -40,7 +40,7 @@ module OpenHAB
       # Add a timer that is now active
       def add(timer)
         logger.trace("Adding #{timer} to timers")
-        @timers << timer
+        @timers[timer] = 1
 
         return unless timer.id
 
@@ -55,7 +55,7 @@ module OpenHAB
       #
       def delete(timer)
         logger.trace("Removing #{timer} from timers")
-        @timers.delete(timer)
+        @timers.remove(timer)
         return unless timer.id
 
         if (timer_set = timers_by_id[timer.id])
@@ -72,14 +72,11 @@ module OpenHAB
       #
       def cancel_all
         logger.trace("Canceling #{@timers.length} timers")
-        @timers.each(&:cancel)
-      end
-
-      #
-      # Counts how many timers are active
-      #
-      def active_timer_count
-        @timers.count(&:active?)
+        # don't use #each, in case timers are scheduling more timers
+        until @timers.empty?
+          timer = @timers.keys.first
+          timer.cancel
+        end
       end
     end
 
