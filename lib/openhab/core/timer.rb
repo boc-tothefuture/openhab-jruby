@@ -61,7 +61,7 @@ module OpenHAB
 
       # @return [String]
       def inspect
-        r = "#<#{self.class.name} #{"#{id} " if id}#{block.source_location.join(":")}"
+        r = "#<#{self.class.name} #{"#{id.inspect} " if id}#{block.source_location.join(":")}"
         if cancelled?
           r += " (cancelled)"
         else

@@ -72,6 +72,14 @@ module OpenHAB
       def rule_registry
         $scriptExtension.get("ruleRegistry")
       end
+
+      #
+      # @!attribute [r] rule_manager
+      # @return [org.openhab.core.automation.RuleManager] The OpenHAB rule manager/engine
+      #
+      def rule_manager
+        @rule_manager ||= OSGi.service("org.openhab.core.automation.RuleManager")
+      end
     end
   end
 end

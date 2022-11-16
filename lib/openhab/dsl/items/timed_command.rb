@@ -24,21 +24,35 @@ module OpenHAB
       # command will reschedule the timed command for that new duration.
       #
       module TimedCommand
-        # Stores information about timed commands
-        # @!visibility private
-
-        TimedCommandDetails = Struct.new(:item, :command, :was, :duration, :on_expire, :timer, :expired, :cancel_rule,
-                                         :rule_uid, keyword_init: true) do
+        # Provides information about why the expiration block of a
+        # {TimedCommand#command timed command} is being called.
+        TimedCommandDetails = Struct.new(:item,
+                                         :on_expire,
+                                         :timer,
+                                         :resolution,
+                                         :rule_uid,
+                                         :mutex,
+                                         keyword_init: true) do
+          # @return [true, false]
           def expired?
-            expired
+            resolution == :expired
           end
 
-          def canceled?
-            !expired?
+          # @return [true, false]
+          def cancelled?
+            resolution == :cancelled
           end
+
+          # @!visibility private
+          # @!attribute [rw] item
+          # @!attribute [rw] on_expire
+          # @!attribute [rw] timer
+          # @!attribute [rw] resolution
+          # @!attribute [rw] rule_uid
+          # @!attribute [rw] mutex
         end
 
-        @timed_commands = {}
+        @timed_commands = java.util.concurrent.ConcurrentHashMap.new
 
         class << self
           # @!visibility private
@@ -51,13 +65,19 @@ module OpenHAB
         # Sends command to an item for specified duration, then on timer expiration sends
         # the expiration command to the item
         #
+        # @note If a block is provided, and the timer is canceled because the
+        #   item changed state while it was waiting, the block will still be
+        #   executed. Be sure to check {TimedCommandDetails#expired? #expired?}
+        #   and/or {TimedCommandDetails#canceled? #canceled?} to determine why
+        #   the block was called.
+        #
         # @param [Command] command to send to object
         # @param [Duration] for duration for item to be in command state
         # @param [Command] on_expire Command to send when duration expires
-        # @param [Proc, nil] block
-        #   Optional block to invoke when timer expires. If provided,
-        #   `on_expire` is ignored and the block is expected to set the item
-        #   to the desired state or carry out some action.
+        # @yield If a block is provided, `on_expire` is ignored and the block
+        #   is expected to set the item to the desired state or carry out some
+        #   other action.
+        # @yieldparam [TimedCommandDetails] timed_command
         # @return [self]
         #
         # @example
@@ -72,19 +92,35 @@ module OpenHAB
           duration = binding.local_variable_get(:for)
           return super(command) unless duration
 
-          # Timer needs access to rule to disable, rule needs access to timer to cancel.
-          # Using a mutex to ensure neither fires before the other is constructed
-          semaphore = Mutex.new
+          on_expire = block if block
 
-          semaphore.synchronize do
-            timed_command_details = TimedCommand.timed_commands[self]
+          TimedCommand.timed_commands.compute(self) do |_key, timed_command_details|
             if timed_command_details.nil?
-              create_timed_command(command: command, duration: duration,
-                                   semaphore: semaphore, on_expire: on_expire, &block)
+              # no prior timed command
+              on_expire ||= default_on_expire(command)
+              super(command)
+              create_timed_command(duration: duration, on_expire: on_expire)
             else
-              logger.trace "Outstanding Timed Command #{timed_command_details} encountered - rescheduling"
-              timed_command_details.duration = duration # Capture updated duration
-              timed_command_details.timer.reschedule duration
+              timed_command_details.mutex.synchronize do
+                if timed_command_details.resolution
+                  # timed command that finished, but hadn't removed itself from the map yet
+                  # (it doesn't do so under the mutex to prevent a deadlock).
+                  # just create a new one
+                  on_expire ||= default_on_expire(command)
+                  super(command)
+                  create_timed_command(duration: duration, on_expire: on_expire)
+                else
+                  # timed command still pending; reset it
+                  logger.trace "Outstanding Timed Command #{timed_command_details} encountered - rescheduling"
+                  timed_command_details.on_expire = on_expire unless on_expire.nil?
+                  timed_command_details.timer.reschedule(duration)
+                  # disable the cancel rule while we send the new command
+                  Core.rule_manager.set_enabled(timed_command_details.rule_uid, false)
+                  super(command)
+                  Core.rule_manager.set_enabled(timed_command_details.rule_uid, true)
+                  timed_command_details
+                end
+              end
             end
           end
 
@@ -94,62 +130,51 @@ module OpenHAB
         private
 
         # Creates a new timed command and places it in the TimedCommand hash
-        def create_timed_command(command:, duration:, semaphore:, on_expire:, &block)
-          on_expire ||= default_on_expire(command)
-          timed_command_details = TimedCommandDetails.new(item: self, command: command, was: state,
-                                                          on_expire: on_expire, duration: duration)
+        def create_timed_command(duration:, on_expire:)
+          timed_command_details = TimedCommandDetails.new(item: self,
+                                                          on_expire: on_expire,
+                                                          mutex: Mutex.new)
 
-          # Send specified command after capturing current state
-          command(command)
-
-          timed_command_details.timer = timed_command_timer(timed_command_details, semaphore, &block)
-          timed_command_details.cancel_rule = TimedCommandCancelRule.new(timed_command_details, semaphore,
-                                                                         &block)
+          timed_command_details.timer = timed_command_timer(timed_command_details, duration)
+          cancel_rule = TimedCommandCancelRule.new(timed_command_details)
           timed_command_details.rule_uid = Core.automation_manager
-                                               .add_rule(timed_command_details.cancel_rule)
+                                               .add_rule(cancel_rule)
                                                .uid
+          Rules.script_rules[timed_command_details.rule_uid] = cancel_rule
           logger.trace "Created Timed Command #{timed_command_details}"
-          TimedCommand.timed_commands[self] = timed_command_details
+          timed_command_details
         end
 
         # Creates the timer to handle changing the item state when timer expires or invoking user supplied block
         # @param [TimedCommandDetailes] timed_command_details details about the timed command
-        # @param [Mutex] semaphore Semaphore to lock on to prevent race condition between rule and timer
         # @return [Timer] Timer
-        def timed_command_timer(timed_command_details, semaphore, &block)
-          DSL.after(timed_command_details.duration, id: self) do
-            semaphore.synchronize do
+        def timed_command_timer(timed_command_details, duration)
+          DSL.after(duration) do
+            timed_command_details.mutex.synchronize do
               logger.trace "Timed command expired - #{timed_command_details}"
-              cancel_timed_command_rule(timed_command_details)
-              timed_command_details.expired = true
-              if block
-                logger.trace "Invoking block #{block} after timed command for #{name} expired"
-                yield(timed_command_details)
+              DSL.remove_rule(timed_command_details.rule_uid)
+              timed_command_details.resolution = :expired
+              case timed_command_details.on_expire
+              when Proc
+                logger.trace "Invoking block #{timed_command_details.on_expire} after timed command for #{name} expired"
+                timed_command_details.on_expire.call(timed_command_details)
+              when Core::Types::UnDefType
+                update(timed_command_details.on_expire)
               else
                 command(timed_command_details.on_expire)
               end
-
-              TimedCommand.timed_commands.delete(timed_command_details.item)
             end
+            TimedCommand.timed_commands.delete(timed_command_details.item)
           end
-        end
-
-        # Cancels timed command rule
-        # @param [TimedCommandDetailed] timed_command_details details about the timed command
-        def cancel_timed_command_rule(timed_command_details)
-          logger.trace "Removing rule: #{timed_command_details.rule_uid}"
-          Rules.scripted_rule_provider.remove_rule(timed_command_details.rule_uid)
         end
 
         #
         # The default expire for ON/OFF is their inverse
         #
         def default_on_expire(command)
-          case format_type(command)
-          when ON then OFF
-          when OFF then ON
-          else state
-          end
+          return !command if command.is_a?(Core::Types::OnOffType)
+
+          raw_state
         end
 
         #
@@ -157,20 +182,20 @@ module OpenHAB
         #
         # @!visibility private
         class TimedCommandCancelRule < org.openhab.core.automation.module.script.rulesupport.shared.simple.SimpleRule
-          def initialize(timed_command_details, semaphore, &block)
+          def initialize(timed_command_details)
             super()
-            @semaphore = semaphore
             @timed_command_details = timed_command_details
-            @block = block
             # Capture rule name if known
             @thread_locals = ThreadLocal.persist
-            set_name("Cancels implicit timer for #{timed_command_details.item.name}")
-            set_triggers([Rules::RuleTriggers.trigger(
+            self.name = "Cancel implicit timer for #{timed_command_details.item.name}"
+            self.triggers = [Rules::RuleTriggers.trigger(
               type: Rules::Triggers::Changed::ITEM_STATE_CHANGE,
-              config: { "itemName" => timed_command_details.item.name,
-                        "previousState" => timed_command_details.command.to_s }
-            )])
+              config: { "itemName" => timed_command_details.item.name }
+            )]
           end
+
+          # Cleanup the rule; nothing to do here.
+          def cleanup; end
 
           #
           # Execute the rule
@@ -178,21 +203,22 @@ module OpenHAB
           # @param [Map] _mod map provided by OpenHAB rules engine
           # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
           #
-          #
-          # There is no feasible way to break this method into smaller components
           def execute(_mod = nil, inputs = nil)
-            @semaphore.synchronize do
-              ThreadLocal.thread_local(**@thread_locals) do
+            ThreadLocal.thread_local(**@thread_locals) do
+              @timed_command_details.mutex.synchronize do
                 logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\
                              "#{@timed_command_details.item.name}  because received event #{inputs}"
                 @timed_command_details.timer.cancel
-                $scriptExtension.get("ruleRegistry").remove(@timed_command_details.rule_uid)
-                TimedCommand.timed_commands.delete(@timed_command_details.item)
-                if @block
+                DSL.remove_rule(@timed_command_details.rule_uid)
+                @timed_command_details.resolution = :cancelled
+                if @timed_command_details.on_expire.is_a?(Proc)
                   logger.trace "Executing user supplied block on timed command cancelation"
-                  @block&.call(@timed_command_details)
+                  @timed_command_details.on_expire.call(@timed_command_details)
                 end
               end
+              TimedCommand.timed_commands.delete(@timed_command_details.item)
+            rescue Exception => e
+              logger.log_exception(e)
             end
           end
         end
