@@ -15,6 +15,24 @@ RSpec.describe OpenHAB::Core::Items::Proxy do
     expect(Switch1.hash).to eql Switch1.hash
   end
 
+  it "can be used in a Java map" do
+    map = java.util.concurrent.ConcurrentHashMap.new
+    map.put(Switch1, 1)
+    expect(map.get(Switch1)).to be 1
+  end
+
+  it "can be used in a Hash" do
+    hash = {}
+    hash[Switch1] = 1
+    expect(hash[Switch1]).to be 1
+  end
+
+  it "can be used in a Set" do
+    set = Set.new
+    set << Switch1
+    expect(set).to include(Switch1)
+  end
+
   it "still works with replaced items" do
     original = Switch1
 
