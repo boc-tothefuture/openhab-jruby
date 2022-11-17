@@ -156,6 +156,7 @@ jobs:
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: Cucumber
         run: bin/rake features
+        timeout-minutes: 8
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v3
         if: failure()

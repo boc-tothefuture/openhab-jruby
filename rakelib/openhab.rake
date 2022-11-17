@@ -142,7 +142,6 @@ namespace :openhab do
   directory OPENHAB_DIR
   directory @deploy_dir
   directory @state_dir
-  directory CUCUMBER_LOGS
 
   desc "Download Openhab and unzip it"
   task download: [OPENHAB_DIR] do |task|
@@ -303,7 +302,7 @@ namespace :openhab do
   end
 
   desc "Warmup OpenHab environment"
-  task warmup: [:prepare, @deploy_dir, CUCUMBER_LOGS] do
+  task warmup: [:prepare, @deploy_dir] do
     start
     openhab_log = File.join(OPENHAB_DIR, "userdata/logs/openhab.log")
 
@@ -314,12 +313,10 @@ namespace :openhab do
       File.foreach(openhab_log).grep(/OpenHAB warmup complete/).any?
     end
     rm dest_file
-    cp openhab_log, File.join(CUCUMBER_LOGS, "warmup.log")
-    cp karaf_log, File.join(CUCUMBER_LOGS, "karaf-warmup.log")
   end
 
   desc "Prepare local Openhab"
-  task prepare: [:download, :configure, :bundle, :deploy, CUCUMBER_LOGS]
+  task prepare: %i[download configure bundle deploy]
 
   desc "Setup local Openhab"
   task setup: %i[prepare stop]

@@ -11,7 +11,5 @@ PACKAGE_DIR = "pkg"
 
 TMP_DIR = File.expand_path("tmp")
 OPENHAB_DIR = File.join(TMP_DIR, "openhab")
-CUCUMBER_LOGS = File.join(TMP_DIR, "cucumber_logs")
 
 CLEAN << PACKAGE_DIR
-CLEAN << CUCUMBER_LOGS
