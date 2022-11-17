@@ -21,10 +21,4 @@ After("@reset_library") do
   start_openhab
 end
 
-After("@log_level_changed") do
-  set_log_level("org.openhab.automation.jruby", "TRACE")
-  set_log_level("org.openhab.automation.jrubyscripting", "TRACE")
-  set_log_level("org.openhab.core.automation", "TRACE")
-end
-
 prepare_openhab

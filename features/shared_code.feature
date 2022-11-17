@@ -11,7 +11,7 @@ Feature: shared_code
         logger.info("Shared Function Test")
       end
       """
-    Given code in a rules file
+    Given a rule
       """
       require "shared_file"
 

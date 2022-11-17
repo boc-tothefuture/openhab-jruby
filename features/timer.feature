@@ -5,7 +5,7 @@ Feature:  timer
     Given Clean OpenHAB with latest Ruby Libraries
 
   Scenario: Timers in script are cancelled if the script is removed
-    Given code in a rules file:
+    Given a rule:
       """
       logger.info("Rule Started")
       after 5.seconds do

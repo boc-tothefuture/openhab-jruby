@@ -5,7 +5,7 @@ Feature:  logging
     Given Clean OpenHAB with latest Ruby Libraries
 
   Scenario: Logger works after requiring third party gems
-    Given code in a rules file
+    Given a rule
       """
       gemfile do
         source 'https://rubygems.org'
@@ -15,4 +15,4 @@ Feature:  logging
       logger.info("OpenHAB Rules!")
       """
     When I deploy the rules file
-    Then It should log "OpenHAB Rules!" within 5 seconds
+    Then It should log 'OpenHAB Rules!' within 5 seconds
