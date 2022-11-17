@@ -116,7 +116,7 @@ jobs:
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: RSpec
         run: bin/rspec --format progress --format html --out rspec.html
-        timeout-minutes: 2
+        timeout-minutes: 4
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v3
         if: failure()
