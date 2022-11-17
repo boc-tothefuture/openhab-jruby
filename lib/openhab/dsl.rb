@@ -85,6 +85,12 @@ module OpenHAB
         logger.trace { builder.inspect }
         builder.build(script)
       rescue Exception => e
+        if (defined?(::RSpec::Expectations::ExpectationNotMetError) &&
+            e.is_a?(::RSpec::Expectations::ExpectationNotMetError)) ||
+           (defined?(::RSpec::Mocks::MockExpectationError) && e.is_a?(::RSpec::Mocks::MockExpectationError))
+          raise e
+        end
+
         builder.send(:logger).log_exception(e)
       end
     end

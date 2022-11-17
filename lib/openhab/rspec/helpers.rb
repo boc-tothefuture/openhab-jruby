@@ -146,7 +146,8 @@ module OpenHAB
 
         begin
           yield
-        rescue ::RSpec::Expectations::ExpectationNotMetError
+        rescue ::RSpec::Expectations::ExpectationNotMetError,
+               ::RSpec::Mocks::MockExpectationError
           raise if Time.now > now + how_long
 
           sleep 0.1

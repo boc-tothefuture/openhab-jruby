@@ -686,6 +686,58 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       end
     end
 
+    describe "#cron" do
+      it "can use cron syntax" do
+        attachment = nil
+        rule do
+          cron (Time.now + 2).strftime("%S %M %H ? * ?"), attach: 1
+          run { |event| attachment = event.attachment }
+        end
+        wait(4.seconds) do
+          expect(attachment).to be 1
+        end
+      end
+
+      it "can use specifiers" do
+        cron_trigger = instance_double(OpenHAB::DSL::Rules::Triggers::Cron)
+        allow(OpenHAB::DSL::Rules::Triggers::Cron).to receive(:new).and_return(cron_trigger)
+        expect(cron_trigger).to receive(:trigger).with(config: { "cronExpression" => "0 5 12 ? * ? *" }, attach: nil)
+        rule do
+          cron minute: 5, hour: 12
+        end
+      end
+
+      it "raises ArgumentError about incorrect specifiers" do
+        rspec = self
+        rule do
+          rspec.expect { cron made_up: 3, stuff: 5 }.to raise_error(ArgumentError, "unknown keywords: :made_up, :stuff")
+        end
+      end
+    end
+
+    describe "#every" do # rubocop:disable RSpec/EmptyExampleGroup
+      def self.generate(name, cron_expression, *every_args, attach: nil, **kwargs)
+        it name, caller: caller do
+          rspec = self
+          executed = false
+          rule do
+            rspec.expect(self).to rspec.receive(:cron).with(cron_expression, attach: attach)
+            every(*every_args, attach: attach, **kwargs)
+            executed = true
+          end
+          expect(executed).to be true
+        end
+      end
+
+      generate("uses cron for :seconds", "* * * ? * ? *", :second)
+      generate("passes through attachment", "* * * ? * ? *", :second, attach: 1)
+      generate("can use durations", "*/5 * * ? * ? *", 5.seconds)
+      generate("can use MonthDay and LocalTime", "0 0 12 17 11 ? *", MonthDay.parse("11-17"),
+               at: LocalTime.parse("12:00"))
+      generate("can use MonthDay as a string", "0 0 12 17 11 ? *", "11-17", at: LocalTime.parse("12:00"))
+      generate("can use LocalTime a string", "0 0 12 17 11 ? *", MonthDay.parse("11-17"), at: "12:00")
+    end
+
     # rubocop:disable RSpec/InstanceVariable
     describe "#watch" do
       around do |example|

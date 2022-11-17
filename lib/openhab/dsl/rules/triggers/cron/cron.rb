@@ -113,8 +113,19 @@ module OpenHAB
           # @return [Hash] map describing cron expression
           #
           def self.from_fields(fields)
-            fields = fields.transform_values { |value| value.to_s.gsub(/\s+/, "") }
-            expression_map = CRON_EXPRESSION_MAP.merge(fields)
+            extra_fields = fields.keys - CRON_EXPRESSION_MAP.keys
+            unless extra_fields.empty?
+              raise ArgumentError,
+                    "unknown keyword#{"s" if extra_fields.size > 1}: #{extra_fields.map(&:inspect).join(", ")}"
+            end
+
+            fields = fields.transform_values { |value| value.to_s.delete(" ") }
+            # find the first expression map that has a field from fields.
+            # this ensure more-specific fields get set to 0, not *
+            base_key = EXPRESSION_MAP.keys.find { |field, _| fields.key?(field) }
+            base_expression = EXPRESSION_MAP[base_key]
+            expression_map = base_expression.merge(fields)
+
             map_to_cron(expression_map)
           end
 
