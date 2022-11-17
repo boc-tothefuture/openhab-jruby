@@ -626,7 +626,7 @@ Furthermore, you can manipulate the managed timers using the built-in {OpenHAB::
 rule 'cancel all timers' do
   received_command Cancel_All_Timers, to: ON # Send a command to this item to cancel all timers
   run do
-    gOutdoorLights.each do |item_as_timer_id|
+    gOutdoorLights.members.each do |item_as_timer_id|
       timers.cancel(item_as_timer_id)
     end
   end
@@ -635,7 +635,7 @@ end
 rule 'reschedule all timers' do
   received_command Reschedule_All_Timers, to: ON # Send a command to this item to restart all timers
   run do
-    gOutdoorLights.each do |item_as_timer_id|
+    gOutdoorLights.members.each do |item_as_timer_id|
       timers.reschedule(item_as_timer_id)
     end
   end
