@@ -6,8 +6,7 @@ require "singleton"
 require "tty-command"
 require "fileutils"
 
-Item = Struct.new(:type, :name, :state, :label, :tags, :groups, :group_type, :pattern, :function, :params,
-                  keyword_init: true)
+Item = Struct.new(:type, :name, keyword_init: true)
 
 def openhab_dir
   File.realpath "tmp/openhab"
@@ -127,17 +126,8 @@ def check_log_regexp(regexp)
   File.foreach(openhab_log).grep(regexp).any?
 end
 
-def add_group(name:, group_type: nil, groups: nil, function: nil, params: nil)
-  item = Item.new(type: "Group", name: name, groups: groups, group_type: group_type, function: function, params: params)
-  Rest.add_item(item: item)
-end
-
 def add_item(item:)
   Rest.add_item(item: item)
-end
-
-def link_item(item_name:, channel_uid:)
-  Rest.link_item(item_name: item_name, channel_uid: channel_uid)
 end
 
 def install_feature(feature)
@@ -190,10 +180,6 @@ def delete_items
   return unless deleted
 
   wait_until(seconds: 30, msg: "Items not empty") { Rest.items.length.zero? }
-end
-
-def set_log_level(bundle, level)
-  openhab_client("log:set #{level.upcase} #{bundle}")
 end
 
 def enable_basic_auth

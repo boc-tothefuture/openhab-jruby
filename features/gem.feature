@@ -5,7 +5,7 @@ Feature:  gem
     Given Clean OpenHAB with latest Ruby Libraries
 
   Scenario: User can install a gem with bundler
-    Given code in a rules file
+    Given a rule
       """
       gemfile do
         source 'https://rubygems.org'
