@@ -43,20 +43,6 @@ module OpenHAB
       end
 
       #
-      # JRuby isn't respecting $RUBYLIB when run embedded inside of OpenHAB, so do it manually
-      #
-      # @return [void]
-      #
-      # @!visibility private
-      def add_rubylib_to_load_path
-        ENV["RUBYLIB"]&.split(File::PATH_SEPARATOR)&.each do |path|
-          next if path.empty?
-
-          $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
-        end
-      end
-
-      #
       # @!attribute [r] automation_manager
       # @return [org.openhab.core.automation.module.script.rulesupport.shared.ScriptedAutomationManager]
       #   The OpenHAB Automation manager.

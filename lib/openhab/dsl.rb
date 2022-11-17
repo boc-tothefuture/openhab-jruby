@@ -675,7 +675,6 @@ module OpenHAB
 end
 
 OpenHAB::Core.wait_till_openhab_ready
-OpenHAB::Core.add_rubylib_to_load_path
 
 # import Items classes into global namespace
 OpenHAB::Core::Items.import_into_global_namespace
