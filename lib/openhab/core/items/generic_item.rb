@@ -65,13 +65,13 @@ module OpenHAB
         #
         # Send a command to this item
         #
-        # @param [Command] command to send to object
+        # @param [Command] command command to send to the item
         # @return [self]
         #
         # @see DSL::Items::TimedCommand#command
         #
         def command(command)
-          command = format_type(command)
+          command = format_command(command)
           logger.trace "Sending Command #{command} to #{name}"
           org.openhab.core.model.script.actions.BusEvent.sendCommand(self, command)
           self
@@ -87,13 +87,13 @@ module OpenHAB
         #
         # Send an update to this item
         #
-        # @param [State] update the item
+        # @param [State] state
         # @return [self]
         #
-        def update(update)
-          update = format_type(update)
-          logger.trace "Sending Update #{update} to #{name}"
-          org.openhab.core.model.script.actions.BusEvent.postUpdate(self, update)
+        def update(state)
+          state = format_update(state)
+          logger.trace "Sending Update #{state} to #{name}"
+          org.openhab.core.model.script.actions.BusEvent.postUpdate(self, state)
           self
         end
 
@@ -291,11 +291,29 @@ module OpenHAB
         #   Send the {REFRESH} command to the item
         #   @return [GenericItem] `self`
 
+        # @!visibility private
+        def format_command(command)
+          command = format_type(command)
+          return command if command.is_a?(Types::Command)
+
+          command = command.to_s
+          org.openhab.core.types.TypeParser.parse_command(getAcceptedCommandTypes, command) || command
+        end
+
+        # @!visibility private
+        def format_update(state)
+          state = format_type(state)
+          return state if state.is_a?(Types::State)
+
+          state = state.to_s
+          org.openhab.core.types.TypeParser.parse_state(getAcceptedDataTypes, state) || state
+        end
+
         # formats a {Types::Type} to send to the event bus
         # @!visibility private
         def format_type(type)
           # actual Type types can be sent directly without conversion
-          # make sure to use Type, because this method is use for both
+          # make sure to use Type, because this method is used for both
           # #update and #command
           return type if type.is_a?(Types::Type)
 

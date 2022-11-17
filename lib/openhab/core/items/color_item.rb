@@ -17,10 +17,6 @@ module OpenHAB
       #
       # @example Sending commands
       #   HueBulb << "#ff0000" # send 'red' as a command
-      #   HueBulb << {red: 255, green: 0, blue: 0} # send 'red' as a command
-      #   HueBulb << {r: 255, g: 0, b: 0} # send 'red' as a command
-      #   HueBulb << {hue: 100, saturation: 0, brightness: 0} # send HSB components as a hash
-      #   HueBulb << {h: 100, s: 0, b: 0} # send HSB components  as a hash
       #   HueBulb.on
       #   HueBulb.dim
       #
@@ -35,40 +31,18 @@ module OpenHAB
       #   HueBulb.state.on? # => true
       #   HueBulb.state.red.to_byte # => 255
       #   HueBulb.state.blue.to_byte # => 0
-      #   HueBulb.state.to_h # => {:hue=>0 °, :saturation=>100%, :brightness=>100%}
-      #   HueBulb.state.to_h(:rgb) # => {:red=>255, :green=>0, :blue=>0}
-      #   HueBulb.state.to_a # => [0 °, 100%, 100%]
-      #   HueBulb.state.to_a(:rgb) # => [255, 0, 0]
       #
       # @!attribute [r] state
       #   @return [HSBType, nil]
       #
       class ColorItem < DimmerItem
-        # string commands aren't allowed on ColorItems, so try to implicitly
-        # convert it to an HSBType
+        # Make sure to do the String => HSBType conversion in Ruby,
+        # where we add support for hex
         # @!visibility private
-        def format_type(command)
-          return format_hash(command.to_hash) if command.respond_to?(:to_hash)
-          return Types::HSBType.new(command) if command.respond_to?(:to_str)
+        def format_type(type)
+          return Types::HSBType.new(type) if type.respond_to?(:to_str)
 
           super
-        end
-
-        private
-
-        # Mapping of hash values sets to conversion methods
-        HASH_KEYS = { %i[r g b] => :from_rgb,
-                      %i[red green blue] => :from_rgb,
-                      %i[h s b] => :from_hsb,
-                      %i[hue saturation brightness] => :from_hsb }.freeze
-
-        def format_hash(hash)
-          hash = hash.transform_keys(&:to_sym)
-          HASH_KEYS.each do |key_set, method|
-            values = hash.values_at(*key_set).compact
-            return Types::HSBType.public_send(method, *values) if values.length == 3
-          end
-          raise ArgumentError, "Supplied hash (#{hash}) must contain one of the following keysets #{keys.keys}"
         end
       end
     end

@@ -10,7 +10,7 @@ module OpenHAB
       module ProfileCallback
         class << self
           #
-          # Wraps the parent class's method to parse non-Types.
+          # Wraps the parent class's method to format non-Types.
           #
           # @!macro def_state_parsing_method
           #   @!method $1($2)
@@ -18,14 +18,10 @@ module OpenHAB
           # @!visibility private
           def def_state_parsing_method(method, param_name)
             class_eval <<~RUBY, __FILE__, __LINE__ + 1
-              def #{method}(state)                                                                                # def handle_command(state)
-                  state = link.item.format_type(state)                                                            #   state = link.item.format_type(state)
-                  if state.is_a?(String)                                                                          #   if state.is_a?(String)
-                    types = link.item.#{param_name == :command ? :accepted_command_types : :accepted_data_types}  #     types = link.item.accepted_command_types
-                    state = org.openhab.core.types.TypeParser.parse_state(types.map(&:java_class), state)         #     state = org.openhab.core.types.TypeParser.parse_state(types.map(&:java_class), state)
-                  end                                                                                             #   end
-                  super(state)                                                                                    #   super(state)
-              end                                                                                                 # end
+              def #{method}(type)                                                             # def handle_command(type)
+                type = link.item.format_#{param_name == :state ? :update : param_name}(type)  #   type = link.item.format_command(type)
+                super(type)                                                                   #   super(type)
+              end                                                                             # end
             RUBY
           end
         end

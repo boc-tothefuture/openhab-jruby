@@ -101,7 +101,7 @@ module OpenHAB
         #
         # Comparison
         #
-        # @param [NumericType, Numeric, String]
+        # @param [NumericType, Numeric]
         #   other object to compare to
         #
         # @return [Integer, nil] -1, 0, +1 depending on whether `other` is
@@ -112,28 +112,7 @@ module OpenHAB
         def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
           if other.is_a?(HSBType)
-            to_a <=> other.to_a
-          elsif other.respond_to?(:to_str)
-            self <=> HSBType.new(other)
-          else
-            super
-          end
-        end
-
-        #
-        # Type Coercion
-        #
-        # Coerce object to a HSBType
-        #
-        # @param [NumericType, Numeric, String]
-        #   other object to coerce to a HSBType
-        #
-        # @return [[HSBType, HSBType], nil]
-        #
-        def coerce(other)
-          logger.trace("Coercing #{self} as a request from #{other.class}")
-          if other.respond_to?(:to_str)
-            [HSBType.new(other.to_str), self]
+            [brightness, hue, saturation] <=> [other.brightness, other.hue, other.saturation]
           else
             super
           end
@@ -172,29 +151,6 @@ module OpenHAB
         # @!visibility private
         def to_s
           "#{hue},#{saturation},#{brightness}"
-        end
-
-        #
-        # Convert the HSBType to a hash
-        # @param [:hsb, :rgb] format for hash
-        # @return [Hash] in requested format
-        def to_h(format = :hsb)
-          values = to_a(format)
-          keys = (format == :hsb ? %i[hue saturation brightness] : %i[red green blue])
-          keys.zip(values).to_h
-        end
-
-        #
-        # Convert the HSBType to an array of values
-        # @param [:hsb, :rgb] format for elements in the array
-        # @return [Array] of HSBType components in requested format
-        def to_a(format = :hsb)
-          case format
-          when :hsb then [hue, saturation, brightness]
-          when :rgb then [red, green, blue].map(&:to_byte)
-          else
-            raise ArgumentError, "Unsupported format #{format}"
-          end
         end
 
         # @!attribute [r] saturation

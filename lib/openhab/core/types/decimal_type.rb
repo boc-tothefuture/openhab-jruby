@@ -92,7 +92,7 @@ module OpenHAB
         #
         def <=>(other)
           logger.trace("(#{self.class}) #{self} <=> #{other} (#{other.class})")
-          if other.is_a?(QuantityType)
+          if other.is_a?(QuantityType) || other.is_a?(HSBType)
             (other <=> self)&.-@
           elsif other.is_a?(self.class)
             compare_to(other)

@@ -11,12 +11,8 @@ RSpec.describe OpenHAB::Core::Items::LocationItem do
   end
 
   describe "can be updated" do
-    specify { expect((item << "30,20").state).to eq "30,20" }
-    specify { expect((item << "30,20,80").state).to eq "30,20,80" }
-    specify { expect((item << PointType.new("40,20")).state).to eq "40,20" }
-    specify { expect((item << { lat: 30, long: 30 }).state).to eq "30,30" }
-    specify { expect((item << { latitude: 30, longitude: 30 }).state).to eq "30,30" }
-    specify { expect((item << { lat: 30, long: 30, alt: 80 }).state).to eq "30,30,80" }
-    specify { expect((item << { latitude: 30, longitude: 30, altitude: 80 }).state).to eq "30,30,80" }
+    specify { expect((item << "30,20").state).to eq PointType.new("30,20") }
+    specify { expect((item << "30,20,80").state).to eq PointType.new("30,20,80") }
+    specify { expect((item << PointType.new("40,20")).state).to eq PointType.new("40,20") }
   end
 end

@@ -85,6 +85,11 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {QuantityType} is no longer implicitly
   convertible and comparable against Strings. Use the `|` operator for easy
   construction of {QuantityType}s: `10 | "°F"`.
+* {HSBType} is no longer convertible and comparable against Strings, Hashes,
+  and Arrays. Just construct an HSBType. Sending a HTML hex color as a string
+  as a command is still supported.
+* {PointType} is no longer convertible and comparable against Strings and
+  Hashes. Just construct a PointType. Send strings as a command is still supported.
 * {QuantityType} can no longer be compared against `Numeric` or {DecimalType} outside
   a {OpenHAB::DSL.unit unit} block. Either compare it against another QuantityType, or
   convert it with to_f first, perform the comparison inside a

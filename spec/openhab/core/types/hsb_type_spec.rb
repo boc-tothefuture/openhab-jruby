@@ -29,31 +29,6 @@ RSpec.describe OpenHAB::Core::Types::HSBType do
     specify { expect(INCREASE).not_to be === HSBType.new("0,0,0") }
   end
 
-  describe "conversion to hashes and arrays" do
-    let(:state) { HSBType::RED }
-
-    specify do
-      expect(state.to_h).to eql({
-                                  hue: 0 | "°",
-                                  saturation: PercentType::HUNDRED,
-                                  brightness: PercentType::HUNDRED
-                                })
-    end
-
-    specify do
-      expect(state.to_h(:hsb)).to eql({
-                                        hue: 0 | "°",
-                                        saturation: PercentType::HUNDRED,
-                                        brightness: PercentType::HUNDRED
-                                      })
-    end
-
-    specify { expect(state.to_h(:rgb)).to eql({ red: 255, green: 0, blue: 0 }) }
-    specify { expect(state.to_a).to eql [0 | "°", PercentType::HUNDRED, PercentType::HUNDRED] }
-    specify { expect(state.to_a(:hsb)).to eql [0 | "°", PercentType::HUNDRED, PercentType::HUNDRED] }
-    specify { expect(state.to_a(:rgb)).to eql [255, 0, 0] }
-  end
-
   describe "comparisons" do
     specify { expect(HSBType::RED).to eq HSBType::RED }
     specify { expect(HSBType::RED != HSBType::RED).to be false }

@@ -30,16 +30,28 @@ module OpenHAB
           # check if this item is in the command's state before actually
           # sending the command
           %i[command update].each do |ensured_method|
-            define_method(ensured_method) do |command|
-              return super(command) unless Thread.current[:openhab_ensure_states]
+            # def command(state)
+            #   return super(state) unless Thread.current[:openhab_ensure_states]
+            #
+            #   logger.trace do
+            #     "#{name} ensure #{state}, format_command: #{format_command(state)}, current state: #{self.state}"
+            #   end
+            #   return if self.state == format_command(state)
+            #
+            #   super(state)
+            # end
+            class_eval <<~RUBY, __FILE__, __LINE__ + 1 # rubocop:disable Style/DocumentDynamicEvalDefinition
+              def #{ensured_method}(state)
+                return super(state) unless Thread.current[:openhab_ensure_states]
 
-              logger.trace do
-                "#{name} ensure #{command}, format_type: #{format_type(command)}, current state: #{state}"
+                logger.trace do
+                  "\#{name} ensure \#{state}, format_#{ensured_method}: \#{format_#{ensured_method}(state)}, current state: \#{self.state}"
+                end
+                return if self.state == format_#{ensured_method}(state)
+
+                super(state)
               end
-              return if state == format_type(command)
-
-              super(command)
-            end
+            RUBY
           end
         end
 

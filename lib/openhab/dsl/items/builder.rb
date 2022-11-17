@@ -492,15 +492,7 @@ module OpenHAB
           item.metadata["autoupdate"] = autoupdate.to_s unless autoupdate.nil?
           item.metadata["expire"] = expire if expire
           item.metadata["stateDescription"] = { "pattern" => format } if format
-          unless state.nil?
-            state = self.state
-            state = item.format_type(state) unless state.is_a?(State)
-            unless state.is_a?(org.openhab.core.types.State)
-              state = org.openhab.core.types.TypeParser.parse_state(item.accepted_data_types.map(&:java_class),
-                                                                    state.to_s)
-            end
-            item.state = state
-          end
+          item.state = item.format_update(state) unless state.nil?
           item
         end
 
