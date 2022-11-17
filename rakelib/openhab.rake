@@ -302,27 +302,6 @@ namespace :openhab do
     rm_rf OPENHAB_DIR
   end
 
-  desc "Create a Dev Dump in OpenHAB and wait until its complete"
-  task :dump do
-    dumps = File.join(OPENHAB_DIR, "userdata", "*.zip")
-
-    puts "Deleting any existing dumps"
-    dump = Dir[dumps].each { |dump_file| rm dump_file }
-
-    karaf("dev:dump-create --no-heap-dump")
-
-    wait_for(30, "Dump to be created") do
-      Dir[dumps].any?
-    end
-    dump = Dir[dumps].first
-    puts "Found dev dump #{dump}"
-    dump_sizes = Array.new(10)
-    wait_for(120, "Dump size to not increase for 10 seconds") do
-      dump_sizes << File.size(dump)
-      dump_sizes.last(10).uniq.length == 1
-    end
-  end
-
   desc "Warmup OpenHab environment"
   task warmup: [:prepare, @deploy_dir, CUCUMBER_LOGS] do
     start

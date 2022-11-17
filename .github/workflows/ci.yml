@@ -156,13 +156,10 @@ jobs:
           key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
       - name: Cucumber
         run: bin/rake features
-      - name: Generate OpenHAB Dump
-        run: bin/rake openhab:dump
-        if: failure()
       - name: Upload OpenHAB Logs
         uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: OpenHAB-logs-${{ github.workflow }}-${{ github.run_number }}-${{ matrix.index }}
-          path: tmp/
+          name: Cucumber-logs-${{ matrix.openhab_version }}
+          path: tmp/openhab/userdata/logs
           retention-days: 2
