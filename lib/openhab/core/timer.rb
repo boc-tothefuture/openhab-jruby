@@ -32,8 +32,12 @@ module OpenHAB
       def_delegator :@timer, :has_terminated, :terminated?
       def_delegators :@timer, :execution_time, :active?, :cancelled?, :running?
 
+      # @return [Object, nil]
+      attr_accessor :id
+
       # @!visibility private
-      attr_reader :id, :block
+      # @!visibility private
+      attr_reader :block
 
       #
       # Create a new Timer Object
@@ -55,8 +59,7 @@ module OpenHAB
           # for auto-conversion of block to interface, so use .impl
           org.eclipse.xtext.xbase.lib.Procedures::Procedure0.impl { execute }
         )
-        yield self
-        @timer.reschedule(new_execution_time(@time))
+        reschedule(@time)
       end
 
       # @return [String]
@@ -81,7 +84,7 @@ module OpenHAB
       # @return [self]
       #
       def reschedule(time = nil)
-        DSL::TimerManager.instance.add(self)
+        DSL.timers.add(self)
         @timer.reschedule(new_execution_time(time || @time))
         self
       end
@@ -92,7 +95,7 @@ module OpenHAB
       # @return [true,false] True if cancel was successful, false otherwise
       #
       def cancel
-        DSL::TimerManager.instance.delete(self)
+        DSL.timers.delete(self)
         @timer.cancel
       end
 
@@ -104,10 +107,12 @@ module OpenHAB
       # @return [void]
       #
       def execute
-        DSL::TimerManager.instance.delete(self)
+        last_execution_time = execution_time
         DSL::ThreadLocal.thread_local(**@thread_locals) do
           @block.call(self)
         end
+        # don't remove ourselves if we were rescheduled in the block
+        DSL.timers.delete(self) if execution_time == last_execution_time
       end
 
       #

@@ -136,6 +136,11 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {OpenHAB::Core::Items::Persistence Persistence} predicates are no longer
   aliased without the `?` (i.e. you must call `#changed_since?`, not
   `#changed_since`).
+* Timers with IDs are no longer uniqueified by where they were created. Make
+  sure you're using a completely unique timer ID if you're using them in
+  multiple locations. For example,
+  `after(1.minute, id: [:this_logical_usage, event.item])`. This makes it
+  possible to schedule the same logically re-entrant timer from multiple rules.
 
 ### Features
 
@@ -150,6 +155,8 @@ here is a non-exhaustive list of significant departures from the original gem:
   directly from {OpenHAB::DSL}.
 * Rule IDs are now generated from the rule name if a name is given, but not
   an id.
+* {OpenHAB::DSL.timers timers} now returns {OpenHAB::DSL::TimerManager an object}
+  that can be used to thread-safely schedule/reschedule/cancel timers by ID.
 
 ### Bug Fixes
 

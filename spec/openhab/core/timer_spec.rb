@@ -128,9 +128,10 @@ RSpec.describe OpenHAB::Core::Timer do
       end
 
       it "reuses the same timer if an id is given" do
-        timer1 = start_timer(5.seconds)
+        timer1 = after(5.seconds, id: "id") { nil }
         expect(timer1.execution_time.to_i).to be 5.seconds.from_now.to_i
-        start_timer(5.seconds)
+        after(5.seconds, id: "id") { nil }
+
         expect(timer1).to be_cancelled
       end
 
@@ -142,20 +143,36 @@ RSpec.describe OpenHAB::Core::Timer do
       end
 
       it "can find a timer by id" do
-        timer = start_timer(5.seconds)
-        expect(timers["id"].to_a).to eql [timer]
+        after(5.seconds, id: "id") { nil }
+
+        expect(timers).to include("id")
       end
 
       it "removes the timer when canceled" do
-        start_timer(5.seconds)
-        timers["id"].cancel
-        expect(timers).not_to have_key("id")
+        after(5.seconds, id: "id") { nil }
+
+        timers.cancel("id")
+        expect(timers).not_to include("id")
       end
 
-      it "can reschedule a set of timers" do
-        start_timer(5.seconds)
-        timers["id"].reschedule(1.second)
-        expect(timers["id"].first.execution_time.to_i).to be 1.second.from_now.to_i
+      it "can reschedule a timer by id" do
+        timer1 = after(5.seconds, id: "id") { nil }
+        timer2 = timers.reschedule("id", 1.second)
+        expect(timer2).to be timer1
+        expect(timer1.execution_time.to_i).to be 1.second.from_now.to_i
+      end
+
+      it "can avoid rescheduling timers that already exist" do
+        first_executed = second_executed = false
+        timer1 = after(5.seconds, id: "id") { first_executed = true }
+        timer2 = after(10.seconds, id: "id", reschedule: false) { second_executed = false }
+        expect(timer2).to be timer1
+
+        next unless self.class.mock_timers?
+
+        time_travel_and_execute_timers(20.seconds)
+        expect(first_executed).to be true
+        expect(second_executed).to be false
       end
     end
   end
@@ -175,6 +192,53 @@ RSpec.describe OpenHAB::Core::Timer do
 
     it "mocks timers" do
       expect(self.class.mock_timers?).to be true
+    end
+
+    describe "TimerManager#schedule" do
+      it "can _not_ schedule anything if you want" do
+        timers.schedule("id") do |timer|
+          expect(timer).to be_nil
+          nil
+        end
+      end
+
+      it "can schedule a timer" do
+        timer1 = nil
+        executed = false
+        timer2 = timers.schedule("id") do |_|
+          timer1 = after(5.seconds) { executed = true }
+        end
+        expect(timer2).not_to be_nil
+        expect(timer2).to be timer1
+        expect(timer1.id).to eql "id"
+        expect(executed).to be false
+        expect(timers).to include("id")
+
+        timer3 = timers.schedule("id") do |timer|
+          expect(timer).to be timer1
+          timer
+        end
+        expect(timer3).to be timer1
+
+        time_travel_and_execute_timers(10.seconds)
+        expect(executed).to be true
+      end
+
+      it "can reschedule an existing timer" do
+        executed = false
+        timers.schedule("id") do |_|
+          after(5.seconds) { executed = true }
+        end
+
+        timers.schedule("id") do |timer|
+          timer.reschedule(10.seconds)
+        end
+
+        time_travel_and_execute_timers(7.seconds)
+        expect(executed).to be false
+        time_travel_and_execute_timers(7.seconds)
+        expect(executed).to be true
+      end
     end
   end
 end

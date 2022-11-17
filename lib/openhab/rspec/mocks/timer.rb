@@ -54,6 +54,8 @@ module OpenHAB
           @executed = false
 
           DSL::TimerManager.instance.add(self)
+
+          self
         end
 
         def execute

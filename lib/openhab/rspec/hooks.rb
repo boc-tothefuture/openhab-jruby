@@ -79,7 +79,7 @@ module OpenHAB
           Core::Items::Metadata::NamespaceHash.registry.remove_provider(@metadata_provider)
           @metadata_provider.restore_parent
           @profile_factory_registration.unregister
-          DSL::TimerManager.instance.cancel_all
+          timers.cancel_all
           # timers and rules have already been canceled, so we can safely just
           # wipe this
           DSL::Items::TimedCommand.timed_commands.clear

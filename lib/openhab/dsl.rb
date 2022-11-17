@@ -270,12 +270,11 @@ module OpenHAB
     end
 
     #
-    # Provides access to the hash for mapping timer ids created by {after}
-    # to the set of active timers associated with that id
+    # Provides access to timers created by {after}
     #
-    # @return [Hash] hash of user specified ids to {TimerSet}
+    # @return [TimerManager]
     def timers
-      TimerManager.instance.timers_by_id
+      TimerManager.instance
     end
 
     # @!group Utilities
@@ -283,32 +282,35 @@ module OpenHAB
     #
     # Create a timer and execute the supplied block after the specified duration
     #
-    # ### Reentrant Timer
+    # ### Reentrant Timers
     #
-    # Timers with an id are reentrant, by id and block. Reentrant means that when the same id and block are encountered,
+    # Timers with an id are reentrant by id. Reentrant means that when the same id is encountered,
     # the timer is rescheduled rather than creating a second new timer.
     #
     # This removes the need for the usual boilerplate code to manually keep track of timer objects.
     #
-    # ### Managing Timers with `id`
+    # Timers with `id` can be managed with the built-in {timers} object.
     #
-    # Timers with `id` can be managed with the built-in {timers} hash. Multiple timer blocks can share
-    # the same `id`, which is why `timers[id]` returns a {TimerSet} object. It is a descendant of `Set`
-    # and it contains a set of timers associated with that id.
+    # When a timer is cancelled, it will be removed from the object.
     #
-    # When a timer is cancelled, it will be removed from the set. Once the set is empty, it will be removed
-    # from `timers[]` hash and `timers[id]` will return nil.
+    # Be sure that your ids are unique. For example, if you're using {GenericItem items} as your
+    # ids, you either need to be sure you don't use the same item for multiple logical contexts,
+    # or you need to make your id more specific, by doing something like embedding the item in
+    # array with a symbol of the timer's purpose, like `[:vacancy, item]`.
     #
     # @see timers
     # @see Rules::Builder#changed
     # @see Items::TimedCommand
     #
-    # @param [java.time.temporal.TemporalAmount, #to_zoned_date_time, Proc] duration after which to execute the block
-    # @param [Object] id to associate with timer. The timer can be accessed with the {timers} hash.
-    # @param [Block] block to execute, block is passed a Timer object
+    # @param [java.time.temporal.TemporalAmount, #to_zoned_date_time, Proc] duration
+    #   Duration after which to execute the block
+    # @param [Object] id ID to associate with timer. The timer can be managed via {timers}.
+    # @param [true,false] reschedule Reschedule the timer if it already exists.
+    # @yield Block to execute when the timer is elapsed.
     # @yieldparam [Core::Timer] timer
     #
-    # @return [Core::Timer]
+    # @return [Core::Timer] if `reschedule` is false, the existing timer.
+    #   Otherwise the new timer.
     #
     # @example Create a simple timer
     #   after 5.seconds do
@@ -339,7 +341,7 @@ module OpenHAB
     #
     #   mytimer.cancel
     #
-    # @example Reentrant timers will automatically reschedule if the same block is encountered again
+    # @example Reentrant timers will automatically reschedule if the same id is encountered again
     #   rule "Turn off closet light after 10 minutes" do
     #     changed ClosetLights.members, to: ON
     #     triggered do |item|
@@ -349,23 +351,28 @@ module OpenHAB
     #     end
     #   end
     #
-    # @example Timers with id can be managed through the built-in `timers[]` hash
-    #   after 1.minute, :id => :foo do
+    # @example Timers with id can be managed through the built-in `timers` object
+    #   after 1.minute, id: :foo do
     #     logger.info("managed timer has fired")
     #   end
     #
-    #   timers[:foo]&.cancel
+    #   timers.cancel(:foo)
     #
-    #   if !timers[:foo]
+    #   if timers.include?(:foo)
     #     logger.info("The timer :foo is not active")
     #   end
     #
-    def after(duration, id: nil, &block)
+    # @example Only create a new timer if it isn't already scheduled
+    #  after(1.minute, id: :foo, reschedule: false) do
+    #    logger.info("Timer fired")
+    #  end
+    #
+    def after(duration, id: nil, reschedule: true, &block)
       raise ArgumentError, "Block is required" unless block
 
       # Carry rule name to timer
       thread_locals = ThreadLocal.persist
-      DSL::TimerManager.instance.create(duration, id: id, thread_locals: thread_locals, block: block)
+      timers.create(duration, id: id, reschedule: reschedule, thread_locals: thread_locals, block: block)
     end
 
     #

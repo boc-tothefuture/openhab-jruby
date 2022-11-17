@@ -157,7 +157,7 @@ end
 #### Reentrant Timer
 
 Timers with `id` will automatically reschedule itself when executed again, 
-and can be managed through {OpenHAB::DSL.timers timers[]} hash
+and can be managed through {OpenHAB::DSL.timers timers} object.
 
 ```ruby
 rule 'automatic reentrant timer' do
@@ -169,10 +169,10 @@ rule 'automatic reentrant timer' do
   end
 end
 
-# timers[] is a built-in hash that keeps track of reentrant timer ids
+# timers is a built-in object that keeps track of reentrant timer ids
 rule 'cancel timer' do
   changed Light_Item, to: OFF
-  run { timers[Motion_Sensor]&.cancel }
+  run { timers.cancel(Motion_Sensor) }
 end
 ```
 

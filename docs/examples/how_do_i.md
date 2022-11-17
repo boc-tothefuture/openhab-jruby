@@ -584,7 +584,7 @@ end
 
 ### Manage Multiple Timers
 
-Multiple timers can be managed in the traditional way by storing the timer objects in a hash
+Multiple timers can be managed in the traditional way by storing the timer objects in a Hash:
 
 ```ruby
 @timers = {}
@@ -604,9 +604,9 @@ rule 'a timer for each group member' do
 end
 ```
 
-However, a built in mechanism is available to 
-help manage multiple timers. This is done using timer IDs. The following rule automatically finds and reschedules 
-the timer matching the same ID, which corresponds to each group member.
+However, a built in mechanism is available to help manage multiple timers, and is done in a thread-safe manner.
+This is done using timer IDs.
+The following rule automatically finds and reschedules the timer matching the same ID, which corresponds to each group member.
 
 ```ruby
 rule 'a timer for each group member' do
@@ -619,17 +619,15 @@ rule 'a timer for each group member' do
 end
 ```
 
-Furthermore, you can manipulate the managed timers using the built-in {OpenHAB::DSL.timers timers[]} hash.
+Furthermore, you can manipulate the managed timers using the built-in {OpenHAB::DSL::TimerManager timers} object.
 
 ```ruby
-# timers[] is a special hash to access the timers created with an id
-# Note here we use Ruby's safe navigation operator in case the timer
-# no longer exists, in which case timers[id] returns nil
+# timers is a special object to access the timers created with an id
 rule 'cancel all timers' do
   received_command Cancel_All_Timers, to: ON # Send a command to this item to cancel all timers
   run do
     gOutdoorLights.each do |item_as_timer_id|
-      timers[item_as_timer_id]&.cancel 
+      timers.cancel(item_as_timer_id)
     end
   end
 end
@@ -638,7 +636,7 @@ rule 'reschedule all timers' do
   received_command Reschedule_All_Timers, to: ON # Send a command to this item to restart all timers
   run do
     gOutdoorLights.each do |item_as_timer_id|
-      timers[item_as_timer_id]&.reschedule
+      timers.reschedule(item_as_timer_id)
     end
   end
 end
