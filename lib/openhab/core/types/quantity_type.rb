@@ -194,7 +194,7 @@ module OpenHAB
             #   elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             #     lhs + rhs
             #   else
-            #     raise TypeError, "#{other.class} can"t be coerced into #{self.class}"
+            #     raise TypeError, "#{other.class} can't be coerced into #{self.class}"
             #   end
             # end
             <<~RUBY, __FILE__, __LINE__ + 1
@@ -238,7 +238,7 @@ module OpenHAB
             #   elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             #     lhs * rhs
             #   else
-            #     raise TypeError, "#{other.class} can"t be coerced into #{self.class}"
+            #     raise TypeError, "#{other.class} can't be coerced into #{self.class}"
             #   end
             # end
             <<~RUBY, __FILE__, __LINE__ + 1
