@@ -674,4 +674,4 @@ OpenHAB::Core::Items.import_into_global_namespace
 # Extend `main` with DSL methods
 singleton_class.include(OpenHAB::DSL)
 
-OpenHAB::DSL.send(:logger).debug "OpenHAB JRuby Scripting Library Version #{OpenHAB::DSL::VERSION} Loaded"
+logger.debug "OpenHAB JRuby Scripting Library Version #{OpenHAB::DSL::VERSION} Loaded"

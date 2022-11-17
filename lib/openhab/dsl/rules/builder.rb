@@ -1310,7 +1310,7 @@ module OpenHAB
 
         # delegate to the caller's logger
         def logger
-          @caller.logger
+          @caller.send(:logger)
         end
 
         #
