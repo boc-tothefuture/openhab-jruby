@@ -22,7 +22,8 @@ here is a non-exhaustive list of significant departures from the original gem:
   `logger` within a `rule` or execution block will be named after the rule.
   Loggers within class or instance-of-a-class context will be named after
   the class. These loggers will _not_ have their name changed simply because
-  their methods happened to be called while a rule is executing.
+  their methods happened to be called while a rule is executing. Logging
+  also defaults to `#to_s` now, instead of `#inspect`.
 * The documentation philosophy has changed. Instead of relying on a large
   set of markdown files to give both commentary and to document the details
   of objects, [YARD](https://yardoc.org/) is now the primary generator
@@ -44,7 +45,7 @@ here is a non-exhaustive list of significant departures from the original gem:
   possible.
 * Major re-organization of class structures. {OpenHAB::Core} now contains any
   classes that are mostly wrappers or extensions of OpenHAB::Core Java
-  classes, while {OpenHAB::DSL} contains novel Ruby-only classes that implment
+  classes, while {OpenHAB::DSL} contains novel Ruby-only classes that implement
   a Ruby-first manner of creating rules, items, and things.
 * As part of the re-organization from above, the definition of a "DSL method"
   that is publicly exposed and available for use has been greatly refined.
@@ -129,7 +130,6 @@ here is a non-exhaustive list of significant departures from the original gem:
   * `between?` method is gone. Use `Range#cover?`: `my_range.cover?(date)`
     instead of `date.between?(my_range)`.
   * See also [Working With Time](docs/usage/time.md)
-  * Add `#ago` and `#from_now` methods to {Duration}
   * Persistence methods no longer accept a {Duration}. Please use `Duration#ago`
     instead.
 * Thing actions are no longer available as a top level method. You must use the
@@ -151,33 +151,37 @@ here is a non-exhaustive list of significant departures from the original gem:
 
 * {OpenHAB::DSL::Items::Builder}
 * {OpenHAB::DSL::Things::Builder}
-* Several new triggers in {OpenHAB::DSL::Rules::Builder}
+* {group::OpenHAB::DSL::Rules::Builder::Triggers Several new triggers}
 * {OpenHAB::DSL.profile}
+* {OpenHAB::DSL.script}
+* {OpenHAB::DSL.remove_rule}
+* {OpenHAB::DSL.trigger_rule}
 * {OpenHAB::DSL.unit} can now handle units for multiple dimensions.
-* Support Ruby's method name convention for thing actions, 
-  e.g. `things["mqtt:broker:mosquitto"].publish_mqtt`
-* Global action methods (such as `increase_master_volume`) are now available
-  directly from {OpenHAB::DSL}.
-* Rule IDs are now generated from the rule name if a name is given, but not
-  an id.
+* Support Ruby's method name convention for thing actions, e.g. `things["mqtt:broker:mosquitto"].publish_mqtt`
+* Global action methods (such as `increase_master_volume`) are now available directly from {OpenHAB::DSL}.
+* Rule IDs are now generated from the rule name if a name is given, but not an id.
 * {OpenHAB::DSL.timers timers} now returns {OpenHAB::DSL::TimerManager an object}
   that can be used to thread-safely schedule/reschedule/cancel timers by ID.
+* `#inspect` on several classes has been improved to be useful, instead of just returning the class name.
+* {OpenHAB::DSL.after after} (and anything else that ultimately relies on timers) support `Proc` for durations.
+* Add `#ago` and `#from_now` methods to {Duration}
 
 ### Bug Fixes
 
 * Fix thing {OpenHAB::Core::EntityLookup#method_missing entity lookup}
-* Fix `ensure` to work with QuantityType
+* Fix {OpenHAB::DSL::Items::Ensure ensure} to work with {QuantityType}
 * Fix scoping of {OpenHAB::DSL::Rules::Terse terse rule} blocks
 * {OpenHAB::DSL.persistence persistence block} now restores the previous setting
 * {OpenHAB::DSL.unit unit} block applies to sending commands to {NumberItem NumberItems}.
-* *All* thread locals are carried over to rule executions and timers. This includes
-  {OpenHAB::DSL.unit unit}, {OpenHAB::DSL.persistence persistence}, and
-  {OpenHAB::DSL.ensure_states ensure_states}.
+* *All* thread locals are carried over to rule executions and timers. This includes {OpenHAB::DSL.unit unit}, {OpenHAB::DSL.persistence persistence}, and {OpenHAB::DSL.ensure_states ensure_states}.
 * Fix thread safety issue that could cause timers to not be canceled when the script unloads.
 * {OpenHAB::DSL::Items::TimedCommand#command Timed command} thread safety issues resolved
 * {OpenHAB::DSL::Items::TimedCommand#command Timed command} now resets the on_expire setting when called again
 * {OpenHAB::DSL::Items::TimedCommand#command Timed command} still sends the command even the previous timed command is still pending
 * {OpenHAB::DSL::Items::TimedCommand#command Timed command} works with resetting to {NULL}/{UNDEF}
+* {OpenHAB::Core::Items::Metadata} hashes are indifferent (converts symbol keys to string keys).
+* Fix {OpenHAB::DSL::Items::Ensure ensure} to work with conversions-from-string that are handled by openhab-core.
+* Avoid stack overflow issues when all of ActiveSupport is required.
 
 ## [4.45.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.1...4.45.2) (2022-10-02)
 
