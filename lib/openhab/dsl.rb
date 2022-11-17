@@ -296,7 +296,10 @@ module OpenHAB
     # Be sure that your ids are unique. For example, if you're using {GenericItem items} as your
     # ids, you either need to be sure you don't use the same item for multiple logical contexts,
     # or you need to make your id more specific, by doing something like embedding the item in
-    # array with a symbol of the timer's purpose, like `[:vacancy, item]`.
+    # array with a symbol of the timer's purpose, like `[:vacancy, item]`. But also note that
+    # assuming default settings, every Ruby file (for file-based rules) or UI rule gets its
+    # own instance of the timers object, so you don't need to worry about collisions among
+    # different files.
     #
     # @see timers
     # @see Rules::Builder#changed

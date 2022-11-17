@@ -98,7 +98,7 @@ and then load rules in, then drop you into IRB.
    it.
 ```ruby
 OpenHAB::Log.logger("org.openhab.core.automation.internal.RuleEngineImpl").level = :debug
-OpenHAB::Log.logger("org.openhab.automation.jrubyscripting").level = :debug
+OpenHAB::Log.gem_root.level = :debug
 OpenHAB::Log.root.level = :debug
 OpenHAB::Log.events.level = :info
 ```
@@ -109,14 +109,15 @@ OpenHAB::Log.events.level = :info
    from either your spec itself, or a `before` block.
  * Differing from when OpenHAB loads rules, all rules are loaded into a single
    JRuby execution context, so changes to globals in one file will affect other
-   files.
+   files. In particular, this applies to ids for reentrant timers will now share
+   a single namespace among all files.
  * Some actions may not be available; you should stub them out if you use them.
    Core actions like {OpenHAB::Core::Actions#notify}, {OpenHAB::Core::Actions#say},
    and {OpenHAB::Core::Actions#play_sound} are stubbed to only log a message
    (at debug level).
  * You may want to avoid rules from firing while setting up the proper state for
    a test. In that case, use the {OpenHAB::RSpec::Helpers#suspend_rules} helper.
- * Item persistence is enabled by default using an in-memory story that only
+ * Item persistence is enabled by default using an in-memory store that only
    tracks changes to items.
  * The {OpenHAB::RSpec::Helpers#install_addon} helper can be used to install an
    addon like `binding-astro` if you need to be able to create things from your

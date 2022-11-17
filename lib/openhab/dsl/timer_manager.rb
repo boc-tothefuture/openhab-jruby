@@ -167,7 +167,7 @@ module OpenHAB
       alias_method :member?, :include?
 
       #
-      # Cancels all active timers
+      # Cancels all active timers in the current script/UI rule
       #
       # Including timers with or without an id.
       #
