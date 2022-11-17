@@ -10,17 +10,40 @@ module OpenHAB
     module Types
       DecimalType = org.openhab.core.library.types.DecimalType
 
+      #
       # {DecimalType} uses a {java.lang.BigDecimal} internally and thus can be
       # used for integers, longs and floating point numbers alike.
+      #
+      # @example DecimalType can be used in case statements with ranges
+      #   # Check if number item is less than 50
+      #   case NumberOne.state
+      #   when (0...50)
+      #     logger.info("#{NumberOne} is less than 50")
+      #   when (50..100)
+      #     logger.info("#{NumberOne} is greater than 50")
+      #   end
+      #
+      # @example DecimalType can be compared directly against Numeric
+      #   if NumberOne > 10
+      #     logger.info("Item #{NumberOne.name} is greater than 10")
+      #   end
+      #
+      # @example DecimalType can be compared against the value of another DecimalType
+      #   if NumberOne.state > NumberTwo.state
+      #     logger.info("Item #{NumberOne} (#{NumberOne.state}) is greater than #{NumberTwo} (#{NumberTwo.state})")
+      #   end
+      #
       class DecimalType
         # @!parse include Command, State
         include NumericType
         include ComparableType
 
         #
+        # @!method initialize(value)
+        #
         # Create a new instance of DecimalType
         #
-        # @param [java.math.BigDecimal, Numeric] args Create a DecimalType from the given value
+        # @param [java.math.BigDecimal, Numeric] value Create a DecimalType from the given value
         #
         def initialize(*args)
           unless args.length == 1
@@ -47,7 +70,7 @@ module OpenHAB
         #
         # Convert DecimalType to a QuantityType
         #
-        # @param [Object] other String or Unit representing an OpenHAB Unit
+        # @param [String, javax.measure.units.Unit] other
         #
         # @return [QuantityType] `self` as a {QuantityType} of the supplied Unit
         #
@@ -85,15 +108,14 @@ module OpenHAB
         #
         # Type Coercion
         #
-        # Coerce object to a DecimalType
+        # Coerce object to a {DecimalType DecimalType}
         #
-        # @param [Numeric, Type] other object to
-        #   coerce to a {DecimalType}
+        # @param [Numeric, Type] other object to coerce to a {DecimalType DecimalType}
         #
         #   If `other` is a {Type}, `self` will instead be coerced
         #   to that type to accomodate comparison with things such as {OnOffType}.
         #
-        # @return [[DecimalType, DecimalType], nil]
+        # @return [Array<(DecimalType, DecimalType)>, nil]
         #
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")

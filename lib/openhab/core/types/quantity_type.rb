@@ -8,15 +8,109 @@ module OpenHAB
     module Types
       QuantityType = org.openhab.core.library.types.QuantityType
 
+      #
       # {QuantityType} extends {DecimalType} to handle physical unit measurement.
+      #
+      # {QuantityType} is part of the [Units of Measurement](https://www.openhab.org/docs/concepts/units-of-measurement.html)
+      # framework in OpenHAB. It is represented as a decimal number with a unit.
+      # You can construct a {QuantityType} object by using the pipe operator with any Numeric.
+      #
+      # @example QuantityTypes can perform math operations between them.
+      #   (50 | "°F") + (-25 | "°F") # => 25.0 °F
+      #   (100 | "°F") / (2 | "°F") # => 50
+      #   (50 | "°F") - (25 | "°F") # => 25 °F
+      #   (50 | "°F") + (50 | "°F") # => 100 °F
+      #
+      # @example If the operand is a number, it will be unit-less, but the result of the operation will have a unit. This only works for multiplication and division.
+      #   (50 | "°F") * 2 # => 100 °F
+      #   (100 | "°F") / 2 # => 50 °F
+      #
+      # @example If the operand is a dimensioned NumberItem it will automatically be converted to a quantity for the operation.
+      #   # NumberF = "2 °F"
+      #   # NumberC = "2 °C"
+      #   (50 | "°F") + NumberF.state # => 52.0 °F
+      #   (50 | "°F") + NumberC.state # => 85.60 °F
+      #
+      # @example If the operand is a non-dimensioned NumberItem it can be used only in multiplication and division operations.
+      #   # Number Dimensionless = 2
+      #   (50 | "°F") * Dimensionless.state # => 100 °F
+      #   (50 | "°F") / Dimensionless.state # => 25 °F
+      #
+      # @example Quantities can be compared, if they have comparable units.
+      #   (50 | "°F") >  (25 | "°F")
+      #   (50 | "°F") >  (525 | "°F")
+      #   (50 | "°F") >= (50 | "°F")
+      #   (50 | "°F") == (50 | "°F")
+      #   (50 | "°F") <  (25 | "°C")
+      #
+      # @example A Range can be used with QuantityType:
+      #   ((0 | "°C")..(100 | "°C")).cover?(NumberC)
+      #
+      # @example A Range can also be used in a case statement for a dimensioned item:
+      #   description = case NumberC.state
+      #                 when (-20 | "°C")...(18 | "°C") then "too cold"
+      #                 when (18 | "°C")...(25 | "°C") then "comfortable"
+      #                 when (25 | "°C")...(40 | "°C") then "too warm"
+      #                 else "out of range"
+      #                 end
+      #
+      # @example Dimensioned Number Items can be converted to quantities with other units using the | operator
+      #   # NumberC = "23 °C"
+      #
+      #   # Using a unit
+      #   logger.info("In Fahrenheit #{NumberC.state | ImperialUnits::FAHRENHEIT }")
+      #
+      #   # Using a string
+      #   logger.info("In Fahrenheit #{NumberC.state | "°F"}")
+      #
+      # @example Dimensionless Number Items can be converted to quantities with units using the | operator
+      #   # Dimensionless = 70
+      #
+      #   # Using a unit
+      #   logger.info("In Fahrenheit #{Dimensionless.state | ImperialUnits::FAHRENHEIT }")
+      #
+      #   # Using a string
+      #   logger.info("In Fahrenheit #{Dimensionless.state | "°F"}")
+      #
+      # @example Dimensioned Number Items automatically use their units and convert automatically for math operations
+      #   # Number:Temperature NumberC = 23 °C
+      #   # Number:Temperature NumberF = 70 °F
+      #   NumberC.state - NumberF.state # => 1.88 °C
+      #   NumberF.state + NumberC.state # => 143.40 °F
+      #
+      # @example Dimensionless Number Items can be used for multiplication and division.
+      #   # Number Dimensionless = 2
+      #   # Number:Temperature NumberF = 70 °F
+      #   NumberF.state * Dimensionless.state # => 140.0 °F
+      #   NumberF.state / Dimensionless.state # => 35.0 °F
+      #   Dimensionless.state * NumberF.state # => 140.0 °F
+      #   2 * NumberF.state                   # => 140.0 °F
+      #
+      # @example Comparisons work on dimensioned number items with different, but comparable units.
+      #   # Number:Temperature NumberC = 23 °C
+      #   # Number:Temperature NumberF = 70 °F
+      #   NumberC.state > NumberF.state # => true
+      #
+      # @example For certain unit types, such as temperature, all unit needs to be normalized to the comparator for all operations when combining comparison operators with dimensioned numbers.
+      #   (NumberC.state | "°F") - (NumberF.state | "°F") < 4 | "°F"
+      #
       class QuantityType
         # @!parse include Command, State
         include NumericType
         include ComparableType
 
-        #
-        # Convert this quantity into a another unit
-        #
+        # @!parse
+        #   #
+        #   # Convert this {QuantityType} into another unit.
+        #   #
+        #   # @param [String, javax.measure.units.Unit] unit
+        #   # @return [QuantityType]
+        #   #
+        #   # @example
+        #   #   NumberC.state | ImperialUnits::FAHRENHEIT
+        #   #
+        #   def to_unit(unit); end
+
         alias_method :|, :to_unit
 
         #
@@ -47,7 +141,7 @@ module OpenHAB
               return compare_to(QuantityType.new(other, unit))
             end
 
-            return nil # don't allow comparison with numeric outside a unit block
+            return nil # don"t allow comparison with numeric outside a unit block
           end
 
           return nil unless other.respond_to?(:coerce)
@@ -58,14 +152,14 @@ module OpenHAB
         #
         # Type Coercion
         #
-        # Coerce object to a QuantityType
+        # Coerce object to a {QuantityType}
         #
         # @param [Numeric, Type] other object to coerce to a {QuantityType}
         #
         #   if `other` is a {Type}, `self` will instead be coerced
         #   to that type to accomodate comparison with things such as {OnOffType}
         #
-        # @return [[QuantityType, QuantityType], nil]
+        # @return [Array<(QuantityType, QuantityType)>, nil]
         def coerce(other)
           logger.trace("Coercing #{self} as a request from #{other.class}")
           if other.is_a?(Type)
@@ -100,7 +194,7 @@ module OpenHAB
             #   elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             #     lhs + rhs
             #   else
-            #     raise TypeError, "#{other.class} can't be coerced into #{self.class}"
+            #     raise TypeError, "#{other.class} can"t be coerced into #{self.class}"
             #   end
             # end
             <<~RUBY, __FILE__, __LINE__ + 1
@@ -144,7 +238,7 @@ module OpenHAB
             #   elsif other.respond_to?(:coerce) && (lhs, rhs = other.coerce(to_d))
             #     lhs * rhs
             #   else
-            #     raise TypeError, "#{other.class} can't be coerced into #{self.class}"
+            #     raise TypeError, "#{other.class} can"t be coerced into #{self.class}"
             #   end
             # end
             <<~RUBY, __FILE__, __LINE__ + 1
@@ -214,7 +308,7 @@ module OpenHAB
         def multiply_quantity(other)
           lhs = deunitize
           rhs = other.deunitize
-          # reverse the arguments if it's multiplication and the LHS isn't a QuantityType
+          # reverse the arguments if it's multiplication and the LHS isn"t a QuantityType
           lhs, rhs = rhs, lhs if lhs.is_a?(java.math.BigDecimal)
           # what a waste... using a QuantityType to multiply two dimensionless quantities
           # have to make sure lhs is still a QuantityType in order to return a new

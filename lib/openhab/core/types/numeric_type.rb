@@ -37,6 +37,15 @@ module OpenHAB
         def +@
           self
         end
+
+        # @!method to_d
+        #   @return [BigDecimal]
+
+        # @!method to_i
+        #   @return [Integer]
+
+        # @!method to_f
+        #   @return [Float]
       end
     end
   end

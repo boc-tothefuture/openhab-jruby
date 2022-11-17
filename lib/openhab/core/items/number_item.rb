@@ -14,6 +14,11 @@ module OpenHAB
       # It can also be used as a counter or as any other thing that can be expressed
       # as a number.
       #
+      # Non-dimensioned numbers will have a state of {DecimalType}, while
+      # dimensioned numbers will have a state of {QuantityType}. Be sure
+      # to read the documentation for those two classes for how to work with
+      # the different states of a {NumberItem}.
+      #
       # @!attribute [r] dimension
       #   @return [Class, nil] The dimension of the number item.
       # @!attribute [r] unit
@@ -21,7 +26,11 @@ module OpenHAB
       # @!attribute [r] state
       #   @return [DecimalType, QuantityType, nil]
       #
-
+      # @example Number Items can be selected in an enumerable with grep.
+      #   # Get all NumberItems
+      #   items.grep(NumberItem)
+      #        .each { |number| logger.info("#{item.name} is a Number Item") }
+      #
       class NumberItem < GenericItem
         include NumericItem
 
