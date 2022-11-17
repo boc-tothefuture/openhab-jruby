@@ -43,9 +43,11 @@ class Integer
   #
   # @return [Duration]
   #
-  def in_milliseconds
+  def milliseconds
     Duration.of_millis(self)
   end
+  alias_method :millisecond, :milliseconds
+  alias_method :ms, :milliseconds
   def_duration_method(:seconds)
   alias_method :second, :seconds
   def_duration_method(:minutes)
@@ -67,9 +69,11 @@ class Float
   #
   # @return [Duration]
   #
-  def in_milliseconds
+  def milliseconds
     java.time.Duration.of_nanos((self * 1_000_000).to_i)
   end
+  alias_method :millisecond, :milliseconds
+  alias_method :ms, :milliseconds
 
   #
   # Create {Duration} of `self` seconds
@@ -77,7 +81,7 @@ class Float
   # @return [Duration]
   #
   def seconds
-    (self * 1000).in_milliseconds
+    (self * 1000).milliseconds
   end
   alias_method :second, :seconds
 
@@ -161,7 +165,9 @@ module OpenHAB
         # non-Integer/Float (i.e. BigDecimal) can still be converted to Duration, via converting to float first
         extend Forwardable
         def_delegators :to_f,
-                       :in_milliseconds,
+                       :milliseconds,
+                       :millisecond,
+                       :ms,
                        :seconds,
                        :second,
                        :minutes,
