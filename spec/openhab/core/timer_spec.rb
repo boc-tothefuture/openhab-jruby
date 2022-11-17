@@ -239,6 +239,36 @@ RSpec.describe OpenHAB::Core::Timer do
         time_travel_and_execute_timers(7.seconds)
         expect(executed).to be true
       end
+
+      it "cancels a timer if you return nil from the block" do
+        executed = false
+        timers.schedule("id") do |_|
+          after(5.seconds) { executed = true }
+        end
+
+        timers.schedule("id") do |_|
+          nil
+        end
+
+        expect(timers).not_to include("id")
+        time_travel_and_execute_timers(7.seconds)
+        expect(executed).to be false
+      end
+
+      it "removes a canceled timer" do
+        executed = false
+        timers.schedule("id") do |_|
+          after(5.seconds) { executed = true }
+        end
+
+        timers.schedule("id") do |timer|
+          timer.tap(&:cancel)
+        end
+
+        expect(timers).not_to include("id")
+        time_travel_and_execute_timers(7.seconds)
+        expect(executed).to be false
+      end
     end
   end
 end

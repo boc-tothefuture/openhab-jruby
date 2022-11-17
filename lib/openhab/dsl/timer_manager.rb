@@ -97,7 +97,7 @@ module OpenHAB
       # @param [Object] id
       # @yieldparam [Timer, nil] timer The existing timer with this id, if one exists.
       # @yieldreturn [Timer, nil] A new timer to associate with this id, the existing
-      #   timer, or nil
+      #   timer, or nil. If nil, any existing timer will be cancelled.
       # @return [Timer, nil]
       #
       # @example Extend an existing timer, or schedule a new one
@@ -129,11 +129,16 @@ module OpenHAB
           new_timer = yield timer
           raise ArgumentError, "Block must return a timer or nil" unless timer.is_a?(Core::Timer) || timer.nil?
 
-          if !new_timer.equal?(timer) && new_timer.id
+          if !new_timer.equal?(timer) && new_timer&.id
             raise ArgumentError,
                   "Do not schedule a new timer with an ID inside a #schedule block"
           end
 
+          if timer&.cancelled?
+            new_timer = nil
+          elsif new_timer.nil? && !timer&.cancelled?
+            timer&.cancel
+          end
           next unless new_timer
 
           new_timer.id ||= id

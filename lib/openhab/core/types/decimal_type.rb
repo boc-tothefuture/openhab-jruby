@@ -24,7 +24,7 @@ module OpenHAB
       #   end
       #
       # @example DecimalType can be compared directly against Numeric
-      #   if NumberOne > 10
+      #   if NumberOne.state > 10
       #     logger.info("Item #{NumberOne.name} is greater than 10")
       #   end
       #
