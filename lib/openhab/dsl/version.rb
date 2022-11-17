@@ -4,6 +4,6 @@ module OpenHAB
   module DSL
     # Version of OpenHAB helper libraries
     # @return [String]
-    VERSION = "4.45.2"
+    VERSION = "5.0.0.rc1"
   end
 end
