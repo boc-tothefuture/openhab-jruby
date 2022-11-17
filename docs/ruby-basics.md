@@ -27,14 +27,14 @@ It is useful to get to know the basic data types that we will often encounter:
 ## Variables
 
 * In Ruby, variables start with a lower case and by convention use `snake_case`.
-* Uppercase identifiers are constants, e.g.  `NAMES`
+* Uppercase identifiers are constants, e.g. `NAMES`
 * Variable whose names start with `$` are global variables, e.g. `$i_am_global`.
 * Variable whose names start with `@` are instance variables, e.g. `@instance_variable`.
 * Local variables are just plain names that starts with a lower case, e.g. `local_var`.
   
 ## Control Expressions
 
-Ruby supports various [control expressions](https://ruby-doc.org/core-2.6.8/doc/syntax/control_expressions_rdoc.html) such as `if/else`, `ternary operator`, `case`, etc.
+Ruby supports various [control expressions](https://ruby-doc.org/core-2.6.8/doc/syntax/control_expressions_rdoc.html) such as `if/else`, ternary operator, `case`, etc.
 
 Example:
 
@@ -75,7 +75,7 @@ end
 ## Loops
 
 While Ruby supports the traditional `for` and `while` loop, they are rarely used. 
-Ruby objects such as array, hash, set, etc. provide a plethora of methods to
+Ruby objects such as Array, Hash, Set, etc. provide a plethora of methods to
 achieve the same thing in a more "Ruby" way.
 
 ### Examples
@@ -130,7 +130,7 @@ end
 
 ### Block arguments
 
-Blocks can receive arguments which are passed by its caller. We will often encounter this in a [run](docs/usage/execution/run.md) and [triggered](docs/usage/execution/triggered.md) blocks.
+Blocks can receive arguments which are passed by its caller. We will often encounter this in {OpenHAB::DSL::Rules::Builder#run run} and {OpenHAB::DSL::Rules::Builder#triggered triggered} blocks.
 
 ```ruby
 rule 'name' do
@@ -209,8 +209,7 @@ end
 
 ## Source Code Formatting
 
-The [ruby style guide](https://github.com/rubocop/ruby-style-guide) 
-offers the generally accepted standards for Ruby source code formatting.
+The [ruby style guide](https://rubystyle.guide) offers the generally accepted standards for Ruby source code formatting.
 
 When working with file based rules in a source code editor (e.g. VSCode), it is highly recommended to integrate 
 [Rubocop](https://rubocop.org/) (or [rubocop-daemon](https://github.com/fohte/rubocop-daemon))
