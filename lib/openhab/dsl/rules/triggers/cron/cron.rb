@@ -11,7 +11,7 @@ module OpenHAB
         # Creates cron triggers
         #
         class Cron < Trigger
-          # Trigger ID for Watch Triggers
+          # Trigger ID for Cron Triggers
           CRON_TRIGGER_MODULE_ID = "jsr223.jruby.CronTrigger"
 
           #
