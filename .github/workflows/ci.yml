@@ -47,9 +47,9 @@ jobs:
           bundler-cache: true
       - name: Yard Coverage
         run: |
-          bin/yard --fail-on-warning
-          bin/yard stats --list-undoc --fail-on-warning
-          bin/yard stats --fail-on-warning | grep "100.00% documented"
+          bin/yardoc -c --no-cache --private --fail-on-warning
+          bin/yard stats -c --list-undoc
+          bin/yard stats -c | grep "100.00% documented"
 
   openhab-matrix:
     runs-on: ubuntu-latest

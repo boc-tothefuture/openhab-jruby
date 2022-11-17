@@ -24,8 +24,23 @@ module OpenHAB
       # command will reschedule the timed command for that new duration.
       #
       module TimedCommand
+        #
         # Provides information about why the expiration block of a
         # {TimedCommand#command timed command} is being called.
+        #
+        # @attr [GenericItem] item
+        #   @!visibility private
+        # @attr [Types::Type, Proc] on_expire
+        #   @!visibility private
+        # @attr [Core::Timer] timer
+        #   @!visibility private
+        # @attr [Symbol] resolution
+        #   @!visibility private
+        # @attr [String] rule_uid
+        #   @!visibility private
+        # @attr [Mutex] mutex
+        #   @!visibility private
+        #
         TimedCommandDetails = Struct.new(:item,
                                          :on_expire,
                                          :timer,
@@ -42,14 +57,6 @@ module OpenHAB
           def cancelled?
             resolution == :cancelled
           end
-
-          # @!visibility private
-          # @!attribute [rw] item
-          # @!attribute [rw] on_expire
-          # @!attribute [rw] timer
-          # @!attribute [rw] resolution
-          # @!attribute [rw] rule_uid
-          # @!attribute [rw] mutex
         end
 
         @timed_commands = java.util.concurrent.ConcurrentHashMap.new
@@ -68,7 +75,7 @@ module OpenHAB
         # @note If a block is provided, and the timer is canceled because the
         #   item changed state while it was waiting, the block will still be
         #   executed. Be sure to check {TimedCommandDetails#expired? #expired?}
-        #   and/or {TimedCommandDetails#canceled? #canceled?} to determine why
+        #   and/or {TimedCommandDetails#cancelled? #cancelled?} to determine why
         #   the block was called.
         #
         # @param [Command] command to send to object
@@ -88,6 +95,7 @@ module OpenHAB
         #   Dimmer.on for: 5.minutes, on_expire: 50
         # @example
         #   Dimmer.on(for: 5.minutes) { |event| Dimmer.off if Light.on? }
+        #
         def command(command, for: nil, on_expire: nil, &block)
           duration = binding.local_variable_get(:for)
           return super(command) unless duration

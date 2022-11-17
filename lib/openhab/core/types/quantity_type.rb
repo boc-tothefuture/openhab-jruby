@@ -185,7 +185,8 @@ module OpenHAB
           end
         end
 
-        # if unit is {Units::ONE}, return a plain Java BigDecimal
+        # if unit is {org.openhab.core.library.unit.Units.ONE}, return a plain
+        # Java BigDecimal
         # @!visibility private
         def deunitize
           return to_big_decimal if unit == Units::ONE
