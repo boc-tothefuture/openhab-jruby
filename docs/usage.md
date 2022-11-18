@@ -6,9 +6,10 @@
 
 To make all the features offered by this library available to your rule, the JRuby scripting addon needs to
 be [configured](docs/installation.md#from-the-user-interface) to install the `openhab-jrubyscripting` gem and
-require the `openhab` script. This will enable all the special methods for [Items](docs/usage/items/index.md),
-[Things](docs/usage/things.md), [Actions](docs/usage/misc/actions.md), [Logging](docs/usage/misc/logging.md) etc. that are documented here,
-and the `event` properties documented for the [Run execution block](docs/usage/execution/run.md).
+require the `openhab/dsl` script. This will enable all the special methods for {OpenHAB::Core::Items Items},
+{OpenHAB::Core::Things::Thing Things}, {OpenHAB::Core::Actions Actions}, {OpenHAB::Log Logging}, etc. that are documented here,
+and the {OpenHAB::Core::Events::AbstractEvent event} properties documented for the 
+{OpenHAB::DSL::Rules::Builder#run run execution blocks}.
 
 ## Creating File-Based Rules
 
@@ -36,8 +37,8 @@ The following features of this library are only usable within file-based rules:
 
 * `Triggers`: UI-based rules provide equivalent triggers through the UI.
 * `Guards`: UI-based rules use `Conditions` in the UI instead. Alternatively it can be implemented inside the rule code.
-* `Execution Blocks`: The UI-based rules will execute your JRuby script as if it's inside a `run` execution block. 
-A special `event` variable is available within your code to provide it with additional information regarding the event. 
-For more details see the [run execution block](docs/usage/execution/run.md).
-* `delay`: There is no direct equivalent in the UI. It can be achieved using timers like in the example below.
+* `Execution Blocks`: The UI-based rules will execute your JRuby script as if it's inside a {OpenHAB::DSL::Rules::Builder#run run execution blocks}. 
+A special {OpenHAB::Core::Events::AbstractEvent event} variable is available within your code to provide it with additional information regarding the event. 
+For more details see the {OpenHAB::DSL::Rules::Builder#run run execution blocks}.
+* `delay`: There is no direct equivalent in the UI. It can be achieved using {OpenHAB::DSL.after timers}.
 * `otherwise`: There is no direct equivalent in the UI. However, it can be implemented within the rule using an `if-else` block.
