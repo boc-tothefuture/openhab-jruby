@@ -45,11 +45,12 @@ RSpec.describe OpenHAB::Log do
     end
 
     it "includes the rule name inside a rule" do
+      rspec = self
       rule "log test", id: "log_test" do
-        expect(logger.name).to eql "org.openhab.automation.jrubyscripting.log_test"
+        rspec.expect(logger.name).to rspec.eql "org.openhab.automation.jrubyscripting.rule.log_test"
         on_start
         run do
-          expect(logger.name).to eql "org.openhab.automation.jrubyscripting.log_test"
+          expect(logger.name).to eql "org.openhab.automation.jrubyscripting.rule.log_test"
         end
       end
     end

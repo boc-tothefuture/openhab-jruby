@@ -183,6 +183,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {OpenHAB::Core::Items::Metadata} hashes are indifferent (converts symbol keys to string keys).
 * Fix {OpenHAB::DSL::Items::Ensure ensure} to work with conversions-from-string that are handled by openhab-core.
 * Avoid stack overflow issues when all of ActiveSupport is required.
+* Don't swallow exceptions inside of `rule` blocks - just let them propagate up.
 
 ## [4.45.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.1...4.45.2) (2022-10-02)
 

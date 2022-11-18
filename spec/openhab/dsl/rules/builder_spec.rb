@@ -18,9 +18,9 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
 
     rspec = self
     rule do
-      rspec.expect(lowerCaseSwitchItem).not_to be_nil
-      rspec.expect(UpperCaseSwitchItem).not_to be_nil
-      rspec.expect(items["lowerCaseSwitchItem"]).not_to be_nil
+      rspec.expect(lowerCaseSwitchItem).not_to rspec.be_nil
+      rspec.expect(UpperCaseSwitchItem).not_to rspec.be_nil
+      rspec.expect(items["lowerCaseSwitchItem"]).not_to rspec.be_nil
     end
   end
 
@@ -69,6 +69,16 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
     end
 
     describe "#changed" do
+      it "complains about invalid data type" do
+        expect do
+          changed([OpenHAB::Core::Things::ThingUID.new("astro:sun:home")]) do
+            nil
+          end
+        end.to raise_error(ArgumentError)
+        expect { changed("StringItemName") { nil } }.to raise_error(ArgumentError)
+        expect { changed(5) { nil } }.to raise_error(ArgumentError)
+      end
+
       context "with items" do
         before do
           items.build do
@@ -365,7 +375,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         end
       end
 
-      context "with things" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
+      context "with things" do
         let!(:thing) do
           things.build { thing "astro:sun:home", config: { "geolocation" => "0,0" } }
         end
@@ -391,6 +401,15 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
           expect(triggered?).to be false
           time_travel_and_execute_timers(20.seconds)
           expect(triggered?).to be false
+        end
+
+        it "support ThingUID" do
+          triggered = false
+          changed things["astro:sun:home"].uid do
+            triggered = true
+          end
+          thing.disable
+          expect(triggered).to be true
         end
       end
     end
@@ -470,7 +489,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       end
     end
 
-    describe "#received_command" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
+    describe "#received_command" do
       before do
         items.build do
           group_item "AlarmModes" do
@@ -478,6 +497,17 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
             number_item "Alarm_Mode_Other", state: 7
           end
         end
+      end
+
+      it "complains about invalid data type" do
+        expect { received_command([Alarm_Mode]) { nil } }.to raise_error(ArgumentError)
+        expect { received_command("StringItemName") { nil } }.to raise_error(ArgumentError)
+        expect { received_command(5) { nil } }.to raise_error(ArgumentError)
+        expect do
+          received_command(OpenHAB::Core::Things::ThingUID.new("astro:sun:home")) do
+            nil
+          end
+        end.to raise_error(ArgumentError)
       end
 
       def self.test_command_trigger(item, members: false, command: nil, expect_triggered: true, &block)
@@ -552,14 +582,33 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
     end
 
     describe "#updated" do
-      context "with things" do # rubocop:disable RSpec/EmptyExampleGroup examples are dynamically generated
-        let!(:thing) do # rubocop:disable RSpec/LetSetup
+      it "complains about invalid data type" do
+        expect do
+          updated([OpenHAB::Core::Things::ThingUID.new("astro:sun:home")]) do
+            nil
+          end
+        end.to raise_error(ArgumentError)
+        expect { updated("StringItemName") { nil } }.to raise_error(ArgumentError)
+        expect { updated(5) { nil } }.to raise_error(ArgumentError)
+      end
+
+      context "with things" do
+        let!(:thing) do
           things.build { thing "astro:sun:home", config: { "geolocation" => "0,0" } }
         end
 
         test_thing_status_trigger(:updated)
         test_thing_status_trigger(:updated, to: :uninitialized)
         test_thing_status_trigger(:updated, to: :unknown, expect_triggered: false)
+
+        it "support ThingUID" do
+          triggered = false
+          updated things["astro:sun:home"].uid do
+            triggered = true
+          end
+          thing.disable
+          expect(triggered).to be true
+        end
       end
 
       context "with items" do
@@ -708,10 +757,9 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       end
 
       it "raises ArgumentError about incorrect specifiers" do
-        rspec = self
-        rule do
-          rspec.expect { cron made_up: 3, stuff: 5 }.to raise_error(ArgumentError, "unknown keywords: :made_up, :stuff")
-        end
+        expect do
+          cron(made_up: 3, stuff: 5) { nil }
+        end.to raise_error(ArgumentError, "unknown keywords: :made_up, :stuff")
       end
     end
 

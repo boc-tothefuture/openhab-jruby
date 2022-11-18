@@ -107,10 +107,13 @@ module OpenHAB
           #
           def changed_trigger(item:, from:, to:, attach: nil, conditions: nil)
             type, config = case item
-                           when GroupItem::Members then group(group: item, from: from,
-                                                              to: to)
-                           when Core::Things::Thing then thing(thing: item, from: from, to: to)
-                           else item(item: item, from: from, to: to)
+                           when GroupItem::Members
+                             group(group: item, from: from, to: to)
+                           when Core::Things::Thing,
+                                Core::Things::ThingUID
+                             thing(thing: item, from: from, to: to)
+                           else
+                             item(item: item, from: from, to: to)
                            end
             append_trigger(type: type, config: config, attach: attach, conditions: conditions)
           end

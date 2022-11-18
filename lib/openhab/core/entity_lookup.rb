@@ -72,7 +72,7 @@ module OpenHAB
         logger.trace("Looking up thing '#{uid}'")
         uid = uid.to_s if uid.is_a?(Symbol)
 
-        uid = generate_thing_uid(uid) unless uid.is_a?(org.openhab.core.thing.ThingUID)
+        uid = Things::ThingUID.new(uid) unless uid.is_a?(Things::ThingUID)
         thing = $things.get(uid)
         return unless thing
 
@@ -116,17 +116,6 @@ module OpenHAB
         name = name.to_s if name.is_a?(Symbol)
         item = $ir.get(name)
         Items::Proxy.new(item) unless item.nil?
-      end
-
-      #
-      # Returns a ThingUID given a string like object
-      #
-      # @!visibility private
-      #
-      # @return [Things::ThingUID]
-      #
-      def self.generate_thing_uid(uid)
-        org.openhab.core.thing.ThingUID.new(*uid.split(":"))
       end
     end
   end

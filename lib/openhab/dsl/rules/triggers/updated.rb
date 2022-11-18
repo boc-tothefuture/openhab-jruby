@@ -74,9 +74,13 @@ module OpenHAB
           #
           def update_trigger(item:, to:, attach: nil, conditions: nil)
             type, config = case item
-                           when GroupItem::Members then group_update(item: item, to: to)
-                           when Core::Things::Thing then thing_update(thing: item, to: to)
-                           else item_update(item: item, to: to)
+                           when GroupItem::Members
+                             group_update(item: item, to: to)
+                           when Core::Things::Thing,
+                                Core::Things::ThingUID
+                             thing_update(thing: item, to: to)
+                           else
+                             item_update(item: item, to: to)
                            end
             append_trigger(type: type, config: config, attach: attach, conditions: conditions)
           end

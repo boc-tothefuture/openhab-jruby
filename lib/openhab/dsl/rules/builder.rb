@@ -703,6 +703,16 @@ module OpenHAB
 
           @ruby_triggers << [:changed, items, { to: to, from: from, duration: duration }]
           items.each do |item|
+            case item
+            when Core::Things::Thing,
+                 Core::Things::ThingUID,
+                 Core::Items::GenericItem,
+                 Core::Items::GroupItem::Members
+              nil
+            else
+              raise ArgumentError, "items must be a GenericItem, GroupItem::Members, Thing, or ThingUID"
+            end
+
             logger.trace("Creating changed trigger for entity(#{item}), to(#{to.inspect}), from(#{from.inspect})")
 
             Array.wrap(from).each do |from_state|
@@ -970,6 +980,13 @@ module OpenHAB
           @ruby_triggers << [:received_command, items, { command: commands }]
 
           items.each do |item|
+            case item
+            when Core::Items::GenericItem,
+                 Core::Items::GroupItem::Members
+              nil
+            else
+              raise ArgumentError, "items must be a GenericItem or GroupItem::Members"
+            end
             commands.each do |cmd|
               logger.trace "Creating received command trigger for items #{item.inspect} and commands #{cmd.inspect}"
 
@@ -1160,6 +1177,16 @@ module OpenHAB
           updated = Updated.new(rule_triggers: @rule_triggers)
           @ruby_triggers << [:updated, items, { to: to }]
           items.map do |item|
+            case item
+            when Core::Things::Thing,
+                 Core::Things::ThingUID,
+                 Core::Items::GenericItem,
+                 Core::Items::GroupItem::Members
+              nil
+            else
+              raise ArgumentError, "items must be a GenericItem, GroupItem::Members, Thing, or ThingUID"
+            end
+
             logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
             [to].flatten.map do |to_state|
               updated.trigger(item: item, to: to_state, attach: attach)

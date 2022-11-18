@@ -33,7 +33,7 @@ module OpenHAB
           # @return [Array] Trigger and config for thing
           #
           def trigger_for_thing(thing:, type:, to: nil, from: nil)
-            config = { "thingUID" => thing.uid.to_s }
+            config = { "thingUID" => thing.to_s }
             config["status"] = trigger_state_from_symbol(to).to_s if to
             config["previousStatus"] = trigger_state_from_symbol(from).to_s if from
             [type, config]

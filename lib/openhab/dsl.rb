@@ -84,14 +84,6 @@ module OpenHAB
         builder.name(name)
         logger.trace { builder.inspect }
         builder.build(script)
-      rescue Exception => e
-        if (defined?(::RSpec::Expectations::ExpectationNotMetError) &&
-            e.is_a?(::RSpec::Expectations::ExpectationNotMetError)) ||
-           (defined?(::RSpec::Mocks::MockExpectationError) && e.is_a?(::RSpec::Mocks::MockExpectationError))
-          raise e
-        end
-
-        builder.send(:logger).log_exception(e)
       end
     end
 
@@ -115,17 +107,13 @@ module OpenHAB
 
       builder = nil
       ThreadLocal.thread_local(openhab_rule_type: "script", openhab_rule_uid: id) do
-        begin
-          builder = Rules::Builder.new(block.binding)
-          builder.uid(id)
-          builder.tags(["Script"])
-          builder.name(name)
-          builder.script(&block)
-          logger.trace { builder.inspect }
-          builder.build(script)
-        end
-      rescue Exception => e
-        builder.send(:logger).log_exception(e)
+        builder = Rules::Builder.new(block.binding)
+        builder.uid(id)
+        builder.tags(["Script"])
+        builder.name(name)
+        builder.script(&block)
+        logger.trace { builder.inspect }
+        builder.build(script)
       end
     end
 

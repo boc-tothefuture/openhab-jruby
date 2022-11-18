@@ -34,20 +34,6 @@ RSpec.describe OpenHAB::DSL do
     end
   end
 
-  describe "#rule" do
-    it "doesn't propagate exceptions during rule definition; just logs them" do
-      logger = instance_double(OpenHAB::Logger)
-      # have to make sure it's available as a method on `self`, not just a local var,
-      # since that's how Rules::Buidler gets it
-      allow(self).to receive(:logger).and_return(logger)
-      allow(logger).to receive(:trace)
-      expect(logger).to receive(:log_exception).with(instance_of(java.lang.NumberFormatException))
-      rule do
-        java.lang.Integer.parse_int("k")
-      end
-    end
-  end
-
   describe "#script" do
     it "creates triggerable rule" do
       triggered = false
