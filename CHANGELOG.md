@@ -146,6 +146,7 @@ here is a non-exhaustive list of significant departures from the original gem:
   multiple locations. For example,
   `after(1.minute, id: [:this_logical_usage, event.item])`. This makes it
   possible to schedule the same logically re-entrant timer from multiple rules.
+* `OpenHAB.conf_root` was renamed to {OpenHAB::Core.config_folder}.
 
 ### Features
 

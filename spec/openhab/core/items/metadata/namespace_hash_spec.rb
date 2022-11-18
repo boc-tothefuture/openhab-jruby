@@ -30,6 +30,12 @@ RSpec.describe OpenHAB::Core::Items::Metadata::NamespaceHash do
       expect(metadata["test"]).to be_empty
     end
 
+    it "stringifies namesapce value" do
+      metadata["test"] = 5
+      expect(metadata["test"].value).to eql "5"
+      expect(metadata["test"]).to be_empty
+    end
+
     it "replaces entire metadata with Hash" do
       metadata["test"] = { "x" => "y" }
       expect(metadata["test"].value).to eql ""

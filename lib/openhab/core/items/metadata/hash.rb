@@ -72,7 +72,7 @@ module OpenHAB
 
                         [value.first, (value.last || {}).transform_keys(&:to_s)]
                       when ::Hash then ["", value.transform_keys(&:to_s)]
-                      else [value, {}]
+                      else [value.to_s, {}]
                       end
               new(Metadata.new(org.openhab.core.items.MetadataKey.new(namespace.to_s, item_name), *value))
             end
