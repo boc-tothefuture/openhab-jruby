@@ -264,7 +264,7 @@ module OpenHAB
     def log_exception(exception)
       exception = clean_backtrace(exception)
       error do
-        "#{exception.message} (#{exception.class})\n#{name}#{exception.backtrace&.join("\n")}"
+        "#{exception.message} (#{exception.class})\n#{exception.backtrace&.join("\n")}"
       end
     end
 
