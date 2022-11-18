@@ -73,7 +73,7 @@ module OpenHAB
         def command(command)
           command = format_command(command)
           logger.trace "Sending Command #{command} to #{name}"
-          org.openhab.core.model.script.actions.BusEvent.sendCommand(self, command)
+          $events.send_command(self, command)
           self
         end
 
@@ -93,7 +93,7 @@ module OpenHAB
         def update(state)
           state = format_update(state)
           logger.trace "Sending Update #{state} to #{name}"
-          org.openhab.core.model.script.actions.BusEvent.postUpdate(self, state)
+          $events.post_update(self, state)
           self
         end
 

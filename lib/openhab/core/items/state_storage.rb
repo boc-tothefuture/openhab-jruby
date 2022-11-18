@@ -18,7 +18,7 @@ module OpenHAB
         #
         # @!visibility private
         def self.from_items(*items)
-          StateStorage.new(org.openhab.core.model.script.actions.BusEvent.store_states(*items).to_h)
+          StateStorage.new($events.store_states(*items).to_h)
         end
 
         #
@@ -27,7 +27,7 @@ module OpenHAB
         # @return [void]
         #
         def restore
-          org.openhab.core.model.script.actions.BusEvent.restore_states(to_h)
+          $events.restore_states(to_h)
         end
 
         #
@@ -36,7 +36,7 @@ module OpenHAB
         # @return [void]
         #
         def restore_changes
-          org.openhab.core.model.script.actions.BusEvent.restore_states(select { |item, value| item.state != value })
+          $events.restore_states(select { |item, value| item.state != value })
         end
 
         #
