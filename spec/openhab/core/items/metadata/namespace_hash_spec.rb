@@ -30,7 +30,7 @@ RSpec.describe OpenHAB::Core::Items::Metadata::NamespaceHash do
       expect(metadata["test"]).to be_empty
     end
 
-    it "stringifies namesapce value" do
+    it "stringifies namespace value" do
       metadata["test"] = 5
       expect(metadata["test"].value).to eql "5"
       expect(metadata["test"]).to be_empty

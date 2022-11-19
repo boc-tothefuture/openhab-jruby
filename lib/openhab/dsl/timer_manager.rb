@@ -127,7 +127,7 @@ module OpenHAB
       def schedule(id)
         @timers_by_id.compute(id) do |_key, timer|
           new_timer = yield timer
-          raise ArgumentError, "Block must return a timer or nil" unless timer.is_a?(Core::Timer) || timer.nil?
+          raise ArgumentError, "Block must return a timer or nil" unless new_timer.is_a?(Core::Timer) || new_timer.nil?
 
           if !new_timer.equal?(timer) && new_timer&.id
             raise ArgumentError,

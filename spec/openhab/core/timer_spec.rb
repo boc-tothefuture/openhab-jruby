@@ -174,6 +174,17 @@ RSpec.describe OpenHAB::Core::Timer do
         expect(first_executed).to be true
         expect(second_executed).to be false
       end
+
+      describe "TimerManager#schedule" do
+        it "requires the block to return a valid timer" do
+          proper_timer_class = self.class.mock_timers? ? OpenHAB::RSpec::Mocks::Timer : described_class
+          real_timer = after(1.second) { nil }
+          fake_timer = Struct.new(:id).new(nil)
+
+          expect(timers.schedule("id") { real_timer }).to be_a(proper_timer_class)
+          expect { timers.schedule("id") { fake_timer } }.to raise_exception(ArgumentError, /must return a timer/i)
+        end
+      end
     end
   end
 
