@@ -96,6 +96,18 @@ module OpenHAB
       #
       def cancel
         DSL.timers.delete(self)
+        cancel!
+      end
+
+      #
+      # Cancel the timer but do not remove self from the timer manager
+      #
+      # To be used internally by {TimerManager} from inside ConcurrentHashMap's compute blocks
+      #
+      # @return [true,false] True if cancel was successful, false otherwise
+      #
+      # @!visibility private
+      def cancel!
         @timer.cancel
       end
 

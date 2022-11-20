@@ -31,7 +31,10 @@ module OpenHAB
             # timer when one doesn't already exist
             next old_timer if !reschedule && old_timer
 
-            old_timer&.cancel
+            if old_timer
+              old_timer.cancel!
+              @timers.remove(old_timer)
+            end
             Core::Timer.new(duration, id: id, thread_locals: thread_locals, block: block)
           end
         end
@@ -55,7 +58,7 @@ module OpenHAB
         @timers.remove(timer)
         return unless timer.id
 
-        @timers_by_id.delete(timer.id)
+        @timers_by_id.remove(timer.id)
       end
 
       #
@@ -67,7 +70,9 @@ module OpenHAB
       def cancel(id)
         result = false
         @timers_by_id.compute_if_present(id) do |_key, timer|
-          result = timer.cancel
+          result = timer.cancel!
+          @timers.remove(timer)
+
           nil
         end
         result
@@ -136,8 +141,9 @@ module OpenHAB
 
           if timer&.cancelled?
             new_timer = nil
-          elsif new_timer.nil? && !timer&.cancelled?
-            timer&.cancel
+          elsif new_timer.nil? && timer && !timer.cancelled?
+            timer.cancel!
+            @timers.remove(timer)
           end
           next unless new_timer
 

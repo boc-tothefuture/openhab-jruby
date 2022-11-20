@@ -175,6 +175,18 @@ RSpec.describe OpenHAB::Core::Timer do
         expect(second_executed).to be false
       end
 
+      it "is reentrant" do
+        exec_proofs = []
+        (200..1000).step(100) do |delay|
+          after(delay.milliseconds, id: "id") { exec_proofs << delay }
+
+          expect(timers).to include("id")
+        end
+
+        time_travel_and_execute_timers(1.1.seconds)
+        expect(exec_proofs).to eq [1000]
+      end
+
       describe "TimerManager#schedule" do
         it "requires the block to return a valid timer" do
           proper_timer_class = self.class.mock_timers? ? OpenHAB::RSpec::Mocks::Timer : described_class
