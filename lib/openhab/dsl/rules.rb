@@ -23,7 +23,7 @@ module OpenHAB
           script_rules.each_value(&:cleanup)
         end
       end
-      ScriptHandling.script_unloaded { cleanup_rules }
+      Core::ScriptHandling.script_unloaded { cleanup_rules }
     end
   end
 end

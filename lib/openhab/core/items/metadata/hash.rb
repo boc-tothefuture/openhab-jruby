@@ -15,6 +15,8 @@ module OpenHAB
         #
         # @!attribute [rw] value
         #   @return [String] The main value for the metadata namespace.
+        # @!attribute [r] namespace
+        #   @return [String]
         #
         class Hash
           java_import org.openhab.core.items.Metadata
@@ -57,6 +59,8 @@ module OpenHAB
                          :to_hash,
                          :value?
           def_delegators :to_h, :invert, :merge, :transform_keys, :transform_values
+
+          def_delegator :uid, :namespace
 
           class << self
             # @!visibility private
@@ -108,13 +112,20 @@ module OpenHAB
           end
 
           # @!visibility private
-          def create
-            NamespaceHash.registry.add(@metadata) if attached?
+          def commit
+            provider.update(@metadata) if attached?
           end
 
           # @!visibility private
-          def commit
-            NamespaceHash.registry.update(@metadata) if attached?
+          def create_or_update
+            return unless attached?
+
+            (p = provider).get(uid) ? p.update(@metadata) : p.add(@metadata)
+          end
+
+          # @!visibility private
+          def remove
+            provider.remove(uid)
           end
 
           # @!visibility private
@@ -383,6 +394,37 @@ module OpenHAB
             [value, to_h].inspect
           end
           alias_method :to_s, :inspect
+
+          #
+          # @raise [RuntimeError] if the provider is not a
+          #   {org.openhab.core.common.registry.ManagedProvider ManagedProvider} that can be updated.
+          # @return [org.openhab.core.common.registry.ManagedProvider]
+          #
+          def provider
+            preferred_provider = Provider.current(
+              Thread.current[:openhab_providers]&.dig(:metadata_items, uid.item_name) ||
+                Thread.current[:openhab_providers]&.dig(:metadata_namespaces, uid.namespace),
+              self
+            )
+
+            if attached?
+              provider = Provider.registry.provider_for(uid)
+              return preferred_provider unless provider
+
+              unless provider.is_a?(org.openhab.core.common.registry.ManagedProvider)
+                raise FrozenError, "Cannot modify metadata from provider #{provider.inspect}"
+              end
+
+              if preferred_provider != provider
+                logger.warn("Provider #{preferred_provider.inspect} cannot be used with #{uid}; " \
+                            "reverting to provider #{provider.inspect}. " \
+                            "This may cause unexpected issues, like metadata persisting that you did not expect to.")
+                preferred_provider = provider
+              end
+
+            end
+            preferred_provider
+          end
         end
       end
     end

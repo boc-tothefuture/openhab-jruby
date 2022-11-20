@@ -96,12 +96,7 @@ module OpenHAB
             metadata = Hash.from_item(@item_name, namespace, value)
             return @hash[metadata.uid.namespace] = metadata unless attached? # rubocop:disable Lint/ReturnInVoidContext
 
-            # registry.get can be omitted, but registry.update will log a warning for nonexistent metadata
-            if self.class.registry.managed_provider.get.get(metadata.uid)
-              metadata.commit
-            else
-              metadata.create
-            end
+            metadata.create_or_update
             metadata # rubocop:disable Lint/Void
           end
           alias_method :store, :[]=
@@ -117,7 +112,11 @@ module OpenHAB
           # @!visibility private
           def clear
             if attached?
-              self.class.registry.remove_item_metadata(@item_name)
+              provider = Provider.current(Thread.current[:openhab_providers]&.dig(:metadata_items, @item_name))
+              provider.remove_item_metadata(@item_name)
+              Thread.current[:openhab_providers]&.[](:metadata_namespaces)&.each_value do |namespace_provider|
+                Provider.current(namespace_provider).remove_item_metadata(@item_name)
+              end
             else
               @hash.clear
             end
@@ -171,11 +170,10 @@ module OpenHAB
 
           # @!visibility private
           def delete(namespace, &block)
-            namespace = namespace.to_s
+            return @hash.delete(namespace.to_s, &block) unless attached?
 
-            return @hash.delete(namespace, &block) unless attached?
-
-            r = self.class.registry.remove(MetadataKey.new(namespace, @item_name))
+            metadata = Hash.from_item(@item_name, namespace, nil)
+            r = metadata.remove
             return yield(namespace) if block && !r
 
             Hash.new(r) if r
@@ -208,7 +206,7 @@ module OpenHAB
             return @hash.each(&block) unless attached?
             return to_enum(:each) unless block
 
-            self.class.registry.all.each do |meta|
+            Provider.registry.all.each do |meta|
               yield meta.uid.namespace, Hash.new(meta) if meta.uid.item_name == @item_name
             end
             self
@@ -220,7 +218,7 @@ module OpenHAB
             return @hash.each_key(&block) unless attached?
             return to_enum(:each_key) unless block
 
-            self.class.registry.all.each do |meta|
+            Provider.registry.all.each do |meta|
               yield meta.uid.namespace if meta.uid.item_name == @item_name
             end
             self
@@ -231,7 +229,7 @@ module OpenHAB
             return @hash.each_value(&block) unless attached?
             return to_enum(:each_value) unless block_given?
 
-            self.class.registry.all.each do |meta|
+            Provider.registry.all.each do |meta|
               yield Hash.new(meta) if meta.uid.item_name == @item_name
             end
             self
@@ -241,7 +239,7 @@ module OpenHAB
           def empty?
             return @hash.empty? unless attached?
 
-            self.class.registry.all.each do |meta|
+            Provider.registry.all.each do |meta|
               return false if meta.uid.item_name == @item_name
             end
             true
@@ -263,7 +261,7 @@ module OpenHAB
             end
 
             logger.trace("Getting metadata for item: #{@item_name}, namespace '#{key}'")
-            if (m = self.class.registry.get(MetadataKey.new(key, @item_name)))
+            if (m = Provider.registry.get(MetadataKey.new(key, @item_name)))
               Hash.new(m)
             elsif block
               yield key
@@ -280,7 +278,7 @@ module OpenHAB
 
             keys.each_with_object([]) do |key, res|
               key = key.to_s
-              if (m = self.class.registry.get(MetadataKey.new(key, @item_name)))
+              if (m = Provider.registry.get(MetadataKey.new(key, @item_name)))
                 res << Hash.new(m)
               elsif block_given?
                 res << yield(key)
@@ -307,7 +305,7 @@ module OpenHAB
             key = key.to_s
             return @hash.key?(key) unless attached?
 
-            !self.class.registry.get(MetadataKey.new(key, @item_name)).nil?
+            !Provider.registry.get(MetadataKey.new(key, @item_name)).nil?
           end
           alias_method :has_key?, :key?
           alias_method :member?, :key?
@@ -373,7 +371,7 @@ module OpenHAB
 
             keys = keys.to_set
             r = {}
-            self.class.registry.all.each do |meta|
+            Provider.registry.all.each do |meta|
               if meta.uid.item_name == @item_name && keys.include?(meta.uid.namespace)
                 r[meta.uid.namespace] =
                   Hash.new(meta)

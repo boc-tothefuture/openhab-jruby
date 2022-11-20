@@ -6,36 +6,6 @@ module OpenHAB
     # Contains extensions to simplify working with {Core::Things::Thing Thing}s.
     #
     module Things
-      # Stores all things created in scripts, and notifies the ThingRegistry
-      # of their existence
-      # aa@!visibility private
-      class ThingProvider < org.openhab.core.common.registry.AbstractProvider
-        include org.openhab.core.thing.ThingProvider
-        include Singleton
-
-        def initialize
-          super
-
-          @things = []
-
-          $things.add_provider(self)
-          ScriptHandling.script_unloaded { $things.remove_provider(self) }
-        end
-
-        # Add a thing to this provider
-        def add(thing)
-          thing = thing.build
-          @things << thing
-          notify_listeners_about_added_element(thing)
-          thing
-        end
-
-        # Get all items in this provider
-        def getAll # rubocop:disable Naming/MethodName required by java interface
-          @things
-        end
-      end
-
       # A thing builder allows you to dynamically create OpenHAB thing at runtime.
       # This can be useful either to create things as soon as the script loads,
       # or even later based on a rule executing.
@@ -45,6 +15,13 @@ module OpenHAB
       #     thing "astro:sun:home", "Astro Sun Data", config: { "geolocation" => "0,0" }
       #   end
       class Builder
+        # @return [org.openhab.core.things.ManagedThingProvider]
+        attr_reader :provider
+
+        def initialize(provider)
+          @provider = Core::Things::Provider.current(provider)
+        end
+
         # Create a new Bridge
         # @see BridgeBuilder#initialize
         def bridge(*args, **kwargs, &block)
@@ -62,7 +39,7 @@ module OpenHAB
         def build(klass, *args, **kwargs, &block)
           builder = klass.new(*args, **kwargs)
           builder.instance_eval(&block) if block
-          thing = ThingProvider.instance.add(builder)
+          thing = provider.add(builder.build)
           thing = Core::Things::Proxy.new(thing)
           thing.enable(enabled: builder.enabled) unless builder.enabled.nil?
           thing

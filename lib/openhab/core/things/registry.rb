@@ -24,6 +24,8 @@ module OpenHAB
         end
         alias_method :include?, :[]
         alias_method :key?, :[]
+        # @deprecated
+        alias_method :has_key?, :[]
 
         #
         # Explicit conversion to array
@@ -34,11 +36,32 @@ module OpenHAB
           $things.all.map { |thing| Proxy.new(thing) }
         end
 
+        #
         # Enter the Thing Builder DSL.
+        # @param (see Core::Provider.current)
         # @yield Block executed in the context of a {DSL::Things::Builder}.
         # @return [Object] The result of the block.
-        def build(&block)
-          DSL::Things::Builder.new.instance_eval(&block)
+        #
+        def build(preferred_provider = nil, &block)
+          DSL::Things::Builder.new(preferred_provider).instance_eval(&block)
+        end
+
+        #
+        # Remove a Thing.
+        #
+        # The thing must be a managed thing (typically created by Ruby or in the UI).
+        #
+        # @param [String, Thing, ThingUID] thing_uid
+        # @return [Thing, nil] The removed item, if found.
+        def remove(thing_uid)
+          thing_uid = thing.uid if thing_uid.is_a?(Thing)
+          thing_uid = ThingUID.new(thing_uid) if thing_uid.is_a?(String)
+          provider = Provider.registry.provider_for(thing_uid)
+          unless provider.is_a?(org.openhab.core.common.registry.ManagedProvider)
+            raise "Cannot remove thing #{thing_uid} from non-managed provider #{provider.inspect}"
+          end
+
+          provider.remove(thing_uid)
         end
       end
     end

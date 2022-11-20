@@ -32,6 +32,8 @@ module OpenHAB
           !$ir.getItems(name).empty?
         end
         alias_method :include?, :key?
+        # @deprecated
+        alias_method :has_key?, :key?
 
         # Explicit conversion to array
         # @return [Array]
@@ -39,26 +41,33 @@ module OpenHAB
           $ir.items.map { |item| Proxy.new(item) }
         end
 
+        #
         # Enter the Item Builder DSL.
+        #
+        # @param (see Core::Provider.current)
         # @yield Block executed in the context of a {DSL::Items::Builder}
         # @return [Object] The return value of the block.
-        def build(&block)
-          DSL::Items::BaseBuilderDSL.new.instance_eval(&block)
+        #
+        def build(preferred_provider = nil, &block)
+          DSL::Items::BaseBuilderDSL.new(preferred_provider).instance_eval(&block)
         end
 
+        #
         # Remove an item.
         #
-        # The item must have either been created by this script, or be a
-        # managed item (typically created in the UI).
+        # The item must be a managed item (typically created by Ruby or in the UI).
         #
+        # @param [String, GenericItem] item_name
         # @param recursive [true, false] Remove the item's members if it's a group
         # @return [GenericItem, nil] The removed item, if found.
         def remove(item_name, recursive: false)
           item_name = item_name.name if item_name.is_a?(GenericItem)
-          result = DSL::Items::ItemProvider.instance.remove(item_name, recursive: recursive)
-          return result if result
+          provider = Provider.registry.provider_for(item_name)
+          unless provider.is_a?(org.openhab.core.common.registry.ManagedProvider)
+            raise "Cannot remove item #{item_name} from non-managed provider #{provider.inspect}"
+          end
 
-          $ir.remove(item_name, recursive)
+          provider.remove(item_name, recursive)
         end
       end
     end

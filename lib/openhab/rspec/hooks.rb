@@ -41,28 +41,32 @@ module OpenHAB
           @known_rules = Core.rule_registry.all.map(&:uid)
         end
 
+        # Each spec gets temporary providers
+        [Core::Items::Provider,
+         Core::Items::Metadata::Provider,
+         Core::Things::Provider,
+         Core::Things::Links::Provider].each do |klass|
+          config.around do |example|
+            klass.new(&example)
+          end
+        end
+
         config.before do |example|
-          @item_provider = DSL::Items::ItemProvider.send(:new)
-          allow(DSL::Items::ItemProvider).to receive(:instance).and_return(@item_provider)
-          @thing_provider = DSL::Things::ThingProvider.send(:new)
-          allow(DSL::Things::ThingProvider).to receive(:instance).and_return(@thing_provider)
-          @item_channel_link_provider = DSL::Items::ItemChannelLinkProvider.send(:new)
-          allow(DSL::Items::ItemChannelLinkProvider).to receive(:instance).and_return(@item_channel_link_provider)
-          mr = Core::Items::Metadata::NamespaceHash.registry
-          @metadata_provider = Mocks::MetadataProvider.new(mr.managed_provider.get)
-          mr.add_provider(@metadata_provider)
-          mr.set_managed_provider(@metadata_provider)
+          # clear persisted thing status
           tm = OSGi.service("org.openhab.core.thing.ThingManager")
           tm.class.field_reader :storage
           tm.storage.keys.each { |k| tm.storage.remove(k) } # rubocop:disable Style/HashEachMethods not a hash
-          @log_index = File.size(log_file)
+
           profile_factory = Core::ProfileFactory.send(:new)
           @profile_factory_registration = OSGi.register_service(profile_factory)
           allow(Core::ProfileFactory).to receive(:instance).and_return(profile_factory)
+
           stub_const("OpenHAB::Core::Timer", Mocks::Timer) if self.class.mock_timers?
+
           log_line = "rspec #{example.location} # #{example.full_description}"
           logger.info(log_line)
           Logger.events.info(log_line)
+          @log_index = File.size(log_file)
         end
 
         config.after do
@@ -70,21 +74,14 @@ module OpenHAB
           (Core.rule_registry.all.map(&:uid) - @known_rules).each do |uid|
             remove_rule(uid) if defined?(remove_rule)
           end
-          $ir.remove_provider(@item_provider)
           Core::Items::Proxy.reset_cache
-          $things.remove_provider(@thing_provider)
           Core::Things::Proxy.reset_cache
-          registry = OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
-          registry.remove_provider(@item_channel_link_provider)
-          Core::Items::Metadata::NamespaceHash.registry.remove_provider(@metadata_provider)
-          @metadata_provider.restore_parent
           @profile_factory_registration.unregister
           timers.cancel_all
           # timers and rules have already been canceled, so we can safely just
           # wipe this
           DSL::Items::TimedCommand.timed_commands.clear
           Timecop.return
-          restore_autoupdate_items
           Mocks::PersistenceService.instance.reset
         end
       end

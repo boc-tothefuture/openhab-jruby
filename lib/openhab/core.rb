@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# several classes rely on this, so force it to load earlier
+require_relative "core/provider"
+
 Dir[File.expand_path("core/**/*.rb", __dir__)].sort.each do |f|
   require f
 end

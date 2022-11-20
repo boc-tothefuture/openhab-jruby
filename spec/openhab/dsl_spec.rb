@@ -109,4 +109,125 @@ RSpec.describe OpenHAB::DSL do
       unit!
     end
   end
+
+  describe "provider" do
+    before do
+      items.build do
+        switch_item "Switch1"
+        switch_item "Switch2"
+      end
+    end
+
+    let(:provider_class) { OpenHAB::Core::Items::Metadata::Provider }
+    let(:registry) { provider_class.registry }
+    let(:managed_provider) { registry.managed_provider.get }
+
+    around do |example|
+      provider_class.new(thread_provider: false) do |provider|
+        example.example_group.let!(:other_provider) { provider }
+        example.call
+      end
+    end
+
+    it "type checks providers" do
+      expect do
+        provider(metadata: :other_provider) { nil }
+      end.to raise_error(ArgumentError, /not a valid provider/)
+    end
+
+    it "type checks proc providers when they're used" do
+      provider(metadata: -> { :other_provider }) do
+        expect { provider_class.current }.to raise_error(ArgumentError)
+      end
+    end
+
+    it "can use a single provider for all" do
+      provider(:persistent) do
+        expect(provider_class.current).to be managed_provider
+      end
+    end
+
+    it "can set a proc as a provider" do
+      provider(-> { :persistent }) do
+        expect(provider_class.current).to be managed_provider
+      end
+    end
+
+    it "can set a provider explicitly" do
+      provider(other_provider) do
+        expect(provider_class.current).to be other_provider
+        expect(OpenHAB::Core::Items::Provider.current).not_to be other_provider
+      end
+    end
+
+    it "can set a managed provider explicitly" do
+      provider(managed_provider) do
+        expect(provider_class.current).to be managed_provider
+        expect(OpenHAB::Core::Items::Provider.current).not_to be managed_provider
+      end
+    end
+
+    it "can set a provider for metadata namespaces" do
+      provider(namespace1: other_provider) do
+        Switch1.metadata[:namespace1] = "hi"
+        Switch1.metadata[:namespace2] = "bye"
+        m1 = Switch1.metadata[:namespace1]
+        m2 = Switch1.metadata[:namespace2]
+        expect(registry.provider_for(m1.uid)).to be other_provider
+        expect(registry.provider_for(m2.uid)).to be provider_class.current
+      end
+    end
+
+    it "can set a provider for metadata items" do
+      provider(Switch1 => other_provider) do
+        Switch1.metadata[:test] = "hi"
+        Switch2.metadata[:test] = "bye"
+        m1 = Switch1.metadata[:test]
+        m2 = Switch2.metadata[:test]
+        expect(registry.provider_for(m1.uid)).to be other_provider
+        expect(registry.provider_for(m2.uid)).to be provider_class.current
+      end
+    end
+
+    it "can set a provider for metadata with a Proc" do
+      my_proc = proc do |metadata|
+        other_provider if metadata&.item == Switch1
+      end
+
+      provider(metadata: my_proc) do
+        Switch1.metadata[:test] = "hi"
+        Switch2.metadata[:test] = "bye"
+        m1 = Switch1.metadata[:test]
+        m2 = Switch2.metadata[:test]
+        expect(registry.provider_for(m1.uid)).to be other_provider
+        expect(registry.provider_for(m2.uid)).to be provider_class.current
+      end
+    end
+
+    it "prevents setting providers for the wrong type" do
+      expect { provider(things: other_provider) { nil } }.to raise_error(ArgumentError, /is not a provider for things/)
+    end
+
+    it "doesn't have zombie metadata across recreated items" do
+      # nest the items.build in blocks as if they're in their own script files
+      OpenHAB::Core::Items::Provider.new do
+        provider_class.new do
+          items.build do
+            switch_item "Switch3", metadata: { test: "hi" }
+          end
+          expect(Switch3.metadata[:test].value).to eql "hi"
+        end
+      end
+      expect(items).not_to have_key("Switch3")
+
+      OpenHAB::Core::Items::Provider.new do
+        provider_class.new do
+          items.build do
+            switch_item "Switch3"
+          end
+          expect(Switch3.metadata).not_to have_key(:test)
+        end
+      end
+    end
+  end
 end

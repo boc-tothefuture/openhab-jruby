@@ -208,7 +208,6 @@ module OpenHAB
         require "openhab/dsl"
 
         require_relative "mocks/persistence_service"
-        require_relative "mocks/metadata_provider"
         require_relative "mocks/timer"
 
         # override several DSL methods
@@ -400,33 +399,17 @@ module OpenHAB
       # need to transfer autoupdate metadata from GenericMetadataProvider to ManagedMetadataProvider
       # so that we can mutate it in the future
       def set_up_autoupdates
-        gmp = OSGi.service("org.openhab.core.model.item.internal.GenericMetadataProvider")
-        mr = Core::Items::Metadata::NamespaceHash.registry
-        mmp = mr.managed_provider.get
-        to_add = []
-        gmp.all.each do |metadata|
+        registry = Core::Items::Metadata::Provider.registry
+        registry.class.field_reader :identifierToElement
+
+        autoupdate_provider = Core::Items::Metadata::Provider.send(:new)
+        registry.all.each do |metadata|
           next unless metadata.uid.namespace == "autoupdate"
 
-          to_add << metadata
+          # tweak the registry to allow us to overwrite this element
+          registry.identifierToElement.delete(metadata.uid)
+          autoupdate_provider.add(metadata)
         end
-        gmp.remove_metadata_by_namespace("autoupdate")
-
-        to_add.each do |m|
-          # we can't just update; we need to remove and add
-          # because this was a duplicate key, so the ManagedProvider
-          # knows about it, but the registry does not. So
-          # removing and adding gets it to notify the registry
-          # that it has it
-          mmp.remove(m.uid) if mmp.get(m.uid)
-          mmp.add(m)
-        end
-      end
-
-      def restore_autoupdate_items
-        return unless instance_variable_defined?(:@autoupdated_items)
-
-        @autoupdated_items&.each(&:commit)
-        @autoupdated_items = nil
       end
     end
 

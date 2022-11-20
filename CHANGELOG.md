@@ -147,6 +147,9 @@ here is a non-exhaustive list of significant departures from the original gem:
   `after(1.minute, id: [:this_logical_usage, event.item])`. This makes it
   possible to schedule the same logically re-entrant timer from multiple rules.
 * `OpenHAB.conf_root` was renamed to {OpenHAB::Core.config_folder}.
+* {OpenHAB::Core::Items::GenericItem#metadata Metadata} now defaults to using transient backing provider.
+  This means that if you add metadata to an item from Ruby, it will disappear when the script is unloaded.
+  See {OpenHAB::DSL.provider} for how to revert to the old behavior within a single block, or for your entire script.
 
 ### Features
 
@@ -165,7 +168,8 @@ here is a non-exhaustive list of significant departures from the original gem:
   that can be used to thread-safely schedule/reschedule/cancel timers by ID.
 * `#inspect` on several classes has been improved to be useful, instead of just returning the class name.
 * {OpenHAB::DSL.after after} (and anything else that ultimately relies on timers) support `Proc` for durations.
-* Add `#ago` and `#from_now` methods to {Duration}
+* Add `#ago` and `#from_now` methods to {Duration}.
+* The ability to designate how metadata should be persisted or not, via {OpenHAB::DSL.provider}.
 
 ### Bug Fixes
 

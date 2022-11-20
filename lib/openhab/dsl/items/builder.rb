@@ -6,100 +6,6 @@ module OpenHAB
     # Contains extensions to simplify working with [GenericItem]s.
     #
     module Items
-      # Stores all items created in scripts, and notifies the ItemRegistry
-      # of their existence
-      # @!visibility private
-      class ItemProvider < org.openhab.core.common.registry.AbstractProvider
-        include org.openhab.core.items.ItemProvider
-        include Singleton
-
-        def initialize
-          super
-
-          @items = {}
-
-          $ir.add_provider(self)
-          ScriptHandling.script_unloaded { $ir.remove_provider(self) }
-        end
-
-        # Add an item to this provider
-        def add(builder)
-          item = builder.build
-          raise "Item #{item.name} already exists" if @items.key?(item.name)
-
-          @items[item.name] = item
-          notify_listeners_about_added_element(item)
-
-          # make sure to add the item to the registry before linking it
-          builder.channels.each do |(channel, config)|
-            if !channel.include?(":") &&
-               (group = builder.groups.find { |g| g.is_a?(GroupItemBuilder) && g.thing })
-              thing = group.thing
-              thing = thing.uid if thing.is_a?(Core::Things::Thing)
-              channel = "#{thing}:#{channel}"
-            end
-            ItemChannelLinkProvider.instance.link(item, channel, config)
-          end
-
-          item
-        end
-
-        # Remove an item from this provider
-        #
-        # @return [GenericItem, nil] The removed item, if found.
-        def remove(item_name, recursive: false)
-          return nil unless @items.key?(item_name)
-
-          item = @items.delete(item_name)
-          if recursive && item.is_a?(Core::Items::GroupItem)
-            item.members.each { |member| remove(member.__getobj__, recursive: true) }
-          end
-
-          notify_listeners_about_removed_element(item)
-          item
-        end
-
-        # Get all items in this provider
-        def getAll # rubocop:disable Naming/MethodName required by java interface
-          @items.values
-        end
-      end
-
-      # @!visibility private
-      class ItemChannelLinkProvider < org.openhab.core.common.registry.AbstractProvider
-        include org.openhab.core.thing.link.ItemChannelLinkProvider
-        include Singleton
-
-        def initialize
-          super
-
-          @links = Hash.new { |h, k| h[k] = Set.new }
-          registry = OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")
-          registry.add_provider(self)
-          ScriptHandling.script_unloaded { registry.remove_provider(self) }
-        end
-
-        # @!visibility private
-        def link(item, channel, config = {})
-          config = org.openhab.core.config.core.Configuration.new(config.transform_keys(&:to_s))
-          channel = org.openhab.core.thing.ChannelUID.new(channel) if channel.is_a?(String)
-          channel = channel.uid if channel.is_a?(org.openhab.core.thing.Channel)
-          link = org.openhab.core.thing.link.ItemChannelLink.new(item.name, channel, config)
-
-          item_links = @links[item.name]
-          if item_links.include?(link)
-            notify_listeners_about_updated_element(link, link)
-          else
-            item_links << link
-            notify_listeners_about_added_element(link)
-          end
-        end
-
-        def getAll # rubocop:disable Naming/MethodName required by java interface
-          @links.values.flatten
-        end
-      end
-
       # An item builder allows you to dynamically create OpenHAB items at runtime.
       # This can be useful either to create items as soon as the script loads,
       # or even later based on a rule executing.
@@ -196,10 +102,37 @@ module OpenHAB
       class BaseBuilderDSL
         include Builder
 
-        private
+        # @!visibility private
+        class ProviderWrapper
+          attr_reader :provider
 
-        def provider
-          ItemProvider.instance
+          def initialize(provider)
+            @provider = provider
+          end
+
+          # @!visibility private
+          def add(builder)
+            item = builder.build
+            provider.add(item)
+            # make sure to add the item to the registry before linking it
+            builder.channels.each do |(channel, config)|
+              if !channel.include?(":") &&
+                 (group = builder.groups.find { |g| g.is_a?(GroupItemBuilder) && g.thing })
+                thing = group.thing
+                channel = "#{thing}:#{channel}"
+              end
+              Core::Things::Links::Provider.link(item, channel, config)
+            end
+            item
+          end
+        end
+        private_constant :ProviderWrapper
+
+        # @return [org.openhab.core.items.ItemProvider]
+        attr_reader :provider
+
+        def initialize(provider)
+          @provider = ProviderWrapper.new(Core::Items::Provider.current(provider))
         end
       end
 

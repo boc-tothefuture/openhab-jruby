@@ -30,7 +30,7 @@ module OpenHAB
     # include this before Core::Actions so that Core::Action's method_missing
     # takes priority
     include Core::EntityLookup
-    [Core::Actions, Rules::Terse, ScriptHandling].each do |mod|
+    [Core::Actions, Core::ScriptHandling, Rules::Terse].each do |mod|
       # make these available both as regular and class methods
       include mod
       singleton_class.include mod
@@ -602,7 +602,7 @@ module OpenHAB
     #   properly restored.
     #
     # {unit!} calls are cumulative - additional calls will not erase the effects
-    # previous calls unless they are for the same dimension.
+    # of previous calls unless they are for the same dimension.
     #
     # @return [Hash<javax.measure.Dimension=>javax.measure.Unit>]
     #   the prior unit configuration
@@ -643,6 +643,129 @@ module OpenHAB
       old_units = Thread.current[:openhab_units] || {}
       Thread.current[:openhab_units] = units.empty? ? {} : old_units.merge(units)
       old_units
+    end
+
+    #
+    # Sets the implicit provider(s) for operations inside the block.
+    #
+    # @param (see #provider!)
+    # @yield [] The block will be executed in the context of the specified unit(s).
+    # @return [Object] the result of the block
+    #
+    # @example
+    #   provider(metadata: :persistent) do
+    #     Switch1.metadata[:last_status_from_service] = status
+    #   end
+    #
+    #   provider!(metadata: { last_status_from_service: :persistent }, Switch2: :persistent)
+    #   Switch1.metadata[:last_status_from_service] = status # this will persist in JSONDB
+    #   Switch1.metadata[:homekit] = "Lightbulb" # this will be removed when the script is deleted
+    #   Switch2.metadata[:homekit] = "Lightbulb" # this will persist in JSONDB
+    #
+    # @see provider!
+    # @see OpenHAB::Core::Provider.current Provider.current for how the current provider is calculated
+    #
+    def provider(*args, **kwargs)
+      raise ArgumentError, "You must give a block to set the provider for the duration of" unless block_given?
+
+      begin
+        old_providers = provider!(*args, **kwargs)
+        yield
+      ensure
+        Thread.current[:openhab_providers] = old_providers
+      end
+    end
+
+    #
+    # Permanently set the implicit provider(s) for this thread.
+    #
+    # @note This method is only intended for use at the top level of rule
+    #   scripts. If it's used within library methods, or hap-hazardly within
+    #   rules, things can get very confusing because the prior state won't be
+    #   properly restored.
+    #
+    # {provider!} calls are cumulative - additional calls will not erase the effects
+    # of previous calls unless they are for the same provider type.
+    #
+    # @overload provider!(things: nil, items: nil, metadata: nil, links: nil, **metadata_items)
+    #
+    # @param [Core::Provider, org.openhab.core.registry.common.ManagedProvider, :persistent, :transient, Proc] providers
+    #   An explicit provider to use. If it's a {Core::Provider}, the type will be inferred automatically.
+    #   Otherwise it's applied to all types.
+    # @param [Hash] providers_by_type
+    #     A list of providers by type. Type can be `:items`, `:metadata`, `:things`, `:links`,
+    #     a {GenericItem} applying the provider to all metadata on that item, or a String or Symbol
+    #     applying the provider to all metadata of that namespace.
+    #
+    #     The provider can be a {org.openhab.core.common.registry.Provider Provider}, `:persistent`,
+    #     `:transient`, or a Proc returning one of those types. When the Proc is called for metadata
+    #     elements, the {Core::Items::Metadata::Hash} will be passed as an argument. Therefore it's
+    #     recommended that you use a Proc, not a Lambda, for permissive argument matching.
+    #
+    # @return [void]
+    #
+    # @see provider
+    # @see OpenHAB::Core::Provider.current Provider.current for how the current provider is calculated
+    #
+    def provider!(*providers, **providers_by_type)
+      thread_providers = Thread.current[:openhab_providers] ||= {}
+      old_providers = thread_providers.dup
+
+      providers.each do |provider|
+        case provider
+        when Core::Provider
+          thread_providers[provider.class.type] = provider
+        when org.openhab.core.common.registry.ManagedProvider
+          type = provider.type
+          unless type
+            raise ArgumentError, "#{provider.inspect} is for objects which are not supported by openhab-jrubyscripting"
+          end
+
+          thread_providers[type] = provider
+        when Proc,
+          :transient,
+          :persistent
+          Core::Provider::KNOWN_TYPES.each do |known_type|
+            thread_providers[known_type] = provider
+          end
+        when Hash
+          # non-symbols can't be used as kwargs, so Item keys show up as a separate hash here
+          # just merge it in, and allow it to be handled below
+          providers_by_type.merge!(provider)
+        else
+          raise ArgumentError, "#{provider.inspect} is not a valid provider"
+        end
+      end
+
+      providers_by_type.each do |type, provider|
+        case provider
+        when Proc,
+          org.openhab.core.common.registry.ManagedProvider,
+          :transient,
+          :persistent,
+          nil
+          nil
+        else
+          raise ArgumentError, "#{provider.inspect} is not a valid provider"
+        end
+
+        case type
+        when :items, :metadata, :things, :links
+          if provider.is_a?(org.openhab.core.common.registry.ManagedProvider) && provider.type != type
+            raise ArgumentError, "#{provider.inspect} is not a provider for #{type}"
+          end
+
+          thread_providers[type] = provider
+        when Symbol, String
+          (thread_providers[:metadata_namespaces] ||= {})[type.to_s] = provider
+        when GenericItem
+          (thread_providers[:metadata_items] ||= {})[type.name] = provider
+        else
+          raise ArgumentError, "#{type.inspect} is not provider type"
+        end
+      end
+
+      old_providers
     end
 
     # @!visibility private

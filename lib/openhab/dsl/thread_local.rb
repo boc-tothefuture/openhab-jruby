@@ -11,6 +11,7 @@ module OpenHAB
 
       # Keys to persist
       KNOWN_KEYS = %i[
+        openhab_providers
         openhab_rule_uid
         openhab_rule_type
         openhab_units
