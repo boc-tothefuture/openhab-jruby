@@ -40,7 +40,8 @@ RSpec.describe OpenHAB::Core::Items::Metadata::Hash do
 
     it "stringifies config keys" do
       namespace[:maxValue] = 10_000
-      expect(namespace["maxValue"]).to be 10_000
+      # JSON round-tripping changes it to a Float
+      expect(namespace["maxValue"]).to be 10_000.0
     end
 
     it "can be added via hash" do
@@ -70,7 +71,8 @@ RSpec.describe OpenHAB::Core::Items::Metadata::Hash do
 
     it "stringifies keys" do
       namespace.replace(maxValue: 10_000)
-      expect(namespace.to_h).to eql({ "maxValue" => 10_000 })
+      # JSON round-tripping changes it to a Float
+      expect(namespace.to_h).to eql({ "maxValue" => 10_000.0 })
     end
 
     it "accepts the config of another namespace" do

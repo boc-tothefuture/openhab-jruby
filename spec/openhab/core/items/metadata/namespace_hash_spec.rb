@@ -21,7 +21,8 @@ RSpec.describe OpenHAB::Core::Items::Metadata::NamespaceHash do
   describe "#[]=" do
     it "stringifies keys" do
       metadata["homekit"] = "", { maxValue: 10_000 }
-      expect(metadata["homekit"].to_h).to eql({ "maxValue" => 10_000 })
+      # JSON round-tripping changes it to a Float
+      expect(metadata["homekit"].to_h).to eql({ "maxValue" => 10_000.0 })
     end
 
     it "replaces entire metadata with value" do

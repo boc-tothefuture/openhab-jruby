@@ -113,13 +113,17 @@ module OpenHAB
 
           # @!visibility private
           def commit
-            provider.update(@metadata) if attached?
+            return unless attached?
+
+            javaify
+            provider.update(@metadata)
           end
 
           # @!visibility private
           def create_or_update
             return unless attached?
 
+            javaify
             (p = provider).get(uid) ? p.update(@metadata) : p.add(@metadata)
           end
 
@@ -424,6 +428,19 @@ module OpenHAB
 
             end
             preferred_provider
+          end
+
+          private
+
+          #
+          # @see https://github.com/openhab/openhab-core/issues/3169
+          #
+          # in the meantime, force the serialization round-trip right now
+          #
+          def javaify
+            mapper = Provider.registry.managed_provider.get.storage.entityMapper
+
+            @metadata = mapper.from_json(mapper.to_json_tree(@metadata), Metadata.java_class)
           end
         end
       end

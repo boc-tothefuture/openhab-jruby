@@ -21,6 +21,10 @@ module OpenHAB
             end
           end
 
+          # see Hash#javaify
+          registry.managed_provider.get.class.field_reader :storage
+          registry.managed_provider.get.storage.class.field_reader :entityMapper
+
           #
           # Removes all metadata of a given item.
           #

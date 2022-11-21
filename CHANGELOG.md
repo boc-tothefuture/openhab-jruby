@@ -150,6 +150,9 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {OpenHAB::Core::Items::GenericItem#metadata Metadata} now defaults to using transient backing provider.
   This means that if you add metadata to an item from Ruby, it will disappear when the script is unloaded.
   See {OpenHAB::DSL.provider} for how to revert to the old behavior within a single block, or for your entire script.
+* {OpenHAB::Core::Items::GenericItem#metadata Metadata} will now be serialized before being set.
+  This fixes a complicated issue where types would changed unexpectedly, or even worse, reference Ruby classes that are not even available in the current JRuby instance.
+  See https://github.com/openhab/openhab-core/issues/3169 for more details.
 
 ### Features
 
