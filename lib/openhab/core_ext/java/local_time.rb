@@ -33,6 +33,8 @@ module OpenHAB
       #   end
       #
       class LocalTime
+        # @!parse include Time
+
         # @!visibility private
         class << self
           #
@@ -102,4 +104,4 @@ module OpenHAB
 end
 
 LocalTime = OpenHAB::CoreExt::Java::LocalTime unless Object.const_defined?(:LocalTime)
-LocalTime.include(OpenHAB::CoreExt::Java::Time)
+java.time.LocalTime.include(OpenHAB::CoreExt::Java::Time)

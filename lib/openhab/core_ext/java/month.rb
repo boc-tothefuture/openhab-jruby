@@ -9,6 +9,8 @@ module OpenHAB
 
       # Extensions to Month
       class Month
+        # @!parse include Time
+
         #
         # Returns the next month
         #
@@ -55,4 +57,4 @@ module OpenHAB
 end
 
 Month = OpenHAB::CoreExt::Java::Month unless Object.const_defined?(:Month)
-Month.include(OpenHAB::CoreExt::Java::Time)
+java.time.Month.include(OpenHAB::CoreExt::Java::Time)
