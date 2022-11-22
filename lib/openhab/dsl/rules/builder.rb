@@ -55,7 +55,6 @@ module OpenHAB
         def rule(name = nil, id: nil, script: nil, binding: nil, &block)
           raise ArgumentError, "Block is required" unless block
 
-          id ||= NameInference.infer_rule_id_from_name(name) if name
           id ||= NameInference.infer_rule_id_from_block(block)
           script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
 
@@ -91,7 +90,6 @@ module OpenHAB
         def script(name = nil, id: nil, script: nil, &block)
           raise ArgumentError, "Block is required" unless block
 
-          id ||= NameInference.infer_rule_id_from_name(name) if name
           id ||= NameInference.infer_rule_id_from_block(block)
           name ||= id
           script ||= block.source rescue nil # rubocop:disable Style/RescueModifier

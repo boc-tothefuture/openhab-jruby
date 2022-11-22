@@ -44,7 +44,7 @@ RSpec.describe OpenHAB::Log do
       expect(Object.new.logger.name).to eql "org.openhab.automation.jrubyscripting.Object"
     end
 
-    it "includes the rule name inside a rule" do
+    it "includes the rule id inside a rule" do
       rspec = self
       rule "log test", id: "log_test" do
         rspec.expect(logger.name).to rspec.eql "org.openhab.automation.jrubyscripting.rule.log_test"
@@ -55,14 +55,14 @@ RSpec.describe OpenHAB::Log do
       end
     end
 
-    it "uses the rule name inside a timer block inside a rule" do
+    it "uses the rule id inside a timer block inside a rule" do
       executed = false
       rule "log test" do
         on_start
         run do
           after(1.second) do
             executed = true
-            expect(logger.name).to eql "org.openhab.automation.jrubyscripting.rule.log_test" # rubocop:disable RSpec/ExpectInHook
+            expect(logger.name).to match(/^org\.openhab\.automation\.jrubyscripting\.rule\.log_spec\.rb:(?:\d+)$/) # rubocop:disable RSpec/ExpectInHook
           end
         end
       end
@@ -70,9 +70,9 @@ RSpec.describe OpenHAB::Log do
       expect(executed).to be true
     end
 
-    it "uses the rule name inside a script block" do
+    it "uses the rule id inside a script block" do
       executed = false
-      script "my script" do
+      script "my script", id: "my_script" do
         executed = true
         expect(logger.name).to eql "org.openhab.automation.jrubyscripting.script.my_script"
       end

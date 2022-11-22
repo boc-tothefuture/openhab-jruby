@@ -165,7 +165,6 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {OpenHAB::DSL.unit} can now handle units for multiple dimensions.
 * Support Ruby's method name convention for thing actions, e.g. `things["mqtt:broker:mosquitto"].publish_mqtt`
 * Global action methods (such as `increase_master_volume`) are now available directly from {OpenHAB::DSL}.
-* Rule IDs are now generated from the rule name if a name is given, but not an id.
 * {OpenHAB::DSL.timers timers} now returns {OpenHAB::DSL::TimerManager an object}
   that can be used to thread-safely schedule/reschedule/cancel timers by ID.
 * `#inspect` on several classes has been improved to be useful, instead of just returning the class name.

@@ -332,8 +332,8 @@ module OpenHAB
         rule_type = Thread.current[:openhab_rule_type]
         full_id = "#{rule_type}:#{rule_uid}"
 
-        self.class.rule_loggers[full_id] ||= Logger.new("#{Logger::PREFIX}.#{rule_type}.#{rule_uid.tr_s(":", "_")
-            .gsub(/[^A-Za-z0-9_.-]/, "")}")
+        self.class.rule_loggers[full_id] ||= Logger.new("#{Logger::PREFIX}.#{rule_type}.#{rule_uid
+            .gsub(/[^A-Za-z0-9_.:-]/, "")}")
       end
 
       extend Forwardable
