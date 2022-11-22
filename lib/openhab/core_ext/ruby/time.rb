@@ -36,13 +36,36 @@ module OpenHAB
         # @!method -(other)
         #
         # Extends {#-} to allow subtracting a {java.time.temporal.TemporalAmount TemporalAmount}
+        # or any other date/time class that responds to #to_zoned_date_time.
         #
-        # @param [java.time.temporal.TemporalAmount] other
+        # Subtractions with another object of the same class (e.g. Time - Other Time, or DateTime - Other DateTime)
+        # remains unchanged from its original behavior.
+        #
+        # @example Time - Duration -> ZonedDateTime
+        #   zdt_one_hour_ago = Time.now - 1.hour
+        #
+        # @example Time - ZonedDateTime -> Duration
+        #   java_duration = Time.now - 1.hour.ago
+        #
+        # @example Time - Numeric -> Time
+        #   time_one_hour_ago = Time - 3600
+        #
+        # @example Time - Time -> Float
+        #   one_day_in_secs = Time.new(2002, 10, 31) - Time.new(2002, 10, 30)
+        #
+        # @param [java.time.temporal.TemporalAmount, #to_zoned_date_time] other
         # @return [ZonedDateTime] If other is a {java.time.temporal.TemporalAmount TemporalAmount}
+        # @return [Duration] If other responds to #to_zoned_date_time
         # @return [Time] If other is a Numeric
+        # @return [Float] If other is a Time
         #
         def minus_with_temporal(other)
           return to_zoned_date_time - other if other.is_a?(java.time.temporal.TemporalAmount)
+
+          # Exclude subtracting against the same class
+          if other.respond_to?(:to_zoned_date_time) && !other.is_a?(self.class)
+            return to_zoned_date_time - other.to_zoned_date_time
+          end
 
           minus_without_temporal(other)
         end

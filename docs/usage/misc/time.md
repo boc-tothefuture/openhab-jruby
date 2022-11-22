@@ -82,6 +82,11 @@ Motion_Sensor.last_update < Time.now - 10.minutes
 # Alternatively:
 Motion_Sensor.last_update < 10.minutes.ago
 
+# Finding The Duration Between Two Times
+elapsed_time = Time.now - Motion_Sensor.last_update
+# Alternatively:
+elapsed_time = ZonedDateTime.now - Motion_Sensor.last_update
+
 # Using `-` operator with ZonedDateTime
 # Comparing two ZonedDateTime using `<` 
 Motion_Sensor.last_update < Light_Item.last_update - 10.minutes
