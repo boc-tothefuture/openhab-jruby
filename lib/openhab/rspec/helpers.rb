@@ -177,6 +177,17 @@ module OpenHAB
       # @return [void]
       #
       def autorequires
+        ENV["RUBYLIB"] ||= ""
+        ENV["RUBYLIB"] += ":" unless ENV["RUBYLIB"].empty?
+        ENV["RUBYLIB"] += rubylib_dir
+
+        $LOAD_PATH.unshift(*ENV["RUBYLIB"]
+          .split(File::PATH_SEPARATOR)
+            .reject(&:empty?)
+            .reject do |path|
+                             $LOAD_PATH.include?(path)
+                           end)
+
         requires = jrubyscripting_config&.get("require") || ""
         requires.split(",").each do |f|
           require f.strip
@@ -202,9 +213,6 @@ module OpenHAB
         karaf.use_root_instance = use_root_instance
         main = karaf.launch
 
-        ENV["RUBYLIB"] ||= ""
-        ENV["RUBYLIB"] += ":" unless ENV["RUBYLIB"].empty?
-        ENV["RUBYLIB"] += rubylib_dir
         require "openhab/dsl"
 
         require_relative "mocks/persistence_service"

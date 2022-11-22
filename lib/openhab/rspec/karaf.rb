@@ -552,7 +552,6 @@ module OpenHAB
       def set_jruby_script_presets
         wait_for_service("org.openhab.core.automation.module.script.ScriptEngineFactory",
                          filter: "(service.config.description.uri=automation:jruby)") do |jrubyscripting|
-          # "org.openhab.core.automation.module.script.internal.ScriptExtensionManager") do |sem|
           sem = OSGi.service(
             "org.openhab.core.automation.module.script.internal.ScriptExtensionManager"
           )
