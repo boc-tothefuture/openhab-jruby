@@ -529,14 +529,12 @@ things['lgwebos:WebOSTV:main-tv'].status == ThingStatus::ONLINE
 ### Enable/Disable a Thing
 
 ```ruby
-thing_manager = OpenHAB::Core::OSGi.service('org.openhab.core.thing.ThingManager')
-
 thing = things['lgwebos:WebOSTV:main-tv']
 
-thing_manager.set_enabled(thing.uid, false)
+thing.disable
 logger.info "TV enabled: #{thing.enabled?}"
 
-thing_manager.set_enabled(thing.uid, true)
+thing.enable
 logger.info "TV enabled: #{thing.enabled?}"
 ```
 

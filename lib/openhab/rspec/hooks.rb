@@ -53,7 +53,7 @@ module OpenHAB
 
         config.before do |example|
           # clear persisted thing status
-          tm = OSGi.service("org.openhab.core.thing.ThingManager")
+          tm = Core::Things.manager
           tm.class.field_reader :storage
           tm.storage.keys.each { |k| tm.storage.remove(k) } # rubocop:disable Style/HashEachMethods not a hash
 
