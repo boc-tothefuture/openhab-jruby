@@ -25,8 +25,7 @@ module OpenHAB
         # @return [ZonedDateTime] If other is a TemporalAmount
         def -(other)
           if other.respond_to?(:to_zoned_date_time)
-            nanos = other.to_zoned_date_time.until(self, java.time.temporal.ChronoUnit::NANOS)
-            (nanos.to_f / 1_000_000_000).seconds
+            java.time.Duration.between(other.to_zoned_date_time, self)
           elsif other.is_a?(Numeric)
             minus(other.seconds)
           else
