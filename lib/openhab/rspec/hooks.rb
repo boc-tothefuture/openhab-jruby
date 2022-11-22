@@ -78,6 +78,7 @@ module OpenHAB
           # wipe this
           DSL::Items::TimedCommand.timed_commands.clear
           Timecop.return
+          restore_autoupdate_items
           Mocks::PersistenceService.instance.reset
         end
       end

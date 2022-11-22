@@ -86,11 +86,16 @@ module OpenHAB
         end
 
         @autoupdated_items = []
+        @spec_metadata_provider = Core::Items::Metadata::Provider.current
 
         $ir.for_each do |_provider, item|
-          if (hash = item.metadata.delete("autoupdate"))
-            @autoupdated_items << hash
-            item.metadata["autoupdate"] = "true"
+          if (hash = item.metadata["autoupdate"])
+            provider = Core::Items::Metadata::Provider.registry.provider_for(hash.uid)
+            provider.remove(hash.uid)
+            @autoupdated_items << [provider, hash]
+            provider(@spec_metadata_provider) do
+              item.metadata["autoupdate"] = "true"
+            end
           end
         end
       end
@@ -418,6 +423,16 @@ module OpenHAB
           registry.identifierToElement.delete(metadata.uid)
           autoupdate_provider.add(metadata)
         end
+      end
+
+      def restore_autoupdate_items
+        return unless instance_variable_defined?(:@autoupdated_items)
+
+        @autoupdated_items.each do |(provider, hash)|
+          @spec_metadata_provider.remove(hash.uid)
+          provider.add(hash.instance_variable_get(:@metadata))
+        end
+        @autoupdated_items = nil
       end
     end
 
