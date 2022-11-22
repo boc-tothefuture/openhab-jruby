@@ -142,13 +142,13 @@ module OpenHAB
       # @yield
       # @return [void]
       def wait(how_long = 2.seconds)
-        now = Time.now
+        start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
         begin
           yield
         rescue ::RSpec::Expectations::ExpectationNotMetError,
                ::RSpec::Mocks::MockExpectationError
-          raise if Time.now > now + how_long
+          raise if Process.clock_gettime(Process::CLOCK_MONOTONIC) > start + how_long.to_f
 
           sleep 0.1
           retry
