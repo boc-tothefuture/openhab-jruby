@@ -53,6 +53,16 @@ module OpenHAB
 
           super
         end
+
+        #
+        # Non equality comparison
+        #
+        # @return [true, false]
+        #
+        # @!visibility private
+        def !=(other)
+          !(self == other) # rubocop:disable Style/InverseMethods
+        end
       end
     end
   end
