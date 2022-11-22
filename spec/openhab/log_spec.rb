@@ -55,19 +55,6 @@ RSpec.describe OpenHAB::Log do
       end
     end
 
-    def local_method(file_logger_name)
-      expect(logger.name).to eql file_logger_name
-      expect(logger.name).not_to eql "org.openhab.automation.jrubyscripting.log_test"
-    end
-
-    it "uses the file's logger name for methods called by a rule" do
-      file_logger_name = logger.name
-      rule "log test" do
-        on_start
-        run { local_method(file_logger_name) }
-      end
-    end
-
     it "uses the rule name inside a timer block inside a rule" do
       executed = false
       rule "log test" do
@@ -89,7 +76,7 @@ RSpec.describe OpenHAB::Log do
         executed = true
         expect(logger.name).to eql "org.openhab.automation.jrubyscripting.script.my_script"
       end
-      trigger_rule("my_script")
+      rules["my_script"].trigger
       expect(executed).to be true
     end
 

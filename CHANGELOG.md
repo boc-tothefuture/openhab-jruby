@@ -75,11 +75,11 @@ here is a non-exhaustive list of significant departures from the original gem:
   in your rules to get `#blank?` and `#present?` methods, and then you can
   use `Item.state.present?`.
 * Semi-related to the above, the
-  {OpenHAB::DSL::Rules::Builder#only_if only_if} and
-  {OpenHAB::DSL::Rules::Builder#not_if not_if} guards now _only_ take blocks.
+  {OpenHAB::DSL::Rules::BuilderDSL#only_if only_if} and
+  {OpenHAB::DSL::Rules::BuilderDSL#not_if not_if} guards now _only_ take blocks.
   This just means where you previously had `only_if Item` you now write
   `only_if { Item.on? }`.
-* Related to the above, {OpenHAB::DSL::Rules::Builder#changed changed for:}
+* Related to the above, {OpenHAB::DSL::Rules::BuilderDSL#changed changed for:}
   guards no longer take items. This just means if you previously had
   `changed Item, for: OtherItem` you now write
   `changed Item, for: -> { OtherItem.state }`.
@@ -111,9 +111,9 @@ here is a non-exhaustive list of significant departures from the original gem:
 * `create_timer` no longer exists as an alias for {after}.
 * `GenericItem#meta` is no longer a supported alias for
   {GenericItem#metadata GenericItem#metadata}.
-* Triggers (such as {OpenHAB::DSL::Rules::Builder#changed changed},
-  {OpenHAB::DSL::Rules::Builder#updated updated}, and
-  {OpenHAB::DSL::Rules::Builder#received_command received_command} that
+* Triggers (such as {OpenHAB::DSL::Rules::BuilderDSL#changed changed},
+  {OpenHAB::DSL::Rules::BuilderDSL#updated updated}, and
+  {OpenHAB::DSL::Rules::BuilderDSL#received_command received_command} that
   previously took a splat _or_ an Array of Items now _only_ take a splat.
   This just means instead of `changed [Item1, Item2]` you write
   `changed Item1, Item2`, or if you have an actual array you write
@@ -158,11 +158,10 @@ here is a non-exhaustive list of significant departures from the original gem:
 
 * {OpenHAB::DSL::Items::Builder}
 * {OpenHAB::DSL::Things::Builder}
-* {group::OpenHAB::DSL::Rules::Builder::Triggers Several new triggers}
+* {group::OpenHAB::DSL::Rules::BuilderDSL::Triggers Several new triggers}
 * {OpenHAB::DSL.profile}
 * {OpenHAB::DSL.script}
-* {OpenHAB::DSL.remove_rule}
-* {OpenHAB::DSL.trigger_rule}
+* {OpenHAB::Core::Rules::Registry}, specifically {OpenHAB::Core::Rules::Registry#remove #remove} and {OpenHAB::Core::Rules::Rule#trigger #trigger} are new functionality.
 * {OpenHAB::DSL.unit} can now handle units for multiple dimensions.
 * Support Ruby's method name convention for thing actions, e.g. `things["mqtt:broker:mosquitto"].publish_mqtt`
 * Global action methods (such as `increase_master_volume`) are now available directly from {OpenHAB::DSL}.

@@ -38,12 +38,12 @@ module OpenHAB
               item.state = NULL unless item.raw_state == NULL
             end
           end
-          @known_rules = Core.rule_registry.all.map(&:uid)
         end
 
         # Each spec gets temporary providers
         [Core::Items::Provider,
          Core::Items::Metadata::Provider,
+         Core::Rules::Provider,
          Core::Things::Provider,
          Core::Things::Links::Provider].each do |klass|
           config.around do |example|
@@ -70,10 +70,6 @@ module OpenHAB
         end
 
         config.after do
-          # remove rules created during the spec
-          (Core.rule_registry.all.map(&:uid) - @known_rules).each do |uid|
-            remove_rule(uid) if defined?(remove_rule)
-          end
           Core::Items::Proxy.reset_cache
           Core::Things::Proxy.reset_cache
           @profile_factory_registration.unregister

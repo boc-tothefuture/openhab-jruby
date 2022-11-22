@@ -123,9 +123,9 @@ module OpenHAB
                   timed_command_details.on_expire = on_expire unless on_expire.nil?
                   timed_command_details.timer.reschedule(duration)
                   # disable the cancel rule while we send the new command
-                  Core.rule_manager.set_enabled(timed_command_details.rule_uid, false)
+                  DSL.rules[timed_command_details.rule_uid].disable
                   super(command)
-                  Core.rule_manager.set_enabled(timed_command_details.rule_uid, true)
+                  DSL.rules[timed_command_details.rule_uid].enable
                   timed_command_details
                 end
               end
@@ -145,10 +145,9 @@ module OpenHAB
 
           timed_command_details.timer = timed_command_timer(timed_command_details, duration)
           cancel_rule = TimedCommandCancelRule.new(timed_command_details)
-          timed_command_details.rule_uid = Core.automation_manager
-                                               .add_rule(cancel_rule)
-                                               .uid
-          Rules.script_rules[timed_command_details.rule_uid] = cancel_rule
+          unmanaged_rule = Core.automation_manager.add_unmanaged_rule(cancel_rule)
+          timed_command_details.rule_uid = unmanaged_rule.uid
+          Core::Rules::Provider.current.add(unmanaged_rule)
           logger.trace "Created Timed Command #{timed_command_details}"
           timed_command_details
         end
@@ -160,7 +159,7 @@ module OpenHAB
           DSL.after(duration) do
             timed_command_details.mutex.synchronize do
               logger.trace "Timed command expired - #{timed_command_details}"
-              DSL.remove_rule(timed_command_details.rule_uid)
+              DSL.rules.remove(timed_command_details.rule_uid)
               timed_command_details.resolution = :expired
               case timed_command_details.on_expire
               when Proc
@@ -200,10 +199,8 @@ module OpenHAB
               type: Rules::Triggers::Changed::ITEM_STATE_CHANGE,
               config: { "itemName" => timed_command_details.item.name }
             )]
+            self.visibility = Core::Rules::Visibility::HIDDEN
           end
-
-          # Cleanup the rule; nothing to do here.
-          def cleanup; end
 
           #
           # Execute the rule
@@ -217,7 +214,7 @@ module OpenHAB
                 logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\
                              "#{@timed_command_details.item.name}  because received event #{inputs}"
                 @timed_command_details.timer.cancel
-                DSL.remove_rule(@timed_command_details.rule_uid)
+                DSL.rules.remove(@timed_command_details.rule_uid)
                 @timed_command_details.resolution = :cancelled
                 if @timed_command_details.on_expire.is_a?(Proc)
                   logger.trace "Executing user supplied block on timed command cancelation"
@@ -226,6 +223,8 @@ module OpenHAB
               end
               TimedCommand.timed_commands.delete(@timed_command_details.item)
             rescue Exception => e
+              raise if defined?(::RSpec)
+
               logger.log_exception(e)
             end
           end

@@ -13,6 +13,7 @@ module OpenHAB
       TYPE_TO_PROVIDER_TYPE = {
         org.openhab.core.items.Item.java_class => :items,
         org.openhab.core.items.Metadata.java_class => :metadata,
+        org.openhab.core.automation.Rule.java_class => :rules,
         org.openhab.core.thing.Thing.java_class => :things,
         org.openhab.core.thing.link.ItemChannelLink.java_class => :links
       }.freeze
@@ -37,6 +38,7 @@ module OpenHAB
     # @abstract
     class Provider < org.openhab.core.common.registry.AbstractProvider
       include org.openhab.core.common.registry.ManagedProvider
+      include Enumerable
       include Singleton
       public_class_method :new
 
@@ -140,6 +142,11 @@ module OpenHAB
         end
       end
 
+      # @!visibility private
+      def each(&block)
+        @elements.each_value(&block)
+      end
+
       # @return [String]
       def inspect
         "#<#{self.class.name}:#{object_id}>"
@@ -192,7 +199,7 @@ module OpenHAB
       def update(element)
         old_element = @elements[element.uid]
         if old_element
-          @elements[element.uid]
+          @elements[element.uid] = element
           notify_listeners_about_updated_element(old_element, element)
         end
         old_element

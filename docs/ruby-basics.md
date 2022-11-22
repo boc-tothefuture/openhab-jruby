@@ -130,7 +130,7 @@ end
 
 ### Block arguments
 
-Blocks can receive arguments which are passed by its caller. We will often encounter this in {OpenHAB::DSL::Rules::Builder#run run} and {OpenHAB::DSL::Rules::Builder#triggered triggered} blocks.
+Blocks can receive arguments which are passed by its caller. We will often encounter this in {OpenHAB::DSL::Rules::BuilderDSL#run run} and {OpenHAB::DSL::Rules::BuilderDSL#triggered triggered} blocks.
 
 ```ruby
 rule 'name' do

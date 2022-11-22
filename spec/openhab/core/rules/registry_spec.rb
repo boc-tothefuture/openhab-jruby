@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-RSpec.describe OpenHAB::DSL::Rules do
-  describe "#remove_rule" do
+RSpec.describe OpenHAB::Core::Rules::Registry do
+  describe "#remove" do
     it "works" do
       my_rule = rule do
         every :day
         run { nil }
       end
 
-      expect(described_class.script_rules.keys).to eql [my_rule.uid]
-      remove_rule(my_rule)
-      expect(described_class.script_rules).to be_empty
-      expect($rules.get(my_rule.uid)).to be_nil
+      expect(rules).to have_key(my_rule.uid)
+      rules.remove(my_rule)
+      expect(rules).not_to have_key(my_rule.uid)
     end
 
     it "can re-add a rule with the same id after it has been removed" do
@@ -20,20 +19,18 @@ RSpec.describe OpenHAB::DSL::Rules do
         run { nil }
       end
 
-      remove_rule("myid")
-      expect(described_class.script_rules).to be_empty
-      expect($rules.get("myid")).to be_nil
+      rules.remove("myid")
+      expect(rules).not_to have_key("myid")
 
       rule id: "myid" do
         every :day
         run { nil }
       end
 
-      expect(described_class.script_rules.keys).to eql ["myid"]
-      expect($rules.get("myid")).not_to be_nil
+      expect(rules).to have_key("myid")
     end
 
-    it "cleans up timers for a duration condition when the rule" do
+    it "cleans up timers for a duration condition when the rule is removed" do
       items.build { switch_item "Item1" }
       my_rule = rule do
         changed Item1, for: 5.minutes
@@ -43,7 +40,7 @@ RSpec.describe OpenHAB::DSL::Rules do
       expect(OpenHAB::DSL::TimerManager.instance.instance_variable_get(:@timers).size).to be 0
       Item1.on
       expect(OpenHAB::DSL::TimerManager.instance.instance_variable_get(:@timers).size).to be 1
-      remove_rule(my_rule)
+      rules.remove(my_rule)
       expect(OpenHAB::DSL::TimerManager.instance.instance_variable_get(:@timers).size).to be 0
     end
   end

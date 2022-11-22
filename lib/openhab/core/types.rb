@@ -13,7 +13,7 @@ module OpenHAB
     # Types are the specific data types that commands and states are. They can be
     # sent to items, be the current state of an item, or be the `command`, `state`,
     # and `was` field of various
-    # {group::OpenHAB::DSL::Rules::Builder::Triggers triggers}.
+    # {group::OpenHAB::DSL::Rules::BuilderDSL::Triggers triggers}.
     # Some types have additional useful methods.
     #
     module Types

@@ -59,7 +59,7 @@ rule 'Generic motion rule' do
 end
 ```
 
-See also: {group::OpenHAB::DSL::Rules::Builder::Triggers Triggers}
+See also: {group::OpenHAB::DSL::Rules::BuilderDSL::Triggers Triggers}
 
 ### Various ways of sending a command to an item
 

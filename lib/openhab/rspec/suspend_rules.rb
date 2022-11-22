@@ -21,6 +21,8 @@ module OpenHAB
               process_queue(create_queue(inputs), mod, inputs)
             end
           rescue Exception => e
+            raise if defined?(::RSpec) && ::RSpec.current_example.example_group.propagate_exceptions?
+
             @run_context.send(:logger).log_exception(e)
           end
         end

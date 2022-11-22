@@ -79,6 +79,48 @@ module OpenHAB
 
           true
         end
+
+        # @!attribute [w] propagate_exceptions
+        #
+        # Set if exceptions in rules should be propagated in specs, instead of just logged.
+        #
+        # @param value [true, false, nil]
+        # @return [true, false, nil]
+        #
+        # @example
+        #   describe "my_rule" do
+        #     self.propagate_exceptions = false
+        #
+        #     it "logs exceptions in rule execution" do
+        #       expect(self.class.propagate_exceptions?).to be false
+        #       rule do
+        #         on_start
+        #         run { raise "exception is logged" }
+        #       end
+        #       expect(spec_log_lines).to include(match(/exception is logged/))
+        #     end
+        #   end
+        #
+        def propagate_exceptions=(value)
+          @propagate_exceptions = value
+        end
+
+        #
+        # If timers are mocked for this example group
+        #
+        # It will search through parent groups until it finds one where it's
+        # explicitly defined, or defaults to `true` if none are.
+        #
+        # @return [true, false]
+        #
+        def propagate_exceptions?
+          if instance_variable_defined?(:@propagate_exceptions) && !@propagate_exceptions.nil?
+            return @propagate_exceptions
+          end
+          return superclass.propagate_exceptions? if superclass.is_a?(ClassMethods)
+
+          true
+        end
       end
 
       # @!visibility private

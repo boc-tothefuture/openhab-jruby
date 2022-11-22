@@ -29,8 +29,13 @@ module OpenHAB
           @guard = config.guard
           @between = config.between && DSL.between(config.between)
           @trigger_conditions = config.trigger_conditions
+          @trigger_conditions.each_value do |condition|
+            condition.rule = self if condition.respond_to?(:rule=)
+          end
           @attachments = config.attachments
           @thread_locals = ThreadLocal.persist
+          @cleanup_hooks = Set.new
+          @listener = nil
         end
 
         #
@@ -48,18 +53,36 @@ module OpenHAB
               process_queue(create_queue(inputs), mod, inputs)
             end
           rescue Exception => e
+            raise if defined?(::RSpec)
+
             @run_context.send(:logger).log_exception(e)
           end
         end
 
-        #
-        # Cleanup any resources associated with automation rule
-        #
-        def cleanup
-          @trigger_conditions.each_value(&:cleanup)
+        # @!visibility private
+        def on_removal(listener)
+          @cleanup_hooks << listener
+          listen_for_removal unless @listener
         end
 
         private
+
+        def cleanup
+          @cleanup_hooks.each(&:cleanup)
+        end
+
+        def listen_for_removal
+          @listener ||= org.openhab.core.common.registry.RegistryChangeListener.impl do |method, element|
+            next unless method == :removed
+
+            logger.trace("Rule #{element.inspect} removed from registry")
+            next unless element.uid == uid
+
+            cleanup
+            $rules.remove_registry_change_listener(@listener)
+          end
+          $rules.add_registry_change_listener(@listener)
+        end
 
         #
         # Create the run queue based on guards
@@ -70,9 +93,9 @@ module OpenHAB
         def create_queue(inputs)
           case check_guards(event: extract_event(inputs))
           when true
-            @run_queue.dup.grep_v(Builder::Otherwise)
+            @run_queue.dup.grep_v(BuilderDSL::Otherwise)
           when false
-            @run_queue.dup.grep(Builder::Otherwise)
+            @run_queue.dup.grep(BuilderDSL::Otherwise)
           end
         end
 
@@ -166,7 +189,7 @@ module OpenHAB
           event = extract_event(inputs)
 
           while (task = run_queue.shift)
-            if task.is_a?(Builder::Delay)
+            if task.is_a?(BuilderDSL::Delay)
               process_delay_task(inputs, mod, run_queue, task)
             else
               process_task(event, task)
@@ -183,10 +206,10 @@ module OpenHAB
         def process_task(event, task)
           ThreadLocal.thread_local(**@thread_locals) do
             case task
-            when Builder::Run then process_run_task(event, task)
-            when Builder::Script then process_script_task(task)
-            when Builder::Trigger then process_trigger_task(event, task)
-            when Builder::Otherwise then process_otherwise_task(event, task)
+            when BuilderDSL::Run then process_run_task(event, task)
+            when BuilderDSL::Script then process_script_task(task)
+            when BuilderDSL::Trigger then process_trigger_task(event, task)
+            when BuilderDSL::Otherwise then process_otherwise_task(event, task)
             end
           end
         end

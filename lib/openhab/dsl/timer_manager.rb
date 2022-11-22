@@ -185,9 +185,11 @@ module OpenHAB
       # @return [void]
       #
       def cancel_all
-        logger.trace("Canceling #{@timers.length} timers")
+        logged = false
         # don't use #each, in case timers are scheduling more timers
         until @timers.empty?
+          logger.trace("Canceling #{@timers.length} timers") unless logged
+          logged = true
           timer = @timers.keys.first
           timer.cancel
         end

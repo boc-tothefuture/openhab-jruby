@@ -60,12 +60,12 @@ RSpec.describe "switches.rb" do
     end
 
     it "sets some state" do
-      trigger_rule("my rule")
+      rules["my rule"].trigger
       expect(GuestCans_Scene.state).to be_nil
     end
 
     it "triggers a rule expecting an event" do
-      trigger_rule("my rule 2", Struct.new(:item).new(GuestCans_Scene))
+      rules["my rule 2"].trigger(Struct.new(:item).new(GuestCans_Scene))
       expect(GuestCans_Scene.state).to be_nil
     end
   end
@@ -86,7 +86,7 @@ and then load rules in, then drop you into IRB.
    the next spec anyway, so just don't waste the energy running them. You
    can still trigger rules manually.
  * Rule triggers besides item related triggers (such as cron or watchers)
-   are not triggered. You can test them with {OpenHAB::DSL.trigger_rule}.
+   are not triggered. You can test them with {OpenHAB::Core::Rules::Rule#trigger trigger}.
  * You can trigger channels directly with {OpenHAB::RSpec::Helpers#trigger_channel}.
  * Timers aren't triggered automatically. Use the {OpenHAB::RSpec::Helpers#execute_timers}
    helper to execute any timers that are ready to run. The `timecop` gem is

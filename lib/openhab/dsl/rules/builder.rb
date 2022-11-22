@@ -5,6 +5,7 @@ require "forwardable"
 require_relative "property"
 require_relative "guard"
 require_relative "rule_triggers"
+require_relative "terse"
 
 Dir[File.expand_path("triggers/*.rb", __dir__)].sort.each do |f|
   require f
@@ -16,10 +17,102 @@ module OpenHAB
     # Creates and manages OpenHAB Rules
     #
     module Rules
+      # A rules builder allows you to create OpenHAB rules.
+      #
+      # Note that all methods on this module are also availabe directly on {OpenHAB::DSL}.
+      #
+      class Builder
+        include Terse
+
+        # @return [org.openhab.core.automation.RuleProvider]
+        attr_reader :provider
+
+        def initialize(provider)
+          @provider = Core::Rules::Provider.current(provider)
+        end
+
+        #
+        # Create a new rule
+        #
+        # @param [String] name The rule name
+        # @yield Block executed in the context of a {Rules::Builder}
+        # @yieldparam [Rules::Builder] rule
+        #   Optional parameter to access the rule configuration from within execution blocks and guards.
+        # @return [Rule]
+        #
+        # @see OpenHAB::DSL::Rules::Builder Rule builder for details on rule triggers, guards and execution blocks
+        # @see Rules::Terse Terse Rules
+        #
+        # @example
+        #   require "openhab/dsl"
+        #
+        #   rule "name" do
+        #     <zero or more triggers>
+        #     <zero or more execution blocks>
+        #     <zero or more guards>
+        #   end
+        #
+        def rule(name = nil, id: nil, script: nil, binding: nil, &block)
+          raise ArgumentError, "Block is required" unless block
+
+          id ||= NameInference.infer_rule_id_from_name(name) if name
+          id ||= NameInference.infer_rule_id_from_block(block)
+          script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
+
+          builder = nil
+
+          ThreadLocal.thread_local(openhab_rule_type: "rule", openhab_rule_uid: id) do
+            builder = BuilderDSL.new(binding || block.binding)
+            builder.uid(id)
+            builder.instance_exec(builder, &block)
+            builder.guard = Guard.new(run_context: builder.caller, only_if: builder.only_if,
+                                      not_if: builder.not_if)
+
+            name ||= NameInference.infer_rule_name(builder)
+            name ||= id
+
+            builder.name(name)
+            logger.trace { builder.inspect }
+            builder.build(provider, script)
+          end
+        end
+
+        #
+        # Create a new script
+        #
+        # A script is a rule with no triggers. It can be called by various other actions,
+        # such as the Run Rules action.
+        #
+        # @param [String] name A descriptive name
+        # @param [String] id The script's ID
+        # @yield [] Block executed when the script is executed.
+        # @return [Rule]
+        #
+        def script(name = nil, id: nil, script: nil, &block)
+          raise ArgumentError, "Block is required" unless block
+
+          id ||= NameInference.infer_rule_id_from_name(name) if name
+          id ||= NameInference.infer_rule_id_from_block(block)
+          name ||= id
+          script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
+
+          builder = nil
+          ThreadLocal.thread_local(openhab_rule_type: "script", openhab_rule_uid: id) do
+            builder = BuilderDSL.new(block.binding)
+            builder.uid(id)
+            builder.tags(["Script"])
+            builder.name(name)
+            builder.script(&block)
+            logger.trace { builder.inspect }
+            builder.build(provider, script)
+          end
+        end
+      end
+
       #
       # Rule configuration for OpenHAB Rules engine
       #
-      class Builder
+      class BuilderDSL
         include Core::EntityLookup
         include DSL
         prepend Triggers
@@ -1319,12 +1412,11 @@ module OpenHAB
         # @param [String] script The source code of the rule
         #
         # @!visibility private
-        def build(script)
+        def build(provider, script)
           return unless create_rule?
 
           rule = AutomationRule.new(config: self)
-          added_rule = add_rule(rule)
-          Rules.script_rules[rule.uid] = rule
+          added_rule = add_rule(provider, rule)
           # add config so that MainUI can show the script
           added_rule.actions.first.configuration.put("type", "application/x-ruby")
           added_rule.actions.first.configuration.put("script", script)
@@ -1383,8 +1475,7 @@ module OpenHAB
         #
         # @param [org.openhab.core.automation.module.script.rulesupport.shared.simple.SimpleRule] rule to add
         #
-        #
-        def add_rule(rule)
+        def add_rule(provider, rule)
           base_uid = rule.uid
           duplicate_index = 1
           while $rules.get(rule.uid)
@@ -1392,7 +1483,9 @@ module OpenHAB
             rule.uid = "#{base_uid} (#{duplicate_index})"
           end
           logger.trace("Adding rule: #{rule}")
-          Core.automation_manager.add_rule(rule)
+          unmanaged_rule = Core.automation_manager.add_unmanaged_rule(rule)
+          provider.add(unmanaged_rule)
+          unmanaged_rule
         end
       end
     end

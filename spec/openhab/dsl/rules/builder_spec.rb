@@ -917,22 +917,26 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         expect(spec_log_lines).to include(include("Outer function called"))
       end
 
-      it "logs errors" do
-        rule do
-          on_start
-          run { raise "failure!" }
-        end
-        expect(spec_log_lines).to include(include("failure! (RuntimeError)"))
-        expect(spec_log_lines).to include(match(%r{rules/builder_spec\.rb:(?:\d+):in `block}))
-      end
+      context "without exception propagation" do
+        self.propagate_exceptions = false
 
-      it "logs java exceptions" do
-        rule do
-          on_start
-          run { java.lang.Integer.parse_int("k") }
+        it "logs errors" do
+          rule do
+            on_start
+            run { raise "failure!" }
+          end
+          expect(spec_log_lines).to include(include("failure! (RuntimeError)"))
+          expect(spec_log_lines).to include(match(%r{rules/builder_spec\.rb:(?:\d+):in `block}))
         end
-        expect(spec_log_lines).to include(include("Java::JavaLang::NumberFormatException"))
-        expect(spec_log_lines).to include(match(/RUBY.*builder_spec\.rb/))
+
+        it "logs java exceptions" do
+          rule do
+            on_start
+            run { java.lang.Integer.parse_int("k") }
+          end
+          expect(spec_log_lines).to include(include("Java::JavaLang::NumberFormatException"))
+          expect(spec_log_lines).to include(match(/RUBY.*builder_spec\.rb/))
+        end
       end
 
       def self.test_event(trigger)

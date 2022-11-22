@@ -41,80 +41,14 @@ module OpenHAB
 
     # @!group Rule Creation
 
-    #
-    # Create a new rule
-    #
-    # @param [String] name The rule name
-    # @yield Block executed in the context of a {Rules::Builder}
-    # @yieldparam [Rules::Builder] rule
-    #   Optional parameter to access the rule configuration from within execution blocks and guards.
-    # @return [org.openhab.core.automation.Rule] The OpenHAB Rule object
-    #
-    # @see OpenHAB::DSL::Rules::Builder Rule builder for details on rule triggers, guards and execution blocks
-    # @see Rules::Terse Terse Rules
-    #
-    # @example
-    #   require "openhab/dsl"
-    #
-    #   rule "name" do
-    #     <zero or more triggers>
-    #     <zero or more execution blocks>
-    #     <zero or more guards>
-    #   end
-    #
-    def rule(name = nil, id: nil, script: nil, binding: nil, &block)
-      raise ArgumentError, "Block is required" unless block
-
-      id ||= Rules::NameInference.infer_rule_id_from_name(name) if name
-      id ||= Rules::NameInference.infer_rule_id_from_block(block)
-      script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
-
-      builder = nil
-
-      ThreadLocal.thread_local(openhab_rule_type: "rule", openhab_rule_uid: id) do
-        builder = Rules::Builder.new(binding || block.binding)
-        builder.uid(id)
-        builder.instance_exec(builder, &block)
-        builder.guard = Rules::Guard.new(run_context: builder.caller, only_if: builder.only_if,
-                                         not_if: builder.not_if)
-
-        name ||= Rules::NameInference.infer_rule_name(builder)
-        name ||= id
-
-        builder.name(name)
-        logger.trace { builder.inspect }
-        builder.build(script)
-      end
+    # (see Rules::Builder#rule)
+    def rule(name = nil, **kwargs, &block)
+      rules.build { rule(name, **kwargs, &block) }
     end
 
-    #
-    # Create a new script
-    #
-    # A script is a rule with no triggers. It can be called by various other actions,
-    # such as the Run Rules action.
-    #
-    # @param [String] id The script's ID
-    # @param [String] name A descriptive name
-    # @yield [] Block executed when the script is executed.
-    #
-    def script(name = nil, id: nil, script: nil, &block)
-      raise ArgumentError, "Block is required" unless block
-
-      id ||= Rules::NameInference.infer_rule_id_from_name(name) if name
-      id ||= Rules::NameInference.infer_rule_id_from_block(block)
-      name ||= id
-      script ||= block.source rescue nil # rubocop:disable Style/RescueModifier
-
-      builder = nil
-      ThreadLocal.thread_local(openhab_rule_type: "script", openhab_rule_uid: id) do
-        builder = Rules::Builder.new(block.binding)
-        builder.uid(id)
-        builder.tags(["Script"])
-        builder.name(name)
-        builder.script(&block)
-        logger.trace { builder.inspect }
-        builder.build(script)
-      end
+    # (see Rules::Builder#script)
+    def script(name = nil, id: nil, **kwargs, &block)
+      rules.build { script(name, id: id, **kwargs, &block) }
     end
 
     # @!group Rule Support
@@ -170,43 +104,16 @@ module OpenHAB
       end
     end
 
-    #
-    # Remove a rule
-    #
-    # @param [String, org.openhab.core.automation.Rule] uid The rule UID or the Rule object to remove.
-    # @return [void]
-    #
-    # @example
-    #   my_rule = rule do
-    #     every :day
-    #     run { nil }
-    #   end
-    #
-    #   remove_rule(my_rule)
-    #
-    def remove_rule(uid)
-      uid = uid.uid if uid.respond_to?(:uid)
-      automation_rule = Rules.script_rules.delete(uid)
-      raise "Rule #{uid} doesn't exist to remove" unless automation_rule
-
-      automation_rule.cleanup
-      # automation_manager doesn't have a remove method, so just have to
-      # remove it directly from the provider
-      Rules.scripted_rule_provider.remove_rule(uid)
-    end
-
-    #
-    # Manually trigger a rule by ID
-    #
-    # @param [String] uid The rule ID
-    # @param [Object, nil] event The event to pass to the rule's execution blocks.
-    # @return [void]
-    #
-    def trigger_rule(uid, event = nil)
-      Rules.script_rules.fetch(uid).execute(nil, { "event" => event })
-    end
-
     # @!group Object Access
+
+    #
+    # Fetches all rules from the rule registry.
+    #
+    # @return [Core::Rules::Registry]
+    #
+    def rules
+      Core::Rules::Registry.instance
+    end
 
     #
     # Fetches all items from the item registry
@@ -296,7 +203,7 @@ module OpenHAB
     # different files.
     #
     # @see timers
-    # @see Rules::Builder#changed
+    # @see Rules::BuilderDSL#changed
     # @see Items::TimedCommand
     #
     # @param [java.time.temporal.TemporalAmount, #to_zoned_date_time, Proc] duration

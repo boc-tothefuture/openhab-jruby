@@ -20,9 +20,9 @@ Several options are available for time related code, including but not limited t
 Ruby [integers](https://ruby-doc.org/core-2.6.8/Integer.html) and
 [floats](https://ruby-doc.org/core-2.6.8/Float.html) are extended with several
 methods to support durations. These methods create a new {Duration} or {Period}
-object that is used by the {OpenHAB::DSL::Rules::Builder#every every} trigger,
-{OpenHAB::DSL::Rules::Builder#delay delay} block, the for option of
-{OpenHAB::DSL::Rules::Builder#changed changed} triggers, and
+object that is used by the {OpenHAB::DSL::Rules::BuilderDSL#every every} trigger,
+{OpenHAB::DSL::Rules::BuilderDSL#delay delay} block, the for option of
+{OpenHAB::DSL::Rules::BuilderDSL#changed changed} triggers, and
 {OpenHAB::Core::Timer timers}.
 
 

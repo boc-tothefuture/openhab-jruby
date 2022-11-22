@@ -429,7 +429,7 @@ rule 'motion sensor' do
 end
 ```
 
-See {OpenHAB::DSL::Rules::Builder.only_if only_if}, {OpenHAB::DSL::Rules::Builder.not_if not_if}
+See {OpenHAB::DSL::Rules::BuilderDSL#only_if only_if}, {OpenHAB::DSL::Rules::BuilderDSL#not_if not_if}
 
 ### Restrict Rule Executions to Certain Time of Day
 
@@ -476,7 +476,7 @@ sleep 1.5 # sleep for 1.5 seconds
 
 See Ruby docs on [sleep](https://ruby-doc.org/core-2.6/Kernel.html#method-i-sleep)
 
-`sleep` should be avoided if possible. A {OpenHAB::DSL::Rules::Builder.delay delay}
+`sleep` should be avoided if possible. A {OpenHAB::DSL::Rules::BuilderDSL#delay delay}
 can be inserted in between two execution blocks to achieve the same result. This delay is implemented with a timer.
 This is available only on file-based rules.
 
@@ -796,21 +796,20 @@ rule_uid = rule_obj.uid
 ### Get the UID of a Rule by Name
 
 ```ruby
-rule_uid = OpenHAB::Core.rule_registry.all.select { |rule| rule.name == 'This is the name of my rule' }.first.uid
+rule_uid = rules.find { |rule| rule.name == 'This is the name of my rule' }.uid
 ```
 
 ### Enable or Disable a Rule by UID
 
 ```ruby
-rule_manager = OpenHAB::Core.rule_manager
-rule_manager.set_enabled(rule_uid, true) # enable rule
-rule_manager.set_enabled(rule_uid, false) # disable rule
+rules[rule_uid].enable
+rules[rule_uid].disable
 ```
 
 ### Run a rule by UID
 
 ```ruby
-trigger_rule(rule_uid)
+rules[rule_uid].trigger
 ```
 
 ### Use a Java Class

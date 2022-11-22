@@ -41,7 +41,7 @@ RSpec.describe OpenHAB::DSL do
         triggered = true
       end
 
-      trigger_rule("testscript")
+      rules["testscript"].trigger
       expect(triggered).to be true
     end
   end

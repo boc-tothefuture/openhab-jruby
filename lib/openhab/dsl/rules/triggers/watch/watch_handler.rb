@@ -98,8 +98,8 @@ module OpenHAB
             #
             def watch_event_handler(glob)
               lambda { |watch_event|
-                logger.trace("Received event(#{watch_event})")
                 if watch_event.path.fnmatch?(glob)
+                  logger.trace("Received event(#{watch_event})")
                   @rule_engine_callback&.triggered(@trigger, { "event" => watch_event })
                 else
                   logger.trace("Event #{watch_event} did not match glob(#{glob})")

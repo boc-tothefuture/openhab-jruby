@@ -87,6 +87,8 @@ module OpenHAB
           DSL::ThreadLocal.thread_local(**@thread_locals) do
             @block.call(event, **kwargs)
           rescue Exception => e
+            raise if defined?(::RSpec)
+
             @block.binding.eval("self").logger.log_exception(e)
           end
         end

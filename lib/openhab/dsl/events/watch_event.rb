@@ -4,7 +4,7 @@ module OpenHAB
   module DSL
     module Events
       #
-      # Event object passed by a {Rules::Builder#watch} trigger.
+      # Event object passed by a {Rules::BuilderDSL#watch} trigger.
       #
       # @!attribute [r] path
       #   @return [Pathname] The path that had an event
