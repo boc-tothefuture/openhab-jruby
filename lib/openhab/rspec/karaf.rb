@@ -129,6 +129,7 @@ module OpenHAB
 
         set_up_bundle_listener
         wait_for_start
+        Mocks::SynchronousExecutor.instance.main_thread = Thread.current
         set_jruby_script_presets
         @main
       end

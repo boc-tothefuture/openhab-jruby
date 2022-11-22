@@ -16,19 +16,25 @@ module OpenHAB
       end
 
       class SynchronousExecutor < java.util.concurrent.ScheduledThreadPoolExecutor
-        class << self
-          def instance
-            @instance ||= new(1)
-          end
+        include Singleton
+
+        attr_accessor :main_thread
+
+        def initialize
+          super(1)
         end
 
         def submit(runnable)
+          return super unless Thread.current == main_thread
+
           runnable.respond_to?(:run) ? runnable.run : runnable.call
 
           java.util.concurrent.CompletableFuture.completed_future(nil)
         end
 
         def execute(runnable)
+          return super unless Thread.current == main_thread
+
           runnable.run
         end
 
@@ -37,6 +43,7 @@ module OpenHAB
         def shutdown_now
           []
         end
+        alias_method :shutdownNow, :shutdown_now
       end
 
       class SynchronousExecutorMap

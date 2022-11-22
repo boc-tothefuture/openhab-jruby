@@ -21,7 +21,7 @@ module OpenHAB
               process_queue(create_queue(inputs), mod, inputs)
             end
           rescue Exception => e
-            @run_context.logger.log_exception(e)
+            @run_context.send(:logger).log_exception(e)
           end
         end
       end
