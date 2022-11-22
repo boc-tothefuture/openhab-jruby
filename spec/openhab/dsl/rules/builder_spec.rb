@@ -388,6 +388,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         test_thing_status_trigger(:changed, from: :online, to: :uninitialized)
         test_thing_status_trigger(:changed, from: :unknown, to: :uninitialized, expect_triggered: false)
         test_thing_status_trigger(:changed, to: :uninitialized, duration: 10.seconds) do |_triggered|
+          skip("deadlocks sometimes")
           execute_timers
           expect(triggered?).to be false
           time_travel_and_execute_timers(15.seconds)
