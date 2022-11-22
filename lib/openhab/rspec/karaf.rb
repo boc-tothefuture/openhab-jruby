@@ -421,12 +421,18 @@ module OpenHAB
               java.util.Hashtable.new(org.osgi.framework.Constants::SERVICE_RANKING => 1.to_java(:int))
             )
 
-            require_relative "mocks/thing_handler"
-            thf = Mocks::ThingHandlerFactory.instance
-            bundle = org.osgi.framework.FrameworkUtil.get_bundle(org.openhab.core.thing.Thing)
-            Mocks::BundleResolver.instance.register_class(thf.class, bundle)
-            bundle.bundle_context.register_service(org.openhab.core.thing.binding.ThingHandlerFactory.java_class, thf,
-                                                   nil)
+            wait_for_service("org.openhab.core.thing.ThingManager") do |tm|
+              tm.class.field_accessor :bundleResolver
+
+              tm.bundleResolver = Mocks::BundleResolver.instance
+
+              require_relative "mocks/thing_handler"
+              thf = Mocks::ThingHandlerFactory.instance
+              bundle = org.osgi.framework.FrameworkUtil.get_bundle(org.openhab.core.thing.Thing)
+              Mocks::BundleResolver.instance.register_class(thf.class, bundle)
+              bundle.bundle_context.register_service(org.openhab.core.thing.binding.ThingHandlerFactory.java_class, thf,
+                                                     nil)
+            end
           end
           if bundle_name == "org.openhab.core.automation"
             org.openhab.core.automation.internal.TriggerHandlerCallbackImpl.field_accessor :executor
