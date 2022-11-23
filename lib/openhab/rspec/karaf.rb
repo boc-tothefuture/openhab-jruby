@@ -562,29 +562,25 @@ module OpenHAB
       # since we're going to be running it in this same VM
       def set_jruby_script_presets
         wait_for_service("org.openhab.core.automation.module.script.ScriptEngineFactory",
-                         filter: "(service.config.description.uri=automation:jruby)") do |jrubyscripting|
+                         filter: "(service.config.description.uri=automation:jruby)") do |_jrubyscripting|
           sem = OSGi.service(
             "org.openhab.core.automation.module.script.internal.ScriptExtensionManager"
           )
           # since we're not created by the ScriptEngineManager, this never gets set; manually set it
           $se = $scriptExtension = ScriptExtensionManagerWrapper.new(sem)
           scope_values = sem.find_default_presets("rspec")
-          scope_values = scope_values.entry_set
-
-          %w[mapInstancePresets mapGlobalPresets].each do |method_name|
-            method = jrubyscripting.class.java_class.get_declared_method(method_name, java.util.Map::Entry.java_class)
-
-            method.accessible = true
-            scope_values = scope_values.map { |e| method.invoke(nil, e) }
-          end
+          scope_values = scope_values.entry_set.to_a
 
           scope_values.each do |entry|
             key = entry.key
             value = entry.value
             # convert Java classes to Ruby classes
             value = value.ruby_class if value.is_a?(java.lang.Class) # rubocop:disable Lint/UselessAssignment
-            # constants need to go into the global namespace
-            key = "::#{key}" if ("A".."Z").cover?(key[0])
+            # variables are globals; constants go into the global namespace
+            key = case key[0]
+                  when "a".."z" then "$#{key}"
+                  when "A".."Z" then "::#{key}"
+                  end
             eval("#{key} = value unless defined?(#{key})", nil, __FILE__, __LINE__) # rubocop:disable Security/Eval
           end
         end
