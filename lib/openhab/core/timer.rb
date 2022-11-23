@@ -83,7 +83,7 @@ module OpenHAB
       # @return [self]
       #
       def reschedule(time = nil)
-        @rescheduled = true
+        Thread.current[:openhab_rescheduled_timer] = true if Thread.current[:openhab_rescheduled_timer] == self
         DSL.timers.add(self)
         @timer.reschedule(new_execution_time(time || @time))
         self
@@ -119,9 +119,10 @@ module OpenHAB
       # @return [void]
       #
       def execute
-        @rescheduled = false
+        Thread.current[:openhab_rescheduled_timer] = self
         DSL::ThreadLocal.thread_local(**@thread_locals) { @block.call(self) }
-        DSL.timers.delete(self) unless @rescheduled
+        DSL.timers.delete(self) unless Thread.current[:openhab_rescheduled_timer] == true
+        Thread.current[:openhab_rescheduled_timer] = nil
       end
 
       #

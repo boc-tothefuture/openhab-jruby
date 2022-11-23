@@ -50,7 +50,7 @@ module OpenHAB
         end
 
         def reschedule(time = nil)
-          @rescheduled = true
+          Thread.current[:openhab_rescheduled_timer] = true if Thread.current[:openhab_rescheduled_timer] == self
           @execution_time = new_execution_time(time || @time)
           @executed = false
 
