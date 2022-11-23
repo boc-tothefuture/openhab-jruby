@@ -26,7 +26,7 @@ module OpenHAB
 
           extend Forwardable
           def_delegators :@metadata, :configuration, :hash, :to_s, :uid, :value
-          protected :configuration
+          private :configuration
 
           # @!method to_hash
           #   Implicit conversion to {::Hash}.
@@ -37,6 +37,9 @@ module OpenHAB
           # still others (mutators) must be manually implemented below.
           def_delegators :configuration,
                          :any?,
+                         :compact,
+                         :compare_by_identity?,
+                         :deconstruct_keys,
                          :default,
                          :default_proc,
                          :each,
@@ -47,6 +50,8 @@ module OpenHAB
                          :filter,
                          :flatten,
                          :has_value?,
+                         :invert,
+                         :key,
                          :keys,
                          :length,
                          :rassoc,
@@ -57,8 +62,10 @@ module OpenHAB
                          :to_a,
                          :to_h,
                          :to_hash,
+                         :transform_keys,
+                         :transform_values,
+                         :values,
                          :value?
-          def_delegators :to_h, :invert, :merge, :transform_keys, :transform_values
 
           def_delegator :uid, :namespace
 
@@ -88,7 +95,7 @@ module OpenHAB
           end
 
           # @!visibility private
-          def initialize(metadata)
+          def initialize(metadata = nil)
             @metadata = metadata
           end
 
@@ -156,7 +163,7 @@ module OpenHAB
               return false unless value == other.value
             end
 
-            to_h < other
+            configuration < other
           end
 
           # @!visibility private
@@ -166,7 +173,7 @@ module OpenHAB
               return false unless value == other.value
             end
 
-            to_h <= other
+            configuration <= other
           end
 
           # @!visibility private
@@ -176,7 +183,7 @@ module OpenHAB
 
               return configuration == other.configuration
             elsif value.empty? && other.respond_to?(:to_hash)
-              return configuration.to_h == other.to_hash
+              return configuration == other.to_hash
             end
             false
           end
@@ -188,7 +195,7 @@ module OpenHAB
               return false unless value == other.value
             end
 
-            to_h > other
+            configuration > other
           end
 
           # @!visibility private
@@ -198,7 +205,7 @@ module OpenHAB
               return false unless value == other.value
             end
 
-            to_h >= other
+            configuration >= other
           end
 
           # @!visibility private
@@ -227,27 +234,13 @@ module OpenHAB
           end
 
           # @!visibility private
-          alias_method :compact, :to_h
-
-          # @!visibility private
           def compact!
-            # no action; impossible to have nil keys
-            self
+            replace(compact)
           end
 
           # @!visibility private
           def compare_by_identity
             raise NotImplementedError
-          end
-
-          # @!visibility private
-          def compare_by_identity?
-            false
-          end
-
-          # @!visibility private
-          def deconstruct_keys
-            self
           end
 
           # @!visibility private
@@ -305,11 +298,6 @@ module OpenHAB
           end
 
           # @!visibility private
-          def key(value)
-            rassoc(value)&.first
-          end
-
-          # @!visibility private
           def key?(key)
             configuration.key?(key.to_s)
           end
@@ -360,7 +348,7 @@ module OpenHAB
 
           # @!visibility private
           def slice(*keys)
-            to_h.slice(*keys.map(&:to_s))
+            configuration.slice(*keys.map(&:to_s))
           end
 
           # @!visibility private
@@ -378,11 +366,6 @@ module OpenHAB
             raise NotImplementedError unless block
 
             replace(transform_values(&block))
-          end
-
-          # @!visibility private
-          def values
-            configuration.values.to_a
           end
 
           # @!visibility private

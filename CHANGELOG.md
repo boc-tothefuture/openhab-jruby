@@ -171,6 +171,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {OpenHAB::DSL.after after} (and anything else that ultimately relies on timers) support `Proc` for durations.
 * Add `#ago` and `#from_now` methods to {Duration}.
 * The ability to designate how metadata should be persisted or not, via {OpenHAB::DSL.provider}.
+* {java.util.Map} and {java.util.List} now more fully implement the expected interfaces of `Hash` and `Array`, so you don't need to explicitly convert (as much) anymore.
 
 ### Bug Fixes
 

@@ -1,3 +1,5 @@
+--exclude lib/openhab/core_ext/java/list.rb
+--exclude lib/openhab/core_ext/java/map.rb
 --exclude lib/openhab/rspec/mocks/
 --exclude lib/openhab/yard/
 --exclude lib/openhab/rspec/jruby.rb
