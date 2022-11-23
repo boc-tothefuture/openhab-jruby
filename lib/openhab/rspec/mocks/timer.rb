@@ -50,6 +50,7 @@ module OpenHAB
         end
 
         def reschedule(time = nil)
+          @rescheduled = true
           @execution_time = new_execution_time(time || @time)
           @executed = false
 
@@ -62,8 +63,8 @@ module OpenHAB
           raise "Timer already cancelled" if cancelled?
           raise "Timer already executed" if terminated?
 
-          super
           @executed = true
+          super
         end
 
         def cancel

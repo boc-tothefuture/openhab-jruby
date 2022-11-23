@@ -30,6 +30,18 @@ RSpec.describe OpenHAB::Core::Timer do
         expect(t.execution_time).to be_within(5.ms).of(final_time)
       end
 
+      it "works from within the execution block" do
+        executed = 0
+        after(0.1.seconds) do |timer|
+          executed += 1
+          timer.reschedule if executed == 1
+        end
+
+        time_travel_and_execute_timers(0.2.seconds)
+        time_travel_and_execute_timers(0.2.seconds)
+        expect(executed).to be 2
+      end
+
       it "accepts a new offset (but doesn't memoize it)" do
         start = Time.now
         next_time = start + 15.seconds
@@ -153,6 +165,28 @@ RSpec.describe OpenHAB::Core::Timer do
 
         timers.cancel("id")
         expect(timers).not_to include("id")
+      end
+
+      it "removes the timer when finished" do
+        executed = false
+        after(0.1.seconds, id: "id") { executed = true }
+
+        time_travel_and_execute_timers(0.2.seconds)
+        expect(executed).to be true
+        expect(timers).not_to include("id")
+      end
+
+      it "does not remove the timer if it was rescheduled" do
+        expect(timers).to receive(:delete).once.and_call_original
+        executed = 0
+        after(0.1.seconds, id: "id") do |t|
+          executed += 1
+          t.reschedule if executed == 1
+        end
+
+        time_travel_and_execute_timers(0.4.seconds)
+        time_travel_and_execute_timers(0.2.seconds)
+        expect(executed).to be 2
       end
 
       it "can reschedule a timer by id" do
