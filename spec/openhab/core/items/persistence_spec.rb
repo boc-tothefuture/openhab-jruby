@@ -55,7 +55,7 @@ RSpec.describe OpenHAB::Core::Items::Persistence do
     items.build { number_item "Number1", state: 3 }
     Number1.persist
     max = Number1.maximum_since(10.seconds.ago)
-    expect(max.timestamp.to_i).to eq Time.now.to_i
+    expect(max.timestamp).to be_within(5.ms).of(Time.now)
     expect(max).to eq max.state
   end
 end
