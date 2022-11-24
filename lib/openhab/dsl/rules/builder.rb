@@ -1413,7 +1413,7 @@ module OpenHAB
         def build(provider, script)
           return unless create_rule?
 
-          rule = AutomationRule.new(config: self)
+          rule = AutomationRule.new(self)
           added_rule = add_rule(provider, rule)
           # add config so that MainUI can show the script
           added_rule.actions.first.configuration.put("type", "application/x-ruby")

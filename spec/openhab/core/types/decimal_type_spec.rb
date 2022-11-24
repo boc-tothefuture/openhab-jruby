@@ -43,11 +43,11 @@ RSpec.describe OpenHAB::Core::Types::DecimalType do
 
     specify { expect(2 + state).to eq 52 }
     specify { expect(2 - state).to eq(-48) }
-    specify { expect(2 / state).to eq 0.04 }
+    specify { expect(2 / state).to be_within(Float::EPSILON).of(0.04) }
     specify { expect(2 * state).to eq 100 }
     specify { expect(2.0 + state).to eq 52 }
     specify { expect(2.0 - state).to eq(-48) }
-    specify { expect(2.0 / state).to eq 0.04 }
+    specify { expect(2.0 / state).to be_within(Float::EPSILON).of(0.04) }
     specify { expect(2.0 * state).to eq 100 }
   end
 

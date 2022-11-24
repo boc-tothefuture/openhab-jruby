@@ -16,7 +16,7 @@ module OpenHAB
         # @param [Config] config Rule configuration
         #
         # Constructor sets a number of variables, no further decomposition necessary
-        def initialize(config:)
+        def initialize(config)
           # Metrics disabled because only setters are called or defaults set.
           super()
           set_name(config.name)

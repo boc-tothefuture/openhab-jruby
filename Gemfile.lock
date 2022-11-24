@@ -13,6 +13,7 @@ PATH
       bundler (~> 2.2)
       marcel (~> 1.0)
       method_source (~> 1.0)
+      ruby2_keywords (~> 0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -163,6 +164,7 @@ GEM
     rubocop-rspec (2.11.1)
       rubocop (~> 1.19)
     ruby-progressbar (1.11.0)
+    ruby2_keywords (0.0.5)
     shellany (0.0.1)
     spoon (0.0.6)
       ffi
@@ -213,4 +215,4 @@ DEPENDENCIES
   yard-coderay
 
 BUNDLED WITH
-   2.3.25
+   2.3.26

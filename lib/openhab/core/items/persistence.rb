@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "delegate"
+
 require_relative "generic_item"
 
 module OpenHAB

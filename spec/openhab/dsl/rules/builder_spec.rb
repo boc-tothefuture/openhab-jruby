@@ -277,7 +277,8 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
               expect(triggered_item).to eql expect_triggered
             end
 
-            super(item, initial_state: initial_state, duration: duration, caller: caller, **kwargs, &block)
+            kwargs[:caller] ||= caller
+            super(item, initial_state: initial_state, duration: duration, **kwargs, &block)
           end
 
           test_changed_trigger(duration: -> { Alarm_Delay.state.to_i.seconds })
@@ -429,11 +430,13 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
 
         channel ||= "astro:sun:home:rise#event"
         it description, caller: caller do
-          args = instance_exec(&block)
+          channels = instance_exec(&block)
           triggered = false
           trigger = nil
+          channel_config = channels.pop if channels.last.is_a?(Hash)
+          channel_config ||= {}
           rule "Execute rule when channel is triggered" do
-            channel(*args)
+            channel(*channels, **channel_config)
             run do |e|
               triggered = true
               trigger = e.event
@@ -799,8 +802,10 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
 
       def test_it(filename, watch_args:, expected: true, check: nil)
         path = type = nil
+        watch_path, config = *watch_args
+        config ||= {}
         rule do
-          watch(*watch_args)
+          watch(watch_path, **config)
           run do |event|
             path = event.path.basename.to_s
             type = event.type

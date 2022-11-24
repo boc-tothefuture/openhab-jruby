@@ -31,7 +31,7 @@ module OpenHAB
       # DSL::Rules::AutomationRule.prepend(AutomationRule)
 
       module DSL
-        def after(*)
+        def after(*, **)
           return if SuspendRules.suspended?
 
           super

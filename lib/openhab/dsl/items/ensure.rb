@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ruby2_keywords"
+
 module OpenHAB
   module DSL
     module Items
@@ -71,14 +73,13 @@ module OpenHAB
           end
 
           # activate `ensure_states` before forwarding to the wrapped object
-          def method_missing(method, *args, &block)
+          ruby2_keywords def method_missing(method, *args, &block)
             return super unless @item.respond_to?(method)
 
             DSL.ensure_states do
               @item.__send__(method, *args, &block)
             end
           end
-          ruby2_keywords :method_missing if respond_to? :ruby2_keywords
 
           # .
           def respond_to_missing?(method, include_private = false)

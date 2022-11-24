@@ -40,7 +40,7 @@ module OpenHAB
             class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{method}_item(*args, **kwargs, &block)         # def dimmer_item(*args, **kwargs, &block)
                 item(#{method.inspect}, *args, **kwargs, &block)  #   item(:dimmer, *args, **kwargs, &block)
-              end
+              end                                                 # end
             RUBY
           end
         end
@@ -251,7 +251,12 @@ module OpenHAB
           @autoupdate = autoupdate
           @channels = []
           @expire = nil
-          self.expire(*Array(expire)) if expire
+          if expire
+            expire = Array(expire)
+            expire_config = expire.pop if expire.last.is_a?(Hash)
+            expire_config ||= {}
+            self.expire(*expire, **expire_config)
+          end
           self.alexa(alexa) if alexa
           self.ga(ga) if ga
           self.homekit(homekit) if homekit
@@ -365,7 +370,7 @@ module OpenHAB
         #     end
         #   end
         #
-        def channel(channel, **config)
+        def channel(channel, config = {})
           @channels << [channel, config]
         end
 
