@@ -32,6 +32,17 @@ RSpec.describe OpenHAB::DSL::Items::Ensure do
     expect(triggers).to match_array(expected_triggers)
   end
 
+  def check_return_value(initial, expected_result)
+    item.update(initial)
+    expect(yield).to be expected_result
+  end
+
+  def check_obj_return_value(initial1, initial2, expected_result)
+    Dimmer1.update(initial1)
+    Dimmer2.update(initial2)
+    expect(yield).to be expected_result
+  end
+
   describe "#ensure" do
     it "sends commands if not in a given state" do
       check_command(0, 100, *both) { item.ensure.on }
@@ -138,6 +149,57 @@ RSpec.describe OpenHAB::DSL::Items::Ensure do
       Temp.ensure << (10 | "°C")
       expect(triggers).to be_empty
     end
+
+    it "makes command and update return nil if in a given state" do
+      check_return_value(0, nil) { item.ensure.update(0) }
+      check_return_value(0, nil) { item.ensure.command(0) }
+
+      group
+      check_obj_return_value(50, 50, nil) { Dimmers.ensure.update(50) }
+      check_obj_return_value(50, 50, nil) { Dimmers.ensure.command(50) }
+      check_obj_return_value(50, 100, nil) { Dimmers.ensure.command(75) }
+
+      items = group.members
+      check_obj_return_value(50, 50, nil) { items.ensure.update(50) }
+      check_obj_return_value(50, 50, nil) { items.ensure.command(50) }
+
+      items = [Dimmer1, Dimmer2]
+      check_obj_return_value(50, 50, nil) { items.ensure.update(50) }
+      check_obj_return_value(50, 50, nil) { items.ensure.command(50) }
+    end
+
+    it "makes command and update return self if not in a given state" do
+      check_return_value(0, item) { item.ensure.update(10) }
+      check_return_value(0, item) { item.ensure.command(10) }
+
+      group
+      # updating GroupItem doesn't update its members
+      check_obj_return_value(50, 50, Dimmers) { Dimmers.ensure.update(0) }
+      check_obj_return_value(0, 50, Dimmers) { Dimmers.ensure.update(0) }
+      check_obj_return_value(50, 0, Dimmers) { Dimmers.ensure.update(0) }
+
+      check_obj_return_value(50, 50, Dimmers) { Dimmers.ensure.command(0) }
+      check_obj_return_value(0, 50, Dimmers) { Dimmers.ensure.command(0) }
+      check_obj_return_value(50, 0, Dimmers) { Dimmers.ensure.command(0) }
+
+      items = group.members
+      check_obj_return_value(50, 50, items) { items.ensure.update(0) }
+      check_obj_return_value(0, 50, items) { items.ensure.update(0) }
+      check_obj_return_value(50, 0, items) { items.ensure.update(0) }
+
+      check_obj_return_value(50, 50, items) { items.ensure.command(0) }
+      check_obj_return_value(0, 50, items) { items.ensure.command(0) }
+      check_obj_return_value(50, 0, items) { items.ensure.command(0) }
+
+      items = [Dimmer1, Dimmer2]
+      check_obj_return_value(50, 50, items) { items.ensure.update(0) }
+      check_obj_return_value(0, 50, items) { items.ensure.update(0) }
+      check_obj_return_value(50, 0, items) { items.ensure.update(0) }
+
+      check_obj_return_value(50, 50, items) { items.ensure.command(0) }
+      check_obj_return_value(0, 50, items) { items.ensure.command(0) }
+      check_obj_return_value(50, 0, items) { items.ensure.command(0) }
+    end
   end
 
   describe "#ensure_states" do
@@ -165,6 +227,57 @@ RSpec.describe OpenHAB::DSL::Items::Ensure do
           item.update(ON)
         end
       end
+    end
+
+    it "makes command and update return nil if in a given state" do
+      check_return_value(0, nil) { ensure_states { item.update(0) } }
+      check_return_value(0, nil) { ensure_states { item.command(0) } }
+
+      group
+      check_obj_return_value(50, 50, nil) { ensure_states { Dimmers.update(50) } }
+      check_obj_return_value(50, 50, nil) { ensure_states { Dimmers.command(50) } }
+      check_obj_return_value(50, 100, nil) { ensure_states { Dimmers.command(75) } }
+
+      items = group.members
+      check_obj_return_value(50, 50, nil) { ensure_states { items.update(50) } }
+      check_obj_return_value(50, 50, nil) { ensure_states { items.command(50) } }
+
+      items = [Dimmer1, Dimmer2]
+      check_obj_return_value(50, 50, nil) { ensure_states { items.update(50) } }
+      check_obj_return_value(50, 50, nil) { ensure_states { items.command(50) } }
+    end
+
+    it "makes command and update return self if not in a given state" do
+      check_return_value(0, item) { ensure_states { item.update(10) } }
+      check_return_value(0, item) { ensure_states { item.command(10) } }
+
+      group
+      # updating GroupItem doesn't update its members
+      check_obj_return_value(50, 50, Dimmers) { ensure_states { Dimmers.update(0) } }
+      check_obj_return_value(0, 50, Dimmers) { ensure_states { Dimmers.update(0) } }
+      check_obj_return_value(50, 0, Dimmers) { ensure_states { Dimmers.update(0) } }
+
+      check_obj_return_value(50, 50, Dimmers) { ensure_states { Dimmers.command(0) } }
+      check_obj_return_value(0, 50, Dimmers) { ensure_states { Dimmers.command(0) } }
+      check_obj_return_value(50, 0, Dimmers) { ensure_states { Dimmers.command(0) } }
+
+      items = group.members
+      check_obj_return_value(50, 50, items) { ensure_states { items.update(0) } }
+      check_obj_return_value(0, 50, items) { ensure_states { items.update(0) } }
+      check_obj_return_value(50, 0, items) { ensure_states { items.update(0) } }
+
+      check_obj_return_value(50, 50, items) { ensure_states { items.command(0) } }
+      check_obj_return_value(0, 50, items) { ensure_states { items.command(0) } }
+      check_obj_return_value(50, 0, items) { ensure_states { items.command(0) } }
+
+      items = [Dimmer1, Dimmer2]
+      check_obj_return_value(50, 50, items) { ensure_states { items.update(0) } }
+      check_obj_return_value(0, 50, items) { ensure_states { items.update(0) } }
+      check_obj_return_value(50, 0, items) { ensure_states { items.update(0) } }
+
+      check_obj_return_value(50, 50, items) { ensure_states { items.command(0) } }
+      check_obj_return_value(0, 50, items) { ensure_states { items.command(0) } }
+      check_obj_return_value(50, 0, items) { ensure_states { items.command(0) } }
     end
   end
 end

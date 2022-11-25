@@ -72,15 +72,17 @@ module Enumerable
   # @!group Items State and Command Methods
 
   # Send a command to every item in the collection
-  # @return [self]
+  # @return [self, nil] nil when `ensure` is in effect and all the items were already in the same state,
+  #   otherwise self
   def command(command)
-    each { |i| i.command(command) }
+    self if count { |i| i.command(command) }.positive?
   end
 
   # Update the state of every item in the collection
-  # @return [self]
+  # @return [self, nil] nil when `ensure` is in effect and all the items were already in the same state,
+  #   otherwise self
   def update(state)
-    each { |i| i.update(state) }
+    self if count { |i| i.update(state) }.positive?
   end
 
   # @!method refresh

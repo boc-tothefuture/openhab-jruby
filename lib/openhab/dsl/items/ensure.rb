@@ -23,6 +23,9 @@ module OpenHAB
         end
 
         # Extensions for {::GenericItem} to implement {Ensure}'s functionality
+        #
+        # @see OpenHAB::DSL.ensure ensure
+        # @see OpenHAB::DSL.ensure_states ensure_states
         module GenericItem
           include Ensurable
 

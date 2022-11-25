@@ -65,10 +65,17 @@ module OpenHAB
         #
         # Send a command to this item
         #
-        # @param [Command] command command to send to the item
-        # @return [self]
+        # When this method is chained after the {OpenHAB::DSL::Items::Ensure::Ensurable#ensure ensure}
+        # method, or issued inside an {OpenHAB::DSL.ensure_states ensure_states} block,
+        # the command will only be sent if the item is not already in the same state.
         #
-        # @see DSL::Items::TimedCommand#command
+        # @param [Command] command command to send to the item
+        # @return [self, nil] nil when `ensure` is in effect and the item was already in the same state,
+        #   otherwise the item.
+        #
+        # @see DSL::Items::TimedCommand#command Timed Command
+        # @see OpenHAB::DSL.ensure_states ensure_states
+        # @see DSL::Items::Ensure::Ensurable#ensure ensure
         #
         def command(command)
           command = format_command(command)
@@ -88,7 +95,8 @@ module OpenHAB
         # Send an update to this item
         #
         # @param [State] state
-        # @return [self]
+        # @return [self, nil] nil when `ensure` is in effect and the item was already in the same state,
+        #   otherwise the item.
         #
         def update(state)
           state = format_update(state)

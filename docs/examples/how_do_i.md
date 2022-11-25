@@ -74,6 +74,11 @@ My_Item.ensure.command ON
 My_Item.ensure << ON
 ```
 
+```ruby
+# ensure causes the command to return nil if the item is already in the same state
+logger.info("Turning off the light") if My_Item.ensure.off
+```
+
 ### Send a Timed Command
 
 A {OpenHAB::DSL::Items::TimedCommand Timed Command} is similar to the OpenHAB Item's 
