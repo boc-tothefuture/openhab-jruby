@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "date"
+
 # Extensions to Date
 class Date
   #
