@@ -37,12 +37,20 @@ RSpec.describe OpenHAB::Core::Items::GenericItem do
       LightSwitch.on
       expect(LightSwitch).to be_on
     end
+
+    it "returns `self` (wrapped in a proxy)" do
+      expect(LightSwitch.on).to be LightSwitch
+    end
   end
 
   describe "#update" do
     it "works" do
       LightSwitch.update(ON)
       expect(LightSwitch).to be_on
+    end
+
+    it "returns `self` (wrapped in a proxy)" do
+      expect(LightSwitch.update(ON)).to be LightSwitch
     end
   end
 

@@ -74,7 +74,7 @@ module OpenHAB
           command = format_command(command)
           logger.trace "Sending Command #{command} to #{name}"
           $events.send_command(self, command)
-          self
+          Proxy.new(self)
         end
 
         # not an alias to allow easier stubbing and overriding
@@ -94,7 +94,7 @@ module OpenHAB
           state = format_update(state)
           logger.trace "Sending Update #{state} to #{name}"
           $events.post_update(self, state)
-          self
+          Proxy.new(self)
         end
 
         #
