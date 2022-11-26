@@ -187,11 +187,6 @@ module OpenHAB
         #   end
         #
 
-        # @!visibility private
-        # import the actual semantics action
-        SemanticsAction = org.openhab.core.model.script.actions.Semantics
-        private_constant :SemanticsAction
-
         # import all the semantics constants
         [org.openhab.core.semantics.model.point.Points,
          org.openhab.core.semantics.model.property.Properties,
@@ -234,7 +229,7 @@ module OpenHAB
         # @return [true, false]
         #
         def location?
-          SemanticsAction.location?(self)
+          Actions::Semantics.location?(self)
         end
 
         #
@@ -246,7 +241,7 @@ module OpenHAB
         # @return [true, false]
         #
         def equipment?
-          SemanticsAction.equipment?(self)
+          Actions::Semantics.equipment?(self)
         end
 
         # Checks if this Item is a {Point}
@@ -257,7 +252,7 @@ module OpenHAB
         # @return [true, false]
         #
         def point?
-          SemanticsAction.point?(self)
+          Actions::Semantics.point?(self)
         end
 
         #
@@ -280,7 +275,7 @@ module OpenHAB
         # @return [GenericItem, nil]
         #
         def location
-          SemanticsAction.get_location(self)&.then(&Proxy.method(:new))
+          Actions::Semantics.get_location(self)&.then(&Proxy.method(:new))
         end
 
         #
@@ -293,7 +288,7 @@ module OpenHAB
         # @return [Class, nil]
         #
         def location_type
-          SemanticsAction.get_location_type(self)&.ruby_class
+          Actions::Semantics.get_location_type(self)&.ruby_class
         end
 
         #
@@ -306,7 +301,7 @@ module OpenHAB
         # @return [GenericItem, nil]
         #
         def equipment
-          SemanticsAction.get_equipment(self)&.then(&Proxy.method(:new))
+          Actions::Semantics.get_equipment(self)&.then(&Proxy.method(:new))
         end
 
         #
@@ -319,7 +314,7 @@ module OpenHAB
         # @return [Class, nil]
         #
         def equipment_type
-          SemanticsAction.get_equipment_type(self)&.ruby_class
+          Actions::Semantics.get_equipment_type(self)&.ruby_class
         end
 
         #
@@ -330,7 +325,7 @@ module OpenHAB
         # @return [Class, nil]
         #
         def point_type
-          SemanticsAction.get_point_type(self)&.ruby_class
+          Actions::Semantics.get_point_type(self)&.ruby_class
         end
 
         #
@@ -341,7 +336,7 @@ module OpenHAB
         # @return [Class, nil]
         #
         def property_type
-          SemanticsAction.get_property_type(self)&.ruby_class
+          Actions::Semantics.get_property_type(self)&.ruby_class
         end
 
         # @!attribute [r] semantic_type
@@ -355,7 +350,7 @@ module OpenHAB
         # @return [Class, nil]
         #
         def semantic_type
-          SemanticsAction.get_semantic_type(self)&.ruby_class
+          Actions::Semantics.get_semantic_type(self)&.ruby_class
         end
 
         #
@@ -409,7 +404,7 @@ module Enumerable
   # Returns a new array of items that are a semantics Location (optionally of the given type)
   # @return [Array<GenericItem>]
   def locations(type = nil)
-    if type && (!type.is_a?(Module) || !(type < OpenHAB::Core::Items::Semantics::Location))
+    if type && (!type.is_a?(Module) || !(type < Semantics::Location))
       raise ArgumentError, "type must be a subclass of Location"
     end
 
@@ -432,7 +427,7 @@ module Enumerable
   # @example Get all TVs in a room
   #   lGreatRoom.equipments(Semantics::Screen)
   def equipments(type = nil)
-    if type && (!type.is_a?(Module) || !(type < OpenHAB::Core::Items::Semantics::Equipment))
+    if type && (!type.is_a?(Module) || !(type < Semantics::Equipment))
       raise ArgumentError, "type must be a subclass of Equipment"
     end
 
@@ -457,19 +452,19 @@ module Enumerable
     end
     unless point_or_property_types.all? do |tag|
              tag.is_a?(Module) &&
-             (tag < OpenHAB::Core::Items::Semantics::Point || tag < OpenHAB::Core::Items::Semantics::Property)
+             (tag < Semantics::Point || tag < Semantics::Property)
            end
       raise ArgumentError, "point_or_property_types must all be a subclass of Point or Property"
     end
-    if point_or_property_types.count { |tag| tag < OpenHAB::Core::Items::Semantics::Point } > 1 ||
-       point_or_property_types.count { |tag| tag < OpenHAB::Core::Items::Semantics::Property } > 1
+    if point_or_property_types.count { |tag| tag < Semantics::Point } > 1 ||
+       point_or_property_types.count { |tag| tag < Semantics::Property } > 1
       raise ArgumentError, "point_or_property_types cannot both be a subclass of Point or Property"
     end
 
     select do |point|
       point.point? && point_or_property_types.all? do |tag|
-        (tag < OpenHAB::Core::Items::Semantics::Point && point.point_type <= tag) ||
-          (tag < OpenHAB::Core::Items::Semantics::Property && point.property_type&.<=(tag))
+        (tag < Semantics::Point && point.point_type <= tag) ||
+          (tag < Semantics::Property && point.property_type&.<=(tag))
       end
     end
   end

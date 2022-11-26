@@ -66,11 +66,15 @@ module OpenHAB
     #
     module Actions
       OSGi.services("org.openhab.core.model.script.engine.action.ActionService")&.each do |service|
-        java_import service.action_class.ruby_class
+        klass = (java_import service.action_class.ruby_class).first
         logger.trace("Loaded ACTION: #{service.action_class}")
+        Object.const_set(service.action_class.simple_name, klass)
       end
       # Import common actions
-      %w[Exec HTTP Ping].each { |action| java_import "org.openhab.core.model.script.actions.#{action}" }
+      %w[Exec HTTP Ping].each do |action|
+        klass = (java_import "org.openhab.core.model.script.actions.#{action}").first
+        Object.const_set(action, klass)
+      end
 
       module_function
 
