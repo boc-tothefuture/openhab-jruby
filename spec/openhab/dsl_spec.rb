@@ -126,6 +126,8 @@ RSpec.describe OpenHAB::DSL do
       provider_class.new(thread_provider: false) do |provider|
         example.example_group.let!(:other_provider) { provider }
         example.call
+      ensure
+        provider.unregister
       end
     end
 
@@ -179,7 +181,6 @@ RSpec.describe OpenHAB::DSL do
     end
 
     it "can set a provider for metadata items" do
-      skip("fragile")
       provider(Switch1 => other_provider) do
         Switch1.metadata[:test] = "hi"
         Switch2.metadata[:test] = "bye"
@@ -191,8 +192,9 @@ RSpec.describe OpenHAB::DSL do
     end
 
     it "can set a provider for metadata with a Proc" do
+      original_provider = provider_class.current
       my_proc = proc do |metadata|
-        other_provider if metadata&.item == Switch1
+        metadata&.item == Switch1 ? other_provider : original_provider
       end
 
       provider(metadata: my_proc) do
@@ -201,7 +203,7 @@ RSpec.describe OpenHAB::DSL do
         m1 = Switch1.metadata[:test]
         m2 = Switch2.metadata[:test]
         expect(registry.provider_for(m1.uid)).to be other_provider
-        expect(registry.provider_for(m2.uid)).to be provider_class.current
+        expect(registry.provider_for(m2.uid)).to be original_provider
       end
     end
 
