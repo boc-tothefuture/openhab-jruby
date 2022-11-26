@@ -57,9 +57,8 @@ module OpenHAB
           tm.class.field_reader :storage
           tm.storage.keys.each { |k| tm.storage.remove(k) } # rubocop:disable Style/HashEachMethods not a hash
 
-          profile_factory = Core::ProfileFactory.send(:new)
-          @profile_factory_registration = OSGi.register_service(profile_factory)
-          allow(Core::ProfileFactory).to receive(:instance).and_return(profile_factory)
+          @profile_factory = Core::ProfileFactory.send(:new)
+          allow(Core::ProfileFactory).to receive(:instance).and_return(@profile_factory)
 
           stub_const("OpenHAB::Core::Timer", Mocks::Timer) if self.class.mock_timers?
 
@@ -72,7 +71,7 @@ module OpenHAB
         config.after do
           Core::Items::Proxy.reset_cache
           Core::Things::Proxy.reset_cache
-          @profile_factory_registration.unregister
+          @profile_factory.unregister
           timers.cancel_all
           # timers and rules have already been canceled, so we can safely just
           # wipe this

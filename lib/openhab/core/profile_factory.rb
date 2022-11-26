@@ -98,6 +98,19 @@ module OpenHAB
 
       def initialize
         @profiles = {}
+
+        @registration = OSGi.register_service(self)
+        ScriptHandling.script_unloaded { unregister }
+      end
+
+      #
+      # Unregister the ProfileFactory OSGi service
+      #
+      # @!visibility private
+      # @return [void]
+      #
+      def unregister
+        @registration.unregister
       end
 
       # @!visibility private
@@ -113,8 +126,5 @@ module OpenHAB
         @profiles.keys
       end
     end
-
-    registration = OSGi.register_service(ProfileFactory.instance)
-    ScriptHandling.script_unloaded { registration.unregister }
   end
 end
