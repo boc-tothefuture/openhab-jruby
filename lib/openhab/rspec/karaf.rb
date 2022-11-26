@@ -104,6 +104,7 @@ module OpenHAB
           java.lang.System.set_property("felix.cm.dir", felix_cm)
           # not handled by karaf instances
           java.lang.System.set_property("openhab.userdata", path)
+          @oh_userdata = nil
           java.lang.System.set_property("openhab.logdir", "#{path}/logs")
         end
         cleanup_instance
@@ -264,8 +265,6 @@ module OpenHAB
             props.remove("transformation")
             props.remove("ui")
             props.remove("binding") unless include_bindings
-            # except we need jrubyscripting
-            props.put("automation", "jrubyscripting")
             cfg.update(props)
 
             # configure persistence to use the mock service
@@ -308,7 +307,6 @@ module OpenHAB
       private_constant :BLOCKED_BUNDLE_TREES
 
       ALLOWED_BUNDLES = %w[
-        org.openhab.automation.jrubyscripting
         org.openhab.core.io.monitor
       ].freeze
       private_constant :ALLOWED_BUNDLES
@@ -561,11 +559,7 @@ module OpenHAB
       # import global variables and constants that the DSL expects,
       # since we're going to be running it in this same VM
       def set_jruby_script_presets
-        wait_for_service("org.openhab.core.automation.module.script.ScriptEngineFactory",
-                         filter: "(service.config.description.uri=automation:jruby)") do |_jrubyscripting|
-          sem = OSGi.service(
-            "org.openhab.core.automation.module.script.internal.ScriptExtensionManager"
-          )
+        wait_for_service("org.openhab.core.automation.module.script.internal.ScriptExtensionManager") do |sem|
           # since we're not created by the ScriptEngineManager, this never gets set; manually set it
           $se = $scriptExtension = ScriptExtensionManagerWrapper.new(sem)
           scope_values = sem.find_default_presets("rspec")
@@ -803,7 +797,6 @@ module OpenHAB
                     <f:feature>openhab-core-model-sitemap</f:feature>
                     <f:feature>openhab-core-model-thing</f:feature>
                     <f:feature>openhab-core-storage-json</f:feature>
-                    <f:feature>openhab-automation-jrubyscripting</f:feature>
                     <f:feature>openhab-transport-http</f:feature>
                     <f:feature prerequisite="true">wrapper</f:feature>
                     <f:bundle>mvn:org.openhab.core.bundles/org.openhab.core.karaf/#{version}</f:bundle>
