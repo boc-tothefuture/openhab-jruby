@@ -29,9 +29,11 @@ module OpenHAB
       #   end
       #
       def script_loaded(&block)
-        Core::ScriptHandlingCallbacks.script_loaded_hooks << block
+        ScriptHandlingCallbacks.script_loaded_hooks << block
       end
 
+      #
+      # @!method script_unloaded(&block)
       #
       # Add a block of code to be executed when the script is unloaded.
       #
@@ -47,8 +49,10 @@ module OpenHAB
       #     logger.info 'Hi, this script has been unloaded'
       #   end
       #
-      def script_unloaded(&block)
-        Core::ScriptHandlingCallbacks.script_unloaded_hooks << block
+      def script_unloaded(before: nil, &block)
+        # `before` is as yet undocumented, because I'm not set on its interface
+        index = before.call(ScriptHandlingCallbacks.script_unloaded_hooks) if before
+        ScriptHandlingCallbacks.script_unloaded_hooks.insert(index || -1, block)
       end
     end
 

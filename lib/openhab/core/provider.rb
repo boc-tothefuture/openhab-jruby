@@ -212,11 +212,11 @@ module OpenHAB
 
       private
 
-      def initialize
-        super
+      def initialize(script_unloaded_before: nil)
+        super()
         @elements = {}
         self.class.registry.add_provider(self)
-        ScriptHandling.script_unloaded { unregister }
+        ScriptHandling.script_unloaded(before: script_unloaded_before) { unregister }
       end
     end
   end

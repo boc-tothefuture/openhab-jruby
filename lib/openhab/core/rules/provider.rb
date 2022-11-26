@@ -19,6 +19,12 @@ module OpenHAB
             $rules
           end
         end
+
+        def initialize
+          super(script_unloaded_before: lambda do |callbacks|
+            callbacks.index { |cb| cb.binding.receiver.is_a?(Items::Provider) }
+          end)
+        end
       end
     end
   end
