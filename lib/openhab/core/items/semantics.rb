@@ -218,6 +218,7 @@ module OpenHAB
         #   Property = org.openhab.core.semantics.Property
 
         # put ourself into the global namespace, replacing the action
+        Object.send(:remove_const, :Semantics)
         ::Semantics = self # rubocop:disable Naming/ConstantName
 
         #
