@@ -18,6 +18,7 @@ namespace :openhab do
   karaf_client_path = File.join(OPENHAB_DIR, "runtime/bin/client")
   karaf_client_args = [karaf_client_path, "-a", @port_numbers[:ssh][:port], "-p", "habopen"].freeze
   @karaf_client = karaf_client_args.join(" ")
+  @cache_dir = File.expand_path("cache")
   @deploy_dir = File.join(OPENHAB_DIR, "conf/automation/jsr223/ruby/personal")
   @state_dir = File.join(OPENHAB_DIR, "rake_state")
   @services_config_file = File.join(OPENHAB_DIR, "conf/services/jruby.cfg")
@@ -139,12 +140,13 @@ namespace :openhab do
     end
   end
 
+  directory @cache_dir
   directory OPENHAB_DIR
   directory @deploy_dir
   directory @state_dir
 
   desc "Download Openhab and unzip it"
-  task download: [OPENHAB_DIR] do |task|
+  task download: [@cache_dir, OPENHAB_DIR] do |task|
     state(task.name) do
       openhab_zip = "openhab-#{@openhab_version}.zip"
       download_url = case @openhab_version
@@ -156,13 +158,20 @@ namespace :openhab do
                        "https://github.com/openhab/openhab-distro/releases/download/"\
                        "#{@openhab_version}/#{openhab_zip}"
                      end
+      openhab_zip = File.join(@cache_dir, openhab_zip)
+      unless File.exist?(openhab_zip)
+        begin
+          # rubocop: disable Security/Open
+          puts "Downloading #{openhab_zip} from #{download_url}"
+          IO.copy_stream(open(download_url), openhab_zip)
+          # rubocop: enable Security/Open
+        rescue Exception
+          File.unlink(openhab_zip)
+          raise
+        end
+      end
       Dir.chdir(OPENHAB_DIR) do
-        # rubocop: disable Security/Open
-        puts "Downloading #{openhab_zip} from #{download_url}"
-        IO.copy_stream(open(download_url), openhab_zip)
         fail_on_error("unzip #{openhab_zip}")
-        rm openhab_zip
-        # rubocop: enable Security/Open
       end
     end
   end

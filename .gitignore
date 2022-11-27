@@ -3,6 +3,7 @@
 /.java-version
 /.karaf
 /.yardoc
+/cache/
 /coverage/
 /doc/
 /docs/yard/
