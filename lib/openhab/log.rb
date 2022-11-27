@@ -235,12 +235,19 @@ module OpenHAB
     alias_method :to_s, :inspect
 
     # @!attribute [rw] level
+    #
+    # @note When a logger's level is modified, the logging infrastructure has
+    #   to reload, and logging may be completely unavailable for a short time.
+    #
     # @return [:error,:warn,:info,:debug,:trace] The current log level
+    #
     def level
       Logger.log_service.get_level(name)[name]&.downcase&.to_sym
     end
 
     def level=(level)
+      return if self.level == level
+
       Logger.log_service.set_level(name, level.to_s)
     end
 
