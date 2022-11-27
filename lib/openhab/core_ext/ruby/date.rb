@@ -87,5 +87,6 @@ class Date
     [other.to_date, self]
   end
 
+  remove_method :inspect
   alias_method :inspect, :to_s
 end

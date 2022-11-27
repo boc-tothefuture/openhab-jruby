@@ -380,6 +380,7 @@ module OpenHAB
 
             [value, to_h].inspect
           end
+          remove_method :to_s
           alias_method :to_s, :inspect
 
           #
