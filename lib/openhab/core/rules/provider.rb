@@ -22,7 +22,16 @@ module OpenHAB
 
         def initialize
           super(script_unloaded_before: lambda do |callbacks|
-            callbacks.index { |cb| cb.binding.receiver.is_a?(Items::Provider) }
+            callbacks.index do |cb|
+              case cb.binding.receiver
+              when Items::Provider,
+                Things::Provider,
+                DSL::TimerManager
+                true
+              else
+                false
+              end
+            end
           end)
         end
       end

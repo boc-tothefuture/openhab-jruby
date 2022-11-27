@@ -109,7 +109,7 @@ module OpenHAB
               state, = retrieve_states(inputs)
               if state == @tracking_to
                 logger.trace("Item changed to #{state} for #{self}, rescheduling timer.")
-                @timer.reschedule(ZonedDateTime.now.plus(@duration))
+                @timer.reschedule(@duration)
               else
                 logger.trace("Item changed to #{state} for #{self}, canceling timer.")
                 @timer.cancel

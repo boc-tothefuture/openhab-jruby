@@ -34,8 +34,10 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       description += " from: #{from.inspect}" if from
       description += " to: #{to.inspect}" if to
       description += " for: #{duration.inspect}" if duration
+      callers = caller
+      id = callers.first.split("/").last.rpartition(":").first
 
-      it description, caller: caller do
+      it description, caller: callers do
         # this is the only way to make this accessible to both
         # the rule where it's set, and to the block given to the
         # definition method
@@ -49,7 +51,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
           end
         end
 
-        rule "Execute rule when thing is #{trigger}" do
+        rule "Execute rule when thing is #{trigger}", id: id do
           kwargs = { to: to }
           kwargs[:from] = from if from
           kwargs[:for] = duration if duration
@@ -389,14 +391,12 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         test_thing_status_trigger(:changed, from: :online, to: :uninitialized)
         test_thing_status_trigger(:changed, from: :unknown, to: :uninitialized, expect_triggered: false)
         test_thing_status_trigger(:changed, to: :uninitialized, duration: 10.seconds) do |_triggered|
-          skip("deadlocks sometimes")
           execute_timers
           expect(triggered?).to be false
           time_travel_and_execute_timers(15.seconds)
           expect(triggered?).to be true
         end
         test_thing_status_trigger(:changed, to: :uninitialized, duration: 20.seconds) do |_triggered|
-          skip("fragile")
           execute_timers
           expect(triggered?).to be false
           thing.enable
@@ -406,7 +406,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
           expect(triggered?).to be false
         end
 
-        it "support ThingUID" do
+        it "supports ThingUID" do
           triggered = false
           changed things["astro:sun:home"].uid do
             triggered = true

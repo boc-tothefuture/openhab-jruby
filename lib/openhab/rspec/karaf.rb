@@ -429,6 +429,11 @@ module OpenHAB
 
               tm.bundleResolver = Mocks::BundleResolver.instance
 
+              require_relative "mocks/safe_caller"
+              field = tm.class.java_class.declared_field :safeCaller
+              field.accessible = true
+              field.set(tm, Mocks::SafeCaller.instance)
+
               require_relative "mocks/thing_handler"
               thf = Mocks::ThingHandlerFactory.instance
               bundle = org.osgi.framework.FrameworkUtil.get_bundle(org.openhab.core.thing.Thing)

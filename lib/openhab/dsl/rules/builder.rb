@@ -1417,7 +1417,7 @@ module OpenHAB
           added_rule = add_rule(provider, rule)
           # add config so that MainUI can show the script
           added_rule.actions.first.configuration.put("type", "application/x-ruby")
-          added_rule.actions.first.configuration.put("script", script)
+          added_rule.actions.first.configuration.put("script", script) if script
 
           rule.execute(nil, { "event" => Struct.new(:attachment).new(start_attachment) }) if on_start?
           added_rule
