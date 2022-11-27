@@ -47,7 +47,7 @@ Given("GEM_HOME is empty") do
   clear_gem_path
 end
 
-Given("a services template filed named {string}") do |file, doc_string|
+Given("a services template file named {string}") do |file, doc_string|
   File.write(File.join(services_dir, file), ERB.new(doc_string).result)
 end
 

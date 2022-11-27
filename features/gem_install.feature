@@ -11,12 +11,12 @@ Feature:  gem_install
   Scenario: Install OpenHAB helper library
     Given OpenHAB is stopped
     And GEM_HOME is empty
-    And a services template filed named "jruby.cfg"
+    And a services template file named "jruby.cfg"
       """
       org.openhab.automation.jrubyscripting:gem_home=<%= gem_home %>
-      org.openhab.automation.jrubyscripting:gems=openhab-jrubyscripting=~>0.0
+      org.openhab.automation.jrubyscripting:gems=openhab-jrubyscripting=>0.a
       org.openhab.automation.jrubyscripting:rubylib=<%= ruby_lib_dir %>
       """
     When I start OpenHAB
-    Then It should log 'Installing Gem: openhab-jrubyscripting' within 180 seconds
-
+    Then It should log 'Installing Gem' within 180 seconds
+    And It should not log 'Error installing Gem' within 10 seconds
