@@ -5,7 +5,7 @@ require_relative "time"
 module OpenHAB
   module CoreExt
     module Java
-      java_import java.time.Month
+      Month = java.time.Month
 
       # Extensions to Month
       class Month
