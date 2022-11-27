@@ -286,7 +286,7 @@ module OpenHAB
         # @return [Object] QuantityType or the original value
         #
         def quantify(value)
-          if value.is_a?(DecimalType) && unit
+          if value.is_a?(DecimalType) && respond_to?(:unit) && unit
             logger.trace("Unitizing #{value} with unit #{unit}")
             QuantityType.new(value.to_big_decimal, unit)
           else

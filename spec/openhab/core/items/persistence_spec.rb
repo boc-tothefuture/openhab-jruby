@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe OpenHAB::Core::Items::Persistence do
-  it "supports various persistence methods" do
-    items.build { number_item "Number1", state: 10 }
-    Number1.persist
+  def test_all_methods(item)
+    item.persist
 
     expect do
       %i[
@@ -19,7 +18,7 @@ RSpec.describe OpenHAB::Core::Items::Persistence do
         updated_since?
         variance_since
       ].each do |method|
-        Number1.__send__(method, 1.minute.ago)
+        item.__send__(method, 1.minute.ago)
       end
 
       %i[
@@ -33,9 +32,17 @@ RSpec.describe OpenHAB::Core::Items::Persistence do
         updated_between?
         variance_between
       ].each do |method|
-        Number1.__send__(method, 2.minutes.ago, 1.minute.ago)
+        item.__send__(method, 2.minutes.ago, 1.minute.ago)
       end
     end.not_to raise_error
+  end
+
+  it "supports all persistence methods on a NumberItem" do
+    test_all_methods(items.build { number_item "Number1", state: 10 })
+  end
+
+  it "supports all persistence methods on a non-NumberItem Item" do
+    test_all_methods(items.build { switch_item "Switch1", state: ON })
   end
 
   it "handles persistence data with units of measurement" do
