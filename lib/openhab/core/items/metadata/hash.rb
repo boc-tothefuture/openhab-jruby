@@ -400,7 +400,7 @@ module OpenHAB
               return preferred_provider unless provider
 
               unless provider.is_a?(org.openhab.core.common.registry.ManagedProvider)
-                raise FrozenError, "Cannot modify metadata from provider #{provider.inspect}"
+                raise FrozenError, "Cannot modify metadata from provider #{provider.inspect} for #{uid}."
               end
 
               if preferred_provider != provider
