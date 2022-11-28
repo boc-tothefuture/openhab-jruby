@@ -124,7 +124,7 @@ module OpenHAB
       #
       def time_travel_and_execute_timers(duration)
         if self.class.mock_timers?
-          Timecop.travel(duration)
+          Timecop.frozen? ? Timecop.freeze(duration) : Timecop.travel(duration)
           execute_timers
         else
           sleep duration

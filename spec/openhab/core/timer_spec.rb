@@ -24,10 +24,10 @@ RSpec.describe OpenHAB::Core::Timer do
         next_time = start + 15.seconds
         final_time = start + 30.seconds
         t = after(15.seconds) { nil }
-        expect(t.execution_time).to be_within(10.ms).of(next_time)
-        Timecop.travel(next_time)
+        expect(t.execution_time).to eq next_time
+        Timecop.freeze(next_time)
         t.reschedule
-        expect(t.execution_time).to be_within(10.ms).of(final_time)
+        expect(t.execution_time).to eq final_time
       end
 
       it "works from within the execution block" do
@@ -48,36 +48,36 @@ RSpec.describe OpenHAB::Core::Timer do
         second_time = start + 45.seconds
         final_time = start + 60.seconds
         t = after(15.seconds) { nil }
-        expect(t.execution_time).to be_within(10.ms).of(next_time)
-        Timecop.travel(next_time)
+        expect(t.execution_time).to eq next_time
+        Timecop.freeze(next_time)
         t.reschedule(30.seconds)
-        expect(t.execution_time).to be_within(10.ms).of(second_time)
-        Timecop.travel(second_time)
+        expect(t.execution_time).to eq second_time
+        Timecop.freeze(second_time)
         t.reschedule
-        expect(t.execution_time).to be_within(10.ms).of(final_time)
+        expect(t.execution_time).to eq final_time
       end
     end
 
     it "supports integral durations" do
       t = after(5.minutes) { nil }
-      expect(t.execution_time).to be_within(10.ms).of(5.minutes.from_now)
+      expect(t.execution_time).to eq 5.minutes.from_now
     end
 
     it "supports non-integral durations" do
       t = after(0.5.minutes) { nil }
-      expect(t.execution_time).to be_within(10.ms).of(30.seconds.from_now)
+      expect(t.execution_time).to eq 30.seconds.from_now
     end
 
     it "supports absolute ZonedDateTime" do
       time = ZonedDateTime.parse("2030-01-01T00:00:00+00:00")
       t = after(time) { nil }
-      expect(t.execution_time).to be_within(10.ms).of(time)
+      expect(t.execution_time).to eq time
     end
 
     it "supports Time" do
       time = Time.parse("2030-01-01T00:00:00+00:00")
       t = after(time) { nil }
-      expect(t.execution_time).to be_within(10.ms).of(time)
+      expect(t.execution_time).to eq time
     end
 
     it "supports Procs" do
@@ -85,10 +85,10 @@ RSpec.describe OpenHAB::Core::Timer do
       next_time = start + 15.seconds
       final_time = start + 30.seconds
       t = after(-> { 15.seconds }) { nil }
-      expect(t.execution_time).to be_within(10.ms).of(next_time)
-      Timecop.travel(next_time)
+      expect(t.execution_time).to eq next_time
+      Timecop.freeze(next_time)
       t.reschedule
-      expect(t.execution_time).to be_within(10.ms).of(final_time)
+      expect(t.execution_time).to eq final_time
     end
 
     describe "#active?" do
@@ -141,7 +141,7 @@ RSpec.describe OpenHAB::Core::Timer do
 
       it "reuses the same timer if an id is given" do
         timer1 = after(5.seconds, id: "id") { nil }
-        expect(timer1.execution_time).to be_within(10.ms).of(5.seconds.from_now)
+        expect(timer1.execution_time).to eq 5.seconds.from_now
         after(5.seconds, id: "id") { nil }
 
         expect(timer1).to be_cancelled
@@ -151,7 +151,7 @@ RSpec.describe OpenHAB::Core::Timer do
         start_timer(10.seconds)
         timer = start_timer(5.seconds)
         timer.reschedule
-        expect(timer.execution_time).to be_within(10.ms).of(5.seconds.from_now)
+        expect(timer.execution_time).to eq 5.seconds.from_now
       end
 
       it "can find a timer by id" do
@@ -193,7 +193,7 @@ RSpec.describe OpenHAB::Core::Timer do
         timer1 = after(5.seconds, id: "id") { nil }
         timer2 = timers.reschedule("id", 1.second)
         expect(timer2).to be timer1
-        expect(timer1.execution_time).to be_within(10.ms).of(1.second.from_now)
+        expect(timer1.execution_time).to eq 1.second.from_now
       end
 
       it "can avoid rescheduling timers that already exist" do

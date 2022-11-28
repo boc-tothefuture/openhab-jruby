@@ -27,7 +27,7 @@ RSpec.describe Time do
     it "works with Numeric and returns a Time" do
       Timecop.freeze
       result = described_class.now - 60
-      expect(result).to be_within(10.ms).of(60.seconds.ago)
+      expect(result).to eq 60.seconds.ago
       expect(result).to be_a(described_class)
     end
 

@@ -66,10 +66,22 @@ module OpenHAB
     #
     module Actions
       OSGi.services("org.openhab.core.model.script.engine.action.ActionService")&.each do |service|
-        klass = (java_import service.action_class.ruby_class).first
-        logger.trace("Loaded ACTION: #{service.action_class}")
-        Object.const_set(service.action_class.simple_name, klass)
+        action_class = service.action_class
+        module_name = action_class.simple_name
+        action = if action_class.interface?
+                   impl = OSGi.service(action_class)
+                   unless impl
+                     logger.error("Unable to find an implementation object for action service #{action_class}.")
+                     next
+                   end
+                   const_set(module_name, impl)
+                 else
+                   (java_import action_class.ruby_class).first
+                 end
+        logger.trace("Loaded ACTION: #{action_class}")
+        Object.const_set(module_name, action)
       end
+
       # Import common actions
       %w[Exec HTTP Ping].each do |action|
         klass = (java_import "org.openhab.core.model.script.actions.#{action}").first
