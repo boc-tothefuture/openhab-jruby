@@ -19,7 +19,7 @@ module OpenHAB
           def def_state_parsing_method(method, param_name)
             class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{method}(type)                                                             # def handle_command(type)
-                type = link.item.format_#{param_name == :state ? :update : param_name}(type)  #   type = link.item.format_command(type)
+                type = link.item.format_#{(param_name == :state) ? :update : param_name}(type)  #   type = link.item.format_command(type)
                 super(type)                                                                   #   super(type)
               end                                                                             # end
             RUBY

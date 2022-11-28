@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "pp"
 require "httparty"
 require "persistent_httparty"
 

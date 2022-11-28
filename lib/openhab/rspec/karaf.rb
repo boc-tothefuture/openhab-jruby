@@ -351,8 +351,7 @@ module OpenHAB
       }.freeze
       private_constant :BLOCKED_COMPONENTS
 
-      START_LEVEL_OVERRIDES = {
-      }.freeze
+      START_LEVEL_OVERRIDES = {}.freeze
       private_constant :START_LEVEL_OVERRIDES
 
       def set_up_bundle_listener

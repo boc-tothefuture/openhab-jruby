@@ -110,7 +110,7 @@ module OpenHAB
 
           # formulate a readable rule name from a channel link trigger
           def infer_rule_name_from_channel_link_trigger(trigger)
-            trigger == :channel_linked ? "Channel linked to item" : "Channel unlinked from item"
+            (trigger == :channel_linked) ? "Channel linked to item" : "Channel unlinked from item"
           end
 
           # formulate a readable rule name from a thing added/updated/remove trigger

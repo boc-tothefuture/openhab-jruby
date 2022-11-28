@@ -16,8 +16,8 @@ module OpenHAB
 
       # have to completely replace this method. only change is the regex splitting
       # into parts now allows `.` as part of the identifier
-      # rubocop:disable Style
-      def format_types(typelist, brackets = true)
+      # rubocop:disable Style/NestedTernaryOperator, Style/StringConcatenation, Style/TernaryParentheses
+      def format_types(typelist, brackets = true) # rubocop:disable Style/OptionalBooleanParameter
         return unless typelist.is_a?(Array)
 
         list = typelist.map do |type|
@@ -27,7 +27,7 @@ module OpenHAB
         end
         list.empty? ? "" : (brackets ? "(#{list.join(", ")})" : list.join(", "))
       end
-      # rubocop:enable Style
+      # rubocop:enable Style/NestedTernaryOperator, Style/StringConcatenation, Style/TernaryParentheses
 
       def link_object(obj, title = nil, *)
         ::YARD::Handlers::JRuby::Base.infer_java_class(obj) if obj.is_a?(String)

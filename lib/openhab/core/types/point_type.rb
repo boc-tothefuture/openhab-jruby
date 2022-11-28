@@ -21,7 +21,7 @@ module OpenHAB
               if value.is_a?(DecimalType) || value.is_a?(StringType)
                 value
               elsif value.is_a?(QuantityType)
-                unit = index == 2 ? DSL.unit(SIUnits::METRE.dimension) || SIUnits::METRE : Units::DEGREE_ANGLE
+                unit = (index == 2) ? DSL.unit(SIUnits::METRE.dimension) || SIUnits::METRE : Units::DEGREE_ANGLE
                 DecimalType.new(value.to_unit(unit).to_big_decimal)
               elsif value.respond_to?(:to_str)
                 StringType.new(value.to_str)

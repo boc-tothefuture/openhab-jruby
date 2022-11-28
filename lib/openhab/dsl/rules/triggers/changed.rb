@@ -60,7 +60,7 @@ module OpenHAB
           #
           def wait_trigger(item:, duration:, to: nil, from: nil, attach: nil)
             item_name = item.respond_to?(:name) ? item.name : item.to_s
-            logger.trace("Creating Changed Wait Change Trigger for Item(#{item_name}) Duration(#{duration}) "\
+            logger.trace("Creating Changed Wait Change Trigger for Item(#{item_name}) Duration(#{duration}) " \
                          "To(#{to}) From(#{from}) Attach(#{attach})")
             conditions = Conditions::Duration.new(to: to, from: from, duration: duration)
             changed_trigger(item: item, to: nil, from: nil, attach: attach, conditions: conditions)

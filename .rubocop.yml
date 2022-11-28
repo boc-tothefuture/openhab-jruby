@@ -20,7 +20,7 @@ Bundler/GemFilename:
     - lib/openhab/dsl/gems.rb
 
 Layout/LineLength:
-  IgnoredPatterns:
+  AllowedPatterns:
     - "# @example" # YARD example titles can't be broken up onto multiple lines.
     - "# @see" # YARD example titles can't be broken up onto multiple lines.
     - "data:[a-z/]+;base64," # Base64 data is long
@@ -41,6 +41,8 @@ RSpec/DescribeClass:
   Enabled: false
 RSpec/ExampleLength:
   Enabled: false
+RSpec/ExampleWording:
+  DisallowedExamples: []
 RSpec/ExpectActual:
   Exclude:
     - spec/openhab/core/types/*_spec.rb
@@ -57,6 +59,8 @@ RSpec/MultipleExpectations:
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
 RSpec/NestedGroups:
+  Enabled: false
+RSpec/NoExpectationExample:
   Enabled: false
 
 Style/Alias:

@@ -151,11 +151,11 @@ namespace :openhab do
       openhab_zip = "openhab-#{@openhab_version}.zip"
       download_url = case @openhab_version
                      when /.*-SNAPSHOT/
-                       "https://ci.openhab.org/job/openHAB3-Distribution/lastSuccessfulBuild/artifact/"\
+                       "https://ci.openhab.org/job/openHAB3-Distribution/lastSuccessfulBuild/artifact/" \
                        "distributions/openhab/target/#{openhab_zip}"
                      else
                        # The same for releases and milestones
-                       "https://github.com/openhab/openhab-distro/releases/download/"\
+                       "https://github.com/openhab/openhab-distro/releases/download/" \
                        "#{@openhab_version}/#{openhab_zip}"
                      end
       openhab_zip = File.join(@cache_dir, openhab_zip)
@@ -252,8 +252,8 @@ namespace :openhab do
 
   def openhab_env
     {
-      "LANG" => ENV["LANG"],
-      "JAVA_HOME" => ENV["JAVA_HOME"],
+      "LANG" => ENV.fetch("LANG", nil),
+      "JAVA_HOME" => ENV.fetch("JAVA_HOME", nil),
       "KARAF_REDIRECT" => karaf_log,
       "EXTRA_JAVA_OPTS" => "-Xmx4g",
       "OPENHAB_HTTP_PORT" => ENV["OPENHAB_HTTP_PORT"] || "8080",

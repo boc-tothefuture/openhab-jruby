@@ -194,7 +194,7 @@ RSpec.describe OpenHAB::DSL do
     it "can set a provider for metadata with a Proc" do
       original_provider = provider_class.current
       my_proc = proc do |metadata|
-        metadata&.item == Switch1 ? other_provider : original_provider
+        (metadata&.item == Switch1) ? other_provider : original_provider
       end
 
       provider(metadata: my_proc) do

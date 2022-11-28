@@ -2,7 +2,6 @@
 
 require "json"
 require "open3"
-require "pp"
 
 OPENHAB_VERSIONS = ["3.3.0", "3.4.0.M5"].freeze
 

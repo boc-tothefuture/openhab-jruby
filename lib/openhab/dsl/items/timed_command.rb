@@ -211,7 +211,7 @@ module OpenHAB
           def execute(_mod = nil, inputs = nil)
             ThreadLocal.thread_local(**@thread_locals) do
               @timed_command_details.mutex.synchronize do
-                logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\
+                logger.trace "Canceling implicit timer #{@timed_command_details.timer} for " \
                              "#{@timed_command_details.item.name}  because received event #{inputs}"
                 @timed_command_details.timer.cancel
                 DSL.rules.remove(@timed_command_details.rule_uid)

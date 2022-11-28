@@ -288,7 +288,7 @@ module OpenHAB
 
           # @!visibility private
           def hash
-            "metadata_namespace_hash".hash + @item_name.hash
+            ["metadata_namespace_hash", @item_name.hash]
           end
 
           # @!visibility private

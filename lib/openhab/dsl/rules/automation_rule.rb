@@ -170,7 +170,7 @@ module OpenHAB
             now = Time.now
             return true if @between.cover? now
 
-            logger.trace("Skipped execution of rule '#{name}' because the current time #{now} "\
+            logger.trace("Skipped execution of rule '#{name}' because the current time #{now} " \
                          "is not between #{@between.begin} and #{@between.end}")
           else
             logger.trace("Skipped execution of rule '#{name}' because of guard #{@guard}")

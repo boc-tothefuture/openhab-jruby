@@ -100,7 +100,7 @@ module OpenHAB
       constants.map { |c| const_get(c) }
                .grep(Module)
                .select { |k| k <= GenericItem && k != GroupItem && k != StringItem }
-               .sort { |a, b| a < b ? 1 : -1 }
+               .sort { |a, b| (a < b) ? 1 : -1 }
                .each do |klass|
         klass.field_reader :ACCEPTED_COMMAND_TYPES, :ACCEPTED_DATA_TYPES unless klass == GenericItem
 

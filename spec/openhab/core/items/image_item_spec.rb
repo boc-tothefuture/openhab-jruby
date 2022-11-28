@@ -4,7 +4,7 @@ RSpec.describe OpenHAB::Core::Items::ImageItem do
   subject(:item) { items.build { image_item "Image1" } }
 
   let(:image_base64) do
-    "data:image/png;base64,"\
+    "data:image/png;base64," \
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAA" \
       "XRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII="
   end
