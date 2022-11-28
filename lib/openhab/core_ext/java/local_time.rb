@@ -33,6 +33,7 @@ module OpenHAB
       #   end
       #
       class LocalTime
+        include Between
         # @!parse include Time
 
         # @!visibility private

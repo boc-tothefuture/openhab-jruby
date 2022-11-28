@@ -46,4 +46,21 @@ RSpec.describe Duration do
       expect(5.minutes.from_now).to eql now + 5.minutes
     end
   end
+
+  describe "#between?" do
+    it "works with min, max" do
+      expect(10.seconds.between?(1.second, 1.hour)).to be true
+      expect(10.seconds.between?(10.seconds, 1.hour)).to be true
+      expect(10.seconds.between?(1.second, 10.seconds)).to be true
+      expect(10.seconds.between?(1.second, 5.seconds)).to be false
+      expect(10.seconds.between?(1.hour, 2.hours)).to be false
+    end
+
+    it "works with range" do
+      expect(10.seconds.between?((1.second)..(1.hour))).to be true
+      expect(10.seconds.between?((1.second)..(10.seconds))).to be true
+      expect(10.seconds.between?((1.second)...(10.seconds))).to be false
+      expect(10.seconds.between?((1.second)..)).to be true
+    end
+  end
 end

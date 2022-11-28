@@ -5,6 +5,7 @@ require "forwardable"
 # Extensions to Time
 class Time
   extend Forwardable
+  include OpenHAB::CoreExt::Between
 
   #
   # @!method +(other)

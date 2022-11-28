@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe java.time.LocalTime do
-  let(:time) { LocalTime.parse("03:22:01") }
+  let(:time) { described_class.parse("03:22:01") }
 
   describe ".parse" do
     specify { expect(described_class.parse("1").to_s).to eql "01:00" }
@@ -130,6 +130,26 @@ RSpec.describe java.time.LocalTime do
           when plus5..plus10 then 2
           end
       expect(r).to be 1
+    end
+  end
+
+  describe "#between?" do
+    let(:minus5) { (time - 5.minutes).to_local_time }
+    let(:plus5) { (time + 5.minutes).to_local_time }
+
+    it "works with min, max" do
+      expect(time.between?("1:00", "4:00")).to be true
+      expect(time.between?(minus5, plus5)).to be true
+      expect(time.between?(time, plus5)).to be true
+      expect(time.between?(minus5, time)).to be true
+      expect(time.between?(minus5, minus5)).to be false
+    end
+
+    it "works with range" do
+      expect(time.between?("1:00".."4:00")).to be true
+      expect(time.between?(minus5..plus5)).to be true
+      expect(time.between?(minus5..time)).to be true
+      expect(time.between?(minus5...time)).to be false
     end
   end
 end

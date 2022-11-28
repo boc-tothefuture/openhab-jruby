@@ -4,6 +4,8 @@ require "date"
 
 # Extensions to Date
 class Date
+  include OpenHAB::CoreExt::Between
+
   #
   # Extends {#+} to allow adding a {java.time.temporal.TemporalAmount TemporalAmount}
   #
@@ -65,7 +67,7 @@ class Date
 
     return self <=> other.to_date(self) if other.is_a?(java.time.MonthDay)
 
-    if other.respond_to?(:coerce) && (lhs, rhs = coerce(self))
+    if other.respond_to?(:coerce) && (lhs, rhs = other.coerce(self))
       return lhs <=> rhs
     end
 

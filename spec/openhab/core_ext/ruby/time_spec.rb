@@ -37,4 +37,26 @@ RSpec.describe Time do
       expect(one_day_in_secs).to be_a(Numeric)
     end
   end
+
+  describe "#between?" do
+    let(:time) { described_class.new(2022, 11, 9, 2, 9, 5, "+00:00") }
+
+    it "works with min, max" do
+      expect(time.between?("2022-10-01", "2022-12-01")).to be true
+      expect(time.between?(time - 1, time + 1)).to be true
+      expect(time.between?(time, time + 1)).to be true
+      expect(time.between?(time - 1, time)).to be true
+      expect(time.between?(time + 1, time + 2)).to be false
+      expect(time.between?(time - 2, time - 1)).to be false
+    end
+
+    it "works with range" do
+      expect(time.between?("2022-10-01".."2022-12-01")).to be true
+      expect(time.between?("2022-11-09T02:09:05+00:00".."2022-12-01")).to be true
+      expect(time.between?(time..time + 1)).to be true
+      expect(time.between?(time - 5..time)).to be true
+      expect(time.between?(time - 5...time)).to be false
+      expect(time.between?(time..)).to be true
+    end
+  end
 end

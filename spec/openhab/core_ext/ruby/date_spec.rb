@@ -27,14 +27,34 @@ RSpec.describe Date do
     it "works with Numeric and returns a Date" do
       Timecop.freeze
       result = described_class.today - 1
-      expect(result).to eq 1.day.ago
-      expect(result).to be_a(described_class)
+      expect(result).to eql 1.day.ago.to_date
     end
 
     it "works with another Date and returns a Rational" do
       one_day = described_class.new(2002, 10, 31) - described_class.new(2002, 10, 30)
       expect(one_day).to eq(1)
       expect(one_day).to be_a(Rational)
+    end
+  end
+
+  describe "#between?" do
+    let(:date) { described_class.new(2022, 11, 9) }
+
+    it "works with min, max" do
+      expect(date.between?("2022-10-01", "2022-12-01")).to be true
+      expect(date.between?(date - 1, date + 1)).to be true
+      expect(date.between?(date, date + 1)).to be true
+      expect(date.between?(date - 1, date)).to be true
+      expect(date.between?(date + 1, date + 2)).to be false
+      expect(date.between?(date - 2, date - 1)).to be false
+    end
+
+    it "works with range" do
+      expect(date.between?("2022-10-01".."2022-12-01")).to be true
+      expect(date.between?(date..(date + 1))).to be true
+      expect(date.between?((date - 5)..date)).to be true
+      expect(date.between?((date - 5)...date)).to be false
+      expect(date.between?(date..)).to be true
     end
   end
 end

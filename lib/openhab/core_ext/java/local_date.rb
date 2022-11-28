@@ -10,6 +10,7 @@ module OpenHAB
       # Extensions to LocalDate
       class LocalDate
         include Time
+        include Between
 
         class << self # rubocop:disable Lint/EmptyClass
           # @!attribute [r] now

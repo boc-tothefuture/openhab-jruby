@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe java.time.LocalDate do
-  let(:date) { java.time.LocalDate.parse("2022-11-09") }
+  let(:date) { described_class.parse("2022-11-09") }
 
   describe "#+" do
     it "works with a Period" do
@@ -152,6 +152,30 @@ RSpec.describe java.time.LocalDate do
       specify { expect(date).to be < (other + 1.day) }
       specify { expect(date).not_to be > other }
       specify { expect(date).to be > (other - 1.day) }
+    end
+  end
+
+  describe "#between?" do
+    it "works with min, max" do
+      expect(date.between?("2022-10-01", "2022-12-01")).to be true
+      expect(date.between?(date - 1.day, date + 1.day)).to be true
+      expect(date.between?(date, date + 1.day)).to be true
+      expect(date.between?(date - 1.day, date)).to be true
+      expect(date.between?(date + 1.day, date + 2.days)).to be false
+      expect(date.between?(date - 2.days, date - 1.day)).to be false
+    end
+
+    it "works with range" do
+      expect(date.between?("2022-10-01".."2022-12-01")).to be true
+      expect(date.between?(date..date + 1.day)).to be true
+      expect(date.between?(date - 5.days..date)).to be true
+      expect(date.between?(date - 5.days...date)).to be false
+      expect(date.between?(date..)).to be true
+    end
+
+    it "checks for invalid arguments" do
+      expect { date.between?((date..date + 1.day), date) }.to raise_exception(ArgumentError)
+      expect { date.between?(date) }.to raise_exception(ArgumentError)
     end
   end
 end

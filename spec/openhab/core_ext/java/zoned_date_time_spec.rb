@@ -180,4 +180,26 @@ RSpec.describe java.time.ZonedDateTime do
       specify { expect(zdt).not_to be > (date + 1.day) }
     end
   end
+
+  describe "#between?" do
+    let(:zdt) { described_class.parse("2022-11-09T02:09:05+00:00") }
+
+    it "works with min, max" do
+      expect(zdt.between?("2022-10-01", "2022-12-01")).to be true
+      expect(zdt.between?(zdt - 1.day, zdt + 1.day)).to be true
+      expect(zdt.between?(zdt, zdt + 1.day)).to be true
+      expect(zdt.between?(zdt - 1.day, zdt)).to be true
+      expect(zdt.between?(zdt + 1.day, zdt + 2.days)).to be false
+      expect(zdt.between?(zdt - 2.days, zdt - 1.day)).to be false
+    end
+
+    it "works with range" do
+      expect(zdt.between?("2022-10-01".."2022-12-01")).to be true
+      expect(zdt.between?("2022-11-09T02:09:05+00:00".."2022-12-01")).to be true
+      expect(zdt.between?(zdt..zdt + 1.day)).to be true
+      expect(zdt.between?(zdt - 5.days..zdt)).to be true
+      expect(zdt.between?(zdt - 5.days...zdt)).to be false
+      expect(zdt.between?(zdt..)).to be true
+    end
+  end
 end

@@ -9,6 +9,8 @@ module OpenHAB
 
       # Extensions to MonthDay
       class MonthDay
+        include Between
+
         class << self
           #
           # Parses strings in the form "M-d"

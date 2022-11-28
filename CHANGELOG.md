@@ -125,10 +125,6 @@ here is a non-exhaustive list of significant departures from the original gem:
   * Date/time objects are no longer comparable to strings.
     Please use the correct type.
   * Comparisons among the varying date/time classes all work.
-  * The global `between` method is gone. Just form your range
-    with the proper underlying type.
-  * `between?` method is gone. Use `Range#cover?`: `my_range.cover?(date)`
-    instead of `date.between?(my_range)`.
   * See also [Working With Time](docs/usage/time.md)
   * Persistence methods no longer accept a {Duration}. Please use `Duration#ago`
     instead.

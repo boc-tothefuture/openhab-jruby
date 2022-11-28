@@ -10,6 +10,7 @@ require "forwardable"
 # Extensions to DateTime
 class DateTime < Date
   extend Forwardable
+  include OpenHAB::CoreExt::Between
 
   # (see Time#plus_with_temporal)
   def plus_with_temporal(other)

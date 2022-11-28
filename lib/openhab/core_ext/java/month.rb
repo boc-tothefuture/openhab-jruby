@@ -9,7 +9,18 @@ module OpenHAB
 
       # Extensions to Month
       class Month
+        include Between
         # @!parse include Time
+
+        # @return [Month]
+        def +(other)
+          plus(other)
+        end
+
+        # @return [Month]
+        def -(other)
+          minus(other)
+        end
 
         #
         # Returns the next month
@@ -49,7 +60,7 @@ module OpenHAB
         #   during conversion. {ZonedDateTime.now} is assumed if not given.
         # @return [ZonedDateTime]
         def to_zoned_date_time(context = nil)
-          to_local_date(context).to_zoned_date_time
+          to_local_date(context).to_zoned_date_time(context)
         end
       end
     end
