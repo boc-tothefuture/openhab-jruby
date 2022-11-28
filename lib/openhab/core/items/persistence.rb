@@ -40,15 +40,25 @@ module OpenHAB
       module Persistence
         GenericItem.prepend(self)
 
-        # A state class with an added timestamp attribute. This is used to hold OpenHAB's HistoricItem.
+        #
+        # A state class with an added timestamp attribute.
+        #
+        # This wraps {org.openhab.core.persistence.HistoricItem HistoricItem}
+        # to allow implicitly treating the object as its state, and wrapping of
+        # that state into a {QuantityType} as necessary.
+        #
         class HistoricState < SimpleDelegator
-          attr_reader :timestamp
-
           alias_method :state, :__getobj__
 
-          def initialize(state, timestamp)
-            @timestamp = timestamp
+          def initialize(state, historic_item)
+            @historic_item = historic_item
             super(state)
+          end
+
+          # @!attribute [r] timestamp
+          # @return [ZonedDateTime]
+          def timestamp
+            @historic_item.timestamp
           end
         end
 
@@ -245,7 +255,7 @@ module OpenHAB
         def previous_state(service = nil, skip_equal: false)
           service ||= persistence_service
           result = Actions::PersistenceExtensions.previous_state(self, skip_equal, service&.to_s)
-          HistoricState.new(quantify(result.state), result.timestamp)
+          HistoricState.new(quantify(result.state), result)
         end
 
         PERSISTENCE_METHODS.each do |method|
@@ -308,7 +318,7 @@ module OpenHAB
         def wrap_result(result, method)
           if result.is_a?(org.openhab.core.persistence.HistoricItem)
             return HistoricState.new(quantify(result.state),
-                                     result.timestamp)
+                                     result)
           end
           return quantify(result) if QUANTITY_METHODS.include?(method)
 

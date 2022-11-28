@@ -19,6 +19,21 @@ module OpenHAB
           end
         end
 
+        module HistoricState
+          def timestamp
+            # PersistenceExtensions uses an anonymous class to wrap the current
+            # state if that happens to be an answer. Except it calls
+            # ZonedDateTime.now in Java land, bypassing Timecop.
+            # Detect that and make the call in Ruby
+            #
+            jc = @historic_item.class.java_class
+            return ZonedDateTime.now if jc.anonymous? && jc.enclosing_class == PersistenceExtensions.java_class
+
+            super
+          end
+        end
+        Core::Items::Persistence::HistoricState.prepend(HistoricState)
+
         attr_reader :id
 
         def initialize
