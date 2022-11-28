@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "irb", "~> 1.4"
   spec.add_development_dependency "persistent_httparty", "~> 0.1"
   spec.add_development_dependency "process_exists", "~> 0.2"
-  spec.add_development_dependency "rake", "~> 12.0"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.11"
   spec.add_development_dependency "rubocop", "~> 1.8"
   spec.add_development_dependency "rubocop-performance", "~> 1.11"
