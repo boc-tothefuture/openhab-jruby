@@ -63,6 +63,13 @@ module OpenHAB
     module ScriptHandlingCallbacks
       class << self
         #
+        # Has the script completed loading?
+        #
+        # @!visibility private
+        # @return [true, false]
+        attr_accessor :script_loaded
+
+        #
         # Return script_loaded_hooks
         #
         # @!visibility private
@@ -78,6 +85,7 @@ module OpenHAB
           @script_unloaded_hooks ||= []
         end
       end
+      self.script_loaded = false
 
       #
       # Executed when OpenHAB unloads a script file
@@ -89,6 +97,22 @@ module OpenHAB
         rescue => e
           logger.error("Failed to call script_unloaded hook #{hook}: #{e}")
         end
+
+        return if ScriptHandlingCallbacks.script_loaded
+
+        # Make sure we terminate the main thread if it's still set up, in case
+        # it's timing out and that's why we're unloading.
+        #
+        # It would seem simpler to just record Thread.current when this file
+        # loads, but if the user is using the autorequire feature of the
+        # jrubyscripting addon, this file will load before the main script.
+        #
+        # Note that Thread.list only includes threads that have had Ruby
+        # execute in them, so we don't need to worry about accidentally killing
+        # a random Java thread.
+        #
+        main_thread = Thread.list.find { |t| t != Thread.current && t.name.include?("-safeCall-") }
+        main_thread&.raise(Interrupt.new)
       end
 
       #
@@ -101,6 +125,7 @@ module OpenHAB
         rescue => e
           logger.error("Failed to call script_loaded hook #{hook}: #{e}")
         end
+        ScriptHandlingCallbacks.script_loaded = true
       end
     end
   end
