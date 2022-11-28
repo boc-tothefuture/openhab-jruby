@@ -90,7 +90,7 @@ array.each_with_index do |elem, index|
   logger.info("Element #{index}: #{elem}")
 end
 
-SWITCH_TO_LIGHT_HASH = { Switch1: Light1, Switch2: Light2 }
+SWITCH_TO_LIGHT_HASH = { Switch1 => Light1, Switch2 => Light2 }
 
 SWITCH_TO_LIGHT_HASH.each do |switch, light|
   logger.info "#{switch.name} => #{light.name}"
