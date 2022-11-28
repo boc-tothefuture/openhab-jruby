@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "method_source", "~> 1.0"
   spec.add_runtime_dependency "ruby2_keywords", "~> 0.0"
 
-  spec.add_development_dependency "cucumber", "~> 7.1"
+  spec.add_development_dependency "cucumber", "~> 8.0"
   spec.add_development_dependency "cuke_linter", "~> 1.2"
   spec.add_development_dependency "guard-rubocop", "~> 1.5"
   spec.add_development_dependency "guard-shell", "~> 0.7"
