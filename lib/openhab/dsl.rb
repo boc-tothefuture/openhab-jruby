@@ -299,6 +299,8 @@ module OpenHAB
     # @example Create a time range
     #   between('7am'..'12pm').cover?(LocalTime.now)
     #
+    # @see CoreExt::Between#between? #between?
+    #
     def between(range)
       raise ArgumentError, "Supplied object must be a range" unless range.is_a?(Range)
 

@@ -736,14 +736,14 @@ Time.now.to_zoned_date_time
 ### Work with LocalTime
 
 ```ruby
-if LocalTime.now > LocalTime.parse('7am')
+if Time.now > LocalTime.parse('7am')
   logger.info 'Wake up!'
 end
 ```
 
 ```ruby
 # The range can cross midnight
-if between('10pm'..'5am').cover?(LocalTime.now)
+if Time.now.between?('10pm'..'5am')
   logger.info 'Sleep time'
 end
 ```
