@@ -11,7 +11,11 @@ require 'net/http'
 # Disabled due to part of buid / potentially refactor into classes
 # rubocop: disable Rake/MethodDefinitionInTask Legacy code
 namespace :openhab do
+  @snapshot_url = ENV['SNAPSHOT_URL'] || 'https://github.com/boc-tothefuture/openhab2-addons/releases/download/'
+
   @openhab_version = ENV['OPENHAB_VERSION'] || '3.3.0'
+  @openhab_version, @bundle_version = @openhab_version.split('+')
+
   @port_numbers = {
     ssh: { port: ENV['OPENHAB_SSH_PORT'] || 8101, config: 'org.apache.karaf.shell:sshPort' },
     lsp: { port: ENV['OPENHAB_LSP_PORT'] || 5007, config: 'org.openhab.lsp:port' }
@@ -128,6 +132,11 @@ namespace :openhab do
     { 'GEM_HOME' => gem_home }
   end
 
+  def download_file(source, dest)
+    puts "Downloading #{dest} from #{source}"
+    IO.copy_stream(open(source), dest) # rubocop: disable Security/Open
+  end
+
   def state(task, args = nil)
     Rake::Task[@state_dir.to_s].execute
     task_file = File.join(@state_dir, task).tr(':', '_')
@@ -159,12 +168,9 @@ namespace :openhab do
                        "#{@openhab_version}/#{openhab_zip}"
                      end
       Dir.chdir(OPENHAB_DIR) do
-        # rubocop: disable Security/Open
-        puts "Downloading #{openhab_zip} from #{download_url}"
-        IO.copy_stream(open(download_url), openhab_zip)
+        download_file(download_url, openhab_zip)
         fail_on_error("unzip #{openhab_zip}")
         rm openhab_zip
-        # rubocop: enable Security/Open
       end
     end
   end
@@ -189,7 +195,14 @@ namespace :openhab do
   desc 'Install JRuby Bundle'
   task bundle: [:download, :services, @deploy_dir] do |task|
     state(task.name) do
-      File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      if @bundle_version
+        snapshot_file = "org.openhab.automation.jrubyscripting-#{@bundle_version}-SNAPSHOT.jar"
+        snapshot_path = File.join(OPENHAB_DIR, 'addons', snapshot_file)
+        download_url = URI.join(@snapshot_url, "#{@bundle_version}/", snapshot_file)
+        download_file(download_url, snapshot_path)
+      else
+        File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
+      end
     end
   end
 
