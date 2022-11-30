@@ -123,7 +123,7 @@ module OpenHAB
           @label = label
           @location = location
           @location = location.label if location.is_a?(GenericItem)
-          @config = config
+          @config = config.transform_keys(&:to_s)
           @enabled = enabled
         end
 
@@ -212,7 +212,7 @@ module OpenHAB
           end
           @type = type
           @label = label
-          @parameters = parameters
+          @parameters = parameters.transform_keys(&:to_s)
         end
 
         # @!visibility private
