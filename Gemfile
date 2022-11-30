@@ -22,8 +22,8 @@ group :development do
   gem 'kramdown-parser-gfm'
   gem 'process_exists'
   gem 'rake', '~> 12.0', require: false
-  gem 'rubocop', '~> 1.8', require: false
-  gem 'rubocop-performance', '~> 1.11', require: false
+  gem 'rubocop', '~> 1.39', require: false
+  gem 'rubocop-performance', '~> 1.15', require: false
   gem 'rubocop-rake', '~> 0.6', require: false
   gem 'solargraph'
   gem 'tty-command'

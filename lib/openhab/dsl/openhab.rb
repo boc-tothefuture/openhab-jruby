@@ -9,7 +9,7 @@ module OpenHAB
   # @return [Pathname] OpenHAB conf path
   #
   def self.conf_root
-    Pathname.new(ENV['OPENHAB_CONF'])
+    Pathname.new(ENV.fetch('OPENHAB_CONF', nil))
   end
 
   module DSL
