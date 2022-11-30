@@ -1,7 +1,6 @@
 require:
   - rubocop-performance
   - rubocop-rake
-  - rubocop-rspec
 
 inherit_mode:
   merge:
@@ -13,21 +12,6 @@ AllCops:
   Exclude:
     - bin/*
 
-RSpec/DescribeClass:
-  Enabled: false
-RSpec/ExampleLength:
-  Enabled: false
-RSpec/FilePath:
-  CustomTransform:
-    OpenHAB: openhab
-RSpec/MessageSpies:
-  Enabled: false
-RSpec/MultipleExpectations:
-  Enabled: false
-
-Style/CaseEquality:
-  Exclude: # we're explicitly testing this operator
-  - spec/openhab/dsl/types/*_spec.rb
 # enforced by checking for 100% documented from `yard --stats`
 # RuboCop doesn't know if a module is documented in a different file
 Style/Documentation:
