@@ -132,7 +132,7 @@ module OpenHAB
         def channel(*args, **kwargs, &block)
           channel = ChannelBuilder.new(*args, thing: self, **kwargs)
           channel.instance_eval(&block) if block
-          @channels << channel
+          @channels << channel.build
         end
 
         # @!visibility private
@@ -190,9 +190,9 @@ module OpenHAB
       # The ChannelBuilder DSL allows you to customize a channel
       class ChannelBuilder
         attr_accessor :label
-        attr_reader :uid, :parameters
+        attr_reader :uid, :parameters, :type
 
-        def initialize(uid, type, label, thing:, group: nil, **parameters)
+        def initialize(uid, type, label = nil, thing:, group: nil, **parameters)
           @thing = thing
 
           uid = uid.to_s
@@ -207,9 +207,8 @@ module OpenHAB
             uid_segments[-1] = group_segments.join(org.openhab.core.thing.ChannelUID::CHANNEL_GROUP_SEPARATOR)
           end
           @uid = org.openhab.core.thing.ChannelUID.new(thing.uid, uid_segments.last)
-          unless type.is_a?(org.openhab.core.thing.ChannelTypeUID)
-            type = org.openhab.core.thing.ChannelTypeUID.new(thing.uid.binding_id,
-                                                             type)
+          unless type.is_a?(org.openhab.core.thing.type.ChannelTypeUID)
+            type = org.openhab.core.thing.type.ChannelTypeUID.new(thing.uid.binding_id, type)
           end
           @type = type
           @label = label
