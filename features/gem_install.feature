@@ -17,6 +17,11 @@ Feature:  gem_install
       org.openhab.automation.jrubyscripting:gems=openhab-scripting=~>4.0
       org.openhab.automation.jrubyscripting:rubylib=<%= ruby_lib_dir %>
       """
-    When I start OpenHAB
-    Then It should log 'Installing Gem: openhab-scripting' within 180 seconds
+   When I start OpenHAB
+   Then It should log "Rule engine started" within 180 seconds
+   Then a deployed rule
+      """
+        logger.debug "OpenHAB JRuby Scripting Library Loaded at Version:  #{OpenHAB::VERSION}"
+      """
+   Then It should log "OpenHAB JRuby Scripting Library Loaded at Version:" within 180 seconds
 
