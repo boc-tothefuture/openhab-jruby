@@ -1,3 +1,4 @@
+--exclude lib/openhab/core/dependency_tracking.rb
 --exclude lib/openhab/core_ext/java/list.rb
 --exclude lib/openhab/core_ext/java/map.rb
 --exclude lib/openhab/rspec/mocks/
