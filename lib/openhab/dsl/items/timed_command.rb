@@ -174,7 +174,7 @@ module OpenHAB
               OpenHAB::DSL.import_presets
               @semaphore.synchronize do
                 thread_local(**@thread_locals) do
-                  logger.trace "Canceling implicit timer #{@timed_command_details.timer} for "\
+                  logger.trace "Canceling implicit timer #{@timed_command_details.timer} for " \
                                "#{@timed_command_details.item.id}  because received event #{inputs}"
                   @timed_command_details.timer.cancel
                   # Disabled due to OpenHAB design

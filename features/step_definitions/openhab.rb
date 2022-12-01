@@ -208,7 +208,7 @@ Then('{string} should stay in state {string} for {int} seconds') do |item, state
   elapsed = 0
   seconds.times do
     unless Rest.item_state(item) == state
-      raise "'#{item}' did not stay in state (#{state}) for #{seconds} seconds, "\
+      raise "'#{item}' did not stay in state (#{state}) for #{seconds} seconds, " \
             "changed to (#{Rest.item_state(item)}) within #{elapsed} seconds"
     end
 

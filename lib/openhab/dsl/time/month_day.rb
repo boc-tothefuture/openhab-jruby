@@ -169,7 +169,7 @@ module OpenHAB
             self.<=>(MonthDay.parse(other))
           when OpenHAB::DSL::Between::MonthDayRange::DayOfYear
             # Compare with DayOfYear and invert result
-            -other.<=>(self)
+            -(other <=> self)
           else
             super
           end
