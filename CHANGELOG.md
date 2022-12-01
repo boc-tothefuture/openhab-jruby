@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.46.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.46.0...4.46.1) (2022-12-01)
+
+
+### Bug Fixes
+
+* gemfile update to increment version past yanked gem and rubocop fixes ([bf59840](https://github.com/boc-tothefuture/openhab-jruby/commit/bf598400fd0bb0f4721874f596a629ed7b903bc2))
+
 ## [4.46.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.2...4.46.0) (2022-12-01)
 
 
