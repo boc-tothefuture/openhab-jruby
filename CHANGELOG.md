@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.46.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.2...4.46.0) (2022-12-01)
+
+
+### Features
+
+* support for JRuby 9.4.0.0/Ruby 3.1 ([72a7f20](https://github.com/boc-tothefuture/openhab-jruby/commit/72a7f201a20d14f168a227e58afe5bf01261262f))
+
+
+### Continuous Integration
+
+* fixing release ruby setup ([390259f](https://github.com/boc-tothefuture/openhab-jruby/commit/390259f839b2bd988ce4ac03fe8a9cc1f8abe082))
+
 ### [4.45.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.45.1...4.45.2) (2022-10-02)
 
 
