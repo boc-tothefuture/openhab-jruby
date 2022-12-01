@@ -1,6 +1,4 @@
 /.bundle/
-/.irb_history
-/.karaf
 /.yardoc
 /_yardoc/
 /_site/
@@ -10,7 +8,6 @@
 /doc/
 /lib/openhab/dsl/gems.locked
 /pkg/
-/spec/examples.txt
 /spec/reports/
 /tmp/
 /.obsidian/

@@ -102,16 +102,6 @@ module OpenHAB
         end
       end
 
-      java_import java.time.Month
-      # Extend Month with helper method
-      class Month
-        # Calcalute and memoize the maximum number of days in a year before this month
-        # @return [Number] maximum nummber of days in a year before this month
-        def max_days_before
-          @max_days_before ||= Month.values.select { |month| month < self }.sum(&:max_length)
-        end
-      end
-
       java_import java.time.MonthDay
       # Extend MonthDay java object with some helper methods
       class MonthDay
@@ -131,6 +121,12 @@ module OpenHAB
           MonthDay.of(m, d)
         end
 
+        # Calcalute the maximum number of days in a year before a supplied month
+        # @return [Number] maximum nummber of days in a year before this month
+        def max_days_before(month)
+          java.time.Month.values.select { |i| i < month }.sum(&:max_length)
+        end
+
         # Parse MonthDay string as defined with by Monthday class without leading double dash "--"
         def self.parse(string)
           logger.trace("#{self.class}.parse #{string} (#{string.class})")
@@ -146,7 +142,7 @@ module OpenHAB
 
         # Get the maximum (supports leap years) day of the year this month day could be
         def max_day_of_year
-          day_of_month + month.max_days_before
+          day_of_month + max_days_before(month)
         end
 
         # Remove -- from MonthDay string representation
