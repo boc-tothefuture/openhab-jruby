@@ -28,8 +28,19 @@ module OpenHAB
           build(BridgeBuilder, *args, **kwargs, &block)
         end
 
+        #
         # Create a new Thing
+        #
+        # @example
+        #   configuration = {
+        #     availabilityTopic: "my-switch/status",
+        #     payloadAvailable: "online",
+        #     payloadNotAvailable: "offline"
+        #   }
+        #   thing("mqtt:topic:my-switch", "My Switch", bridge: "mqtt:bridge:mosquitto", config: configuration)
+        #
         # @see ThingBuilder#initialize
+        #
         def thing(*args, **kwargs, &block)
           build(ThingBuilder, *args, **kwargs, &block)
         end
@@ -132,8 +143,17 @@ module OpenHAB
           @enabled = enabled
         end
 
+        #
         # Add an explicitly configured channel to this item
+        #
+        # @example
+        #   channel("power1", "switch",
+        #     stateTopic: "stat/my-switch/RESULT",
+        #     transformationPattern="JSONPATH:$.POWER1",
+        #     commandTopic="cmnd/my-switch/POWER1")
+        #
         # @see ChannelBuilder#initialize
+        #
         def channel(*args, **kwargs, &block)
           channel = ChannelBuilder.new(*args, thing: self, **kwargs)
           channel.instance_eval(&block) if block
@@ -187,6 +207,7 @@ module OpenHAB
 
         # Create a new Thing with this Bridge as its Bridge
         # @see ThingBuilder#initialize
+        # @see Builder#thing
         def thing(*args, **kwargs, &block)
           super(*args, bridge: self, **kwargs, &block)
         end
@@ -197,6 +218,17 @@ module OpenHAB
         attr_accessor :label
         attr_reader :uid, :parameters, :type
 
+        #
+        # Create a ChannelBuilder object
+        #
+        # @param [String] uid The channel's ID
+        # @param [String, ChannelTypeUID, :trigger] type The concrete type of the channel
+        # @param [String] label The channel label
+        # @param [thing] thing The thing associated with this channel.
+        #   This parameter is not needed for the {ThingBuilder#channel} method.
+        # @param [String] group The group name
+        # @param [Hash] parameters Additional parameters that are used as the channel configuration
+        #
         def initialize(uid, type, label = nil, thing:, group: nil, **parameters)
           @thing = thing
 
