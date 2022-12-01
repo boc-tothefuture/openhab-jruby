@@ -21,7 +21,6 @@ A simplified [cron]({{ site.baseurl }}{% link usage/triggers/cron.md %}) trigger
 | `:month`            | Execute rule every month                                                                              | `:month`                       |
 | `:year`             | Execute rule once a year                                                                              | `:year`                        |
 | `:monday`           | Execute rule every Monday at midnight                                                                 | `:monday`                      |
-| `:monday`           | Execute rule every Monday at midnight                                                                 | `:monday`                      |
 | `:tuesday`          | Execute rule every Tuesday at midnight                                                                | `:tuesday`                     |
 | `:wednesday`        | Execute rule every Wednesday at midnight                                                              | `:wednesday`                   |
 | `:thursday`         | Execute rule every Thursday at midnight                                                               | `:thursday`                    |
