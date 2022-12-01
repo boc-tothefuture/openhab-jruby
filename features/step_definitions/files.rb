@@ -4,7 +4,7 @@ require 'securerandom'
 
 def create_sub_file(dir, file)
   conf_sub_dir = File.join(conf_dir, dir)
-  Dir.mkdir conf_sub_dir unless File.exist? conf_sub_dir
+  FileUtils.mkdir_p conf_sub_dir
   temp_conf_file(conf_sub_dir)
   conf_file = File.join(conf_sub_dir, file)
   File.write(conf_file, SecureRandom.hex)
