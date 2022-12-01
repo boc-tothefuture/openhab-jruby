@@ -117,8 +117,13 @@ module OpenHAB
             @bridge_uid = org.openhab.core.thing.ThingUID.new(*bridge_segments)
           end
 
-          @uid = org.openhab.core.thing.ThingUID.new(*[binding, type, @bridge_uid&.id,
-                                                       uid_segments.last].compact)
+          thinguid = if uid_segments.length > 2
+                       [binding, type, uid_segments.last].compact
+                     else
+                       [binding, type, @bridge_uid&.id, uid_segments.last].compact
+                     end
+
+          @uid = org.openhab.core.thing.ThingUID.new(*thinguid)
           @thing_type_uid = org.openhab.core.thing.ThingTypeUID.new(*@uid.all_segments[0..1])
           @label = label
           @location = location
