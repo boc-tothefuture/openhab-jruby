@@ -1,5 +1,17 @@
 JRuby OpenHAB Scripting Change Log
 
+### [4.46.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.46.1...4.46.2) (2022-12-01)
+
+
+### Bug Fixes
+
+* **docs:** remove duplicate monday ([cf33b20](https://github.com/boc-tothefuture/openhab-jruby/commit/cf33b20b0e4f64f7953e1208a77539c4f3a50e6d))
+
+
+### Documentation
+
+* add a code of conduct ([ca8def5](https://github.com/boc-tothefuture/openhab-jruby/commit/ca8def559e910ab6be2e82d1d21a02ddbd7e1e74))
+
 ### [4.46.1](https://github.com/boc-tothefuture/openhab-jruby/compare/4.46.0...4.46.1) (2022-12-01)
 
 
