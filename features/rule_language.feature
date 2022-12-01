@@ -159,7 +159,30 @@ Feature: rule_language
       """
       """
     When I deploy the rules file
-    Then It should log 'OpenHAB JRuby Scripting Library Version' within 5 seconds
+    Then It should log 'Scripting Library (Version' within 5 seconds
+
+  Scenario: Ruby version should be logged on start
+    Given code in a rules file:
+      """
+      """
+    When I deploy the rules file
+    Then It should log ' Ruby (Version' within 5 seconds
+
+  Scenario: JRuby version should be logged on start
+    Given code in a rules file:
+      """
+      """
+    When I deploy the rules file
+    Then It should log 'JRuby (Version' within 5 seconds
+
+  Scenario: Ruby description should be logged on start
+    Given code in a rules file:
+      """
+      """
+    When I deploy the rules file
+    Then It should log 'Ruby Description (' within 5 seconds
+
+
 
   Scenario: Library waits until automation manager is ready before processing rules
     Given code in a rules file:
