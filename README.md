@@ -19,6 +19,9 @@
   <a href="https://conventionalcommits.org/">
       <img alt="Convention commits observance" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg"/>
   </a>
+  <a href="https://www.contributor-covenant.org/">
+      <img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg"/>
+  </a>
  </p>
 
 ## Usage
