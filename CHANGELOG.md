@@ -1,5 +1,12 @@
 JRuby OpenHAB Scripting Change Log
 
+## [4.47.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.46.2...4.47.0) (2022-12-02)
+
+
+### Features
+
+* log JRuby/Ruby version and ruby description at start ([1ad9a50](https://github.com/boc-tothefuture/openhab-jruby/commit/1ad9a505c0724ed8607c164fa787d1068311bbb0))
+
 ### [4.46.2](https://github.com/boc-tothefuture/openhab-jruby/compare/4.46.1...4.46.2) (2022-12-01)
 
 
