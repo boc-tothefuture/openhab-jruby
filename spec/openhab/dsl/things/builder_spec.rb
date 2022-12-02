@@ -30,7 +30,7 @@ RSpec.describe OpenHAB::DSL::Things::Builder do
   it "can create channels" do
     things.build do
       thing "astro:sun:home" do
-        channel "channeltest", "string", config1: "testconfig"
+        channel "channeltest", "string", config: { config1: "testconfig" }
       end
     end
     expect(home = things["astro:sun:home"]).not_to be_nil
