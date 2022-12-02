@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "fileutils"
 require "open-uri"
 require "tty-command"
 require "process_exists"
@@ -161,12 +162,12 @@ namespace :openhab do
       openhab_zip = File.join(@cache_dir, openhab_zip)
       unless File.exist?(openhab_zip)
         begin
-          # rubocop: disable Security/Open
           puts "Downloading #{openhab_zip} from #{download_url}"
-          IO.copy_stream(open(download_url), openhab_zip)
-          # rubocop: enable Security/Open
-        rescue Exception
-          File.unlink(openhab_zip)
+          URI.parse(download_url).open do |download_stream|
+            IO.copy_stream(download_stream, openhab_zip)
+          end
+        rescue
+          FileUtils.rm_f(openhab_zip)
           raise
         end
       end

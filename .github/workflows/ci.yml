@@ -7,8 +7,7 @@ on:
       - main
 
 env:
-  RUBY_VERSION: 2.6.8
-  JRUBY_VERSION: jruby-9.3.8.0
+  RUBY_VERSION: 3.1.3
   GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
@@ -55,25 +54,22 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: |
+        ["3.3.0", "3.4.0.M5"]
     steps:
-      - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
-      - id: set-matrix
-        run: |
-          JSON=$(bin/rake github:oh_versions_matrix)
-          echo $JSON
-          echo "matrix=$JSON" >> $GITHUB_OUTPUT
+      # For some reason fromJson in matrix: can't use `env`, so you have to
+      # set a job output. But nothing actually has to run. But you have to have
+      # at least one step. Weird.
+      - name: No Op
+        run: true
 
   openhab-setup:
-    needs: [openhab-matrix]
+    needs: openhab-matrix
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
-      matrix: ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
+      matrix:
+        openhab_version: ${{ fromJson(needs.openhab-matrix.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
@@ -85,7 +81,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
+          key: OpenHAB-setup-${{ matrix.openhab_version }}
       - name: Setup OpenHAB
         if: steps.cache.outputs.cache-hit != 'true'
         env:
@@ -97,12 +93,17 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
-      matrix: ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
+      matrix:
+        openhab_version: ${{ fromJson(needs.openhab-matrix.outputs.matrix) }}
+        jruby_version: ["jruby-9.3.8.0", "jruby-9.4.0.0"]
+        exclude:
+          - openhab_version: 3.3.0
+            jruby_version: jruby-9.4.0.0
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ env.JRUBY_VERSION }}
+          ruby-version: ${{ matrix.jruby_version }}
           bundler-cache: true
       - uses: actions/setup-java@v3
         with:
@@ -113,7 +114,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
+          key: OpenHAB-setup-${{ matrix.openhab_version }}
       - name: RSpec
         run: bin/rspec --format progress --format html --out rspec.html
         timeout-minutes: 4
@@ -121,23 +122,23 @@ jobs:
         uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: RSpec-logs-${{ matrix.openhab_version }}
+          name: RSpec-logs-${{ matrix.openhab_version }}-#{{ matrix.jruby_version }}
           path: tmp/openhab/userdata/logs
           retention-days: 2
       - name: Upload RSpec results
         uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: RSpec-results-${{ matrix.openhab_version }}
+          name: RSpec-results-${{ matrix.openhab_version }}-#{{ matrix.jruby_version }}
           path: rspec.html
-
 
   cucumber:
     needs: [openhab-matrix, openhab-setup]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
-      matrix: ${{fromJson(needs.openhab-matrix.outputs.matrix)}}
+      matrix:
+        openhab_version: ${{ fromJson(needs.openhab-matrix.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
@@ -153,7 +154,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: OpenHAB-setup-${{ hashFiles('.bundlehash', 'Rakefile', 'rakelib/openhab.rake') }}-${{ matrix.openhab_version }}
+          key: OpenHAB-setup-${{ matrix.openhab_version }}
       - name: Cucumber
         run: bin/rake features
         timeout-minutes: 8
