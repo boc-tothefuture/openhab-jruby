@@ -26,7 +26,9 @@ module OpenHAB
     base.extend OpenHAB::Core::EntityLookup
     base.extend OpenHAB::DSL
 
-    logger.debug "OpenHAB JRuby Scripting Library Version #{OpenHAB::VERSION} Loaded"
+    logger.debug "OpenHAB JRuby (Version #{JRUBY_VERSION}) Scripting Library (Version #{OpenHAB::VERSION}) " \
+                 "Supporting Ruby (Version #{RUBY_VERSION})"
+    logger.trace "Ruby Description (#{RUBY_DESCRIPTION})"
 
     OpenHAB::Core.add_rubylib_to_load_path
   end
