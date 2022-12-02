@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-# several classes rely on this, so force it to load earlier
-require_relative "core/provider"
-
-Dir[File.expand_path("core/**/*.rb", __dir__)].sort.each do |f|
-  require f
-end
-
 module OpenHAB
   # Contains classes and modules that wrap actual OpenHAB objects
   module Core
@@ -51,8 +44,57 @@ module OpenHAB
       #   The OpenHAB Automation manager.
       #
       def automation_manager
-        $scriptExtension.get("automationManager")
+        $se.get("automationManager")
+      end
+
+      #
+      # Imports a specific script extension preset into the global namespace
+      #
+      # @param [String] preset
+      # @return [void]
+      #
+      def import_preset(preset)
+        import_scope_values($se.import_preset(preset))
+      end
+
+      #
+      # Imports all default script extension presets into the global namespace
+      #
+      # @!visibility private
+      # @return [void]
+      #
+      def import_default_presets
+        $se.default_presets.each { |preset| import_preset(preset) }
+      end
+
+      #
+      # Imports concrete scope values into the global namespace
+      #
+      # @param [java.util.Map<String, Object>] scope_values
+      # @!visibility private
+      # @return [void]
+      #
+      def import_scope_values(scope_values)
+        scope_values.for_each do |key, value|
+          # convert Java classes to Ruby classes
+          value = value.ruby_class if value.is_a?(java.lang.Class) # rubocop:disable Lint/UselessAssignment
+          # variables are globals; constants go into the global namespace
+          key = case key[0]
+                when "a".."z" then "$#{key}"
+                when "A".."Z" then "::#{key}"
+                end
+          eval("#{key} = value unless defined?(#{key})", nil, __FILE__, __LINE__) # rubocop:disable Security/Eval
+        end
       end
     end
+
+    import_default_presets
   end
+end
+
+# several classes rely on this, so force it to load earlier
+require_relative "core/provider"
+
+Dir[File.expand_path("core/**/*.rb", __dir__)].sort.each do |f|
+  require f
 end

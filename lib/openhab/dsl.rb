@@ -107,6 +107,19 @@ module OpenHAB
     # @!group Object Access
 
     #
+    # (see Core::ValueCache)
+    #
+    # @return [Core::ValueCache] the cache shared among all scripts and UI rules in all languages.
+    #
+    # @see Core::ValueCache ValueCache
+    #
+    # @since openHAB 3.4.0
+    #
+    def shared_cache
+      $sharedCache
+    end
+
+    #
     # Fetches all rules from the rule registry.
     #
     # @return [Core::Rules::Registry]

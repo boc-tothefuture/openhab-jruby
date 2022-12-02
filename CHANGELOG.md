@@ -157,6 +157,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {group::OpenHAB::DSL::Rules::BuilderDSL::Triggers Several new triggers}
 * {OpenHAB::DSL.profile}
 * {OpenHAB::DSL.script}
+* {OpenHAB::DSL.shared_cache}
 * {OpenHAB::Core::Rules::Registry}, specifically {OpenHAB::Core::Rules::Registry#remove #remove} and {OpenHAB::Core::Rules::Rule#trigger #trigger} are new functionality.
 * {OpenHAB::DSL.unit} can now handle units for multiple dimensions.
 * Support Ruby's method name convention for thing actions, e.g. `things["mqtt:broker:mosquitto"].publish_mqtt`

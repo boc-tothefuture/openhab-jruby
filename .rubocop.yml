@@ -75,11 +75,14 @@ Style/Documentation:
 Style/GlobalVars:
   AllowedVariables: # these globals are set by OpenHAB, and we can't change their name
    - $actions
+   - $dependency_listener
    - $events
    - $ir
    - $rules
+   - $privateCache
    - $se
    - $scriptExtension
+   - $sharedCache
    - $things
 Style/HashSyntax:
   EnforcedStyle: ruby19_no_mixed_keys

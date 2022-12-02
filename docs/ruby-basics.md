@@ -30,7 +30,25 @@ It is useful to get to know the basic data types that we will often encounter:
 * Uppercase identifiers are constants, e.g. `NAMES`
 * Variable whose names start with `$` are global variables, e.g. `$i_am_global`.
 * Variable whose names start with `@` are instance variables, e.g. `@instance_variable`.
+  Instance variables are similar to member variables or fields in other languages.
 * Local variables are just plain names that starts with a lower case, e.g. `local_var`.
+
+### Examples
+
+Instance variables are created as soon as they are referenced.
+They are persisted on whatever `self` is.
+In most simple file-based rules, and in UI based rules, `self` is simply a top level `Object` named `main`, and instance variables will be persisted between multiple executions of the same rule:
+
+```ruby
+rule "light turned on" do
+  changed Light_Switch, to: ON
+  run do
+    @turned_on_count ||= 0
+    @turned_on_count += 1
+    logger.info("The light has been turned on #{@turned_on_count} times")
+  end
+end
+```
   
 ## Control Expressions
 

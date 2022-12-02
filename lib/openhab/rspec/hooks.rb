@@ -11,6 +11,14 @@ module OpenHAB
   module RSpec
     Object.include Helpers if defined?(IRB)
 
+    # @!visibility private
+    module Hooks
+      class << self
+        attr_accessor :cache_script_extension
+      end
+      self.cache_script_extension = nil
+    end
+
     Helpers.launch_karaf(
       include_bindings: Configuration.include_bindings,
       include_jsondb: Configuration.include_jsondb,
@@ -28,6 +36,15 @@ module OpenHAB
           Helpers.send(:set_up_autoupdates)
           Helpers.load_transforms
           Helpers.load_rules
+
+          if DSL.shared_cache
+            Hooks.cache_script_extension = OSGi.service(
+              "org.openhab.core.automation.module.script.ScriptExtensionProvider",
+              filter:
+                "(component.name=org.openhab.core.automation.module.script.rulesupport.internal.CacheScriptExtension)"
+            )
+            Hooks.cache_script_extension.class.field_reader :sharedCache
+          end
         end
 
         config.before do
@@ -79,6 +96,7 @@ module OpenHAB
           Timecop.return
           restore_autoupdate_items
           Mocks::PersistenceService.instance.reset
+          Hooks.cache_script_extension.sharedCache.clear if DSL.shared_cache
         end
       end
     end

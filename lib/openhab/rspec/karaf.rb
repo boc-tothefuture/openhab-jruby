@@ -20,6 +20,14 @@ module OpenHAB
         def get(type)
           @manager.get(type, "jruby")
         end
+
+        def default_presets
+          @manager.default_presets
+        end
+
+        def import_preset(preset)
+          @manager.find_preset(preset, "rspec")
+        end
       end
       private_constant :ScriptExtensionManagerWrapper
 
@@ -566,21 +574,6 @@ module OpenHAB
         wait_for_service("org.openhab.core.automation.module.script.internal.ScriptExtensionManager") do |sem|
           # since we're not created by the ScriptEngineManager, this never gets set; manually set it
           $se = $scriptExtension = ScriptExtensionManagerWrapper.new(sem)
-          scope_values = sem.find_default_presets("rspec")
-          scope_values = scope_values.entry_set.to_a
-
-          scope_values.each do |entry|
-            key = entry.key
-            value = entry.value
-            # convert Java classes to Ruby classes
-            value = value.ruby_class if value.is_a?(java.lang.Class) # rubocop:disable Lint/UselessAssignment
-            # variables are globals; constants go into the global namespace
-            key = case key[0]
-                  when "a".."z" then "$#{key}"
-                  when "A".."Z" then "::#{key}"
-                  end
-            eval("#{key} = value unless defined?(#{key})", nil, __FILE__, __LINE__) # rubocop:disable Security/Eval
-          end
         end
       end
 

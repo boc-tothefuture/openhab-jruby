@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Style/GlobalVars
-if $dependency_listener
+if defined?($dependency_listener)
   require "jruby"
 
   klass = Class.new(org.jruby.util.collections.StringArraySet) do
@@ -33,4 +32,3 @@ if $dependency_listener
 else
   logger.warn("Dependency listener not found; dependency tracking disabled.")
 end
-# rubocop:enable Style/GlobalVars
