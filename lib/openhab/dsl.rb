@@ -171,7 +171,7 @@ module OpenHAB
     end
 
     #
-    # Provides access to timers created by {after}
+    # Provides access to timers created by {after after}
     #
     # @return [TimerManager]
     def timers
@@ -186,7 +186,8 @@ module OpenHAB
     # ### Reentrant Timers
     #
     # Timers with an id are reentrant by id. Reentrant means that when the same id is encountered,
-    # the timer is rescheduled rather than creating a second new timer.
+    # the timer is rescheduled rather than creating a second new timer. Note that the timer will
+    # execute the block provided in the latest call.
     #
     # This removes the need for the usual boilerplate code to manually keep track of timer objects.
     #
@@ -267,9 +268,21 @@ module OpenHAB
     #   end
     #
     # @example Only create a new timer if it isn't already scheduled
-    #  after(1.minute, id: :foo, reschedule: false) do
-    #    logger.info("Timer fired")
-    #  end
+    #   after(1.minute, id: :foo, reschedule: false) do
+    #     logger.info("Timer fired")
+    #   end
+    #
+    # @example Reentrant timers will execute the block from the most recent call
+    #   # In the following example, if Item1 received a command, followed by Item2,
+    #   # the timer will execute the block referring to Item2.
+    #   rule "Execute The Most Recent Block" do
+    #     received_command Item1, Item2
+    #     run do |event|
+    #       after(10.minutes, id: :common_timer) do
+    #         logger.info "The latest command was received from #{event.item}"
+    #       end
+    #     end
+    #   end
     #
     def after(duration, id: nil, reschedule: true, &block)
       raise ArgumentError, "Block is required" unless block

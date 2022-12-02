@@ -211,14 +211,26 @@ RSpec.describe OpenHAB::Core::Timer do
 
       it "is reentrant" do
         exec_proofs = []
-        (200..1000).step(100) do |delay|
+        (200..500).step(100) do |delay|
           after(delay.milliseconds, id: "id") { exec_proofs << delay }
 
           expect(timers).to include("id")
         end
 
-        time_travel_and_execute_timers(1.1.seconds)
-        expect(exec_proofs).to eq [1000]
+        time_travel_and_execute_timers(0.6.seconds)
+        expect(exec_proofs).to eq [500]
+      end
+
+      it "executes the block from the latest call" do
+        result = 0
+        after(0.1.seconds, id: "id") { result = 1 }
+        after(0.1.seconds, id: "id") { result = 2 }
+        after(0.1.seconds, id: "id") { result = 3 }
+
+        expect(result).to eq 0
+
+        time_travel_and_execute_timers(0.2.seconds)
+        expect(result).to eq 3
       end
 
       describe "TimerManager#schedule" do
