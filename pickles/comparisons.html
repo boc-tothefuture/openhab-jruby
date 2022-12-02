@@ -1,0 +1,799 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"[]>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>comparisons</title>
+    <link rel="stylesheet" href="css/master.css" type="text/css" />
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print" />
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/scripts.js" type="text/javascript"></script>
+    <script type="text/javascript">
+$(document).ready(function() {
+  initializeToc();
+});
+</script>
+    <!-- We are using Font Awesome - http://fortawesome.github.com/Font-Awesome - licensed under CC BY 3.0 -->
+  </head>
+  <body>
+    <div id="container">
+      <div id="top" />
+      <div id="toc">
+        <p class="tocCollapser" title="Collapse Table of Content">«</p>
+        <ul class="features">
+          <li class="file" id="root">
+            <a href="index.html">Home</a>
+          </li>
+          <li class="file">
+            <a href="attachments.html">attachments</a>
+          </li>
+          <li class="file">
+            <a href="between.html">between</a>
+          </li>
+          <li class="file">
+            <a href="changed_duration.html">changed_duration</a>
+          </li>
+          <li class="file">
+            <a href="channels.html">channels</a>
+          </li>
+          <li class="file">
+            <a href="color_item.html">color_item</a>
+          </li>
+          <li class="file">
+            <span class="current">comparisons</span>
+          </li>
+          <li class="file">
+            <a href="contact_item.html">contact_item</a>
+          </li>
+          <li class="file">
+            <a href="cron.html">cron</a>
+          </li>
+          <li class="file">
+            <a href="date_time_item.html">date_time_item</a>
+          </li>
+          <li class="file">
+            <a href="decimal_type.html">decimal_type</a>
+          </li>
+          <li class="file">
+            <a href="delay.html">delay</a>
+          </li>
+          <li class="file">
+            <a href="dimmer_item.html">dimmer_item</a>
+          </li>
+          <li class="file">
+            <a href="ensure_states.html">ensure_states</a>
+          </li>
+          <li class="file">
+            <a href="every.html">every</a>
+          </li>
+          <li class="file">
+            <a href="gem.html">gem</a>
+          </li>
+          <li class="file">
+            <a href="gem_install.html">gem_install</a>
+          </li>
+          <li class="file">
+            <a href="generic_trigger.html">generic_trigger</a>
+          </li>
+          <li class="file">
+            <a href="groups.html">groups</a>
+          </li>
+          <li class="file">
+            <a href="hsb_type.html">hsb_type</a>
+          </li>
+          <li class="file">
+            <a href="image_item.html">image_item</a>
+          </li>
+          <li class="file">
+            <a href="increase_decrease_type.html">increase_decrease_type</a>
+          </li>
+          <li class="file">
+            <a href="item_timers.html">item_timers</a>
+          </li>
+          <li class="file">
+            <a href="items.html">items</a>
+          </li>
+          <li class="file">
+            <a href="location_item.html">location_item</a>
+          </li>
+          <li class="file">
+            <a href="logging.html">logging</a>
+          </li>
+          <li class="file">
+            <a href="metadata.html">metadata</a>
+          </li>
+          <li class="file">
+            <a href="metadata_hash.html">metadata_hash</a>
+          </li>
+          <li class="file">
+            <a href="month_day.html">month_day</a>
+          </li>
+          <li class="file">
+            <a href="next_previous_type.html">next_previous_type</a>
+          </li>
+          <li class="file">
+            <a href="number_item.html">number_item</a>
+          </li>
+          <li class="file">
+            <a href="on_off_type.html">on_off_type</a>
+          </li>
+          <li class="file">
+            <a href="open_closed_type.html">open_closed_type</a>
+          </li>
+          <li class="file">
+            <a href="percent_type.html">percent_type</a>
+          </li>
+          <li class="file">
+            <a href="play_pause_type.html">play_pause_type</a>
+          </li>
+          <li class="file">
+            <a href="quantity_type.html">quantity_type</a>
+          </li>
+          <li class="file">
+            <a href="received_command.html">received_command</a>
+          </li>
+          <li class="file">
+            <a href="refresh_type.html">refresh_type</a>
+          </li>
+          <li class="file">
+            <a href="rewind_fastforward_type.html">rewind_fastforward_type</a>
+          </li>
+          <li class="file">
+            <a href="ruby.html">ruby</a>
+          </li>
+          <li class="file">
+            <a href="rule_language.html">rule_language</a>
+          </li>
+          <li class="file">
+            <a href="run.html">run</a>
+          </li>
+          <li class="file">
+            <a href="script_handling.html">script_handling</a>
+          </li>
+          <li class="file">
+            <a href="semantics.html">semantics</a>
+          </li>
+          <li class="file">
+            <a href="shared_code.html">shared_code</a>
+          </li>
+          <li class="file">
+            <a href="states.html">states</a>
+          </li>
+          <li class="file">
+            <a href="stop_move_type.html">stop_move_type</a>
+          </li>
+          <li class="file">
+            <a href="string_item.html">string_item</a>
+          </li>
+          <li class="file">
+            <a href="string_type.html">string_type</a>
+          </li>
+          <li class="file">
+            <a href="switch_item.html">switch_item</a>
+          </li>
+          <li class="file">
+            <a href="thing.html">thing</a>
+          </li>
+          <li class="file">
+            <a href="time.html">time</a>
+          </li>
+          <li class="file">
+            <a href="time_of_day.html">time_of_day</a>
+          </li>
+          <li class="file">
+            <a href="transformation.html">transformation</a>
+          </li>
+          <li class="file">
+            <a href="triggered.html">triggered</a>
+          </li>
+          <li class="file">
+            <a href="units_of_measurement.html">units_of_measurement</a>
+          </li>
+          <li class="file">
+            <a href="up_down_type.html">up_down_type</a>
+          </li>
+          <li class="file">
+            <a href="updated.html">updated</a>
+          </li>
+          <li class="file">
+            <a href="watch.html">watch</a>
+          </li>
+          <li>
+            <div class="directory">
+              <a href="assets/index.html">assets</a>
+            </div>
+            <ul class="features" />
+          </li>
+        </ul>
+      </div>
+      <div id="feature">
+        <h1>comparisons</h1>
+        <div class="description">
+          <p>Rule language supports comparisons of different types</p>
+        </div>
+        <ul id="scenarios">
+          <li class="scenario">
+            <div class="scenario-heading">
+              <h2></h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>Clean OpenHAB with latest Ruby Libraries</li>
+                <li class="step">
+                  <span class="keyword">And </span>groups:<div class="table_container"><table class="datatable"><thead><tr><th>name</th><th>type</th><th>function</th><th>params</th></tr></thead><tbody><tr><td>Temperatures</td><td>Number:Temperature</td><td>AVG</td><td></td></tr><tr><td>Switches</td><td>Switch</td><td>AND</td><td>ON, OFF</td></tr><tr><td>Contacts</td><td>Contact</td><td>OR</td><td>OPEN, CLOSED</td></tr><tr><td>Dates</td><td>DateTime</td><td>LATEST</td><td></td></tr><tr><td>Shutters</td><td>Rollershutter</td><td>AND</td><td>UP, DOWN</td></tr><tr><td>ShuttersPos</td><td>Rollershutter</td><td>MAX</td><td></td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>groups</th><th>state</th></tr></thead><tbody><tr><td>Number</td><td>Number5</td><td>Number Five</td><td></td><td>5</td></tr><tr><td>Number</td><td>Number10</td><td>Number Ten</td><td></td><td>10</td></tr><tr><td>Number</td><td>Number10A</td><td>Number Ten A</td><td></td><td>10</td></tr><tr><td>Number</td><td>Number20</td><td>Number Twenty</td><td></td><td>20</td></tr><tr><td>Number</td><td>NumberNull</td><td>Number NULL</td><td></td><td>NULL</td></tr><tr><td>Number</td><td>NumberNullA</td><td>Number NULL A</td><td></td><td>NULL</td></tr><tr><td>Number:Temperature</td><td>Number5C</td><td>Number Five</td><td>Temperatures</td><td>5°C</td></tr><tr><td>Number:Temperature</td><td>Number10C</td><td>Number Ten</td><td>Temperatures</td><td>10°C</td></tr><tr><td>Number:Temperature</td><td>Number10C2</td><td>Number Ten</td><td>Temperatures</td><td>10°C</td></tr><tr><td>Number:Temperature</td><td>Number20C</td><td>Number Twenty</td><td>Temperatures</td><td>20°C</td></tr><tr><td>Number:Illuminance</td><td>NumberLux</td><td>Number Lux</td><td></td><td>465.3 lx</td></tr><tr><td>Dimmer</td><td>Dimmer5</td><td>Dimmer Five</td><td></td><td>5</td></tr><tr><td>Dimmer</td><td>Dimmer10</td><td>Dimmer Ten</td><td></td><td>10</td></tr><tr><td>Switch</td><td>SwitchOne</td><td>Switch One</td><td>Switches</td><td>ON</td></tr><tr><td>Switch</td><td>SwitchTwo</td><td>Switch Two</td><td>Switches</td><td>OFF</td></tr><tr><td>Contact</td><td>ContactOne</td><td>Contact One</td><td>Contacts</td><td>OPEN</td></tr><tr><td>Contact</td><td>ContactTwo</td><td>Contact Two</td><td>Contacts</td><td>CLOSED</td></tr><tr><td>DateTime</td><td>DateOne</td><td>Date One</td><td>Dates</td><td>2021-01-01T00:00:00+00:00</td></tr><tr><td>DateTime</td><td>DateTwo</td><td>Date Two</td><td>Dates</td><td>2021-02-01T12:00:00+00:00</td></tr><tr><td>Rollershutter</td><td>ShutterOne</td><td>Shutter One</td><td>Shutters, ShuttersPos</td><td>0</td></tr><tr><td>Rollershutter</td><td>ShutterTwo</td><td>Shutter Two</td><td>Shutters, ShuttersPos</td><td>50</td></tr><tr><td>Color</td><td>Color</td><td>Color</td><td></td><td>0, 100, 100</td></tr></tbody></table></div></li>
+              </ul>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="comparisons-can-be-done-against-different-types">
+              <h2>Comparisons can be done against different types</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">java_import org.openhab.core.library.types.DateTimeType
+java_import org.openhab.core.library.types.DecimalType
+java_import org.openhab.core.library.types.PercentType
+
+#comparison pairs
+tests = [
+  # NumberItem vs NumberItem
+  [ Number10                    , 'eql?', Number10                    , true  ]  ,
+  [ Number10                    , 'eql?', Number10A                   , false ]  ,
+  [ Number10                    , '=='  , Number10A                   , true  ]  ,
+  [ Number10                    , '=='  , Number5                     , false ]  ,
+  [ NumberNull                  , '=='  , NumberNullA                 , true  ]  ,
+  [ Number10                    , '!='  , Number5                     , true  ]  ,
+  [ Number10                    , '!='  , Number10A                   , false ]  ,
+
+  [ Number10                    , '&lt;'   , Number20                    , true  ]  ,
+  [ Number10                    , '&lt;'   , Number5                     , false ]  ,
+  [ Number10                    , '&gt;'   , Number5                     , true  ]  ,
+  [ Number10                    , '&gt;'   , Number20                    , false ]  ,
+
+  # NumberItem vs DecimalType
+  [ Number10                    , 'eql?', DecimalType.new(10)         , false ]  ,
+  [ Number10                    , '=='  , DecimalType.new(10)         , true  ]  ,
+  [ Number10                    , '=='  , DecimalType.new(5)          , false ]  ,
+  [ Number10                    , '!='  , DecimalType.new(5)          , true  ]  ,
+  [ Number10                    , '!='  , DecimalType.new(10)         , false ]  ,
+
+  [ Number10                    , '&lt;'   , DecimalType.new(20)         , true  ]  ,
+  [ Number10                    , '&lt;'   , DecimalType.new(5)          , false ]  ,
+  [ Number10                    , '&gt;'   , DecimalType.new(5)          , true  ]  ,
+  [ Number10                    , '&gt;'   , DecimalType.new(20)         , false ]  ,
+
+  # NumberItem vs Ruby Numeric
+  [ Number10                    , 'eql?', 10                          , false ]  ,
+  [ Number10                    , '=='  , 10                          , true  ]  ,
+  [ Number10                    , '=='  , 1                           , false ]  ,
+  [ Number10                    , '!='  , 1                           , true  ]  ,
+  [ Number10                    , '!='  , 10                          , false ]  ,
+
+  [ Number10                    , '&lt;'   , 10.1                        , true  ]  ,
+  [ Number10                    , '&lt;'   , 5                           , false ]  ,
+  [ Number10                    , '&gt;'   , 5                           , true  ]  ,
+  [ Number10                    , '&gt;'   , 10.1                        , false ]  ,
+
+  # Ruby Numeric vs NumberItem
+  [ 10                          , 'eql?', Number10                    , false ]  ,
+  [ 10                          , '=='  , Number10                    , true  ]  ,
+  [ 10                          , '=='  , Number5                     , false ]  ,
+  [ 10                          , '!='  , Number5                     , true  ]  ,
+  [ 10                          , '!='  , Number10                    , false ]  ,
+
+  [ 10.5                        , '&lt;'   , Number20                    , true  ]  ,
+  [ 10                          , '&lt;'   , Number5                     , false ]  ,
+  [ 10                          , '&gt;'   , Number5                     , true  ]  ,
+  [ 10                          , '&gt;'   , Number10                    , false ]  ,
+
+  # DecimalType vs NumberItem
+  [ DecimalType.new(10)         , 'eql?', Number10                    , false ]  ,
+  [ DecimalType.new(10)         , '=='  , Number10                    , true  ]  ,
+  [ DecimalType.new(10)         , '=='  , Number5                     , false ]  ,
+  [ DecimalType.new(10)         , '!='  , Number5                     , true  ]  ,
+  [ DecimalType.new(10)         , '!='  , Number10                    , false ]  ,
+
+  [ DecimalType.new(10.5)       , '&lt;'   , Number20                    , true  ]  ,
+  [ DecimalType.new(10)         , '&lt;'   , Number5                     , false ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , Number5                     , true  ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , Number10                    , false ]  ,
+
+  # NumberItem vs DimmerItem
+  [ Number10                    , 'eql?', Dimmer10                    , false ]  ,
+  [ Number10                    , '=='  , Dimmer10                    , true  ]  ,
+  [ Number10                    , '=='  , Dimmer5                     , false ]  ,
+  [ Number10                    , '!='  , Dimmer5                     , true  ]  ,
+  [ Number10                    , '!='  , Dimmer10                    , false ]  ,
+
+  [ Number5                     , '&lt;'   , Dimmer10                    , true  ]  ,
+  [ Number10                    , '&lt;'   , Dimmer5                     , false ]  ,
+  [ Number10                    , '&gt;'   , Dimmer5                     , true  ]  ,
+  [ Number5                     , '&gt;'   , Dimmer10                    , false ]  ,
+
+  # DimmerItem vs NumberItem
+  [ Dimmer10                    , 'eql?', Number10                    , false ]  ,
+  [ Dimmer10                    , '=='  , Number10                    , true  ]  ,
+  [ Dimmer10                    , '=='  , Number5                     , false ]  ,
+  [ Dimmer10                    , '!='  , Number5                     , true  ]  ,
+  [ Dimmer10                    , '!='  , Number10                    , false ]  ,
+
+  [ Dimmer10                    , '&lt;'   , Number20                    , true  ]  ,
+  [ Dimmer10                    , '&lt;'   , Number5                     , false ]  ,
+  [ Dimmer10                    , '&gt;'   , Number5                     , true  ]  ,
+  [ Dimmer10                    , '&gt;'   , Number20                    , false ]  ,
+
+  # NumberItem's state vs DimmerItem's state
+  [ Number10.state              , 'eql?', Dimmer10.state              , false ]  ,
+  [ Number10.state              , '=='  , Dimmer10.state              , true  ]  ,
+  [ Number5.state               , '=='  , Dimmer10.state              , false ]  ,
+  [ Number5.state               , '!='  , Dimmer10.state              , true  ]  ,
+  [ Number10.state              , '!='  , Dimmer10.state              , false ]  ,
+
+  # DimmerItem vs Ruby Numeric
+  [ Dimmer10                    , 'eql?', 10                          , false ]  ,
+  [ Dimmer10                    , '=='  , 10                          , true  ]  ,
+  [ Dimmer10                    , '=='  , 10.1                        , false ]  ,
+  [ Dimmer10                    , '!='  , 2                           , true  ]  ,
+  [ Dimmer10                    , '!='  , 10                          , false ]  ,
+
+  [ Dimmer10                    , '&lt;'   , 20                          , true  ]  ,
+  [ Dimmer10                    , '&lt;'   , 5                           , false ]  ,
+  [ Dimmer10                    , '&gt;'   , 5                           , true  ]  ,
+  [ Dimmer10                    , '&gt;'   , 20                          , false ]  ,
+
+  # DimmerItem vs OnOffType
+  [ Dimmer10                    , 'eql?', ON                          , false ]  ,
+  [ Dimmer10                    , '=='  , ON                          , true  ]  ,
+  [ Dimmer10                    , '=='  , OFF                         , false ]  ,
+  [ Dimmer10                    , '!='  , ON                          , false ]  ,
+  [ Dimmer10                    , '!='  , OFF                         , true  ]  ,
+
+  # Ruby Numeric vs DimmerItem
+  [ 10                          , 'eql?', Dimmer10                    , false ]  ,
+  [ 10                          , '=='  , Dimmer10                    , true  ]  ,
+  [ 10.1                        , '=='  , Dimmer10                    , false ]  ,
+  [ 2                           , '!='  , Dimmer10                    , true  ]  ,
+  [ 10                          , '!='  , Dimmer10                    , false ]  ,
+
+  [ 5                           , '&lt;'   , Dimmer10                    , true  ]  ,
+  [ 20                          , '&lt;'   , Dimmer10                    , false ]  ,
+  [ 11                          , '&gt;'   , Dimmer10                    , true  ]  ,
+  [ 5                           , '&gt;'   , Dimmer10                    , false ]  ,
+
+  # NumberItem with UoM vs another
+  [ Number10C                   , 'eql?', Number10C2                  , false ]  ,
+  [ Number10C                   , '=='  , Number10C2                  , true  ]  ,
+  [ Number10C                   , '!='  , Number10C2                  , false ]  ,
+
+  # NumberItem with UoM vs String
+  [ Number10C                   , 'eql?', '10 °C'                     , false ]  ,
+  [ Number10C                   , '&gt;'   , '4 °F'                      , true  ]  ,
+  [ Number10C                   , '=='  , '10 °C'                     , true  ]  ,
+
+  # NumberItem with UoM vs Integer
+  [ Number10C                   , 'eql?', 10                          , false ]  ,
+  [ Number10C                   , '&gt;'   , 3                           , true  ]  ,
+  [ Number10C                   , '=='  , 10                          , true  ]  ,
+  [ NumberLux                   , '&lt;'   , 100                         , false ]  ,
+  [ 100                         , '&gt;'   , NumberLux                   , false ]  ,
+
+  # NumberItem with UoM vs QuantityType
+  [ Number10C                   , 'eql?', QuantityType.new('10°C')    , false ]  ,
+  [ Number10C                   , '=='  , QuantityType.new('10°C')    , true  ]  ,
+  [ Number10C                   , '=='  , QuantityType.new('10°F')    , false ]  ,
+  [ Number10C                   , '=='  , QuantityType.new('50°F')    , true  ]  ,
+  [ Number10C                   , '!='  , QuantityType.new('10°F')    , true  ]  ,
+  [ Number10C                   , '!='  , QuantityType.new('10.1°C')  , true  ]  ,
+  [ Number10C                   , '!='  , QuantityType.new('50°F')    , false ]  ,
+
+  [ Number10C                   , '&gt;'   , QuantityType.new('5°C')     , true  ]  ,
+  [ Number10C                   , '&gt;'   , QuantityType.new('10°F')    , true  ]  ,
+  [ Number10C                   , '&gt;'   , QuantityType.new('50°F')    , false ]  ,
+  [ Number5C                    , '&lt;'   , QuantityType.new('10°C')    , true  ]  ,
+  [ Number20C                   , '&lt;'   , QuantityType.new('10°C')    , false ]  ,
+  [ Number5C                    , '&lt;'   , QuantityType.new('50°F')    , true  ]  ,
+
+  # QuantityType vs NumberItem with UoM
+  [ QuantityType.new('10°C')    , 'eql?', Number10C                   , false ]  ,
+  [ QuantityType.new('10°C')    , '=='  , Number10C                   , true  ]  ,
+  [ QuantityType.new('50°F')    , '=='  , Number10C                   , true  ]  ,
+  [ QuantityType.new('10°F')    , '=='  , Number10C                   , false ]  ,
+  [ QuantityType.new('10°C')    , '=='  , Number20C                   , false ]  ,
+
+
+  [ QuantityType.new('10°F')    , '!='  , Number10C                   , true  ]  ,
+  [ QuantityType.new('10.1°C')  , '!='  , Number10C                   , true  ]  ,
+  [ QuantityType.new('50°F')    , '!='  , Number10C                   , false ]  ,
+  [ QuantityType.new('10°C')    , '!='  , Number10C                   , false ]  ,
+
+  [ QuantityType.new('50°C')    , '&gt;'   , Number10C                   , true  ]  ,
+  [ QuantityType.new('10°F')    , '&gt;'   , Number10C                   , false ]  ,
+  [ QuantityType.new('50°F')    , '&gt;'   , Number10C                   , false ]  ,
+  [ QuantityType.new('10°C')    , '&lt;'   , Number20C                   , true  ]  ,
+  [ QuantityType.new('10°C')    , '&lt;'   , Number5C                    , false ]  ,
+  [ QuantityType.new('50°F')    , '&lt;'   , Number20C                   , true  ]  ,
+
+  # NumberItem vs PercentType
+  [ Number10                    , 'eql?', PercentType.new(10)         , false ]  ,
+  [ Number10                    , '=='  , PercentType.new(10)         , true  ]  ,
+  [ Number5                     , '=='  , PercentType.new(10)         , false ]  ,
+  [ Number5                     , '!='  , PercentType.new(10)         , true  ]  ,
+  [ Number10                    , '!='  , PercentType.new(10)         , false ]  ,
+
+  [ Number5                     , '&lt;'   , PercentType.new(10)         , true  ]  ,
+  [ Number20                    , '&lt;'   , PercentType.new(10)         , false ]  ,
+  [ Number20                    , '&gt;'   , PercentType.new(10)         , true  ]  ,
+  [ Number5                     , '&gt;'   , PercentType.new(10)         , false ]  ,
+
+  # PercentType vs NumberItem
+  [ PercentType.new(10)         , 'eql?', Number10                    , false ]  ,
+  [ PercentType.new(10)         , '=='  , Number10                    , true  ]  ,
+  [ PercentType.new(10)         , '=='  , Number5                     , false ]  ,
+  [ PercentType.new(10)         , '!='  , Number5                     , true  ]  ,
+  [ PercentType.new(10)         , '!='  , Number10                    , false ]  ,
+
+  [ PercentType.new(10)         , '&lt;'   , Number20                    , true  ]  ,
+  [ PercentType.new(10)         , '&lt;'   , Number5                     , false ]  ,
+  [ PercentType.new(10)         , '&gt;'   , Number5                     , true  ]  ,
+  [ PercentType.new(10)         , '&gt;'   , Number20                    , false ]  ,
+
+  # NumberItem vs DecimalType
+  [ Number10                    , 'eql?', DecimalType.new(10)         , false ]  ,
+  [ Number10                    , '=='  , DecimalType.new(10)         , true  ]  ,
+  [ Number5                     , '=='  , DecimalType.new(10)         , false ]  ,
+  [ Number5                     , '!='  , DecimalType.new(10)         , true  ]  ,
+  [ Number10                    , '!='  , DecimalType.new(10)         , false ]  ,
+
+  [ Number5                     , '&lt;'   , DecimalType.new(10)         , true  ]  ,
+  [ Number20                    , '&lt;'   , DecimalType.new(10)         , false ]  ,
+  [ Number20                    , '&gt;'   , DecimalType.new(10)         , true  ]  ,
+  [ Number5                     , '&gt;'   , DecimalType.new(10)         , false ]  ,
+
+  # DecimalType vs NumberItem
+  [ DecimalType.new(10)         , 'eql?', Number10                    , false ]  ,
+  [ DecimalType.new(10)         , '=='  , Number10                    , true  ]  ,
+  [ DecimalType.new(10)         , '=='  , Number5                     , false ]  ,
+  [ DecimalType.new(10)         , '!='  , Number5                     , true  ]  ,
+  [ DecimalType.new(10)         , '!='  , Number10                    , false ]  ,
+
+  [ DecimalType.new(10)         , '&lt;'   , Number20                    , true  ]  ,
+  [ DecimalType.new(10)         , '&lt;'   , Number5                     , false ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , Number5                     , true  ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , Number20                    , false ]  ,
+
+  # PercentType vs DecimalType
+  [ PercentType.new(10)         , 'eql?', DecimalType.new(10)         , false ]  ,
+  [ PercentType.new(10)         , '=='  , DecimalType.new(10)         , true  ]  ,
+  [ PercentType.new(10)         , '=='  , DecimalType.new(5)          , false ]  ,
+  [ PercentType.new(10)         , '!='  , DecimalType.new(5)          , true  ]  ,
+  [ PercentType.new(10)         , '!='  , DecimalType.new(10)         , false ]  ,
+
+  [ PercentType.new(10)         , '&lt;'   , DecimalType.new(20)         , true  ]  ,
+  [ PercentType.new(10)         , '&lt;'   , DecimalType.new(5)          , false ]  ,
+  [ PercentType.new(10)         , '&gt;'   , DecimalType.new(5)          , true  ]  ,
+  [ PercentType.new(10)         , '&gt;'   , DecimalType.new(20)         , false ]  ,
+
+  # DecimalType vs PercentType
+  [ DecimalType.new(10)         , 'eql?', PercentType.new(10)         , false ]  ,
+  [ DecimalType.new(10)         , '=='  , PercentType.new(10)         , true  ]  ,
+  [ DecimalType.new(10)         , '=='  , PercentType.new(5)          , false ]  ,
+  [ DecimalType.new(10)         , '!='  , PercentType.new(5)          , true  ]  ,
+  [ DecimalType.new(10)         , '!='  , PercentType.new(10)         , false ]  ,
+
+  [ DecimalType.new(10)         , '&lt;'   , PercentType.new(20)         , true  ]  ,
+  [ DecimalType.new(10)         , '&lt;'   , PercentType.new(5)          , false ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , PercentType.new(5)          , true  ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , PercentType.new(20)         , false ]  ,
+
+  # QuantityType vs String with UoM
+  [ QuantityType.new('10°C')    , '=='  , '10°C'                      , true  ]  ,
+  [ QuantityType.new('50°F')    , '=='  , '10°C'                      , true  ]  ,
+  [ QuantityType.new('10°F')    , '=='  , '10°C'                      , false ]  ,
+  [ QuantityType.new('10°C')    , '=='  , '20°C'                      , false ]  ,
+
+  [ QuantityType.new('10°F')    , '!='  , '10°C'                      , true  ]  ,
+  [ QuantityType.new('10.1°C')  , '!='  , '10°C'                      , true  ]  ,
+  [ QuantityType.new('50°F')    , '!='  , '10°C'                      , false ]  ,
+  [ QuantityType.new('10°C')    , '!='  , '10°C'                      , false ]  ,
+
+  [ QuantityType.new('50°C')    , '&gt;'   , '10°C'                      , true  ]  ,
+  [ QuantityType.new('10°F')    , '&gt;'   , '10°C'                      , false ]  ,
+  [ QuantityType.new('50°F')    , '&gt;'   , '10°C'                      , false ]  ,
+  [ QuantityType.new('10°C')    , '&lt;'   , '20°C'                      , true  ]  ,
+  [ QuantityType.new('10°C')    , '&lt;'   , '5°C'                       , false ]  ,
+  [ QuantityType.new('50°F')    , '&lt;'   , '20°C'                      , true  ]  ,
+
+  # String with UoM vs QuantityType
+  [ '10°C'                      , '=='  , QuantityType.new('10°C')    , true  ]  ,
+  [ '10°C'                      , '=='  , QuantityType.new('50°F')    , true  ]  ,
+  [ '10°C'                      , '=='  , QuantityType.new('10°F')    , false ]  ,
+  [ '20°C'                      , '=='  , QuantityType.new('10°C')    , false ]  ,
+  [ '10°C'                      , '!='  , QuantityType.new('10°F')    , true  ]  ,
+  [ '10°C'                      , '!='  , QuantityType.new('10.1°C')  , true  ]  ,
+  [ '10°C'                      , '!='  , QuantityType.new('50°F')    , false ]  ,
+  [ '10°C'                      , '!='  , QuantityType.new('10°C')    , false ]  ,
+  [ '10°C'                      , '&lt;'   , QuantityType.new('50°C')    , true  ]  ,
+  [ '10°C'                      , '&lt;'   , QuantityType.new('10°F')    , false ]  ,
+  [ '10°C'                      , '&lt;'   , QuantityType.new('50°F')    , false ]  ,
+  [ '20°C'                      , '&gt;'   , QuantityType.new('10°C')    , true  ]  ,
+  [ '5°C'                       , '&gt;'   , QuantityType.new('10°C')    , false ]  ,
+  [ '20°C'                      , '&gt;'   , QuantityType.new('50°F')    , true  ]  ,
+
+  # PercentType vs PercentType
+  [ PercentType.new(10)         , 'eql?', PercentType.new(10)         , true  ]  ,
+  [ PercentType.new(10)         , '=='  , PercentType.new(10)         , true  ]  ,
+  [ PercentType.new(10)         , '=='  , PercentType.new(1)          , false ]  ,
+  [ PercentType.new(10)         , '!='  , PercentType.new(1)          , true  ]  ,
+  [ PercentType.new(10)         , '!='  , PercentType.new(10)         , false ]  ,
+  [ PercentType.new(10)         , '&lt;'   , PercentType.new(10.1)       , true  ]  ,
+  [ PercentType.new(10)         , '&lt;'   , PercentType.new(5)          , false ]  ,
+  [ PercentType.new(10)         , '&gt;'   , PercentType.new(5)          , true  ]  ,
+  [ PercentType.new(10)         , '&gt;'   , PercentType.new(10.1 )      , false ]  ,
+
+  # PercentType vs Ruby Numeric
+  [ PercentType.new(10)         , 'eql?', 10                          , false ]  ,
+  [ PercentType.new(10)         , '=='  , 10                          , true  ]  ,
+  [ PercentType.new(10)         , 'eql?', 1                           , false ]  ,
+  [ PercentType.new(10)         , '=='  , 1                           , false ]  ,
+  [ PercentType.new(10)         , '!='  , 1                           , true  ]  ,
+  [ PercentType.new(10)         , '!='  , 10                          , false ]  ,
+  [ PercentType.new(10)         , '&lt;'   , 10.1                        , true  ]  ,
+  [ PercentType.new(10)         , '&lt;'   , 5                           , false ]  ,
+  [ PercentType.new(10)         , '&gt;'   , 5                           , true  ]  ,
+  [ PercentType.new(10)         , '&gt;'   , 10.1                        , false ]  ,
+
+  # Ruby Numeric vs PercentType
+  [ 10                          , '=='  , PercentType.new(10)         , true  ]  ,
+  [ 10                          , '=='  , PercentType.new(5)          , false ]  ,
+  [ 10                          , '!='  , PercentType.new(5)          , true  ]  ,
+  [ 10                          , '!='  , PercentType.new(10)         , false ]  ,
+  [ 10.5                        , '&lt;'   , PercentType.new(20)         , true  ]  ,
+  [ 10                          , '&lt;'   , PercentType.new(5)          , false ]  ,
+  [ 10                          , '&gt;'   , PercentType.new(5)          , true  ]  ,
+  [ 10                          , '&gt;'   , PercentType.new(10)         , false ]  ,
+
+  # DecimalType vs DecimalType
+  [ DecimalType.new(10)         , 'eql?', DecimalType.new(10)         , true  ]  ,
+  [ DecimalType.new(10)         , '=='  , DecimalType.new(10)         , true  ]  ,
+  [ DecimalType.new(10)         , 'eql?', DecimalType.new(1)          , false ]  ,
+  [ DecimalType.new(10)         , '=='  , DecimalType.new(1)          , false ]  ,
+  [ DecimalType.new(10)         , '!='  , DecimalType.new(1)          , true  ]  ,
+  [ DecimalType.new(10)         , '!='  , DecimalType.new(10)         , false ]  ,
+  [ DecimalType.new(10)         , '&lt;'   , DecimalType.new(10.1)       , true  ]  ,
+  [ DecimalType.new(10)         , '&lt;'   , DecimalType.new(5)          , false ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , DecimalType.new(5)          , true  ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , DecimalType.new(10.1)       , false ]  ,
+
+  # DecimalType vs Ruby Numeric
+  [ DecimalType.new(10)         , 'eql?', 10                          , false ]  ,
+  [ DecimalType.new(10)         , '=='  , 10                          , true  ]  ,
+  [ DecimalType.new(10)         , '=='  , 1                           , false ]  ,
+  [ DecimalType.new(10)         , '!='  , 1                           , true  ]  ,
+  [ DecimalType.new(10)         , '!='  , 10                          , false ]  ,
+  [ DecimalType.new(10)         , '&lt;'   , 10.1                        , true  ]  ,
+  [ DecimalType.new(10)         , '&lt;'   , 5                           , false ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , 5                           , true  ]  ,
+  [ DecimalType.new(10)         , '&gt;'   , 10.1                        , false ]  ,
+
+  # Ruby Numeric vs DecimalType
+  [ 10                          , '=='  , DecimalType.new(10)         , true  ]  ,
+  [ 10                          , '=='  , DecimalType.new(5)          , false ]  ,
+  [ 10                          , '!='  , DecimalType.new(5)          , true  ]  ,
+  [ 10                          , '!='  , DecimalType.new(10)         , false ]  ,
+  [ 10.5                        , '&lt;'   , DecimalType.new(20)         , true  ]  ,
+  [ 10                          , '&lt;'   , DecimalType.new(5)          , false ]  ,
+  [ 10                          , '&gt;'   , DecimalType.new(5)          , true  ]  ,
+  [ 10                          , '&gt;'   , DecimalType.new(10)         , false ]  ,
+
+  # DateTimeItem
+  [ DateOne                     , '&lt;'   , DateTwo                     , true  ]  ,
+  [ DateOne                     , '&lt;='  , '2021-02-09'                , true  ]  ,
+  [ DateOne                     , '&gt;'   , Time.now                    , false ]  ,
+  [ DateOne                     , '=='  , '2021-01-01T00:00:00+00:00' , true  ]  ,
+  [ DateOne                     , '!='  , '2021-01-01T00:00:00+01:00' , true  ]  ,
+
+  [ DateTwo                     , '&lt;'   , DateOne                     , false ]  ,
+  [ '2021-02-09'                , '&gt;='  , DateOne                     , true  ]  ,
+  [ Time.now                    , '&gt;'   , DateOne                     , true  ]  ,
+  [ '2021-01-01T00:00:00+00:00' , '=='  , DateOne                     , true  ]  ,
+  [ '2021-01-01T00:00:00+01:00' , '!='  , DateOne                     , true  ]  ,
+
+  # DateTimeType
+  [ DateTimeType.parse('2021-01-01T00:00:00+00:00'), '&lt;'  , DateTimeType.parse('2021-02-01T12:00:00+00:00'), true  ]  ,
+  [ DateTimeType.parse('2021-01-01T00:00:00+00:00'), '&lt;'  , DateTwo, true  ]  ,
+  [ DateTimeType.parse('2021-01-01T00:00:00+00:00'), '&lt;=' , '2021-02-09'                , true  ]  ,
+  [ DateTimeType.parse('2021-01-01T00:00:00+00:00'), '&gt;'  , Time.now                    , false ]  ,
+  [ DateTimeType.parse('2021-01-01T00:00:00+00:00'), '==' , '2021-01-01T00:00:00+00:00' , true  ]  ,
+  [ DateTimeType.parse('2021-01-01T00:00:00+00:00'), '!=' , '2021-01-01T00:00:00+01:00' , true  ]  ,
+
+  [ DateTimeType.parse('2021-02-01T12:00:00+00:00'), '&lt;'  , DateTimeType.parse('2021-01-01T00:00:00+00:00'), false ]  ,
+  [ DateTwo                     , '&lt;'   , DateTimeType.parse('2021-01-01T00:00:00+00:00'), false ]  ,
+  [ '2021-02-09'                , '&gt;='  , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
+  [ Time.now                    , '&gt;'   , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
+  [ '2021-01-01T00:00:00+00:00' , '=='  , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
+  [ '2021-01-01T00:00:00+01:00' , '!='  , DateTimeType.parse('2021-01-01T00:00:00+00:00'), true  ]  ,
+
+  # MonthDay
+  [ MonthDay.of(2, 3)           , '=='  , '02-03'     , true],
+  [ MonthDay.of(2, 3)           , '=='  , '02-3'      , true],
+  [ MonthDay.of(2, 3)           , '=='  , '2-03'      , true],
+  [ MonthDay.of(2, 3)           , '=='  , '2-3'       , true],
+  [ MonthDay.of(2, 3)           , '=='  , '--2-3'     , true],
+
+  # HSBType
+  [ HSBType.new(0, 100, 100)    , '=='  , Color                       , true  ]  ,
+  [ HSBType.new(0, 100, 100)    , '!='  , Color                       , false ]  ,
+  [ Color                       , '=='  , HSBType.new(0, 100, 100)    , true  ]  ,
+  [ Color                       , '!='  , HSBType.new(0, 100, 100)    , false ]  ,
+  [ Color                       , '=='  , 100                         , true  ]  ,
+  [ Color                       , '=='  , ON                          , true  ]  ,
+  [ Color                       , '=='  , HSBType.new(1, 100, 100)    , false ]  ,
+  [ Color                       , '=='  , HSBType.new(0, 99, 100)     , false ]  ,
+  [ Color                       , '=='  , HSBType.new(0, 100, 99)     , false ]  ,
+
+  # Rollershutters
+  [ ShutterTwo                  , '=='  , 50                          , true  ]  ,
+  [ ShutterOne                  , '&lt;'   , 50                          , true  ]  ,
+  [ ShutterOne                  , '&gt;'   , ShutterTwo                  , false ]  ,
+  [ 50                          , '=='  , ShutterTwo                  , true  ]  ,
+  [ 50                          , '&lt;'   , ShutterOne                  , false ]  ,
+  [ ShutterTwo                  , '&gt;'   , ShutterOne                  , true  ]  ,
+
+  # Groups
+  [ Temperatures                , '&lt;'   , Temperatures.max            , true  ]  ,
+  [ Temperatures                , '&gt;'   , 0                           , true  ]  ,
+  [ Temperatures                , '&gt;'   , '0 °C'                      , true  ]  ,
+  [ Switches                    , '=='  , ON                          , false ]  ,
+  [ Switches                    , '=='  , OFF                         , true  ]  ,
+  [ Switches                    , '=='  , SwitchTwo                   , true  ]  ,
+  [ Switches                    , '=='  , SwitchOne                   , false ]  ,
+  [ Contacts                    , '=='  , OPEN                        , true  ]  ,
+  [ Contacts                    , '=='  , CLOSED                      , false ]  ,
+  [ Dates                       , '&lt;'   , Time.now                    , true  ]  ,
+  [ Dates                       , '&gt;'   , DateOne                     , true  ]  ,
+  [ Dates                       , '=='  , DateTwo                     , true  ]  ,
+  [ Dates                       , '=='  , DateOne                     , false ]  ,
+  [ Dates                       , '=='  , TimeOfDay.noon              , true  ]  ,
+  [ Shutters                    , '=='  , UP                          , false ]  ,
+  [ Shutters                    , '=='  , DOWN                        , true  ]  ,
+  [ ShuttersPos                 , '=='  , 50                          , true  ]  ,
+  [ ShuttersPos                 , '&lt;'   , 20                          , false ]  ,
+
+  [ Temperatures.max            , '&lt;'   , Temperatures                , false ]  ,
+  [ '0 °C'                      , '&lt;'   , Temperatures                , true  ]  ,
+  [ ON                          , '=='  , Switches                    , false ]  ,
+  [ OFF                         , '=='  , Switches                    , true  ]  ,
+  [ SwitchTwo                   , '=='  , Switches                    , true  ]  ,
+  [ SwitchOne                   , '=='  , Switches                    , false ]  ,
+  [ OPEN                        , '=='  , Contacts                    , true  ]  ,
+  [ CLOSED                      , '=='  , Contacts                    , false ]  ,
+  [ Time.now                    , '&lt;'   , Dates                       , false ]  ,
+  [ DateOne                     , '&gt;'   , Dates                       , false ]  ,
+  [ DateTwo                     , '=='  , Dates                       , true  ]  ,
+  [ DateOne                     , '=='  , Dates                       , false ]  ,
+  [ TimeOfDay.noon              , '=='  , Dates                       , true  ]  ,
+  [ UP                          , '=='  , Shutters                    , false ]  ,
+  [ DOWN                        , '=='  , Shutters                    , true  ]  ,
+  [ 50                          , '=='  , ShuttersPos                 , true  ]  ,
+  [ 20                          , '&lt;'   , ShuttersPos                 , true  ]  ,
+
+  # Enums
+  [ NULL                        , '=='  , NULL                        , true  ]  ,
+  [ NULL                        , '=='  , UNDEF                       , false ]  ,
+  [ NULL                        , '=='  , ON                          , false ]  ,
+  [ NULL                        , '=='  , OFF                         , false ]  ,
+  [ NULL                        , '=='  , UP                          , false ]  ,
+  [ NULL                        , '=='  , REFRESH                     , false ]  ,
+  [ UNDEF                       , '=='  , NULL                        , false ]  ,
+  [ UNDEF                       , '=='  , UNDEF                       , true  ]  ,
+  [ UNDEF                       , '=='  , ON                          , false ]  ,
+  [ UNDEF                       , '=='  , OFF                         , false ]  ,
+  [ UNDEF                       , '=='  , UP                          , false ]  ,
+  [ UNDEF                       , '=='  , REFRESH                     , false ]  ,
+  [ REFRESH                     , '=='  , NULL                        , false ]  ,
+  [ REFRESH                     , '=='  , UNDEF                       , false ]  ,
+  [ REFRESH                     , '=='  , ON                          , false ]  ,
+  [ REFRESH                     , '=='  , OFF                         , false ]  ,
+  [ REFRESH                     , '=='  , UP                          , false ]  ,
+  [ REFRESH                     , '=='  , REFRESH                     , true  ]  ,
+  [ ON                          , '=='  , NULL                        , false ]  ,
+  [ ON                          , '=='  , UNDEF                       , false ]  ,
+  [ ON                          , '=='  , ON                          , true  ]  ,
+  [ ON                          , '=='  , OFF                         , false ]  ,
+  [ ON                          , '=='  , UP                          , false ]  ,
+  [ ON                          , '=='  , REFRESH                     , false ]  ,
+  [ OFF                         , '=='  , NULL                        , false ]  ,
+  [ OFF                         , '=='  , UNDEF                       , false ]  ,
+  [ OFF                         , '=='  , ON                          , false ]  ,
+  [ OFF                         , '=='  , OFF                         , true  ]  ,
+  [ OFF                         , '=='  , UP                          , false ]  ,
+  [ OFF                         , '=='  , REFRESH                     , false ]  ,
+  [ NULL                        , '!='  , NULL                        , false ]  ,
+  [ NULL                        , '!='  , UNDEF                       , true  ]  ,
+  [ NULL                        , '!='  , ON                          , true  ]  ,
+  [ NULL                        , '!='  , OFF                         , true  ]  ,
+  [ NULL                        , '!='  , UP                          , true  ]  ,
+  [ NULL                        , '!='  , REFRESH                     , true  ]  ,
+  [ UNDEF                       , '!='  , NULL                        , true  ]  ,
+  [ UNDEF                       , '!='  , UNDEF                       , false ]  ,
+  [ UNDEF                       , '!='  , ON                          , true  ]  ,
+  [ UNDEF                       , '!='  , OFF                         , true  ]  ,
+  [ UNDEF                       , '!='  , UP                          , true  ]  ,
+  [ UNDEF                       , '!='  , REFRESH                     , true  ]  ,
+  [ REFRESH                     , '!='  , NULL                        , true  ]  ,
+  [ REFRESH                     , '!='  , UNDEF                       , true  ]  ,
+  [ REFRESH                     , '!='  , ON                          , true  ]  ,
+  [ REFRESH                     , '!='  , OFF                         , true  ]  ,
+  [ REFRESH                     , '!='  , UP                          , true  ]  ,
+  [ REFRESH                     , '!='  , REFRESH                     , false ]  ,
+  [ ON                          , '!='  , NULL                        , true  ]  ,
+  [ ON                          , '!='  , UNDEF                       , true  ]  ,
+  [ ON                          , '!='  , ON                          , false ]  ,
+  [ ON                          , '!='  , OFF                         , true  ]  ,
+  [ ON                          , '!='  , UP                          , true  ]  ,
+  [ ON                          , '!='  , REFRESH                     , true  ]  ,
+  [ OFF                         , '!='  , NULL                        , true  ]  ,
+  [ OFF                         , '!='  , UNDEF                       , true  ]  ,
+  [ OFF                         , '!='  , ON                          , true  ]  ,
+  [ OFF                         , '!='  , OFF                         , false ]  ,
+  [ OFF                         , '!='  , UP                          , true  ]  ,
+  [ OFF                         , '!='  , REFRESH                     , true  ]  ,
+
+  [ (0..100)                    , '===' , ON                          , false ]  ,
+  [ 50                          , '=='  , ON                          , false ]  ,
+]
+
+def test_to_s(test)
+  left, operator, right, expected_result = test
+  "#{left.class} (#{left}) #{operator} #{right.class} (#{right}) should be: #{expected_result}"
+end
+
+ok_count = 0
+failed_tests = []
+tests.each_with_index do |test, index|
+  left, operator, right, expected_result = test
+  test = test_to_s(test)
+  logger.info("Test ##{index} start: #{test}")
+  result = left.__send__(operator, right)
+  if result == expected_result
+    logger.info("Test ##{index} result: PASSED")
+    ok_count += 1
+  else
+    failed_tests &lt;&lt; "##{index} #{test}"
+    logger.error("Test ##{index} result: FAILED")
+  end
+rescue =&gt; e
+  failed_tests &lt;&lt; "##{index} #{test}"
+  logger.error("Test ##{index} result: FAILED with error")
+  logger.error("#{e}: #{e.backtrace}")
+end
+
+if ok_count == tests.count
+  logger.info("All tests passed")
+else
+  logger.error("Some tests failed:")
+  failed_tests.each { |test| logger.error(test) }
+end
+logger.info("Total tests: #{tests.count}, passed: #{ok_count}, failed: #{tests.count - ok_count}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "All tests passed" within 10 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('comparisons-can-be-done-against-different-types')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="footer">
+        <p>Generated on: 2 December 2022 01:55:39</p>
+        <p>Produced by Pickles, version 2.21.1.0</p>
+      </div>
+    </div>
+  </body>
+</html>

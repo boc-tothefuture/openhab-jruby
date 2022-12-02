@@ -1,0 +1,1015 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"[]>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>ensure_states</title>
+    <link rel="stylesheet" href="css/master.css" type="text/css" />
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print" />
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/scripts.js" type="text/javascript"></script>
+    <script type="text/javascript">
+$(document).ready(function() {
+  initializeToc();
+});
+</script>
+    <!-- We are using Font Awesome - http://fortawesome.github.com/Font-Awesome - licensed under CC BY 3.0 -->
+  </head>
+  <body>
+    <div id="container">
+      <div id="top" />
+      <div id="toc">
+        <p class="tocCollapser" title="Collapse Table of Content">«</p>
+        <ul class="features">
+          <li class="file" id="root">
+            <a href="index.html">Home</a>
+          </li>
+          <li class="file">
+            <a href="attachments.html">attachments</a>
+          </li>
+          <li class="file">
+            <a href="between.html">between</a>
+          </li>
+          <li class="file">
+            <a href="changed_duration.html">changed_duration</a>
+          </li>
+          <li class="file">
+            <a href="channels.html">channels</a>
+          </li>
+          <li class="file">
+            <a href="color_item.html">color_item</a>
+          </li>
+          <li class="file">
+            <a href="comparisons.html">comparisons</a>
+          </li>
+          <li class="file">
+            <a href="contact_item.html">contact_item</a>
+          </li>
+          <li class="file">
+            <a href="cron.html">cron</a>
+          </li>
+          <li class="file">
+            <a href="date_time_item.html">date_time_item</a>
+          </li>
+          <li class="file">
+            <a href="decimal_type.html">decimal_type</a>
+          </li>
+          <li class="file">
+            <a href="delay.html">delay</a>
+          </li>
+          <li class="file">
+            <a href="dimmer_item.html">dimmer_item</a>
+          </li>
+          <li class="file">
+            <span class="current">ensure_states</span>
+          </li>
+          <li class="file">
+            <a href="every.html">every</a>
+          </li>
+          <li class="file">
+            <a href="gem.html">gem</a>
+          </li>
+          <li class="file">
+            <a href="gem_install.html">gem_install</a>
+          </li>
+          <li class="file">
+            <a href="generic_trigger.html">generic_trigger</a>
+          </li>
+          <li class="file">
+            <a href="groups.html">groups</a>
+          </li>
+          <li class="file">
+            <a href="hsb_type.html">hsb_type</a>
+          </li>
+          <li class="file">
+            <a href="image_item.html">image_item</a>
+          </li>
+          <li class="file">
+            <a href="increase_decrease_type.html">increase_decrease_type</a>
+          </li>
+          <li class="file">
+            <a href="item_timers.html">item_timers</a>
+          </li>
+          <li class="file">
+            <a href="items.html">items</a>
+          </li>
+          <li class="file">
+            <a href="location_item.html">location_item</a>
+          </li>
+          <li class="file">
+            <a href="logging.html">logging</a>
+          </li>
+          <li class="file">
+            <a href="metadata.html">metadata</a>
+          </li>
+          <li class="file">
+            <a href="metadata_hash.html">metadata_hash</a>
+          </li>
+          <li class="file">
+            <a href="month_day.html">month_day</a>
+          </li>
+          <li class="file">
+            <a href="next_previous_type.html">next_previous_type</a>
+          </li>
+          <li class="file">
+            <a href="number_item.html">number_item</a>
+          </li>
+          <li class="file">
+            <a href="on_off_type.html">on_off_type</a>
+          </li>
+          <li class="file">
+            <a href="open_closed_type.html">open_closed_type</a>
+          </li>
+          <li class="file">
+            <a href="percent_type.html">percent_type</a>
+          </li>
+          <li class="file">
+            <a href="play_pause_type.html">play_pause_type</a>
+          </li>
+          <li class="file">
+            <a href="quantity_type.html">quantity_type</a>
+          </li>
+          <li class="file">
+            <a href="received_command.html">received_command</a>
+          </li>
+          <li class="file">
+            <a href="refresh_type.html">refresh_type</a>
+          </li>
+          <li class="file">
+            <a href="rewind_fastforward_type.html">rewind_fastforward_type</a>
+          </li>
+          <li class="file">
+            <a href="ruby.html">ruby</a>
+          </li>
+          <li class="file">
+            <a href="rule_language.html">rule_language</a>
+          </li>
+          <li class="file">
+            <a href="run.html">run</a>
+          </li>
+          <li class="file">
+            <a href="script_handling.html">script_handling</a>
+          </li>
+          <li class="file">
+            <a href="semantics.html">semantics</a>
+          </li>
+          <li class="file">
+            <a href="shared_code.html">shared_code</a>
+          </li>
+          <li class="file">
+            <a href="states.html">states</a>
+          </li>
+          <li class="file">
+            <a href="stop_move_type.html">stop_move_type</a>
+          </li>
+          <li class="file">
+            <a href="string_item.html">string_item</a>
+          </li>
+          <li class="file">
+            <a href="string_type.html">string_type</a>
+          </li>
+          <li class="file">
+            <a href="switch_item.html">switch_item</a>
+          </li>
+          <li class="file">
+            <a href="thing.html">thing</a>
+          </li>
+          <li class="file">
+            <a href="time.html">time</a>
+          </li>
+          <li class="file">
+            <a href="time_of_day.html">time_of_day</a>
+          </li>
+          <li class="file">
+            <a href="transformation.html">transformation</a>
+          </li>
+          <li class="file">
+            <a href="triggered.html">triggered</a>
+          </li>
+          <li class="file">
+            <a href="units_of_measurement.html">units_of_measurement</a>
+          </li>
+          <li class="file">
+            <a href="up_down_type.html">up_down_type</a>
+          </li>
+          <li class="file">
+            <a href="updated.html">updated</a>
+          </li>
+          <li class="file">
+            <a href="watch.html">watch</a>
+          </li>
+          <li>
+            <div class="directory">
+              <a href="assets/index.html">assets</a>
+            </div>
+            <ul class="features" />
+          </li>
+        </ul>
+      </div>
+      <div id="feature">
+        <h1>ensure_states</h1>
+        <div class="description">
+          <p>Rule languages has ensure_states feature</p>
+        </div>
+        <ul id="scenarios">
+          <li class="scenario">
+            <div class="scenario-heading">
+              <h2></h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>Clean OpenHAB with latest Ruby Libraries</li>
+                <li class="step">
+                  <span class="keyword">And </span>groups:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>function</th></tr></thead><tbody><tr><td>Dimmer</td><td>Dimmers</td><td>AVG</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>group</th><th>state</th></tr></thead><tbody><tr><td>Dimmer</td><td>DimmerOne</td><td>Dimmer One</td><td>Dimmers</td><td>50</td></tr><tr><td>Dimmer</td><td>DimmerTwo</td><td>Dimmer Two</td><td>Dimmers</td><td>50</td></tr><tr><td>Number:Temperature</td><td>Temp</td><td>Temp [%d °F]</td><td></td><td>80</td></tr></tbody></table></div></li>
+              </ul>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-sends-commands-if-not-in-given-state">
+              <h2>ensure sends commands if not in given state</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>item states:<div class="table_container"><table class="datatable"><thead><tr><th>item</th><th>state</th></tr></thead><tbody><tr><td>DimmerOne</td><td>&lt;initial_state&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  rule "command received" do
+    &lt;trigger_type&gt; DimmerOne
+    run do |event|
+      logger.info("DimmerOne &lt;trigger_type&gt;")
+    end
+  end
+  DimmerOne.ensure.&lt;command&gt;</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>"DimmerOne" should be in state "&lt;final_state&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "DimmerOne &lt;trigger_type&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-sends-commands-if-not-in-given-state')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial_state</th>
+                        <th>command</th>
+                        <th>final_state</th>
+                        <th>trigger_type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>0</td>
+                        <td>on</td>
+                        <td>100</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>&lt;&lt; ON</td>
+                        <td>100</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>update(ON)</td>
+                        <td>100</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>&lt;&lt; 50</td>
+                        <td>50</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>update(50)</td>
+                        <td>50</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>off</td>
+                        <td>0</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>&lt;&lt; OFF</td>
+                        <td>0</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>update(OFF)</td>
+                        <td>0</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>&lt;&lt; 100</td>
+                        <td>100</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>update(100)</td>
+                        <td>100</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>off</td>
+                        <td>0</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>&lt;&lt; OFF</td>
+                        <td>0</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>&lt;&lt; 0</td>
+                        <td>0</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>update(0)</td>
+                        <td>0</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>update(OFF)</td>
+                        <td>0</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-does-not-send-commands-if-already-in-given-state">
+              <h2>ensure does not send commands if already in given state</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>item states:<div class="table_container"><table class="datatable"><thead><tr><th>item</th><th>state</th></tr></thead><tbody><tr><td>DimmerOne</td><td>&lt;initial_state&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  rule "command received" do
+    &lt;trigger_type&gt; DimmerOne
+    run do |event|
+      logger.info("DimmerOne &lt;trigger_type&gt;")
+    end
+  end
+  DimmerOne.ensure.&lt;command&gt;
+  logger.info("Command sent")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Command sent" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"DimmerOne" should be in state "&lt;final_state&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should not log "DimmerOne &lt;trigger_type&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-does-not-send-commands-if-already-in-given-state')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial_state</th>
+                        <th>command</th>
+                        <th>final_state</th>
+                        <th>trigger_type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>0</td>
+                        <td>off</td>
+                        <td>0</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>&lt;&lt; OFF</td>
+                        <td>0</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>&lt;&lt; 0</td>
+                        <td>0</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>update(OFF)</td>
+                        <td>0</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>update(0)</td>
+                        <td>0</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>on</td>
+                        <td>50</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>&lt;&lt; ON</td>
+                        <td>50</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>&lt;&lt; 50</td>
+                        <td>50</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>update(50)</td>
+                        <td>50</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>on</td>
+                        <td>100</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>&lt;&lt; ON</td>
+                        <td>100</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>&lt;&lt; 100</td>
+                        <td>100</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>update(100)</td>
+                        <td>100</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-sends-commands-to-group-if-not-in-given-state">
+              <h2>ensure sends commands to group if not in given state</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>item states:<div class="table_container"><table class="datatable"><thead><tr><th>item</th><th>state</th></tr></thead><tbody><tr><td>DimmerOne</td><td>&lt;initial_state1&gt;</td></tr><tr><td>DimmerTwo</td><td>&lt;initial_state2&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  rule "command received" do
+    received_command DimmerOne
+    run do |event|
+      logger.info("DimmerOne received command")
+    end
+  end
+  Dimmers.ensure.&lt;command&gt;</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>"DimmerOne" should be in state "&lt;final_state1&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"DimmerTwo" should be in state "&lt;final_state2&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "DimmerOne received command" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-sends-commands-to-group-if-not-in-given-state')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial_state1</th>
+                        <th>initial_state2</th>
+                        <th>command</th>
+                        <th>final_state1</th>
+                        <th>final_state2</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>on</td>
+                        <td>100</td>
+                        <td>100</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>&lt;&lt; ON</td>
+                        <td>100</td>
+                        <td>100</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>&lt;&lt; 50</td>
+                        <td>50</td>
+                        <td>50</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>0</td>
+                        <td>off</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>0</td>
+                        <td>&lt;&lt; OFF</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>0</td>
+                        <td>&lt;&lt; 100</td>
+                        <td>100</td>
+                        <td>100</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-does-not-send-commands-to-group-if-in-given-state">
+              <h2>ensure does not send commands to group if in given state</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>item states:<div class="table_container"><table class="datatable"><thead><tr><th>item</th><th>state</th></tr></thead><tbody><tr><td>DimmerOne</td><td>&lt;initial_state1&gt;</td></tr><tr><td>DimmerTwo</td><td>&lt;initial_state2&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  rule "command received" do
+    received_command DimmerOne
+    run do |event|
+      logger.info("DimmerOne received command")
+    end
+  end
+  Dimmers.ensure.&lt;command&gt;
+  logger.info("Command sent")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Command sent" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"DimmerOne" should be in state "&lt;final_state1&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"DimmerTwo" should be in state "&lt;final_state2&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should not log "DimmerOne received command" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-does-not-send-commands-to-group-if-in-given-state')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial_state1</th>
+                        <th>initial_state2</th>
+                        <th>command</th>
+                        <th>final_state1</th>
+                        <th>final_state2</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>off</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>&lt;&lt; OFF</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>0</td>
+                        <td>&lt;&lt; 50</td>
+                        <td>100</td>
+                        <td>0</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-sends-commands-memberwise-to-group-if-not-in-given-state">
+              <h2>ensure sends commands memberwise to group if not in given state</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>item states:<div class="table_container"><table class="datatable"><thead><tr><th>item</th><th>state</th></tr></thead><tbody><tr><td>DimmerOne</td><td>&lt;initial_state1&gt;</td></tr><tr><td>DimmerTwo</td><td>&lt;initial_state2&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  rule "command received" do
+    received_command DimmerOne
+    run do |event|
+      logger.info("DimmerOne received command")
+    end
+  end
+  Dimmers.members.ensure.&lt;command&gt;</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>"DimmerOne" should be in state "&lt;final_state1&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"DimmerTwo" should be in state "&lt;final_state2&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "DimmerOne received command" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-sends-commands-memberwise-to-group-if-not-in-given-state')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial_state1</th>
+                        <th>initial_state2</th>
+                        <th>command</th>
+                        <th>final_state1</th>
+                        <th>final_state2</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>0</td>
+                        <td>100</td>
+                        <td>on</td>
+                        <td>100</td>
+                        <td>100</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>100</td>
+                        <td>&lt;&lt; ON</td>
+                        <td>100</td>
+                        <td>100</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>100</td>
+                        <td>&lt;&lt; 50</td>
+                        <td>50</td>
+                        <td>50</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensurestates-does-not-send-commands-if-already-in-given-state">
+              <h2>ensure_states does not send commands if already in given state</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>item states:<div class="table_container"><table class="datatable"><thead><tr><th>item</th><th>state</th></tr></thead><tbody><tr><td>DimmerOne</td><td>0</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  rule "command received" do
+    &lt;trigger_type&gt; DimmerOne
+    run do |event|
+      logger.info("DimmerOne &lt;trigger_type&gt;")
+    end
+  end
+  ensure_states do
+    DimmerOne.&lt;command&gt;
+  end
+  logger.info("Command sent")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Command sent" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"DimmerOne" should be in state "0" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should not log "DimmerOne &lt;trigger_type&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensurestates-does-not-send-commands-if-already-in-given-state')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>command</th>
+                        <th>trigger_type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>off</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>update(OFF)</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-works-with-boolean-commands-for-switchitem">
+              <h2>ensure works with boolean commands for SwitchItem</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>Switch</td><td>Switch1</td><td>&lt;initial_state&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  rule "command received" do
+    &lt;trigger_type&gt; Switch1
+    run do |event|
+      logger.info("Switch1 &lt;trigger_type&gt;")
+    end
+  end
+  Switch1.ensure.&lt;command&gt;
+  logger.info("Command sent")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Command sent" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"Switch1" should be in state "&lt;initial_state&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should not log "Switch1 &lt;trigger_type&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-works-with-boolean-commands-for-switchitem')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial_state</th>
+                        <th>command</th>
+                        <th>trigger_type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>OFF</td>
+                        <td>command false</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>ON</td>
+                        <td>command true</td>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>OFF</td>
+                        <td>update false</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>ON</td>
+                        <td>update true</td>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-update-doesnt-send-a-command">
+              <h2>ensure update doesn't send a command</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>Switch</td><td>Switch1</td><td>OFF</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  rule "command received" do
+    received_command Switch1
+    run do |event|
+      logger.info("Switch1 received command")
+    end
+  end
+  Switch1.ensure.update ON
+  logger.info("Item updated")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Item updated" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"Switch1" should be in state "ON" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should not log "Switch1 received command" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-update-doesnt-send-a-command')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-is-available-on-enumerable">
+              <h2>ensure is available on Enumerable</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">rule "command received" do
+  received_command DimmerOne, DimmerTwo
+  run do |event|
+    logger.info("Dimmers received command")
+  end
+end
+sleep 1
+[DimmerOne, DimmerTwo].ensure.command &lt;command&gt;</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It &lt;should&gt; log "Dimmers received command" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-is-available-on-enumerable')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>command</th>
+                        <th>should</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>50</td>
+                        <td>should not</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>10</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ensure-works-sending-a-number-to-a-quantity">
+              <h2>ensure works sending a number to a quantity</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">Temp.ensure &lt;&lt; 75
+sleep 1
+logger.info("Temp is #{Temp.state}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It &lt;should&gt; log "Temp is 75 °F" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ensure-works-sending-a-number-to-a-quantity')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="footer">
+        <p>Generated on: 2 December 2022 01:55:39</p>
+        <p>Produced by Pickles, version 2.21.1.0</p>
+      </div>
+    </div>
+  </body>
+</html>

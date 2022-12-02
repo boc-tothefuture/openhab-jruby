@@ -1,0 +1,626 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"[]>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>groups</title>
+    <link rel="stylesheet" href="css/master.css" type="text/css" />
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print" />
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/scripts.js" type="text/javascript"></script>
+    <script type="text/javascript">
+$(document).ready(function() {
+  initializeToc();
+});
+</script>
+    <!-- We are using Font Awesome - http://fortawesome.github.com/Font-Awesome - licensed under CC BY 3.0 -->
+  </head>
+  <body>
+    <div id="container">
+      <div id="top" />
+      <div id="toc">
+        <p class="tocCollapser" title="Collapse Table of Content">«</p>
+        <ul class="features">
+          <li class="file" id="root">
+            <a href="index.html">Home</a>
+          </li>
+          <li class="file">
+            <a href="attachments.html">attachments</a>
+          </li>
+          <li class="file">
+            <a href="between.html">between</a>
+          </li>
+          <li class="file">
+            <a href="changed_duration.html">changed_duration</a>
+          </li>
+          <li class="file">
+            <a href="channels.html">channels</a>
+          </li>
+          <li class="file">
+            <a href="color_item.html">color_item</a>
+          </li>
+          <li class="file">
+            <a href="comparisons.html">comparisons</a>
+          </li>
+          <li class="file">
+            <a href="contact_item.html">contact_item</a>
+          </li>
+          <li class="file">
+            <a href="cron.html">cron</a>
+          </li>
+          <li class="file">
+            <a href="date_time_item.html">date_time_item</a>
+          </li>
+          <li class="file">
+            <a href="decimal_type.html">decimal_type</a>
+          </li>
+          <li class="file">
+            <a href="delay.html">delay</a>
+          </li>
+          <li class="file">
+            <a href="dimmer_item.html">dimmer_item</a>
+          </li>
+          <li class="file">
+            <a href="ensure_states.html">ensure_states</a>
+          </li>
+          <li class="file">
+            <a href="every.html">every</a>
+          </li>
+          <li class="file">
+            <a href="gem.html">gem</a>
+          </li>
+          <li class="file">
+            <a href="gem_install.html">gem_install</a>
+          </li>
+          <li class="file">
+            <a href="generic_trigger.html">generic_trigger</a>
+          </li>
+          <li class="file">
+            <span class="current">groups</span>
+          </li>
+          <li class="file">
+            <a href="hsb_type.html">hsb_type</a>
+          </li>
+          <li class="file">
+            <a href="image_item.html">image_item</a>
+          </li>
+          <li class="file">
+            <a href="increase_decrease_type.html">increase_decrease_type</a>
+          </li>
+          <li class="file">
+            <a href="item_timers.html">item_timers</a>
+          </li>
+          <li class="file">
+            <a href="items.html">items</a>
+          </li>
+          <li class="file">
+            <a href="location_item.html">location_item</a>
+          </li>
+          <li class="file">
+            <a href="logging.html">logging</a>
+          </li>
+          <li class="file">
+            <a href="metadata.html">metadata</a>
+          </li>
+          <li class="file">
+            <a href="metadata_hash.html">metadata_hash</a>
+          </li>
+          <li class="file">
+            <a href="month_day.html">month_day</a>
+          </li>
+          <li class="file">
+            <a href="next_previous_type.html">next_previous_type</a>
+          </li>
+          <li class="file">
+            <a href="number_item.html">number_item</a>
+          </li>
+          <li class="file">
+            <a href="on_off_type.html">on_off_type</a>
+          </li>
+          <li class="file">
+            <a href="open_closed_type.html">open_closed_type</a>
+          </li>
+          <li class="file">
+            <a href="percent_type.html">percent_type</a>
+          </li>
+          <li class="file">
+            <a href="play_pause_type.html">play_pause_type</a>
+          </li>
+          <li class="file">
+            <a href="quantity_type.html">quantity_type</a>
+          </li>
+          <li class="file">
+            <a href="received_command.html">received_command</a>
+          </li>
+          <li class="file">
+            <a href="refresh_type.html">refresh_type</a>
+          </li>
+          <li class="file">
+            <a href="rewind_fastforward_type.html">rewind_fastforward_type</a>
+          </li>
+          <li class="file">
+            <a href="ruby.html">ruby</a>
+          </li>
+          <li class="file">
+            <a href="rule_language.html">rule_language</a>
+          </li>
+          <li class="file">
+            <a href="run.html">run</a>
+          </li>
+          <li class="file">
+            <a href="script_handling.html">script_handling</a>
+          </li>
+          <li class="file">
+            <a href="semantics.html">semantics</a>
+          </li>
+          <li class="file">
+            <a href="shared_code.html">shared_code</a>
+          </li>
+          <li class="file">
+            <a href="states.html">states</a>
+          </li>
+          <li class="file">
+            <a href="stop_move_type.html">stop_move_type</a>
+          </li>
+          <li class="file">
+            <a href="string_item.html">string_item</a>
+          </li>
+          <li class="file">
+            <a href="string_type.html">string_type</a>
+          </li>
+          <li class="file">
+            <a href="switch_item.html">switch_item</a>
+          </li>
+          <li class="file">
+            <a href="thing.html">thing</a>
+          </li>
+          <li class="file">
+            <a href="time.html">time</a>
+          </li>
+          <li class="file">
+            <a href="time_of_day.html">time_of_day</a>
+          </li>
+          <li class="file">
+            <a href="transformation.html">transformation</a>
+          </li>
+          <li class="file">
+            <a href="triggered.html">triggered</a>
+          </li>
+          <li class="file">
+            <a href="units_of_measurement.html">units_of_measurement</a>
+          </li>
+          <li class="file">
+            <a href="up_down_type.html">up_down_type</a>
+          </li>
+          <li class="file">
+            <a href="updated.html">updated</a>
+          </li>
+          <li class="file">
+            <a href="watch.html">watch</a>
+          </li>
+          <li>
+            <div class="directory">
+              <a href="assets/index.html">assets</a>
+            </div>
+            <ul class="features" />
+          </li>
+        </ul>
+      </div>
+      <div id="feature">
+        <h1>groups</h1>
+        <div class="description">
+          <p>Rule languages supports groups</p>
+        </div>
+        <ul id="scenarios">
+          <li class="scenario">
+            <div class="scenario-heading">
+              <h2></h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>Clean OpenHAB with latest Ruby Libraries</li>
+                <li class="step">
+                  <span class="keyword">And </span>groups:<div class="table_container"><table class="datatable"><thead><tr><th>name</th><th>group</th></tr></thead><tbody><tr><td>House</td><td></td></tr><tr><td>GroundFloor</td><td>House</td></tr><tr><td>Livingroom</td><td>GroundFloor</td></tr><tr><td>Sensors</td><td>House</td></tr><tr><td>Temperatures</td><td>Sensors</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>state</th><th>groups</th></tr></thead><tbody><tr><td>Number</td><td>Livingroom_Temp</td><td>Living Room temperature</td><td>70</td><td>Livingroom, Temperatures</td></tr><tr><td>Number</td><td>Bedroom_Temp</td><td>Bedroom temperature</td><td>50</td><td>GroundFloor, Temperatures</td></tr><tr><td>Number</td><td>Den_Temp</td><td>Den temperature</td><td>30</td><td>GroundFloor, Temperatures</td></tr></tbody></table></div></li>
+              </ul>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ability-to-operate-on-the-items-in-a-group-using-enumerable-methods">
+              <h2>Ability to operate on the items in a group using enumerable methods</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Total Temperatures: #{Temperatures.count}")
+logger.info("Temperatures: #{House.all_members.sort_by(&amp;:label).map(&amp;:label).join(', ')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Total Temperatures: 3' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'Temperatures: Bedroom temperature, Den temperature, Living Room temperature' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ability-to-operate-on-the-items-in-a-group-using-enumerable-methods')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="access-to-group-data">
+              <h2>Access to group data</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Group: #{Temperatures.name}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Group: Temperatures' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('access-to-group-data')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ability-to-operate-on-the-items-in-nested-group-using-allmembers-and-enumerable-methods">
+              <h2>Ability to operate on the items in nested group using all_members and enumerable methods</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("House Count: #{House.all_members.count}")
+logger.info("Items: #{House.all_members.sort_by(&amp;:label).map(&amp;:label).join(', ')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'House Count: 3' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'Items: Bedroom temperature, Den temperature, Living Room temperature' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ability-to-operate-on-the-items-in-nested-group-using-allmembers-and-enumerable-methods')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="access-to-sub-groups-using-allmembersgroups">
+              <h2>Access to sub groups using all_members(:groups)</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("House Sub Groups: #{House.all_members(:groups).count}")
+logger.info("Groups: #{House.all_members(:groups).sort_by(&amp;:id).map(&amp;:id).join(', ')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'House Sub Groups: 4' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'Groups: GroundFloor, Livingroom, Sensors, Temperatures' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('access-to-sub-groups-using-allmembersgroups')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="access-to-parent-groups-using-groups-method">
+              <h2>Access to parent groups using groups method</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Parent Groups: #{Temperatures.groups.map(&amp;:id).sort.join(', ')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Parent Groups: Sensors' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('access-to-parent-groups-using-groups-method')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="filter-output-of-allmembers-with-a-block">
+              <h2>Filter output of all_members with a block</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info(House.all_members { |item| /.*room.*/.match?(item.name) }.sort_by(&amp;:name).map(&amp;:name).join(', '))</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log ' Bedroom_Temp, Livingroom, Livingroom_Temp' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('filter-output-of-allmembers-with-a-block')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="fetch-group-by-name">
+              <h2>Fetch Group by name</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Sensors Group: #{groups['Sensors'].name}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Sensors Group: Sensors' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('fetch-group-by-name')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="groups-have-enumerable-based-math-functions">
+              <h2>Groups have enumerable based math functions</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Max is #{Temperatures.max}")
+logger.info("Min is #{Temperatures.min}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Max is 70" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "Min is 30" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('groups-have-enumerable-based-math-functions')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="group-update-trigger-has-eventitem-in-run-block">
+              <h2>Group update trigger has event.item in run block</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">rule 'group member updated' do
+  updated Temperatures.members
+  run do |event|
+    logger.info("event.item is #{event.item.name}")
+  end
+end
+
+rule 'update a group member' do
+  on_start
+  run { Livingroom_Temp.update 65 }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'event.item is Livingroom_Temp' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('group-update-trigger-has-eventitem-in-run-block')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="commands-sent-to-a-group-are-propagated-to-the-group-items">
+              <h2>Commands sent to a group are propagated to the group items</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">  GroundFloor.&lt;method&gt; &lt;value&gt;</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>"Bedroom_Temp" should be in state "&lt;value&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>"Den_Temp" should be in state "&lt;value&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('commands-sent-to-a-group-are-propagated-to-the-group-items')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>method</th>
+                        <th>value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>&lt;&lt;</td>
+                        <td>55</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>command</td>
+                        <td>60</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="groups-work-in-case-statements">
+              <h2>Groups work in case statements</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>groups:<div class="table_container"><table class="datatable"><thead><tr><th>name</th><th>type</th><th>function</th><th>params</th></tr></thead><tbody><tr><td>Switches</td><td>Switch</td><td>AND</td><td>ON, OFF</td></tr><tr><td>Contacts</td><td>Contact</td><td>OR</td><td>OPEN, CLOSED</td></tr><tr><td>Shutters</td><td>Rollershutter</td><td>AND</td><td>UP, DOWN</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>state</th><th>groups</th></tr></thead><tbody><tr><td>Switch</td><td>SwitchOne</td><td>Switch One</td><td>ON</td><td>Switches</td></tr><tr><td>Switch</td><td>SwitchTwo</td><td>Switch Two</td><td>OFF</td><td>Switches</td></tr><tr><td>Contact</td><td>ContactOne</td><td>Contact One</td><td>OPEN</td><td>Contacts</td></tr><tr><td>Contact</td><td>ContactTwo</td><td>Contact Two</td><td>CLOSED</td><td>Contacts</td></tr><tr><td>Rollershutter</td><td>ShutterOne</td><td>Shutter One</td><td>0</td><td>Shutters</td></tr><tr><td>Rollershutter</td><td>ShutterTwo</td><td>Shutter Two</td><td>50</td><td>Shutters</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">case Contacts
+when OPEN then logger.info('At least one contact is OPEN')
+when CLOSED then logger.info('All contacts are CLOSED')
+end
+
+case Switches
+when ON then logger.info('All switches are ON')
+when OFF then logger.info('At least one switch is OFF')
+end
+
+case Shutters
+when 0 then logger.info('All shutters are UP')
+when 100 then logger.info('At least one shutter is not UP')
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "At least one contact is OPEN" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "At least one switch is OFF" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "At least one shutter is not UP" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('groups-work-in-case-statements')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="members-on-groups-indicates-to-rules-engine-to-trigger-on-changes-to-any-members-of-the-group">
+              <h2>members on groups indicates to rules engine to trigger on changes to any members of the group</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'group member updated' do
+  updated Temperatures.members
+  run do |event|
+    logger.info("Group temperature updated")
+  end
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>update state for item "Livingroom_Temp" to "65"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Group temperature updated' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('members-on-groups-indicates-to-rules-engine-to-trigger-on-changes-to-any-members-of-the-group')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="can-iterate-group-members">
+              <h2>Can iterate group members</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:<div class="pre"><pre><code class="no-highlight">logger.info("Ground Floor: #{GroundFloor.members.sort_by(&amp;:name).map(&amp;:name).join(', ')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Ground Floor: Bedroom_Temp, Den_Temp, Livingroom' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('can-iterate-group-members')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="changes-to-groups-is-visible-to-running-rules">
+              <h2>Changes to groups is visible to running rules</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:<div class="pre"><pre><code class="no-highlight">rule 'test' do
+  on_start
+  run { logger.info(Temperatures.sort_by(&amp;:name).map(&amp;:name).join(', ')) }
+  delay 10.seconds
+  run { logger.info(Temperatures.sort_by(&amp;:name).map(&amp;:name).join(', ')) }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Bedroom_Temp, Den_Temp, Livingroom_Temp" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">But </span>if I wait 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>I add items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>state</th><th>groups</th></tr></thead><tbody><tr><td>Number</td><td>Livingroom_Temp</td><td>Living Room temperature</td><td>70</td><td></td></tr><tr><td>Number</td><td>Kitchen_Temp</td><td>Kitchen     temperature</td><td>60</td><td>Temperatures</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Bedroom_Temp, Den_Temp, Kitchen_Temp" within 10 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('changes-to-groups-is-visible-to-running-rules')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="changing-of-group-type-updates-methods">
+              <h2>Changing of Group type updates methods</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>groups:<div class="table_container"><table class="datatable"><thead><tr><th>name</th><th>type</th></tr></thead><tbody><tr><td>Switches</td><td>Switch</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file:<div class="pre"><pre><code class="no-highlight">rule 'test' do
+  on_start
+  run { logger.info(Switches.respond_to?(:on?)) }
+  delay 10.seconds
+  run { logger.info(Switches.respond_to?(:on?)) }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "true" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">But </span>if I wait 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>groups:<div class="table_container"><table class="datatable"><thead><tr><th>name</th><th>type</th></tr></thead><tbody><tr><td>Switches</td><td>Contact</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "false" within 10 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('changing-of-group-type-updates-methods')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="can-add-lazy-arrays-together">
+              <h2>Can add lazy arrays together</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Item+Group Count: #{(items + groups).count}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Item+Group Count: 13' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('can-add-lazy-arrays-together')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="footer">
+        <p>Generated on: 2 December 2022 01:55:39</p>
+        <p>Produced by Pickles, version 2.21.1.0</p>
+      </div>
+    </div>
+  </body>
+</html>

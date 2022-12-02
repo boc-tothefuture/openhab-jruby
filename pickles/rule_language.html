@@ -1,0 +1,849 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"[]>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>rule_language</title>
+    <link rel="stylesheet" href="css/master.css" type="text/css" />
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print" />
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/scripts.js" type="text/javascript"></script>
+    <script type="text/javascript">
+$(document).ready(function() {
+  initializeToc();
+});
+</script>
+    <!-- We are using Font Awesome - http://fortawesome.github.com/Font-Awesome - licensed under CC BY 3.0 -->
+  </head>
+  <body>
+    <div id="container">
+      <div id="top" />
+      <div id="toc">
+        <p class="tocCollapser" title="Collapse Table of Content">«</p>
+        <ul class="features">
+          <li class="file" id="root">
+            <a href="index.html">Home</a>
+          </li>
+          <li class="file">
+            <a href="attachments.html">attachments</a>
+          </li>
+          <li class="file">
+            <a href="between.html">between</a>
+          </li>
+          <li class="file">
+            <a href="changed_duration.html">changed_duration</a>
+          </li>
+          <li class="file">
+            <a href="channels.html">channels</a>
+          </li>
+          <li class="file">
+            <a href="color_item.html">color_item</a>
+          </li>
+          <li class="file">
+            <a href="comparisons.html">comparisons</a>
+          </li>
+          <li class="file">
+            <a href="contact_item.html">contact_item</a>
+          </li>
+          <li class="file">
+            <a href="cron.html">cron</a>
+          </li>
+          <li class="file">
+            <a href="date_time_item.html">date_time_item</a>
+          </li>
+          <li class="file">
+            <a href="decimal_type.html">decimal_type</a>
+          </li>
+          <li class="file">
+            <a href="delay.html">delay</a>
+          </li>
+          <li class="file">
+            <a href="dimmer_item.html">dimmer_item</a>
+          </li>
+          <li class="file">
+            <a href="ensure_states.html">ensure_states</a>
+          </li>
+          <li class="file">
+            <a href="every.html">every</a>
+          </li>
+          <li class="file">
+            <a href="gem.html">gem</a>
+          </li>
+          <li class="file">
+            <a href="gem_install.html">gem_install</a>
+          </li>
+          <li class="file">
+            <a href="generic_trigger.html">generic_trigger</a>
+          </li>
+          <li class="file">
+            <a href="groups.html">groups</a>
+          </li>
+          <li class="file">
+            <a href="hsb_type.html">hsb_type</a>
+          </li>
+          <li class="file">
+            <a href="image_item.html">image_item</a>
+          </li>
+          <li class="file">
+            <a href="increase_decrease_type.html">increase_decrease_type</a>
+          </li>
+          <li class="file">
+            <a href="item_timers.html">item_timers</a>
+          </li>
+          <li class="file">
+            <a href="items.html">items</a>
+          </li>
+          <li class="file">
+            <a href="location_item.html">location_item</a>
+          </li>
+          <li class="file">
+            <a href="logging.html">logging</a>
+          </li>
+          <li class="file">
+            <a href="metadata.html">metadata</a>
+          </li>
+          <li class="file">
+            <a href="metadata_hash.html">metadata_hash</a>
+          </li>
+          <li class="file">
+            <a href="month_day.html">month_day</a>
+          </li>
+          <li class="file">
+            <a href="next_previous_type.html">next_previous_type</a>
+          </li>
+          <li class="file">
+            <a href="number_item.html">number_item</a>
+          </li>
+          <li class="file">
+            <a href="on_off_type.html">on_off_type</a>
+          </li>
+          <li class="file">
+            <a href="open_closed_type.html">open_closed_type</a>
+          </li>
+          <li class="file">
+            <a href="percent_type.html">percent_type</a>
+          </li>
+          <li class="file">
+            <a href="play_pause_type.html">play_pause_type</a>
+          </li>
+          <li class="file">
+            <a href="quantity_type.html">quantity_type</a>
+          </li>
+          <li class="file">
+            <a href="received_command.html">received_command</a>
+          </li>
+          <li class="file">
+            <a href="refresh_type.html">refresh_type</a>
+          </li>
+          <li class="file">
+            <a href="rewind_fastforward_type.html">rewind_fastforward_type</a>
+          </li>
+          <li class="file">
+            <a href="ruby.html">ruby</a>
+          </li>
+          <li class="file">
+            <span class="current">rule_language</span>
+          </li>
+          <li class="file">
+            <a href="run.html">run</a>
+          </li>
+          <li class="file">
+            <a href="script_handling.html">script_handling</a>
+          </li>
+          <li class="file">
+            <a href="semantics.html">semantics</a>
+          </li>
+          <li class="file">
+            <a href="shared_code.html">shared_code</a>
+          </li>
+          <li class="file">
+            <a href="states.html">states</a>
+          </li>
+          <li class="file">
+            <a href="stop_move_type.html">stop_move_type</a>
+          </li>
+          <li class="file">
+            <a href="string_item.html">string_item</a>
+          </li>
+          <li class="file">
+            <a href="string_type.html">string_type</a>
+          </li>
+          <li class="file">
+            <a href="switch_item.html">switch_item</a>
+          </li>
+          <li class="file">
+            <a href="thing.html">thing</a>
+          </li>
+          <li class="file">
+            <a href="time.html">time</a>
+          </li>
+          <li class="file">
+            <a href="time_of_day.html">time_of_day</a>
+          </li>
+          <li class="file">
+            <a href="transformation.html">transformation</a>
+          </li>
+          <li class="file">
+            <a href="triggered.html">triggered</a>
+          </li>
+          <li class="file">
+            <a href="units_of_measurement.html">units_of_measurement</a>
+          </li>
+          <li class="file">
+            <a href="up_down_type.html">up_down_type</a>
+          </li>
+          <li class="file">
+            <a href="updated.html">updated</a>
+          </li>
+          <li class="file">
+            <a href="watch.html">watch</a>
+          </li>
+          <li>
+            <div class="directory">
+              <a href="assets/index.html">assets</a>
+            </div>
+            <ul class="features" />
+          </li>
+        </ul>
+      </div>
+      <div id="feature">
+        <h1>rule_language</h1>
+        <div class="description">
+          <p>Rule language generic support</p>
+        </div>
+        <ul id="scenarios">
+          <li class="scenario">
+            <div class="scenario-heading">
+              <h2></h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>Clean OpenHAB with latest Ruby Libraries</li>
+              </ul>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rules-support-description">
+              <h2>Rules support description</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a rule:<div class="pre"><pre><code class="no-highlight">rule 'Test rule' do
+  description 'This is the rule description'
+  on_start
+  run {}
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>The rule 'Test rule' should have 'This is the rule description' as its description</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rules-support-description')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rules-support-tags">
+              <h2>Rules support tags</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a rule:<div class="pre"><pre><code class="no-highlight">myrule = rule 'Test rule' do
+  tags "tag1", "tag2", Semantics::LivingRoom
+  on_start
+  run {}
+end
+
+logger.info myrule.tags.to_a.sort</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log '["LivingRoom", "tag1", "tag2"]' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rules-support-tags')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="call-function-from-rule">
+              <h2>Call function from rule</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">def outer_function(message)
+  logger.info("Outer Function #{message}")
+end
+
+rule 'Test Outer Function' do
+  on_start
+  run { outer_function("Test123") }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Outer Function Test123' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('call-function-from-rule')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="iterate-over-group-using-array-methods-directly-on-group-object">
+              <h2>Iterate over group using array methods directly on group object</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>group "GarageDoors"</li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>group</th><th>state</th></tr></thead><tbody><tr><td>Contact</td><td>LeftDoor</td><td>Left Door</td><td>GarageDoors</td><td>OPEN</td></tr><tr><td>Contact</td><td>RightDoor</td><td>Right Door</td><td>GarageDoors</td><td>CLOSED</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">open_doors = GarageDoors.select(&amp;:open?)
+open_doors.each { | door | logger.warn("Garage Door #{door.id} is OPEN") }</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Garage Door Left Door is OPEN' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('iterate-over-group-using-array-methods-directly-on-group-object')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="number-ranges-should-work-with-dimmer-values">
+              <h2>Number ranges should work with dimmer values</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>state</th></tr></thead><tbody><tr><td>Dimmer</td><td>TestDimmer</td><td>Dimmer Switch</td><td>55</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">case TestDimmer
+when 0...50
+ logger.info("#{TestDimmer.id} Less than 50")
+when 50..100
+ logger.info("#{TestDimmer.id} More than 50")
+else
+ logger.info("#{TestDimmer} Not matched")
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'More than 50' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('number-ranges-should-work-with-dimmer-values')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="grep-should-work-on-items-by-itemtype">
+              <h2>Grep should work on Items by ItemType</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>state</th></tr></thead><tbody><tr><td>Dimmer</td><td>TestDimmer</td><td>Dimmer Switch</td><td>55</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">items.grep(Dimmer)
+     .each { |item| logger.info("Found #{item.label}")}</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Found Dimmer Switch' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('grep-should-work-on-items-by-itemtype')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rule-supports-executing-different-block-if-guards-are-not-satisfied">
+              <h2>Rule supports executing different block if guards are not satisfied</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>Switch</td><td>TestSwitch</td><td>ON</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule<div class="pre"><pre><code class="no-highlight">rule 'Execute otherwise if guard is not satisfied' do
+  on_start
+  run { TestSwitch &lt;&lt; ON }
+  otherwise { TestSwitch &lt;&lt; OFF }
+  only_if { &lt;condition&gt; }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>"TestSwitch" should be in state "&lt;outcome&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rule-supports-executing-different-block-if-guards-are-not-satisfied')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: Check different conditions</h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>condition</th>
+                        <th>outcome</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>true</td>
+                        <td>ON</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>false</td>
+                        <td>OFF</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="terse-rules-are-supported">
+              <h2>Terse rules are supported</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>Switch</td><td>TestSwitch</td><td>OFF</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule<div class="pre"><pre><code class="no-highlight">changed TestSwitch do
+  logger.trace("Rule {#{OpenHAB::DSL::Rules::Rule.script_rules.first.name}}")
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">And </span>item "TestSwitch" state is changed to "ON"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Rule {TestSwitch changed}' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('terse-rules-are-supported')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="triggers-return-an-openhab-triggerimpl-object">
+              <h2>Triggers return an OpenHAB TriggerImpl object</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>Number</td><td>Alarm_Mode</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule<div class="pre"><pre><code class="no-highlight">rule 'Check trigger return value' do
+  trigger = &lt;trigger&gt; Alarm_Mode
+  logger.info("&lt;trigger&gt; returns #{trigger&amp;.first&amp;.class}")
+  run { }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log '&lt;trigger&gt; returns Java::OrgOpenhabCoreAutomationInternal::TriggerImpl' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('triggers-return-an-openhab-triggerimpl-object')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>trigger</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>updated</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>changed</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>received_command</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rule-logs-a-warning-and-isnt-created-if-it-contains-no-execution-blocks">
+              <h2>Rule logs a warning and isn't created if it contains no execution blocks</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a rule<div class="pre"><pre><code class="no-highlight">rule 'No execution blocks' do
+  on_start
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'has no execution blocks, not creating rule' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rule-logs-a-warning-and-isnt-created-if-it-contains-no-execution-blocks')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="library-version-should-be-logged-on-start">
+              <h2>Library version should be logged on start</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:</li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Scripting Library (Version' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('library-version-should-be-logged-on-start')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ruby-version-should-be-logged-on-start">
+              <h2>Ruby version should be logged on start</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:</li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log ' Ruby (Version' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ruby-version-should-be-logged-on-start')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="jruby-version-should-be-logged-on-start">
+              <h2>JRuby version should be logged on start</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:</li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'JRuby (Version' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('jruby-version-should-be-logged-on-start')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="ruby-description-should-be-logged-on-start">
+              <h2>Ruby description should be logged on start</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:</li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Ruby Description (' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('ruby-description-should-be-logged-on-start')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="library-waits-until-automation-manager-is-ready-before-processing-rules">
+              <h2>Library waits until automation manager is ready before processing rules</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:</li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'OpenHAB ready for rule processing' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('library-waits-until-automation-manager-is-ready-before-processing-rules')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="errors-in-blocks-are-logged-with-stack-trace-and-exits-rule">
+              <p class="tags">Tags: <span>@log_level_changed</span></p>
+              <h2>Errors in blocks are logged with stack trace and exits rule</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>log level INFO</li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">def test
+  test2
+end
+
+def test2
+  raise 'Something is wrong'
+end
+
+rule 'test' do
+  on_start
+  &lt;block&gt; { test }
+  delay 1.seconds
+  run { logger.info('This one works!') }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Something is wrong (RuntimeError)' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'In rule: test' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "in `test2'" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "in `test'" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "in `block in &lt;main&gt;'" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "in `&lt;main&gt;'" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">But </span>It should not log 'This one works!' within 10 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('errors-in-blocks-are-logged-with-stack-trace-and-exits-rule')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: Checks different block types</h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>block</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>run</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>only_if</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>not_if</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="native-java-exceptions-are-handled-during-rule-execution">
+              <p class="tags">Tags: <span>@log_level_changed</span></p>
+              <h2>Native java exceptions are handled during rule execution</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>log level INFO</li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">def test
+  Java::JavaLang::Integer.parseInt('k')
+end
+
+rule 'test' do
+  on_start
+  run { test }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'For input string: "k" (Java::JavaLang::NumberFormatException)' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'In rule: test' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "RUBY.test" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "RUBY.&lt;main&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('native-java-exceptions-are-handled-during-rule-execution')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="native-java-exceptions-are-handled-during-rule-creation">
+              <p class="tags">Tags: <span>@log_level_changed</span></p>
+              <h2>Native java exceptions are handled during rule creation</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>log level INFO</li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">def test
+  Java::JavaLang::Integer.parseInt('k')
+end
+
+rule 'test' do
+  test
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'For input string: "k" (Java::JavaLang::NumberFormatException)' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'In rule: test' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "RUBY.test" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "RUBY.&lt;main&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('native-java-exceptions-are-handled-during-rule-creation')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="openhab-config-directory-is-available">
+              <h2>OpenHAB config directory is available</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:<div class="pre"><pre><code class="no-highlight">  logger.info("Conf #{OpenHAB.conf_root}")
+  logger.info("Conf directory is #{OpenHAB.conf_root.each_filename.to_a.last(2).join('/')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Conf directory is openhab/conf' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('openhab-config-directory-is-available')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rule-method-returns-the-rule-object-with-rule-uid">
+              <h2>Rule method returns the rule object with Rule UID</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file:<div class="pre"><pre><code class="no-highlight">rule = rule 'test' do
+  on_start
+  run { logger.info('inside rule') }
+end
+logger.info "Rule UID: '#{rule.uid}'"</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log /Rule UID: '.+'/ within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rule-method-returns-the-rule-object-with-rule-uid')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="dsl-methods-dont-leak-into-other-objects">
+              <h2>DSL methods don't leak into other objects</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a raw rule:<div class="pre"><pre><code class="no-highlight">original_methods = Class.methods
+
+require 'openhab'
+
+leaked_methods = (Class.methods - original_methods).sort
+logger.info "Leaked methods: #{leaked_methods}"</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Leaked methods: []" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('dsl-methods-dont-leak-into-other-objects')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="check-constants-introduced-by-the-library">
+              <p class="tags">Tags: <span>@wip</span></p>
+              <h2>Check constants introduced by the library</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a raw rule:<div class="pre"><pre><code class="no-highlight">def all_constants
+  Object.ancestors.map(&amp;:constants).concat(Object.constants).flatten.uniq.sort
+end
+
+original_constants = all_constants
+
+require 'openhab'
+
+added_constants = (all_constants - original_constants).sort
+
+# added_constants.each {|s| logger.info "#{s} =&gt; #{Object.const_get(s).class.name}" }
+logger.info "Added constants: #{added_constants}"
+logger.info "OK"</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "OK" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('check-constants-introduced-by-the-library')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="footer">
+        <p>Generated on: 2 December 2022 01:55:39</p>
+        <p>Produced by Pickles, version 2.21.1.0</p>
+      </div>
+    </div>
+  </body>
+</html>

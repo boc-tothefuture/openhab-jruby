@@ -1,0 +1,1060 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"[]>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>received_command</title>
+    <link rel="stylesheet" href="css/master.css" type="text/css" />
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print" />
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/scripts.js" type="text/javascript"></script>
+    <script type="text/javascript">
+$(document).ready(function() {
+  initializeToc();
+});
+</script>
+    <!-- We are using Font Awesome - http://fortawesome.github.com/Font-Awesome - licensed under CC BY 3.0 -->
+  </head>
+  <body>
+    <div id="container">
+      <div id="top" />
+      <div id="toc">
+        <p class="tocCollapser" title="Collapse Table of Content">«</p>
+        <ul class="features">
+          <li class="file" id="root">
+            <a href="index.html">Home</a>
+          </li>
+          <li class="file">
+            <a href="attachments.html">attachments</a>
+          </li>
+          <li class="file">
+            <a href="between.html">between</a>
+          </li>
+          <li class="file">
+            <a href="changed_duration.html">changed_duration</a>
+          </li>
+          <li class="file">
+            <a href="channels.html">channels</a>
+          </li>
+          <li class="file">
+            <a href="color_item.html">color_item</a>
+          </li>
+          <li class="file">
+            <a href="comparisons.html">comparisons</a>
+          </li>
+          <li class="file">
+            <a href="contact_item.html">contact_item</a>
+          </li>
+          <li class="file">
+            <a href="cron.html">cron</a>
+          </li>
+          <li class="file">
+            <a href="date_time_item.html">date_time_item</a>
+          </li>
+          <li class="file">
+            <a href="decimal_type.html">decimal_type</a>
+          </li>
+          <li class="file">
+            <a href="delay.html">delay</a>
+          </li>
+          <li class="file">
+            <a href="dimmer_item.html">dimmer_item</a>
+          </li>
+          <li class="file">
+            <a href="ensure_states.html">ensure_states</a>
+          </li>
+          <li class="file">
+            <a href="every.html">every</a>
+          </li>
+          <li class="file">
+            <a href="gem.html">gem</a>
+          </li>
+          <li class="file">
+            <a href="gem_install.html">gem_install</a>
+          </li>
+          <li class="file">
+            <a href="generic_trigger.html">generic_trigger</a>
+          </li>
+          <li class="file">
+            <a href="groups.html">groups</a>
+          </li>
+          <li class="file">
+            <a href="hsb_type.html">hsb_type</a>
+          </li>
+          <li class="file">
+            <a href="image_item.html">image_item</a>
+          </li>
+          <li class="file">
+            <a href="increase_decrease_type.html">increase_decrease_type</a>
+          </li>
+          <li class="file">
+            <a href="item_timers.html">item_timers</a>
+          </li>
+          <li class="file">
+            <a href="items.html">items</a>
+          </li>
+          <li class="file">
+            <a href="location_item.html">location_item</a>
+          </li>
+          <li class="file">
+            <a href="logging.html">logging</a>
+          </li>
+          <li class="file">
+            <a href="metadata.html">metadata</a>
+          </li>
+          <li class="file">
+            <a href="metadata_hash.html">metadata_hash</a>
+          </li>
+          <li class="file">
+            <a href="month_day.html">month_day</a>
+          </li>
+          <li class="file">
+            <a href="next_previous_type.html">next_previous_type</a>
+          </li>
+          <li class="file">
+            <a href="number_item.html">number_item</a>
+          </li>
+          <li class="file">
+            <a href="on_off_type.html">on_off_type</a>
+          </li>
+          <li class="file">
+            <a href="open_closed_type.html">open_closed_type</a>
+          </li>
+          <li class="file">
+            <a href="percent_type.html">percent_type</a>
+          </li>
+          <li class="file">
+            <a href="play_pause_type.html">play_pause_type</a>
+          </li>
+          <li class="file">
+            <a href="quantity_type.html">quantity_type</a>
+          </li>
+          <li class="file">
+            <span class="current">received_command</span>
+          </li>
+          <li class="file">
+            <a href="refresh_type.html">refresh_type</a>
+          </li>
+          <li class="file">
+            <a href="rewind_fastforward_type.html">rewind_fastforward_type</a>
+          </li>
+          <li class="file">
+            <a href="ruby.html">ruby</a>
+          </li>
+          <li class="file">
+            <a href="rule_language.html">rule_language</a>
+          </li>
+          <li class="file">
+            <a href="run.html">run</a>
+          </li>
+          <li class="file">
+            <a href="script_handling.html">script_handling</a>
+          </li>
+          <li class="file">
+            <a href="semantics.html">semantics</a>
+          </li>
+          <li class="file">
+            <a href="shared_code.html">shared_code</a>
+          </li>
+          <li class="file">
+            <a href="states.html">states</a>
+          </li>
+          <li class="file">
+            <a href="stop_move_type.html">stop_move_type</a>
+          </li>
+          <li class="file">
+            <a href="string_item.html">string_item</a>
+          </li>
+          <li class="file">
+            <a href="string_type.html">string_type</a>
+          </li>
+          <li class="file">
+            <a href="switch_item.html">switch_item</a>
+          </li>
+          <li class="file">
+            <a href="thing.html">thing</a>
+          </li>
+          <li class="file">
+            <a href="time.html">time</a>
+          </li>
+          <li class="file">
+            <a href="time_of_day.html">time_of_day</a>
+          </li>
+          <li class="file">
+            <a href="transformation.html">transformation</a>
+          </li>
+          <li class="file">
+            <a href="triggered.html">triggered</a>
+          </li>
+          <li class="file">
+            <a href="units_of_measurement.html">units_of_measurement</a>
+          </li>
+          <li class="file">
+            <a href="up_down_type.html">up_down_type</a>
+          </li>
+          <li class="file">
+            <a href="updated.html">updated</a>
+          </li>
+          <li class="file">
+            <a href="watch.html">watch</a>
+          </li>
+          <li>
+            <div class="directory">
+              <a href="assets/index.html">assets</a>
+            </div>
+            <ul class="features" />
+          </li>
+        </ul>
+      </div>
+      <div id="feature">
+        <h1>received_command</h1>
+        <div class="description">
+          <p>Rule languages supports item received command trigger</p>
+        </div>
+        <ul id="scenarios">
+          <li class="scenario">
+            <div class="scenario-heading">
+              <h2></h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>Clean OpenHAB with latest Ruby Libraries</li>
+                <li class="step">
+                  <span class="keyword">And </span>group "AlarmModes"</li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>group</th><th>state</th></tr></thead><tbody><tr><td>Number</td><td>Alarm_Mode</td><td>AlarmModes</td><td>7</td></tr><tr><td>Number</td><td>Alarm_Mode_Other</td><td>AlarmModes</td><td>7</td></tr></tbody></table></div></li>
+              </ul>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rule-supports-receivedcommand">
+              <h2>Rule supports received_command</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule when item received command' do
+  received_command Alarm_Mode
+  run { |event| logger.info("Item received command: #{event.command}" ) }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "Alarm_Mode" state is changed to "7"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Item received command: 7' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rule-supports-receivedcommand')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rule-supports-helper-predicates-for-named-commands">
+              <h2>Rule supports helper predicates for named commands</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>&lt;item_type&gt;</td><td>TestItem</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule when item received command' do
+  received_command TestItem
+  run do |event|
+    predicates = %i[refresh? on? off? increase? decrease? up? down? stop? move? play? pause? rewind? fast_forward? next? previous?]
+
+    predicate_to_command_map = predicates.map {|pred| [pred, pred[0..-2].upcase] }.to_h.merge(fast_forward?: 'FASTFORWARD')
+
+    command = "&lt;command&gt;"
+    predicate = predicate_to_command_map.key(command)
+
+    logger.info("Item received &lt;command&gt;: #{event.send(predicate)}")
+
+    other_results = predicates.grep_v(predicate).select { |other_pred| event.send(other_pred) }
+    logger.info("Other predicates matched: #{other_results.any?} #{other_results}")
+  end
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "TestItem" state is changed to "&lt;command&gt;"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Item received &lt;command&gt;: true' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'Other predicates matched: false' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rule-supports-helper-predicates-for-named-commands')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>item_type</th>
+                        <th>command</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Switch</td>
+                        <td>REFRESH</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Switch</td>
+                        <td>ON</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Switch</td>
+                        <td>OFF</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Dimmer</td>
+                        <td>INCREASE</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Dimmer</td>
+                        <td>DECREASE</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Rollershutter</td>
+                        <td>UP</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Rollershutter</td>
+                        <td>DOWN</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Rollershutter</td>
+                        <td>STOP</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Rollershutter</td>
+                        <td>MOVE</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Player</td>
+                        <td>PLAY</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Player</td>
+                        <td>PAUSE</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Player</td>
+                        <td>REWIND</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Player</td>
+                        <td>FASTFORWARD</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Player</td>
+                        <td>NEXT</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Player</td>
+                        <td>PREVIOUS</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rule-supports-receivedcommand-with-specific-values">
+              <h2>Rule supports received_command with specific values</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule when item receives specific command' do
+  received_command Alarm_Mode, command: 7
+  run { |event| logger.info("Item received command: #{event.command}" ) }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "Alarm_Mode" state is changed to "&lt;state&gt;"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It &lt;log&gt; log 'Item received command: &lt;state&gt;' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rule-supports-receivedcommand-with-specific-values')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>state</th>
+                        <th>log</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>7</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>14</td>
+                        <td>should not</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rule-supports-receivedcommand-to-one-of-many-matching-values">
+              <h2>Rule supports received_command to one of many matching values</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule when item receives one of many specific commands' do
+  received_command Alarm_Mode, commands: [7,14]
+  run { |event| logger.info("Item received command: #{event.command}" ) }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "Alarm_Mode" state is changed to "&lt;state&gt;"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It &lt;log&gt; log 'Item received command: &lt;state&gt;' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rule-supports-receivedcommand-to-one-of-many-matching-values')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>state</th>
+                        <th>log</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>7</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>14</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>10</td>
+                        <td>should not</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rules-support-group-receives-command">
+              <h2>Rules support group receives command</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule when group receives a specific command' do
+  received_command AlarmModes
+  triggered { |item| logger.info("Group #{item.id} received command")}
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "AlarmModes" state is changed to "7"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Group AlarmModes received command' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rules-support-group-receives-command')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rules-support-group-members-received-command">
+              <h2>Rules support group members received command</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule when member of group receives any command' do
+  received_command AlarmModes.members
+  triggered { |item| logger.info("Group item #{item.id} received command")}
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "AlarmModes" state is changed to "7"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Group item Alarm_Mode received command' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rules-support-group-members-received-command')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="rules-support-group-members-received-command-for-specific-commands">
+              <h2>Rules support group members received command for specific commands</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule when member of group is changed to one of many states' do
+  received_command AlarmModes.members, commands: [7,14]
+  triggered { |item| logger.info("Group item #{item.id} received command")}
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "AlarmModes" state is changed to "&lt;state&gt;"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It &lt;log&gt; log 'Group item Alarm_Mode received command' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('rules-support-group-members-received-command-for-specific-commands')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>state</th>
+                        <th>log</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>7</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>14</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>10</td>
+                        <td>should not</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="eventcommand-for-color-item-can-be-compared-to-accepted-command-types">
+              <h2>event.command for Color item can be compared to accepted command types</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>Color</td><td>Item1</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule<div class="pre"><pre><code class="no-highlight">hsb000 = HSBType.new(0,0,0) # Doing this because https://github.com/boc-tothefuture/openhab-jruby/issues/348
+rule 'handle command' do
+  received_command Item1
+  run do |event|
+    logger.info("We sent a command &lt;command&gt;")
+    logger.info("event.command.class: #{event.command.class}")
+    log = case event.command
+          when &lt;cond1&gt; then 'cond1'
+          when &lt;cond2&gt; then 'cond2'
+          when &lt;cond3&gt; then 'cond3'
+          else 'cond-else'
+          end
+    logger.info("case match: #{log}")
+  end
+end
+
+Item1 &lt;&lt; &lt;command&gt;</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'case match: &lt;log&gt;' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('eventcommand-for-color-item-can-be-compared-to-accepted-command-types')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>command</th>
+                        <th>cond1</th>
+                        <th>cond2</th>
+                        <th>cond3</th>
+                        <th>log</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>ON</td>
+                        <td>ON</td>
+                        <td>1..100</td>
+                        <td>INCREASE</td>
+                        <td>cond1</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>ON</td>
+                        <td>0..99,100</td>
+                        <td>OFF</td>
+                        <td>ON</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>OFF</td>
+                        <td>OFF</td>
+                        <td>INCREASE,DECREASE</td>
+                        <td>0</td>
+                        <td>cond1</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>OFF</td>
+                        <td>1..100</td>
+                        <td>0</td>
+                        <td>OFF</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>INCREASE</td>
+                        <td>ON,DECREASE</td>
+                        <td>0..100</td>
+                        <td>INCREASE</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>DECREASE</td>
+                        <td>OFF</td>
+                        <td>0,INCREASE</td>
+                        <td>DECREASE</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>OFF</td>
+                        <td>DECREASE</td>
+                        <td>0</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>ON</td>
+                        <td>DECREASE</td>
+                        <td>0..50</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>50</td>
+                        <td>ON</td>
+                        <td>INCREASE</td>
+                        <td>50</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>ON</td>
+                        <td>0..99</td>
+                        <td>100</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>'0,0,0'</td>
+                        <td>'1,2,3'</td>
+                        <td>ON,OFF,DECREASE,INCREASE</td>
+                        <td>hsb000</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="eventcommand-for-player-item-can-be-compared-to-accepted-command-types">
+              <h2>event.command for Player item can be compared to accepted command types</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>Player</td><td>Item1</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule<div class="pre"><pre><code class="no-highlight">rule 'handle command' do
+  received_command Item1
+  run do |event|
+    logger.info('We sent a command &lt;command&gt;')
+    logger.info("event.command.class: #{event.command.class}")
+    log = case event.command
+          when &lt;cond1&gt; then 'cond1'
+          when &lt;cond2&gt; then 'cond2'
+          when &lt;cond3&gt; then 'cond3'
+          else 'cond-else'
+          end
+    logger.info("case match: #{log}")
+  end
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">And </span>item "Item1" state is changed to "&lt;command&gt;"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'case match: &lt;log&gt;' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('eventcommand-for-player-item-can-be-compared-to-accepted-command-types')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>command</th>
+                        <th>cond1</th>
+                        <th>cond2</th>
+                        <th>cond3</th>
+                        <th>log</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAY</td>
+                        <td>PLAY</td>
+                        <td>1..100</td>
+                        <td>ON</td>
+                        <td>cond1</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>PLAY</td>
+                        <td>PAUSE</td>
+                        <td>NEXT,PREVIOUS,REWIND,FASTFORWARD</td>
+                        <td>PLAY</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="eventcommand-for-rollershutter-item-can-be-compared-to-accepted-command-types">
+              <h2>event.command for Rollershutter item can be compared to accepted command types</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>Rollershutter</td><td>Item1</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule<div class="pre"><pre><code class="no-highlight">rule 'handle command' do
+  received_command Item1
+  run do |event|
+    logger.info('We sent a command &lt;command&gt;')
+    logger.info("event.command.class: #{event.command.class}")
+    log = case event.command
+          when &lt;cond1&gt; then 'cond1'
+          when &lt;cond2&gt; then 'cond2'
+          when &lt;cond3&gt; then 'cond3'
+          else 'cond-else'
+          end
+    logger.info("case match: #{log}")
+  end
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">And </span>item "Item1" state is changed to "&lt;command&gt;"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'case match: &lt;log&gt;' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('eventcommand-for-rollershutter-item-can-be-compared-to-accepted-command-types')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>command</th>
+                        <th>cond1</th>
+                        <th>cond2</th>
+                        <th>cond3</th>
+                        <th>log</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>UP</td>
+                        <td>0</td>
+                        <td>1..100</td>
+                        <td>DOWN,UP</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>UP</td>
+                        <td>100</td>
+                        <td>STOP,MOVE,'UP'</td>
+                        <td>UP</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>DOWN</td>
+                        <td>UP</td>
+                        <td>0..100</td>
+                        <td>DOWN</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>DOWN</td>
+                        <td>0..100</td>
+                        <td>INCREASE,DECREASE,PLAY,PAUSE</td>
+                        <td>UP</td>
+                        <td>cond-else</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>STOP</td>
+                        <td>STOP</td>
+                        <td>MOVE</td>
+                        <td>0</td>
+                        <td>cond1</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>MOVE</td>
+                        <td>STOP</td>
+                        <td>UP,DOWN</td>
+                        <td>MOVE</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>0</td>
+                        <td>STOP,MOVE</td>
+                        <td>UP,DOWN</td>
+                        <td>0</td>
+                        <td>cond3</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>100</td>
+                        <td>STOP,MOVE</td>
+                        <td>100</td>
+                        <td>UP</td>
+                        <td>cond2</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="received-command-support-ranges">
+              <h2>received command support ranges</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>Number</td><td>Alarm_Mode</td><td>&lt;initial&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule with range conditions' do
+  received_command Alarm_Mode, &lt;conditions&gt;
+  run { |event| logger.info("Alarm Mode: Received command #{event.command}") }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "Alarm_Mode" state is changed to "&lt;change&gt;"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It &lt;should&gt; log 'Alarm Mode: Received command &lt;change&gt;' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('received-command-support-ranges')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: With range</h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial</th>
+                        <th>conditions</th>
+                        <th>change</th>
+                        <th>should</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>4</td>
+                        <td>commands:  8..10</td>
+                        <td>9</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>11</td>
+                        <td>commands: 4..12</td>
+                        <td>14</td>
+                        <td>should not</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="received-command-supports-procs">
+              <h2>Received command supports procs</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>Number</td><td>Alarm_Mode</td><td>&lt;initial&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Execute rule with proc conditions' do
+  received_command Alarm_Mode, &lt;conditions&gt;
+  run { |event| logger.info("Alarm Mode: Received command #{event.command}") }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "Alarm_Mode" state is changed to "&lt;change&gt;"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It &lt;should&gt; log 'Alarm Mode: Received command &lt;change&gt;' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('received-command-supports-procs')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: With lambda</h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial</th>
+                        <th>conditions</th>
+                        <th>change</th>
+                        <th>should</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>4</td>
+                        <td>command: -&gt;t { (8..10).include? t }</td>
+                        <td>9</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>11</td>
+                        <td>command: -&gt;t { (4..12).include? t }</td>
+                        <td>14</td>
+                        <td>should not</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="examples">
+                <h3>Examples: With proc</h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>initial</th>
+                        <th>conditions</th>
+                        <th>change</th>
+                        <th>should</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>4</td>
+                        <td>command: proc { |t|(8..10).include? t }</td>
+                        <td>9</td>
+                        <td>should</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>11</td>
+                        <td>command: proc { |t|(4..12).include? t }</td>
+                        <td>14</td>
+                        <td>should not</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div id="footer">
+        <p>Generated on: 2 December 2022 01:55:39</p>
+        <p>Produced by Pickles, version 2.21.1.0</p>
+      </div>
+    </div>
+  </body>
+</html>

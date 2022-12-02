@@ -1,0 +1,1052 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"[]>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>items</title>
+    <link rel="stylesheet" href="css/master.css" type="text/css" />
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print" />
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/scripts.js" type="text/javascript"></script>
+    <script type="text/javascript">
+$(document).ready(function() {
+  initializeToc();
+});
+</script>
+    <!-- We are using Font Awesome - http://fortawesome.github.com/Font-Awesome - licensed under CC BY 3.0 -->
+  </head>
+  <body>
+    <div id="container">
+      <div id="top" />
+      <div id="toc">
+        <p class="tocCollapser" title="Collapse Table of Content">«</p>
+        <ul class="features">
+          <li class="file" id="root">
+            <a href="index.html">Home</a>
+          </li>
+          <li class="file">
+            <a href="attachments.html">attachments</a>
+          </li>
+          <li class="file">
+            <a href="between.html">between</a>
+          </li>
+          <li class="file">
+            <a href="changed_duration.html">changed_duration</a>
+          </li>
+          <li class="file">
+            <a href="channels.html">channels</a>
+          </li>
+          <li class="file">
+            <a href="color_item.html">color_item</a>
+          </li>
+          <li class="file">
+            <a href="comparisons.html">comparisons</a>
+          </li>
+          <li class="file">
+            <a href="contact_item.html">contact_item</a>
+          </li>
+          <li class="file">
+            <a href="cron.html">cron</a>
+          </li>
+          <li class="file">
+            <a href="date_time_item.html">date_time_item</a>
+          </li>
+          <li class="file">
+            <a href="decimal_type.html">decimal_type</a>
+          </li>
+          <li class="file">
+            <a href="delay.html">delay</a>
+          </li>
+          <li class="file">
+            <a href="dimmer_item.html">dimmer_item</a>
+          </li>
+          <li class="file">
+            <a href="ensure_states.html">ensure_states</a>
+          </li>
+          <li class="file">
+            <a href="every.html">every</a>
+          </li>
+          <li class="file">
+            <a href="gem.html">gem</a>
+          </li>
+          <li class="file">
+            <a href="gem_install.html">gem_install</a>
+          </li>
+          <li class="file">
+            <a href="generic_trigger.html">generic_trigger</a>
+          </li>
+          <li class="file">
+            <a href="groups.html">groups</a>
+          </li>
+          <li class="file">
+            <a href="hsb_type.html">hsb_type</a>
+          </li>
+          <li class="file">
+            <a href="image_item.html">image_item</a>
+          </li>
+          <li class="file">
+            <a href="increase_decrease_type.html">increase_decrease_type</a>
+          </li>
+          <li class="file">
+            <a href="item_timers.html">item_timers</a>
+          </li>
+          <li class="file">
+            <span class="current">items</span>
+          </li>
+          <li class="file">
+            <a href="location_item.html">location_item</a>
+          </li>
+          <li class="file">
+            <a href="logging.html">logging</a>
+          </li>
+          <li class="file">
+            <a href="metadata.html">metadata</a>
+          </li>
+          <li class="file">
+            <a href="metadata_hash.html">metadata_hash</a>
+          </li>
+          <li class="file">
+            <a href="month_day.html">month_day</a>
+          </li>
+          <li class="file">
+            <a href="next_previous_type.html">next_previous_type</a>
+          </li>
+          <li class="file">
+            <a href="number_item.html">number_item</a>
+          </li>
+          <li class="file">
+            <a href="on_off_type.html">on_off_type</a>
+          </li>
+          <li class="file">
+            <a href="open_closed_type.html">open_closed_type</a>
+          </li>
+          <li class="file">
+            <a href="percent_type.html">percent_type</a>
+          </li>
+          <li class="file">
+            <a href="play_pause_type.html">play_pause_type</a>
+          </li>
+          <li class="file">
+            <a href="quantity_type.html">quantity_type</a>
+          </li>
+          <li class="file">
+            <a href="received_command.html">received_command</a>
+          </li>
+          <li class="file">
+            <a href="refresh_type.html">refresh_type</a>
+          </li>
+          <li class="file">
+            <a href="rewind_fastforward_type.html">rewind_fastforward_type</a>
+          </li>
+          <li class="file">
+            <a href="ruby.html">ruby</a>
+          </li>
+          <li class="file">
+            <a href="rule_language.html">rule_language</a>
+          </li>
+          <li class="file">
+            <a href="run.html">run</a>
+          </li>
+          <li class="file">
+            <a href="script_handling.html">script_handling</a>
+          </li>
+          <li class="file">
+            <a href="semantics.html">semantics</a>
+          </li>
+          <li class="file">
+            <a href="shared_code.html">shared_code</a>
+          </li>
+          <li class="file">
+            <a href="states.html">states</a>
+          </li>
+          <li class="file">
+            <a href="stop_move_type.html">stop_move_type</a>
+          </li>
+          <li class="file">
+            <a href="string_item.html">string_item</a>
+          </li>
+          <li class="file">
+            <a href="string_type.html">string_type</a>
+          </li>
+          <li class="file">
+            <a href="switch_item.html">switch_item</a>
+          </li>
+          <li class="file">
+            <a href="thing.html">thing</a>
+          </li>
+          <li class="file">
+            <a href="time.html">time</a>
+          </li>
+          <li class="file">
+            <a href="time_of_day.html">time_of_day</a>
+          </li>
+          <li class="file">
+            <a href="transformation.html">transformation</a>
+          </li>
+          <li class="file">
+            <a href="triggered.html">triggered</a>
+          </li>
+          <li class="file">
+            <a href="units_of_measurement.html">units_of_measurement</a>
+          </li>
+          <li class="file">
+            <a href="up_down_type.html">up_down_type</a>
+          </li>
+          <li class="file">
+            <a href="updated.html">updated</a>
+          </li>
+          <li class="file">
+            <a href="watch.html">watch</a>
+          </li>
+          <li>
+            <div class="directory">
+              <a href="assets/index.html">assets</a>
+            </div>
+            <ul class="features" />
+          </li>
+        </ul>
+      </div>
+      <div id="feature">
+        <h1>items</h1>
+        <div class="description">
+          <p>Rule languages supports items</p>
+        </div>
+        <ul id="scenarios">
+          <li class="scenario">
+            <div class="scenario-heading">
+              <h2></h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>Clean OpenHAB with latest Ruby Libraries</li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th><th>state</th></tr></thead><tbody><tr><td>Dimmer</td><td>DimmerTest</td><td>Test Dimmer</td><td>45</td></tr><tr><td>Switch</td><td>SwitchTest</td><td>Test Switch</td><td>OFF</td></tr><tr><td>Switch</td><td>SwitchTwo</td><td>Test Switch Two</td><td>OFF</td></tr></tbody></table></div></li>
+              </ul>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="can-access-items-as-an-enumerablearray">
+              <h2>Can access items as an enumerable/array</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Item Count: #{items.count}")
+logger.info("Items: #{items.sort_by(&amp;:label).map(&amp;:label).join(', ')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Item Count: 3' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'Items: Test Dimmer, Test Switch' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('can-access-items-as-an-enumerablearray')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="fetch-item-by-name">
+              <h2>Fetch Item by name</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Dimmer Name: #{items['DimmerTest'].name}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Dimmer Name: DimmerTest' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('fetch-item-by-name')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="dynamically-adjust-dimmer-when-corresponding-switch-is-turned-on">
+              <h2>Dynamically adjust dimmer when corresponding switch is turned on</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Increase Related Dimmer Brightness when Switch is turned on' do
+  changed SwitchTest, to: ON
+  triggered { |item| items[item.name.gsub('Switch','Dimmer')].brighten(10) }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "SwitchTest" state is changed to "ON"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>"DimmerTest" should be in state "55" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('dynamically-adjust-dimmer-when-corresponding-switch-is-turned-on')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="send-command-to-an-item">
+              <h2>Send command to an item</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Increase Related Dimmer Brightness when Switch is turned on' do
+  changed SwitchTest, to: ON
+  run { SwitchTwo &lt;&lt; ON }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item "SwitchTest" state is changed to "ON"</li>
+                <li class="step">
+                  <span class="keyword">Then </span>"SwitchTwo" should be in state "ON" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('send-command-to-an-item')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="id-returns-label-if-set-or-name-if-not">
+              <h2>id returns label if set or name if not</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th></tr></thead><tbody><tr><td>Dimmer</td><td>DimmerOne</td><td>Test Dimmer</td></tr><tr><td>Dimmer</td><td>DimmerTwo</td><td></td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info "Dimmer One: #{DimmerOne.id}"
+logger.info "Dimmer Two: #{DimmerTwo.id}"</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Dimmer One: Test Dimmer' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'Dimmer Two: DimmerTwo' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('id-returns-label-if-set-or-name-if-not')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="undef-returns-true-if-item-is-in-state-undef">
+              <h2>undef? returns true if item is in state UNDEF</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">SwitchTest.setState(UNDEF)
+logger.info("SwitchTest is UNDEF") if SwitchTest.undef?</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'SwitchTest is UNDEF' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('undef-returns-true-if-item-is-in-state-undef')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="null-returns-true-if-item-is-in-state-null">
+              <h2>null? returns true if item is in state NULL</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">SwitchTest.setState(NULL)
+logger.info("SwitchTest is NULL") if SwitchTest.null?</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'SwitchTest is NULL' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('null-returns-true-if-item-is-in-state-null')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="state-returns-true-if-item-is-not-in-state-null-or-undef">
+              <h2>state? returns true if item is not in state NULL or UNDEF</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">SwitchTest.setState(NULL)
+DimmerTest.setState(UNDEF)
+[SwitchTest, DimmerTest, SwitchTwo].each do |item|
+  logger.info("#{item.name} has a state") if item.state?
+  logger.info("#{item.name} does not have a state") unless item.state?
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'SwitchTwo has a state' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'SwitchTest does not have a state' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'DimmerTest does not have a state' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('state-returns-true-if-item-is-not-in-state-null-or-undef')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="state-returns-nil-if-item-is-in-state-null-or-undef">
+              <h2>state returns nil if item is in state NULL or UNDEF</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">SwitchTest.setState(NULL)
+DimmerTest.setState(UNDEF)
+[SwitchTest, DimmerTest, SwitchTwo].each do |item|
+  logger.info("#{item.name} has a state") unless item.state.nil?
+  logger.info("#{item.name} does not have a state") if item.state.nil?
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'SwitchTwo has a state' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'SwitchTest does not have a state' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'DimmerTest does not have a state' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('state-returns-nil-if-item-is-in-state-null-or-undef')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="item-returns-string-representation-of-state-value-for-tos">
+              <h2>Item returns string representation of state value for to_s</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>&lt;type&gt;</td><td>Test</td><td>&lt;state&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Item: #{Test}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'Item: &lt;state&gt;' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('item-returns-string-representation-of-state-value-for-tos')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>type</th>
+                        <th>state</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>String</td>
+                        <td>"Hello, World"</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Switch</td>
+                        <td>ON</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Dimmer</td>
+                        <td>50</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Contact</td>
+                        <td>OPEN</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Number</td>
+                        <td>90.6</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Number</td>
+                        <td>NULL</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Number</td>
+                        <td>UNDEF</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="items-in-array-work-with-array-methods">
+              <h2>Items in array work with array methods</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>Number</td><td>Livingroom_Temp</td><td>70</td></tr><tr><td>Number</td><td>Bedroom_Temp</td><td>50</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">number_items = [Livingroom_Temp, Bedroom_Temp]
+logger.info("Max is #{number_items.max}")
+logger.info("Min is #{number_items.min}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Max is 70" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "Min is 50" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('items-in-array-work-with-array-methods')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="send-update-to-an-item">
+              <h2>Send update to an item</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a deployed rule:<div class="pre"><pre><code class="no-highlight">rule 'Item Updated' do
+  updated SwitchTest, to: OFF
+  run { logger.info("SwitchTest Received Update") }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">SwitchTest.update OFF</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "SwitchTest Received Update" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('send-update-to-an-item')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="check-for-item-existence">
+              <h2>Check for item existence</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("DimmerTest include? #{items.include? 'DimmerTest'}")
+logger.info("SimmerTest include? #{items.include? 'SimmerTest'}")
+logger.info("SimmerTest item nil? #{items['SimmerTest'].nil?}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log 'DimmerTest include? true' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'SimmerTest include? false' within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log 'SimmerTest item nil? true' within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('check-for-item-existence')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="verify-class-of-item">
+              <h2>Verify class of item</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>Number</td><td>Number1</td><td>1</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Number1 class is a NumberItem? #{Number1.class == OpenHAB::DSL::Items::NumberItem}")
+logger.info("items['Number1'] class is a NumberItem? #{items['Number1'].class == OpenHAB::DSL::Items::NumberItem}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Number1 class is a NumberItem? true" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "items['Number1'] class is a NumberItem? true" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('verify-class-of-item')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="verify-items-can-access-groups">
+              <h2>Verify items can access groups</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>groups:<div class="table_container"><table class="datatable"><thead><tr><th>name</th></tr></thead><tbody><tr><td>Numbers</td></tr><tr><td>EvenNumbers</td></tr><tr><td>PrimeNumbers</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>groups</th></tr></thead><tbody><tr><td>Number</td><td>Number3</td><td>Numbers, PrimeNumbers</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Number3 is in groups #{Number3.groups.map(&amp;:name).join(', ')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Number3 is in groups Numbers, PrimeNumbers" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('verify-items-can-access-groups')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="dangling-group-references-are-ignored">
+              <h2>Dangling group references are ignored</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>groups:<div class="table_container"><table class="datatable"><thead><tr><th>name</th></tr></thead><tbody><tr><td>Numbers</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>groups</th></tr></thead><tbody><tr><td>Number</td><td>Number3</td><td>Numbers, PrimeNumbers</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Number3 is in groups #{Number3.groups.map(&amp;:name).join(', ')}$")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Number3 is in groups Numbers$" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('dangling-group-references-are-ignored')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="items-can-be-used-as-hash-keys">
+              <h2>Items can be used as hash keys</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="comment"># Ref: https://github.com/boc-tothefuture/openhab-jruby/issues/252</span>
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>&lt;type&gt;</td><td>&lt;name&gt;</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">ITEMS_HASH = { &lt;name&gt; =&gt; "I'm &lt;name&gt;" }
+logger.info("#{ITEMS_HASH[&lt;name&gt;]}")
+logger.info("&lt;name&gt;.hash == &lt;name&gt;.hash: #{&lt;name&gt;.hash == &lt;name&gt;.hash}")
+logger.info("&lt;name&gt;.eql?(&lt;name&gt;): #{&lt;name&gt;.eql?(&lt;name&gt;)}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "I'm &lt;name&gt;" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "&lt;name&gt;.hash == &lt;name&gt;.hash: true" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "&lt;name&gt;.eql?(&lt;name&gt;): true" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('items-can-be-used-as-hash-keys')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: </h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>type</th>
+                        <th>name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Number</td>
+                        <td>Number1</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>String</td>
+                        <td>String1</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>Player</td>
+                        <td>Player1</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="item-returns-nil-for-an-unlinked-item">
+              <h2>Item returns nil for an unlinked item</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>Number</td><td>Number1</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("No thing: #{Number1.thing.nil?}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "No thing: true" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('item-returns-nil-for-an-unlinked-item')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="item-returns-its-linked-thing">
+              <h2>Item returns its linked thing</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>feature 'openhab-binding-astro' installed</li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>String</td><td>PhaseName</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>things:<div class="table_container"><table class="datatable"><thead><tr><th>id</th><th>thing_uid</th><th>label</th><th>config</th><th>status</th></tr></thead><tbody><tr><td>home</td><td>astro:sun</td><td>Astro Sun Data</td><td>{"geolocation":"0,0"}</td><td>enable</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>linked:<div class="table_container"><table class="datatable"><thead><tr><th>item</th><th>channel</th></tr></thead><tbody><tr><td>PhaseName</td><td>astro:sun:home:phase#name</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Thing: #{PhaseName.thing.uid}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Thing: astro:sun:home" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('item-returns-its-linked-thing')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="item-returns-all-its-linked-things">
+              <h2>Item returns all its linked things</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>feature 'openhab-binding-astro' installed</li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th></tr></thead><tbody><tr><td>String</td><td>TooManyThings</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>things:<div class="table_container"><table class="datatable"><thead><tr><th>id</th><th>thing_uid</th><th>label</th><th>config</th><th>status</th></tr></thead><tbody><tr><td>home</td><td>astro:sun</td><td>Astro Sun Data</td><td>{"geolocation":"0,0"}</td><td>enable</td></tr><tr><td>home</td><td>astro:moon</td><td>Astro Moon Data</td><td>{"geolocation":"0,0"}</td><td>enable</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>linked:<div class="table_container"><table class="datatable"><thead><tr><th>item</th><th>channel</th></tr></thead><tbody><tr><td>TooManyThings</td><td>astro:sun:home:phase#name</td></tr><tr><td>TooManyThings</td><td>astro:moon:home:phase#name</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>code in a rules file<div class="pre"><pre><code class="no-highlight">logger.info("Thing: #{TooManyThings.things.map(&amp;:uid).map(&amp;:to_s).sort.join(',')}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rules file</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Thing: astro:moon:home,astro:sun:home" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('item-returns-all-its-linked-things')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="referenced-items-always-access-latest-item-instance">
+              <h2>Referenced items always access latest item instance</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th></tr></thead><tbody><tr><td>String</td><td>FooString</td><td>foo</td></tr><tr><td>Switch</td><td>MySwitch</td><td>switch</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule:<div class="pre"><pre><code class="no-highlight">h = { foo: FooString }
+rule 'check reference' do
+  on_start
+  changed MySwitch
+  run { logger.info("Label: #{h[:foo].label}") }
+end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Label: foo" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">But </span>If items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>label</th></tr></thead><tbody><tr><td>String</td><td>FooString</td><td>bar</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>item 'MySwitch' state is changed to 'ON'</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Label: bar" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('referenced-items-always-access-latest-item-instance')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="item-objects-can-be-compared-in-a-case-statement">
+              <h2>Item objects can be compared in a case statement</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a rule:<div class="pre"><pre><code class="no-highlight">logger.info case SwitchTwo.item
+            when DimmerTest then 'Matched DimmerTest'
+            when SwitchTest then 'Matched SwitchTest'
+            when SwitchTwo then 'Matched SwitchTwo'
+            end</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item 'DimmerTest' state is changed to '0'</li>
+                <li class="step">
+                  <span class="keyword">And </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "Matched SwitchTwo" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('item-objects-can-be-compared-in-a-case-statement')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="items-matches-arrayinclude">
+              <h2>Items matches array#include?</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a rule:<div class="pre"><pre><code class="no-highlight">logger.info("SwitchTwo in array? #{[DimmerTest, SwitchTwo].include?(SwitchTwo.item)}")
+logger.info("DimmerTest in array? #{[SwitchTwo, SwitchTest].include?(DimmerTest.item)}")
+logger.info("SwitchTest in array? #{[DimmerTest, SwitchTwo].include?(SwitchTest.item)}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item 'DimmerTest' state is changed to '0'</li>
+                <li class="step">
+                  <span class="keyword">And </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "SwitchTwo in array? true" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "DimmerTest in array? false" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "SwitchTest in array? false" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('items-matches-arrayinclude')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="items-matches-hashkey">
+              <h2>Items matches hash#key?</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a rule:<div class="pre"><pre><code class="no-highlight">logger.info("SwitchTwo in hash? #{{DimmerTest =&gt; true, SwitchTwo =&gt; true}.key?(SwitchTwo)}")
+logger.info("SwitchTwo.item in hash? #{{DimmerTest =&gt; true, SwitchTwo =&gt; true}.key?(SwitchTwo.item)}")
+logger.info("DimmerTest in hash? #{{SwitchTwo =&gt; true, SwitchTest =&gt; true}.key?(DimmerTest)}")
+logger.info("SwitchTest in hash? #{{DimmerTest =&gt; true, SwitchTwo =&gt; true}.key?(SwitchTest)}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item 'DimmerTest' state is changed to '0'</li>
+                <li class="step">
+                  <span class="keyword">And </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "SwitchTwo in hash? true" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "SwitchTwo.item in hash? true" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "DimmerTest in hash? false" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "SwitchTest in hash? false" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('items-matches-hashkey')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="items-matches-hashvalue">
+              <h2>Items matches hash#value?</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>a rule:<div class="pre"><pre><code class="no-highlight">logger.info("SwitchTwo in value? #{{a: DimmerTest, b: SwitchTwo}.value?(SwitchTwo.item)}")
+logger.info("DimmerTest in value? #{{a: SwitchTwo, b: SwitchTest}.value?(DimmerTest.item)}")
+logger.info("SwitchTest in value? #{{a: DimmerTest, b: SwitchTwo}.value?(SwitchTest.item)}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>item 'DimmerTest' state is changed to '0'</li>
+                <li class="step">
+                  <span class="keyword">And </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "SwitchTwo in value? true" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "DimmerTest in value? false" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "SwitchTest in value? false" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('items-matches-hashvalue')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="direct-comparison-of-items">
+              <h2>Direct comparison of Items</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>state</th></tr></thead><tbody><tr><td>String</td><td>NonNullStringItem1</td><td>hi</td></tr><tr><td>String</td><td>NullStringItem1</td><td>NULL</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule:<div class="pre"><pre><code class="no-highlight">logger.info("&lt;left&gt; == &lt;right&gt;: #{&lt;left&gt; == &lt;right&gt;}")</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "&lt;left&gt; == &lt;right&gt;: &lt;result&gt;" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('direct-comparison-of-items')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+            <div>
+              <div class="examples">
+                <h3>Examples: State comparisons</h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>left</th>
+                        <th>right</th>
+                        <th>result</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>SwitchTwo</td>
+                        <td>SwitchTest</td>
+                        <td>true</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="examples">
+                <h3>Examples: Different item objects comparisons</h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>left</th>
+                        <th>right</th>
+                        <th>result</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>SwitchTwo.item</td>
+                        <td>SwitchTest.item</td>
+                        <td>false</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>SwitchTwo.item</td>
+                        <td>SwitchTest</td>
+                        <td>false</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>NonNullStringItem1</td>
+                        <td>NullStringItem1.item</td>
+                        <td>false</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="examples">
+                <h3>Examples: Same item object comparisons</h3>
+                <div class="table_container">
+                  <table class="datatable">
+                    <thead>
+                      <tr>
+                        <th>left</th>
+                        <th>right</th>
+                        <th>result</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>SwitchTwo.item</td>
+                        <td>items['SwitchTwo'].item</td>
+                        <td>true</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>SwitchTwo</td>
+                        <td>items['SwitchTwo'].item</td>
+                        <td>true</td>
+                        <td />
+                      </tr>
+                      <tr>
+                        <td>SwitchTwo.item</td>
+                        <td>items['SwitchTwo']</td>
+                        <td>true</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="scenario">
+            <div class="scenario-heading" id="groupitem-grep-can-use-itemitem">
+              <h2>GroupItem grep can use Item.item</h2>
+            </div>
+            <div class="steps">
+              <ul>
+                <li class="step">
+                  <span class="keyword">Given </span>group "Switches"</li>
+                <li class="step">
+                  <span class="keyword">And </span>items:<div class="table_container"><table class="datatable"><thead><tr><th>type</th><th>name</th><th>group</th><th>state</th></tr></thead><tbody><tr><td>Switch</td><td>Switch1</td><td>Switches</td><td>OFF</td></tr><tr><td>Switch</td><td>Switch2</td><td>Switches</td><td>OFF</td></tr></tbody></table></div></li>
+                <li class="step">
+                  <span class="keyword">And </span>a rule:<div class="pre"><pre><code class="no-highlight">logger.info "grep result1: #{Switches.grep(Switch1.item).first.name}"
+logger.info "grep result2: #{Switches.grep(Switch2.item).first.name}"
+logger.info "grep result3: #{Switches.grep(Switch1).first.name}"
+logger.info "grep result4: #{Switches.grep(Switch2).first.name}"</code></pre></div></li>
+                <li class="step">
+                  <span class="keyword">When </span>I deploy the rule</li>
+                <li class="step">
+                  <span class="keyword">Then </span>It should log "grep result1: Switch1" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "grep result2: Switch2" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "grep result3: Switch1" within 5 seconds</li>
+                <li class="step">
+                  <span class="keyword">And </span>It should log "grep result4: Switch2" within 5 seconds</li>
+              </ul>
+            </div>
+            <a class="scenario-link" href="javascript:showImageLink('groupitem-grep-can-use-itemitem')" title="Copy scenario link to clipboard.">
+              <i class="icon-link"> </i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="footer">
+        <p>Generated on: 2 December 2022 01:55:39</p>
+        <p>Produced by Pickles, version 2.21.1.0</p>
+      </div>
+    </div>
+  </body>
+</html>
