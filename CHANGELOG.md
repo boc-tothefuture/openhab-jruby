@@ -99,8 +99,8 @@ here is a non-exhaustive list of significant departures from the original gem:
 * The top-level `groups` method providing access to only {GroupItem}s has been
   removed. Use `items.grep(GroupItem)` if you would like to filter to only
   groups.
-* `GenericItem#id` no longer exists; just use
-  {GenericItem#to_s GenericItem#to_s} which does what `#id` used to do.
+* `GemericItem#id` no longer exists; just use
+  {Item#to_s Item#to_s} which does what `#id` used to do.
 * `states?(*items)` helper is gone. Just use `items.all?(:state?)`, or in
   the rare cased you used `states?(*items, things: true)`, use
   `items.all? { |i| i.state? && i.things.all?(&:online?) }`.
@@ -109,8 +109,8 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {GroupItem#all_members GroupItem#all_members} no
   longer has a `filter` parameter; use `grep` if you want just {GroupItem}s.
 * `create_timer` no longer exists as an alias for {after}.
-* `GenericItem#meta` is no longer a supported alias for
-  {GenericItem#metadata GenericItem#metadata}.
+* `Item#meta` is no longer a supported alias for
+  {Item#metadata Item#metadata}.
 * Triggers (such as {OpenHAB::DSL::Rules::BuilderDSL#changed changed},
   {OpenHAB::DSL::Rules::BuilderDSL#updated updated}, and
   {OpenHAB::DSL::Rules::BuilderDSL#received_command received_command} that
@@ -169,6 +169,10 @@ here is a non-exhaustive list of significant departures from the original gem:
 * Add `#ago` and `#from_now` methods to {Duration}.
 * The ability to designate how metadata should be persisted or not, via {OpenHAB::DSL.provider}.
 * {java.util.Map} and {java.util.List} now more fully implement the expected interfaces of `Hash` and `Array`, so you don't need to explicitly convert (as much) anymore.
+* If you reference an item that does not currently exist in a rule trigger, instead of raising `MethodMissing` or `NameError`, the trigger will be created anyway.
+  openHAB will log a warning that the item is missing, and the trigger will not work. When the item is eventually created, the trigger will begin to work.
+  This matches the behavior of DSL rules.
+  Note that this only works for {OpenHAB::DSL::Rules::Terse terse rules} if they're created within a {OpenHAB::DSL::Rules::Builder rules.build} block.
 
 ### Bug Fixes
 

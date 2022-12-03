@@ -17,7 +17,7 @@ module OpenHAB
 
         #
         # @!attribute [r] item
-        # @return [GenericItem] The item that was linked or unlinked
+        # @return [Item] The item that was linked or unlinked
         #
         def item
           EntityLookup.lookup_item(itemName)

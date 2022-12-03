@@ -4,11 +4,11 @@ module OpenHAB
   module Core
     module Things
       #
-      # Contains the link between a {Thing Thing's} {Channel Channels} and {GenericItem Items}.
+      # Contains the link between a {Thing Thing's} {Channel Channels} and {Item Items}.
       #
       module Links
         #
-        # Provides {Items::GenericItem items} linked to {Channel channels} in Ruby to openHAB.
+        # Provides {Items::Item items} linked to {Channel channels} in Ruby to openHAB.
         #
         class Provider < Core::Provider
           include org.openhab.core.thing.link.ItemChannelLinkProvider

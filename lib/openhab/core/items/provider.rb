@@ -4,7 +4,7 @@ module OpenHAB
   module Core
     module Items
       #
-      # Provides {GenericItem Items} created in Ruby to openHAB
+      # Provides {Item Items} created in Ruby to openHAB
       #
       class Provider < Core::Provider
         include org.openhab.core.items.ItemProvider
@@ -25,7 +25,7 @@ module OpenHAB
         #
         # @param [String] item_name
         # @param [true, false] recursive
-        # @return [GenericItem, nil] The removed item, if found.
+        # @return [Item, nil] The removed item, if found.
         #
         def remove(item_name, recursive = false) # rubocop:disable Style/OptionalBooleanParameter matches Java method
           return nil unless @elements.key?(item_name)

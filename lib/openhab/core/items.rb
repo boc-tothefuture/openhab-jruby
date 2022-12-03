@@ -25,6 +25,7 @@ module OpenHAB
             Object.const_set(const_name, k) unless Object.const_defined?(const_name)
           end
           Object.const_set(:GenericItem, GenericItem) unless Object.const_defined?(:GenericItem)
+          Object.const_set(:Item, Item) unless Object.const_defined?(:Item)
         end
 
         private

@@ -42,7 +42,7 @@ module OpenHAB
         # @return [Object] The result of the block.
         #
         def build(preferred_provider = nil, &block)
-          DSL::Rules::Builder.new(preferred_provider).instance_eval(&block)
+          DSL::Rules::Builder.new(preferred_provider).instance_eval_with_dummy_items(&block)
         end
 
         #

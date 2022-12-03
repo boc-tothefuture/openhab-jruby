@@ -13,12 +13,12 @@ module OpenHAB
       end
 
       module AcceptedDataTypes
-        # @see GenericItem#accepted_command_types
+        # @see Item#accepted_command_types
         def accepted_command_types
           super.map { |k| k.is_a?(java.lang.Class) ? k.ruby_class : k }
         end
 
-        # @see GenericItem#accepted_data_types
+        # @see Item#accepted_data_types
         def accepted_data_types
           super.map { |k| k.is_a?(java.lang.Class) ? k.ruby_class : k }
         end

@@ -33,7 +33,7 @@ module OpenHAB
       # ```
       #
       # @!attribute [r] base_item
-      #   @return [GenericItem, nil] A typed item if the group has a particular type.
+      #   @return [Item, nil] A typed item if the group has a particular type.
       #
       # @example Operate on items in a group using enumerable methods
       #   logger.info("Total Temperatures: #{Temperatures.members.count}")
@@ -99,7 +99,9 @@ module OpenHAB
 
           # @return [String]
           def inspect
-            "#<OpenHAB::Core::Items::GroupItems::Members #{name} #{map(&:name).inspect}>"
+            r = "#<OpenHAB::Core::Items::GroupItems::Members #{name}"
+            r += " #{map(&:name).inspect}>" unless @group.__getobj__.nil?
+            "#{r}>"
           end
           alias_method :to_s, :inspect
         end
@@ -120,7 +122,7 @@ module OpenHAB
         # @see Enumerable
         #
         def members
-          Members.new(self)
+          Members.new(Proxy.new(self))
         end
 
         #

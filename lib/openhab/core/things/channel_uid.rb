@@ -28,7 +28,7 @@ module OpenHAB
         # Return the item if this channel is linked with an item. If a channel is linked to more than one item,
         # this method only returns the first item.
         #
-        # @return [GenericItem, nil]
+        # @return [Item, nil]
         #
         def item
           items.first
@@ -39,7 +39,7 @@ module OpenHAB
         #
         # Returns all of the channel's linked items.
         #
-        # @return [Array<GenericItem>] An array of things or an empty array
+        # @return [Array<Item>] An array of things or an empty array
         #
         def items
           registry = OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")

@@ -160,7 +160,7 @@ module OpenHAB
           #  second element is a Hash configuring trigger
           #
           def group(group:, from:, to:)
-            config = { "groupName" => group.group.name }
+            config = { "groupName" => group.name }
             config["state"] = to.to_s if to
             config["previousState"] = from.to_s if from
             [GROUP_STATE_CHANGE, config]

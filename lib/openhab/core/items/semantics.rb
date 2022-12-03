@@ -9,7 +9,7 @@ require_relative "semantics/enumerable"
 module OpenHAB
   module Core
     module Items
-      # Module for implementing semantics helper methods on {GenericItem} in order to easily navigate
+      # Module for implementing semantics helper methods on {Item} in order to easily navigate
       # the {https://www.openhab.org/docs/tutorial/model.html Semantic Model} in your scripts.
       # This can be extremely useful to find related items in rules that are executed for any member of a group.
       #
@@ -161,6 +161,7 @@ module OpenHAB
         GenericItem.include(self)
         GroupItem.extend(Forwardable)
         GroupItem.def_delegators :members, :equipments, :locations
+
         # @!parse
         #   class Items::GroupItem
         #     #
@@ -273,7 +274,7 @@ module OpenHAB
         # Checks ancestor groups one level at a time, returning the first
         # {Location} Item found.
         #
-        # @return [GenericItem, nil]
+        # @return [Item, nil]
         #
         def location
           Actions::Semantics.get_location(self)&.then(&Proxy.method(:new))
@@ -299,7 +300,7 @@ module OpenHAB
         #
         # Checks ancestor groups one level at a time, returning the first {Equipment} Item found.
         #
-        # @return [GenericItem, nil]
+        # @return [Item, nil]
         #
         def equipment
           Actions::Semantics.get_equipment(self)&.then(&Proxy.method(:new))
@@ -379,7 +380,7 @@ module OpenHAB
         #   Pass 1 or 2 classes that are sub-classes of {Point} or {Property}.
         #   Note that when comparing against semantic tags, it does a sub-class check.
         #   So if you search for [Control], you'll get items tagged with [Switch].
-        # @return [Array<GenericItem>]
+        # @return [Array<Item>]
         #
         def points(*point_or_property_types)
           return members.points(*point_or_property_types) if equipment? || location?
@@ -403,7 +404,7 @@ module Enumerable
   #
 
   # Returns a new array of items that are a semantics Location (optionally of the given type)
-  # @return [Array<GenericItem>]
+  # @return [Array<Item>]
   def locations(type = nil)
     if type && (!type.is_a?(Module) || !(type < Semantics::Location))
       raise ArgumentError, "type must be a subclass of Location"
@@ -423,7 +424,7 @@ module Enumerable
   #   that belong to the {Semantics::Equipment equipments}, use {#members}
   #   before calling {#points}. See the example with {#points}.
   #
-  # @return [Array<GenericItem>]
+  # @return [Array<Item>]
   #
   # @example Get all TVs in a room
   #   lGreatRoom.equipments(Semantics::Screen)
@@ -440,7 +441,7 @@ module Enumerable
 
   # Returns a new array of items that are semantics points (optionally of a given type)
   #
-  # @return [Array<GenericItem>]
+  # @return [Array<Item>]
   #
   # @example Get all the power switch items for every equipment in a room
   #   lGreatRoom.equipments.members.points(Semantics::Switch)

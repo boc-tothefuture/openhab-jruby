@@ -133,7 +133,7 @@ module OpenHAB
         #   it will be deducible from the `uid` if it contains two or more segments.
         #   To create a Thing with a blank type id, use one segment for `uid` and provide the binding id.
         # @param [String, BridgeBuilder] bridge The bridge uid, if the Thing should belong to a bridge.
-        # @param [String, GenericItem] location The location of this Thing.
+        # @param [String, Item] location The location of this Thing.
         #   When given an Item, use the item's label as the location.
         # @param [Hash] config The Thing's configuration, as required by the binding. The key can be strings or symbols.
         # @param [true,false] enabled Whether the Thing should be enabled or disabled.
@@ -169,7 +169,7 @@ module OpenHAB
           @thing_type_uid = org.openhab.core.thing.ThingTypeUID.new(*@uid.all_segments[0..1])
           @label = label
           @location = location
-          @location = location.label if location.is_a?(GenericItem)
+          @location = location.label if location.is_a?(Item)
           @config = config.transform_keys(&:to_s)
           @enabled = enabled
         end

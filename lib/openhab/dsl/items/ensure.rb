@@ -7,7 +7,7 @@ module OpenHAB
     module Items
       # Functionality to implement `ensure`/`ensure_states`
       module Ensure
-        # Contains the `ensure` method mixed into {GenericItem} and {GroupItem::Members}
+        # Contains the `ensure` method mixed into {Item} and {GroupItem::Members}
         module Ensurable
           # Fluent method call that you can chain commands on to, that will
           # then automatically ensure that the item is not in the command's
@@ -18,15 +18,15 @@ module OpenHAB
           # @example Turn on all switches in a group that aren't already on
           #   MySwitchGroup.members.ensure.on
           def ensure
-            GenericItemDelegate.new(self)
+            ItemDelegate.new(self)
           end
         end
 
-        # Extensions for {::GenericItem} to implement {Ensure}'s functionality
+        # Extensions for {::Item} to implement {Ensure}'s functionality
         #
         # @see OpenHAB::DSL.ensure ensure
         # @see OpenHAB::DSL.ensure_states ensure_states
-        module GenericItem
+        module Item
           include Ensurable
 
           Core::Items::GenericItem.prepend(self)
@@ -63,7 +63,7 @@ module OpenHAB
         # "anonymous" class that wraps any method call in `ensure_states`
         # before forwarding to the wrapped object
         # @!visibility private
-        class GenericItemDelegate
+        class ItemDelegate
           def initialize(item)
             @item = item
           end

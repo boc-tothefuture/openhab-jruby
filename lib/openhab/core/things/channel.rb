@@ -9,7 +9,7 @@ module OpenHAB
 
       #
       # {Channel} is a part of a {Thing} that represents a functionality of it.
-      # Therefore {GenericItem Items} can be linked a to a channel.
+      # Therefore {Item Items} can be linked a to a channel.
       #
       # @!attribute [r] item
       #   (see ChannelUID#item)

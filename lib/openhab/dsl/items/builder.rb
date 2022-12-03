@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     #
-    # Contains extensions to simplify working with [GenericItem]s.
+    # Contains extensions to simplify working with {Item Items}.
     #
     module Items
       # An item builder allows you to dynamically create OpenHAB items at runtime.

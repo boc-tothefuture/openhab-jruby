@@ -23,6 +23,9 @@ module OpenHAB
       #
       class Builder
         include Terse
+        include Core::EntityLookup
+
+        self.create_dummy_items = true
 
         # @return [org.openhab.core.automation.RuleProvider]
         attr_reader :provider
@@ -119,6 +122,8 @@ module OpenHAB
         prepend Triggers
         extend Property
         extend Forwardable
+
+        self.create_dummy_items = true
 
         delegate %i[triggers trigger_conditions attachments] => :@rule_triggers
 
@@ -800,11 +805,11 @@ module OpenHAB
             case item
             when Core::Things::Thing,
                  Core::Things::ThingUID,
-                 Core::Items::GenericItem,
+                 Core::Items::Item,
                  Core::Items::GroupItem::Members
               nil
             else
-              raise ArgumentError, "items must be a GenericItem, GroupItem::Members, Thing, or ThingUID"
+              raise ArgumentError, "items must be an Item, GroupItem::Members, Thing, or ThingUID"
             end
 
             logger.trace("Creating changed trigger for entity(#{item}), to(#{to.inspect}), from(#{from.inspect})")
@@ -1003,7 +1008,7 @@ module OpenHAB
         # The `event` passed to run blocks will be an
         # {Core::Events::ItemCommandEvent}.
         #
-        # @param [GenericItem, GroupItem::Members] items Items to create trigger for
+        # @param [Item, GroupItem::Members] items Items to create trigger for
         # @param [Core::TypesCommand, Array<Command>, Range, Proc] command commands to match for trigger
         # @param [Array<Command>, Range, Proc] commands Fluent alias for `command`
         # @param [Object] attach object to be attached to the trigger
@@ -1075,11 +1080,11 @@ module OpenHAB
 
           items.each do |item|
             case item
-            when Core::Items::GenericItem,
+            when Core::Items::Item,
                  Core::Items::GroupItem::Members
               nil
             else
-              raise ArgumentError, "items must be a GenericItem or GroupItem::Members"
+              raise ArgumentError, "items must be an Item or GroupItem::Members"
             end
             commands.each do |cmd|
               logger.trace "Creating received command trigger for items #{item.inspect} and commands #{cmd.inspect}"
@@ -1197,7 +1202,7 @@ module OpenHAB
         # {Core::Events::ThingStatusInfoEvent} depending on if the triggering
         # element was an item or a thing.
         #
-        # @param [GenericItem, GroupItem::Members, Thing] items
+        # @param [Item, GroupItem::Members, Thing] items
         #   Objects to create trigger for.
         # @param [State, Array<State>, Range, Proc, Symbol, String] to
         #   Only execute rule if the state matches `to` state(s). If the
@@ -1274,11 +1279,11 @@ module OpenHAB
             case item
             when Core::Things::Thing,
                  Core::Things::ThingUID,
-                 Core::Items::GenericItem,
+                 Core::Items::Item,
                  Core::Items::GroupItem::Members
               nil
             else
-              raise ArgumentError, "items must be a GenericItem, GroupItem::Members, Thing, or ThingUID"
+              raise ArgumentError, "items must be an Item, GroupItem::Members, Thing, or ThingUID"
             end
 
             logger.trace("Creating updated trigger for item(#{item}) to(#{to})")
@@ -1378,17 +1383,6 @@ module OpenHAB
         # @!visibility private
         def start_attachment
           @on_start.attach
-        end
-
-        # @!visibility private
-        #
-        # Run the supplied block inside the object instance of the object that created the rule
-        #
-        # @yield [] Block executed in context of the object creating the rule
-        #
-        #
-        def my(&block)
-          @caller.instance_eval(&block)
         end
 
         #

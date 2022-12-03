@@ -6,7 +6,7 @@ module OpenHAB
       java_import org.openhab.core.thing.link.ItemChannelLink
 
       #
-      # Represents the link between a {GenericItem} and a {Thing Thing's}
+      # Represents the link between an {Item} and a {Thing Thing's}
       # {Channel}.
       #
       # @!attribute [r] thing
@@ -21,7 +21,7 @@ module OpenHAB
         def_delegator :linked_uid, :thing
 
         # @!attribute [r] item
-        # @return [GenericItem]
+        # @return [Item]
         def item
           DSL.items[item_name]
         end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe OpenHAB::Core::Items::GenericItem do
+RSpec.describe OpenHAB::Core::Items::Item do
   before do
     items.build do
       group_item "House" do

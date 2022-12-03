@@ -40,31 +40,31 @@ module Enumerable
   #
 
   # Returns a new array of items that have at least one of the given tags
-  # @return [Array<GenericItem>]
+  # @return [Array<Item>]
   def tagged(*tags)
     reject { |i| (tags & i.tags.to_a).empty? }
   end
 
   # Returns a new array of items that do not have any of the given tags
-  # @return [Array<GenericItem>]
+  # @return [Array<Item>]
   def not_tagged(*tags)
     select { |i| (tags & i.tags.to_a).empty? }
   end
 
   # Returns a new array of items that are a member of at least one of the given groups
-  # @return [Array<GenericItem>]
+  # @return [Array<Item>]
   def member_of(*groups)
     reject { |i| (groups.map(&:name) & i.group_names).empty? }
   end
 
   # Returns a new array of items that are not a member of any of the given groups
-  # @return [Array<GenericItem>]
+  # @return [Array<Item>]
   def not_member_of(*groups)
     select { |i| (groups.map(&:name) & i.group_names).empty? }
   end
 
   # Returns the group members the elements
-  # @return [Array<GenericItem>]
+  # @return [Array<Item>]
   def members
     grep(OpenHAB::Core::Items::GroupItem).flat_map(&:members)
   end
@@ -149,6 +149,6 @@ module Enumerable
   # can't use `include`, because Enumerable has already been included
   # in other classes
   def ensure
-    OpenHAB::DSL::Items::Ensure::GenericItemDelegate.new(self)
+    OpenHAB::DSL::Items::Ensure::ItemDelegate.new(self)
   end
 end

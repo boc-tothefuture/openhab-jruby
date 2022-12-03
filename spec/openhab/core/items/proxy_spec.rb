@@ -48,6 +48,32 @@ RSpec.describe OpenHAB::Core::Items::Proxy do
     expect(original.__getobj__).to be new_item.__getobj__
   end
 
+  context "without a backing item" do
+    let(:item) { described_class.new(:MySwitch) }
+
+    it "supports #name" do
+      expect(item.name).to eq "MySwitch"
+    end
+
+    it "pretends to be an item" do
+      expect(item).to be_a(Item)
+    end
+
+    it "can access GroupItem#members" do
+      expect(item.members).to be_a(GroupItem::Members)
+    end
+
+    it "doesn't respond to other Item methods" do
+      expect(item).not_to respond_to(:command)
+      expect { item.command }.to raise_error(NoMethodError)
+    end
+  end
+
+  it "does not respond to GroupItem#members if it's backed by a non-GroupItem" do
+    expect(Switch1).not_to respond_to(:members)
+    expect { Switch1.members }.to raise_error(NoMethodError)
+  end
+
   describe "Comparisons" do
     before do
       items.build { switch_item "Switch2" }

@@ -376,6 +376,51 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
             test_changed_trigger("Switches", from: ON, to: ON, expect_triggered: nil)
           end
         end
+
+        context "with dummy proxies" do
+          it "handles items that are constants" do
+            triggered = false
+            rule do
+              changed ItemThatDoesntYetExist
+              run { triggered = true }
+            end
+
+            items.build { switch_item "ItemThatDoesntYetExist" }
+            expect(triggered).to be false
+            ItemThatDoesntYetExist.on
+            expect(triggered).to be true
+          end
+
+          it "handles items that are not constants" do
+            triggered = false
+            rule do
+              changed gItemThatDoesntYetExist
+              run { triggered = true }
+            end
+
+            items.build { switch_item "gItemThatDoesntYetExist" }
+            expect(triggered).to be false
+            gItemThatDoesntYetExist.on
+            expect(triggered).to be true
+          end
+
+          it "handles group members" do
+            triggered = false
+            rule do
+              changed gItemThatDoesntYetExist.members
+              run { triggered = true }
+            end
+
+            items.build do
+              group_item "gItemThatDoesntYetExist", type: :switch, function: "OR(ON,OFF)" do
+                switch_item "Switch2"
+              end
+            end
+            expect(triggered).to be false
+            Switch2.on
+            expect(triggered).to be true
+          end
+        end
       end
 
       context "with things" do

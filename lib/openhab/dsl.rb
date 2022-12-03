@@ -69,7 +69,7 @@ module OpenHAB
     #   The state being sent for `:state_from_item` and `:state_from_handler` events.
     # @yieldparam [Core::Things::ItemChannelLink] link
     #   The link between the item and the channel, including its configuration.
-    # @yieldparam [GenericItem] item The linked item.
+    # @yieldparam [Item] item The linked item.
     # @yieldparam [Core::Things::ChannelUID] channel_uid The linked channel.
     # @yieldparam [Hash] configuration The profile configuration.
     # @yieldparam [org.openhab.core.thing.profiles.ProfileContext] context The profile context.
@@ -208,7 +208,7 @@ module OpenHAB
     #
     # When a timer is cancelled, it will be removed from the object.
     #
-    # Be sure that your ids are unique. For example, if you're using {GenericItem items} as your
+    # Be sure that your ids are unique. For example, if you're using {Item items} as your
     # ids, you either need to be sure you don't use the same item for multiple logical contexts,
     # or you need to make your id more specific, by doing something like embedding the item in
     # array with a symbol of the timer's purpose, like `[:vacancy, item]`. But also note that
@@ -342,7 +342,7 @@ module OpenHAB
     # current state of each item. It is implemented by calling OpenHAB's
     # [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
     #
-    # @param [GenericItem] items Items to store states of.
+    # @param [Item] items Items to store states of.
     #
     # @return [Core::Items::StateStorage] item states
     #
@@ -629,7 +629,7 @@ module OpenHAB
     #   Otherwise it's applied to all types.
     # @param [Hash] providers_by_type
     #     A list of providers by type. Type can be `:items`, `:metadata`, `:things`, `:links`,
-    #     a {GenericItem} applying the provider to all metadata on that item, or a String or Symbol
+    #     an {Item} applying the provider to all metadata on that item, or a String or Symbol
     #     applying the provider to all metadata of that namespace.
     #
     #     The provider can be a {org.openhab.core.common.registry.Provider Provider}, `:persistent`,
@@ -693,7 +693,7 @@ module OpenHAB
           thread_providers[type] = provider
         when Symbol, String
           (thread_providers[:metadata_namespaces] ||= {})[type.to_s] = provider
-        when GenericItem
+        when Item
           (thread_providers[:metadata_items] ||= {})[type.name] = provider
         else
           raise ArgumentError, "#{type.inspect} is not provider type"

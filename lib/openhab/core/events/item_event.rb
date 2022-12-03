@@ -11,7 +11,7 @@ module OpenHAB
       class ItemEvent < AbstractEvent
         #
         # @!attribute [r] item
-        # @return [GenericItem] The item that triggered this event.
+        # @return [Item] The item that triggered this event.
         #
         def item
           EntityLookup.lookup_item(item_name)

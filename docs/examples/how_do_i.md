@@ -653,7 +653,7 @@ end
 metadata = My_Item.metadata['namespace'].value
 ```
 
-See {GenericItem#metadata}
+See {Item#metadata}
 
 ## Use Persistence
 

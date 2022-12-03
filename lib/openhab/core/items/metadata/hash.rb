@@ -111,7 +111,7 @@ module OpenHAB
           end
 
           # @!attribute [r] item
-          #   @return [GenericItem, nil] The item this namespace is attached to.
+          #   @return [Item, nil] The item this namespace is attached to.
           def item
             return nil unless attached?
 

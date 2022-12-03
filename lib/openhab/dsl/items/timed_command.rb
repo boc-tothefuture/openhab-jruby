@@ -3,7 +3,7 @@
 module OpenHAB
   module DSL
     module Items
-      # Extensions for {GenericItem} to implement timed commands
+      # Extensions for {Item} to implement timed commands
       #
       # All items have an implicit timer associated with them, enabling to
       # easily set an item into a specific state for a specified duration and
@@ -28,7 +28,7 @@ module OpenHAB
         # Provides information about why the expiration block of a
         # {TimedCommand#command timed command} is being called.
         #
-        # @attr [GenericItem] item
+        # @attr [Item] item
         #   @!visibility private
         # @attr [Types::Type, Proc] on_expire
         #   @!visibility private
