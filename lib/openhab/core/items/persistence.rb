@@ -87,7 +87,7 @@ module OpenHAB
         # @!method last_update(service = nil)
         #   Return the time the item was last updated.
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
-        #   @return [ZonedDateTime] The timestamp of the last update
+        #   @return [ZonedDateTime, nil] The timestamp of the last update
 
         # @!method average_since(timestamp, service = nil)
         #   Return the average value of the item's state since the given time
@@ -255,7 +255,7 @@ module OpenHAB
         def previous_state(service = nil, skip_equal: false)
           service ||= persistence_service
           result = Actions::PersistenceExtensions.previous_state(self, skip_equal, service&.to_s)
-          HistoricState.new(quantify(result.state), result)
+          HistoricState.new(quantify(result.state), result) if result
         end
 
         PERSISTENCE_METHODS.each do |method|
@@ -317,8 +317,7 @@ module OpenHAB
         #
         def wrap_result(result, method)
           if result.is_a?(org.openhab.core.persistence.HistoricItem)
-            return HistoricState.new(quantify(result.state),
-                                     result)
+            return HistoricState.new(quantify(result.state), result)
           end
           return quantify(result) if QUANTITY_METHODS.include?(method)
 
