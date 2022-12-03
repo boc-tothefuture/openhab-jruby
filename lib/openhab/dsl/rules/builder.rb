@@ -34,21 +34,24 @@ module OpenHAB
         #
         # Create a new rule
         #
-        # @param [String] name The rule name
-        # @yield Block executed in the context of a {Rules::Builder}
-        # @yieldparam [Rules::Builder] rule
-        #   Optional parameter to access the rule configuration from within execution blocks and guards.
-        # @return [Rule]
+        # The rule must have at least one trigger and one execution block.
+        # To create a "script" without any triggers, use {#script}.
         #
-        # @see OpenHAB::DSL::Rules::Builder Rule builder for details on rule triggers, guards and execution blocks
+        # @param [String] name The rule name
+        # @yield Block executed in the context of a {Rules::BuilderDSL}
+        # @yieldparam [Rules::BuilderDSL] rule
+        #   Optional parameter to access the rule configuration from within execution blocks and guards.
+        # @return [Core::Rules::Rule, nil] The rule object, or nil if no rule was created.
+        #
+        # @see OpenHAB::DSL::Rules::BuilderDSL Rule BuilderDSL for details on rule triggers, guards and execution blocks
         # @see Rules::Terse Terse Rules
         #
         # @example
         #   require "openhab/dsl"
         #
         #   rule "name" do
-        #     <zero or more triggers>
-        #     <zero or more execution blocks>
+        #     <one or more triggers>
+        #     <one or more execution blocks>
         #     <zero or more guards>
         #   end
         #
@@ -85,7 +88,7 @@ module OpenHAB
         # @param [String] name A descriptive name
         # @param [String] id The script's ID
         # @yield [] Block executed when the script is executed.
-        # @return [Rule]
+        # @return [Core::Rules::Rule]
         #
         def script(name = nil, id: nil, script: nil, &block)
           raise ArgumentError, "Block is required" unless block
