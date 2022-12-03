@@ -4,7 +4,7 @@ require "tmpdir"
 
 RSpec.describe OpenHAB::DSL::Rules::Builder do
   it "doesn't create a rule if there are no execution blocks" do
-    rule(id: "test_rule") { on_start }
+    rule(id: "test_rule") { on_load }
 
     expect($rules.get("test_rule")).to be_nil
     expect(spec_log_lines).to include(include("has no execution blocks, not creating rule"))
@@ -66,6 +66,70 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
           instance_eval(&block)
         else
           expect(triggered?).to be expect_triggered
+        end
+      end
+    end
+
+    describe "#on_start" do
+      it "works with default level" do
+        rule = rule do
+          on_start
+          run { nil }
+        end
+        t = rule.triggers.first
+        expect(t.type_uid).to eql "core.SystemStartlevelTrigger"
+        expect(t.configuration.properties.key?("startlevel")).to be true
+        expect(t.configuration.properties["startlevel"].to_i).to eq 100
+      end
+
+      # @param [Symbol,Integer,Array<Symbol>,Array<Integer>] level
+      # @param [Integer,Array<Integer>] raw_level
+      def test_on_start(level, raw_level = nil)
+        rule = rule do
+          if level.is_a?(Array)
+            on_start at_levels: level
+          else
+            on_start at_level: level
+          end
+          run { nil }
+        end
+
+        level = Array.wrap(level)
+        raw_level = raw_level ? Array.wrap(raw_level) : level
+
+        rule.triggers.each_with_index do |trigger, i|
+          expect(trigger.type_uid).to eql "core.SystemStartlevelTrigger"
+          expect(trigger.configuration.properties.key?("startlevel")).to be true
+          expect(trigger.configuration.properties["startlevel"].to_i).to eq raw_level[i]
+        end
+      end
+
+      it "works with numeric at_level" do
+        [40, 50, 70, 80, 100].each { |level| test_on_start(level) }
+      end
+
+      it "works with symbolic at_level" do
+        { rules: 40, ruleengine: 50, ui: 70, things: 80, complete: 100 }.each do |symbol, numeric|
+          test_on_start(symbol, numeric)
+        end
+      end
+
+      it "works with numeric at_levels" do
+        test_on_start([40, 50, 70, 80, 100])
+      end
+
+      it "works with symbolic at_levels" do
+        test_on_start(%i[rules ruleengine ui things complete], [40, 50, 70, 80, 100])
+      end
+
+      it "raises an exception with invalid symbols" do
+        %i[foo baz].each do |level|
+          expect do
+            rule do
+              on_start at_level: level
+              run { nil }
+            end
+          end.to raise_exception(ArgumentError)
         end
       end
     end
@@ -963,7 +1027,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
           logger.info("Outer function called")
         end
         rule do
-          on_start
+          on_load
           run { outer_function }
         end
         expect(spec_log_lines).to include(include("Outer function called"))
@@ -974,7 +1038,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
 
         it "logs errors" do
           rule do
-            on_start
+            on_load
             run { raise "failure!" }
           end
           expect(spec_log_lines).to include(include("failure! (RuntimeError)"))
@@ -983,7 +1047,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
 
         it "logs java exceptions" do
           rule do
-            on_start
+            on_load
             run { java.lang.Integer.parse_int("k") }
           end
           expect(spec_log_lines).to include(include("Java::JavaLang::NumberFormatException"))
@@ -1010,7 +1074,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       it "runs multiple blocks" do
         ran = 0
         rule do
-          on_start
+          on_load
           run { ran += 1 }
           run { ran += 1 }
           run { ran += 1 }
@@ -1023,7 +1087,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       it "works" do
         executed = 0
         rule do
-          on_start
+          on_load
           run { executed += 1 }
           delay 5.seconds
           run { executed += 1 }
@@ -1099,7 +1163,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       describe "#only_if" do
         def run_rule
           rule do
-            on_start
+            on_load
             run { @ran = :run }
             otherwise { @ran = :otherwise }
             only_if { @condition }
@@ -1121,7 +1185,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         it "supports multiple only_if blocks" do
           ran = false
           rule do
-            on_start
+            on_load
             run { ran = true }
             only_if { true }
             only_if { true }
@@ -1132,7 +1196,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         it "supports multiple only_if blocks but doesn't run if any are false" do
           ran = false
           rule do
-            on_start
+            on_load
             run { ran = true }
             only_if { true }
             only_if { false }
@@ -1144,7 +1208,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       describe "#not_if" do
         def run_rule
           rule do
-            on_start
+            on_load
             run { @ran = :run }
             otherwise { @ran = :otherwise }
             not_if { @condition }
@@ -1166,7 +1230,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         it "supports multiple not_if blocks" do
           ran = false
           rule do
-            on_start
+            on_load
             run { ran = true }
             not_if { false }
             not_if { false }
@@ -1177,7 +1241,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         it "supports multiple only_if blocks but doesn't run if any are true" do
           ran = false
           rule do
-            on_start
+            on_load
             run { ran = true }
             not_if { true }
             not_if { false }
@@ -1190,7 +1254,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
         it "#{result ? "runs" : "doesn't run"} for only_if #{only_if_value} and #{not_if_value}", caller: caller do
           ran = false
           rule do
-            on_start
+            on_load
             run { ran = true }
             only_if { only_if_value }
             not_if { not_if_value }
@@ -1226,7 +1290,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
           it "works with #{range.inspect} (#{range.begin.class})", caller: caller do
             ran = false
             rule do
-              on_start
+              on_load
               between range
               run { ran = true }
             end
@@ -1298,7 +1362,7 @@ RSpec.describe OpenHAB::DSL::Rules::Builder do
       thing
       trigger_channel("astro:sun:home:rise#event")
     end
-    test_it(:on_start)
+    test_it(:on_load)
     test_it(:trigger, "core.ItemStateUpdateTrigger", itemName: "Item1") { item.on }
 
     it "passes through attachment for watch" do

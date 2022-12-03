@@ -18,7 +18,7 @@ module OpenHAB
       #
       # @example
       #   rule 'Log state of all doors on system startup' do
-      #     on_start
+      #     on_load
       #     run do
       #       Doors.each do |door|
       #         case door.state

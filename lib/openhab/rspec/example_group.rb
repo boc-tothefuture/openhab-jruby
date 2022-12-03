@@ -94,7 +94,7 @@ module OpenHAB
         #     it "logs exceptions in rule execution" do
         #       expect(self.class.propagate_exceptions?).to be false
         #       rule do
-        #         on_start
+        #         on_load
         #         run { raise "exception is logged" }
         #       end
         #       expect(spec_log_lines).to include(match(/exception is logged/))

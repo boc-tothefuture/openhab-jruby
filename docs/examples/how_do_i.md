@@ -343,7 +343,7 @@ end
 
 ```ruby
 rule 'initialize things' do
-  on_start # This also triggers whenever the script (re)loads
+  on_load # This triggers whenever the script (re)loads
   run { logger.info 'Here we go!' }
 end
 ```
@@ -487,7 +487,7 @@ This is available only on file-based rules.
 
 ```ruby
 rule 'delay something' do
-  on_start
+  on_load
   run { logger.info 'This will run immediately' }
   delay 10.seconds
   run { logger.info 'This will run 10 seconds after' }
@@ -499,7 +499,7 @@ either a file-based rule or in a UI based rule using {OpenHAB::DSL.after after}
 
 ```ruby
 rule 'delay something' do
-  on_start
+  on_load
   run do
     logger.info 'This will run immediately' 
     after(10.seconds) do

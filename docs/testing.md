@@ -82,7 +82,7 @@ and then load rules in, then drop you into IRB.
 
  * See {OpenHAB::RSpec::Helpers} for all helper methods available in specs.
  * All items are reset to {NULL} before each spec.
- * `on_start` triggers are _not_ honored. Items will be reset to {NULL} before
+ * `on_load` triggers are _not_ honored. Items will be reset to {NULL} before
    the next spec anyway, so just don't waste the energy running them. You
    can still trigger rules manually.
  * Rule triggers besides item related triggers (such as cron or watchers)
@@ -132,10 +132,10 @@ or installation on Ubuntu or Debian with .debs. You may need to customize them
 if your installation is laid out differently. Additional OpenHAB or Karaf
 specific system properties will be set the same as OpenHAB would.
 
-| Variable                 | Default                 | Description                                                         |
-| ------------------------ | ----------------------- | ------------------------------------------------------------------- |
-| `$OPENHAB_HOME`          | `/usr/share/openhab`    | Location for the OpenHAB installation                               |
-| `$OPENHAB_RUNTIME`       | `$OPENHAB_HOME/runtime` | Location for OpenHAB's private Maven repository containing its JARs |
+| Variable           | Default                 | Description                                                         |
+| ------------------ | ----------------------- | ------------------------------------------------------------------- |
+| `$OPENHAB_HOME`    | `/usr/share/openhab`    | Location for the OpenHAB installation                               |
+| `$OPENHAB_RUNTIME` | `$OPENHAB_HOME/runtime` | Location for OpenHAB's private Maven repository containing its JARs |
 
 ## Transformations
 

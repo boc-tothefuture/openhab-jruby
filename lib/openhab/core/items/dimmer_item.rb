@@ -48,7 +48,7 @@ module OpenHAB
       #
       # @example
       #   rule 'Dim a switch on system startup over 100 seconds' do
-      #     on_start
+      #     on_load
       #     100.times do
       #       run { DimmerSwitch.dim }
       #       delay 1.second
@@ -57,7 +57,7 @@ module OpenHAB
       #
       # @example
       #   rule 'Dim a switch on system startup by 5, pausing every second' do
-      #     on_start
+      #     on_load
       #     100.step(-5, 0) do |level|
       #       run { DimmerSwitch << level }
       #       delay 1.second

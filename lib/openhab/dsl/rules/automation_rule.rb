@@ -110,8 +110,10 @@ module OpenHAB
         def extract_event(inputs)
           event = inputs&.dig("event")
           unless event
-            event = Struct.new(:event, :attachment, :command).new
-            event.command = inputs&.dig("command")
+            input_keys = inputs.to_h.keys.grep(/^[a-z_]+[a-zA-Z0-9_]*$/).grep_v("module") # only pick valid identifiers
+            event_members = %i[attachment] | input_keys.map(&:to_sym)
+            event = Struct.new(*event_members).new
+            input_keys.each { |key| event[key] = inputs[key] }
           end
           add_attachment(event, inputs)
         end

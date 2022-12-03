@@ -154,7 +154,7 @@ module OpenHAB
     #
     # @example
     #   rule 'search for a suitable item' do
-    #     on_start
+    #     on_load
     #     triggered do
     #       # Send ON to DimmerTest if it exists, otherwise send it to SwitchTest
     #       (items['DimmerTest'] || items['SwitchTest'])&.on

@@ -26,7 +26,7 @@ module OpenHAB
   # @example The following entries are in a file named 'log_test.rb'
   #   rule 'foo' do
   #     run { logger.trace('Test logging at trace') } # 2020-12-03 18:05:20.903 [TRACE] [org.openhab.automation.jrubyscripting.foo] - Test logging at trace
-  #     on_start
+  #     on_load
   #   end
   #
   #

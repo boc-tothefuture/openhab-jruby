@@ -48,7 +48,7 @@ RSpec.describe OpenHAB::Log do
       rspec = self
       rule "log test", id: "log_test" do
         rspec.expect(logger.name).to rspec.eql "org.openhab.automation.jrubyscripting.rule.log_test"
-        on_start
+        on_load
         run do
           expect(logger.name).to eql "org.openhab.automation.jrubyscripting.rule.log_test"
         end
@@ -58,7 +58,7 @@ RSpec.describe OpenHAB::Log do
     it "uses the rule id inside a timer block inside a rule" do
       executed = false
       rule "log test" do
-        on_start
+        on_load
         run do
           after(1.second) do
             executed = true
@@ -122,7 +122,7 @@ RSpec.describe OpenHAB::Log do
 
     it "uses the class name inside a class method inside a rule" do
       rule "my rule" do
-        on_start
+        on_load
         run do
           expect(MyClass.logger_name).to eql "org.openhab.automation.jrubyscripting.MyClass"
           expect(MyClass.new.logger_name).to eql "org.openhab.automation.jrubyscripting.MyClass"

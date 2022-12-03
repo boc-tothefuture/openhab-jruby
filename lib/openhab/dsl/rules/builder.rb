@@ -267,7 +267,7 @@ module OpenHAB
         #
         # @example
         #   rule 'Delay sleeps between execution elements' do
-        #     on_start
+        #     on_load
         #     run { logger.info("Sleeping") }
         #     delay 5.seconds
         #     run { logger.info("Awake") }
@@ -275,7 +275,7 @@ module OpenHAB
         #
         # @example Like other execution blocks, multiple can exist in a single rule.
         #   rule 'Multiple delays can exist in a rule' do
-        #     on_start
+        #     on_load
         #     run { logger.info("Sleeping") }
         #     delay 5.seconds
         #     run { logger.info("Sleeping Again") }
@@ -285,7 +285,7 @@ module OpenHAB
         #
         # @example You can use Ruby code in your rule across multiple execution blocks like a run and a delay.
         #   rule 'Dim a switch on system startup over 100 seconds' do
-        #     on_start
+        #     on_load
         #     100.times do
         #       run { DimmerSwitch.dim }
         #       delay 1.second
@@ -310,7 +310,7 @@ module OpenHAB
         #
         # @example
         #   rule 'Turn switch ON or OFF based on value of another switch' do
-        #     on_start
+        #     on_load
         #     run { TestSwitch << ON }
         #     otherwise { TestSwitch << OFF }
         #     only_if { OtherSwitch.on? }
@@ -433,28 +433,28 @@ module OpenHAB
         #
         # @example String of {LocalTime}
         #   rule 'Log an entry if started between 3:30:04 and midnight using strings' do
-        #     on_start
+        #     on_load
         #     run { logger.info ("Started at #{LocalTime.now}")}
         #     between '3:30:04'..LocalTime::MIDNIGHT
         #   end
         #
         # @example {LocalTime}
         #   rule 'Log an entry if started between 3:30:04 and midnight using LocalTime objects' do
-        #     on_start
+        #     on_load
         #     run { logger.info ("Started at #{LocalTime.now}")}
         #     between LocalTime.of(3, 30, 4)..LocalTime::MIDNIGHT
         #   end
         #
         # @example String of {MonthDay}
         #   rule 'Log an entry if started between March 9th and April 10ths' do
-        #     on_start
+        #     on_load
         #     run { logger.info ("Started at #{Time.now}")}
         #     between '03-09'..'04-10'
         #   end
         #
         # @example {MonthDay}
         #   rule 'Log an entry if started between March 9th and April 10ths' do
-        #     on_start
+        #     on_load
         #     run { logger.info ("Started at #{Time.now}")}
         #     between MonthDay.of(03,09)..'04-06'
         #   end
@@ -541,8 +541,8 @@ module OpenHAB
           @rule_triggers = RuleTriggers.new
           @caller = caller_binding.eval "self"
           @ruby_triggers = []
+          @on_load = nil
           enabled(true)
-          on_start(false)
           tags([])
         end
 
@@ -970,38 +970,111 @@ module OpenHAB
         end
 
         #
-        # Run this rule when the script is loaded.
+        # Creates a trigger that executes when the script is loaded
         #
-        # Execute the rule on OpenHAB start up and whenever the script is
-        # reloaded. This is useful to perform initialization routines,
-        # especially when combined with other triggers.
+        # Execute the rule whenever the script is first loaded, including on OpenHAB start up,
+        # and on subsequent reloads on file modifications.
+        # This is useful to perform initialization routines, especially when combined with other triggers.
         #
-        # @param [true, false] run_on_start Run this rule on start, defaults to True
-        # @param [Object] attach object to be attached to the trigger
+        # @param [Object] attach Object to be attached to the trigger
         # @return [void]
         #
         # @example
-        #   rule "startup rule" do
-        #     on_start
+        #   rule "script startup rule" do
+        #     on_load
         #     run do
         #       <calculate some item state>
         #     end
         #   end
         #
         # @example
-        #   rule 'Ensure all security lights are on' do
-        #     on_start
+        #   rule "Ensure all security lights are on" do
+        #     on_load
         #     run { Security_Lights.on }
         #   end
         #
-        # rubocop:disable Style/OptionalBooleanParameter
-        def on_start(run_on_start = true, attach: nil)
-          @on_start = Struct.new(:enabled, :attach).new(run_on_start, attach)
+        def on_load(attach: nil)
+          # prevent overwriting the attachment
+          raise ArgumentError, "on_load can only be used once within a rule" if @on_load
+
+          @on_load = { attachment: attach }
         end
-        # rubocop:enable Style/OptionalBooleanParameter
 
         #
-        # Create a trigger for when an item or group receives a command
+        # Creates a trigger that executes when OpenHAB reaches a certain start level
+        #
+        # This will only trigger once during OpenHAB start up. It won't trigger on script reloads.
+        #
+        # @param [Integer,:rules,:ruleengine,:ui,:things,:complete] at_level
+        #   Zero or more start levels. Note that Startlevels less than 40 are not available as triggers
+        #   because the rule engine needs to start up first before it can execute any rules
+        #
+        #   | Symbol        | Start Level |
+        #   | ------------- | ----------- |
+        #   | `:osgi`       | 10          |
+        #   | `:model`      | 20          |
+        #   | `:state`      | 30          |
+        #   | `:rules`      | 40          |
+        #   | `:ruleengine` | 50          |
+        #   | `:ui`         | 70          |
+        #   | `:things`     | 80          |
+        #   | `:complete`   | 100         |
+        # @param [Array<Integer,:rules,:ruleengine,:ui,:things,:complete>] at_levels Fluent alias for `at_level`
+        # @param [Object] attach Object to be attached to the trigger
+        # @return [void]
+        #
+        # @example
+        #   rule "Trigger at openHAB system start" do
+        #     on_start # trigger at the default startlevel 100
+        #     run { logger.info "openHAB start up complete." }
+        #   end
+        #
+        # @example Trigger at a specific start level
+        #   rule "Trigger after things are loaded" do
+        #     on_start at_level: :things
+        #     run { logger.info "Things are ready!" }
+        #   end
+        #
+        # @example Trigger at multiple levels
+        #   rule "Multiple start up triggers" do
+        #     on_start at_levels: %i[ui things complete]
+        #     run do |event|
+        #       logger.info "openHAB startlevel has reached level #{event.startlevel}"
+        #     end
+        #   end
+        #
+        # @see https://www.openhab.org/docs/configuration/rules-dsl.html#system-based-triggers System based triggers
+        #
+        def on_start(at_level: nil, at_levels: nil, attach: nil)
+          levels = Array.wrap(at_level) | Array.wrap(at_levels)
+          levels = [100] if levels.empty?
+
+          levels.map! do |level|
+            next level unless level.is_a?(Symbol)
+
+            begin
+              klass = org.openhab.core.service.StartLevelService.java_class
+              klass.declared_field("STARTLEVEL_#{level.upcase}").get_int(klass)
+            rescue java.lang.NoSuchFieldException
+              raise ArgumentError, "Invalid symbol for at_level: :#{level}"
+            end
+          end
+
+          levels.each do |level|
+            logger.warn "Rule engine doesn't start until start level 40" if level < 40
+
+            logger.trace("Creating a SystemStartlevelTrigger with startlevel=#{level}")
+            Triggers::Trigger.new(rule_triggers: @rule_triggers)
+                             .append_trigger(
+                               type: "core.SystemStartlevelTrigger",
+                               config: { startlevel: level },
+                               attach: attach
+                             )
+          end
+        end
+
+        #
+        # Creates a trigger for when an item or group receives a command
         #
         # The command/commands parameters are replicated for DSL fluency.
         #
@@ -1367,25 +1440,6 @@ module OpenHAB
         # @!endgroup
 
         #
-        # Checks if this rule should run on start
-        #
-        # @return [true, false] True if rule should run on start, false otherwise.
-        #
-        def on_start?
-          @on_start.enabled
-        end
-
-        #
-        # Get the optional start attachment
-        #
-        # @return [Object] optional user provided attachment to the on_start method
-        #
-        # @!visibility private
-        def start_attachment
-          @on_start.attach
-        end
-
-        #
         # @return [String]
         #
         def inspect
@@ -1393,7 +1447,7 @@ module OpenHAB
             #<OpenHAB::DSL::Rules::Builder: #{uid}
             triggers=#{triggers.inspect},
             run blocks=#{run.inspect},
-            on_start=#{on_start?},
+            on_load=#{@on_load},
             Trigger Conditions=#{trigger_conditions.inspect},
             Trigger UIDs=#{triggers.map(&:id).inspect},
             Attachments=#{attachments.inspect}
@@ -1416,7 +1470,7 @@ module OpenHAB
           added_rule.actions.first.configuration.put("type", "application/x-ruby")
           added_rule.actions.first.configuration.put("script", script) if script
 
-          rule.execute(nil, { "event" => Struct.new(:attachment).new(start_attachment) }) if on_start?
+          rule.execute(nil, { "event" => Struct.new(:attachment).new(@on_load[:attachment]) }) if @on_load
           added_rule
         end
 
@@ -1453,7 +1507,7 @@ module OpenHAB
         # @return [true,false] True if rule has triggers, false otherwise
         #
         def triggers?
-          on_start? || !triggers.empty?
+          @on_load || !triggers.empty?
         end
 
         #

@@ -44,7 +44,7 @@ end
 
 ```ruby
 rule 'Timer example' do
-  on_start
+  on_load
   run do
     after(3.hours) { logger.info('3 hours have passed') }
   end
