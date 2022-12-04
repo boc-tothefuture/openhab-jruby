@@ -8,6 +8,9 @@ module OpenHAB
       #
       # @!visibility private
       class AutomationRule < org.openhab.core.automation.module.script.rulesupport.shared.simple.SimpleRule
+        # @!visibility private
+        INPUT_KEY_PATTERN = /^[a-z_]+[a-zA-Z0-9_]*$/.freeze
+
         field_writer :uid
 
         #
@@ -50,7 +53,8 @@ module OpenHAB
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
             trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
-              process_queue(create_queue(inputs), mod, inputs)
+              event = extract_event(inputs)
+              process_queue(create_queue(event), mod, event)
             end
           rescue Exception => e
             raise if defined?(::RSpec)
@@ -87,11 +91,11 @@ module OpenHAB
         #
         # Create the run queue based on guards
         #
-        # @param [Map] inputs rule inputs
+        # @param [Map] event Event object
         # @return [Queue] <description>
         #
-        def create_queue(inputs)
-          case check_guards(event: extract_event(inputs))
+        def create_queue(event)
+          case check_guards(event: event)
           when true
             @run_queue.dup.grep_v(BuilderDSL::Otherwise)
           when false
@@ -109,13 +113,17 @@ module OpenHAB
         #
         def extract_event(inputs)
           event = inputs&.dig("event")
-          unless event
-            input_keys = inputs.to_h.keys.grep(/^[a-z_]+[a-zA-Z0-9_]*$/).grep_v("module") # only pick valid identifiers
-            event_members = %i[attachment] | input_keys.map(&:to_sym)
-            event = Struct.new(*event_members).new
-            input_keys.each { |key| event[key] = inputs[key] }
+          attachment = @attachments[trigger_id(inputs)]
+          if event
+            event.attachment = attachment if attachment
+            return event
           end
-          add_attachment(event, inputs)
+
+          inputs = inputs.to_h
+                         .select { |key, _value| key != "module" && INPUT_KEY_PATTERN.match?(key) }
+                         .transform_keys(&:to_sym)
+                         .merge({ attachment: attachment })
+          Struct.new(*inputs.keys).new(*inputs.values)
         end
 
         #
@@ -135,24 +143,7 @@ module OpenHAB
         # @return [Array] Array of trigger conditions that match rule UID
         #
         def trigger_conditions(inputs)
-          # Parse this to get the trigger UID:
-          # ["72698819-83cb-498a-8e61-5aab8b812623.event", "oldState", "module", \
-          #  "72698819-83cb-498a-8e61-5aab8b812623.oldState", "event", "newState",\
-          #  "72698819-83cb-498a-8e61-5aab8b812623.newState"]
           @trigger_conditions[trigger_id(inputs)]
-        end
-
-        # If an attachment exists for the trigger for this event add it to the event object
-        # @param [Object] event Event
-        # @param [Hash] inputs Inputs into event
-        # @return [Object] Event with attachment added
-        #
-        def add_attachment(event, inputs)
-          attachment = @attachments[trigger_id(inputs)]
-          return event unless attachment
-
-          event.attachment = attachment
-          event
         end
 
         #
@@ -185,14 +176,12 @@ module OpenHAB
         #
         # @param [Array] run_queue array of procs of various types to execute
         # @param [Map] mod OpenHAB map object describing rule trigger
-        # @param [Map] inputs OpenHAB map object describing rule trigge
+        # @param [Map] event OpenHAB map object describing rule trigger
         #
-        def process_queue(run_queue, mod, inputs)
-          event = extract_event(inputs)
-
+        def process_queue(run_queue, mod, event)
           while (task = run_queue.shift)
             if task.is_a?(BuilderDSL::Delay)
-              process_delay_task(inputs, mod, run_queue, task)
+              process_delay_task(event, mod, run_queue, task)
             else
               process_task(event, task)
             end
@@ -231,15 +220,15 @@ module OpenHAB
         #
         # Process delay task
         #
-        # @param [Map] inputs Rule trigger inputs
+        # @param [Map] event Rule trigger event
         # @param [Map] mod Rule modes
         # @param [Queue] run_queue Queue of tasks for this rule
         # @param [Delay] task to process
         #
         #
-        def process_delay_task(inputs, mod, run_queue, task)
+        def process_delay_task(event, mod, run_queue, task)
           remaining_queue = run_queue.slice!(0, run_queue.length)
-          DSL.after(task.duration) { process_queue(remaining_queue, mod, inputs) }
+          DSL.after(task.duration) { process_queue(remaining_queue, mod, event) }
         end
 
         #

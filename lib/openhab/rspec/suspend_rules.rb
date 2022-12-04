@@ -18,7 +18,8 @@ module OpenHAB
             logger.trace { "Execute called with mod (#{mod&.to_string}) and inputs (#{inputs.inspect})" }
             logger.trace { "Event details #{inputs["event"].inspect}" } if inputs&.key?("event")
             trigger_conditions(inputs).process(mod: mod, inputs: inputs) do
-              process_queue(create_queue(inputs), mod, inputs)
+              event = extract_event(inputs)
+              process_queue(create_queue(event), mod, event)
             end
           rescue Exception => e
             raise if defined?(::RSpec) && ::RSpec.current_example.example_group.propagate_exceptions?
