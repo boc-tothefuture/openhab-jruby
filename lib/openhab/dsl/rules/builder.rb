@@ -541,7 +541,7 @@ module OpenHAB
           @rule_triggers = RuleTriggers.new
           @caller = caller_binding.eval "self"
           @ruby_triggers = []
-          @on_load = nil
+          @on_load_id = nil
           enabled(true)
           tags([])
         end
@@ -994,10 +994,11 @@ module OpenHAB
         #   end
         #
         def on_load(attach: nil)
-          # prevent overwriting the attachment
-          raise ArgumentError, "on_load can only be used once within a rule" if @on_load
+          # prevent overwriting @on_load_id
+          raise ArgumentError, "on_load can only be used once within a rule" if @on_load_id
 
-          @on_load = { attachment: attach }
+          @on_load_id = SecureRandom.uuid
+          attachments[@on_load_id] = attach
         end
 
         #
@@ -1447,7 +1448,7 @@ module OpenHAB
             #<OpenHAB::DSL::Rules::Builder: #{uid}
             triggers=#{triggers.inspect},
             run blocks=#{run.inspect},
-            on_load=#{@on_load},
+            on_load=#{!@on_load_id.nil?},
             Trigger Conditions=#{trigger_conditions.inspect},
             Trigger UIDs=#{triggers.map(&:id).inspect},
             Attachments=#{attachments.inspect}
@@ -1470,7 +1471,7 @@ module OpenHAB
           added_rule.actions.first.configuration.put("type", "application/x-ruby")
           added_rule.actions.first.configuration.put("script", script) if script
 
-          rule.execute(nil, { "event" => Struct.new(:attachment).new(@on_load[:attachment]) }) if @on_load
+          rule.execute(nil, { "module" => @on_load_id }) if @on_load_id
           added_rule
         end
 
@@ -1507,7 +1508,7 @@ module OpenHAB
         # @return [true,false] True if rule has triggers, false otherwise
         #
         def triggers?
-          @on_load || !triggers.empty?
+          @on_load_id || !triggers.empty?
         end
 
         #

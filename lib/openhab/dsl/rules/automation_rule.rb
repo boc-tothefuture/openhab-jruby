@@ -115,15 +115,15 @@ module OpenHAB
           event = inputs&.dig("event")
           attachment = @attachments[trigger_id(inputs)]
           if event
-            event.attachment = attachment if attachment
+            event.attachment = attachment
             return event
           end
 
           inputs = inputs.to_h
                          .select { |key, _value| key != "module" && INPUT_KEY_PATTERN.match?(key) }
                          .transform_keys(&:to_sym)
-                         .merge({ attachment: attachment })
-          Struct.new(*inputs.keys).new(*inputs.values)
+          inputs[:attachment] = attachment
+          Struct.new(*inputs.keys, keyword_init: true).new(inputs)
         end
 
         #
