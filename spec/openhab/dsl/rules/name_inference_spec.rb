@@ -72,7 +72,22 @@ RSpec.describe OpenHAB::DSL::Rules::NameInference do
   context "with #on_start" do
     it "generates a useful name" do
       r = rules.build { on_start { nil } }
-      expect(r.name).to eql "System Start Level reached 100 (:complete)"
+      expect(r.name).to eql "System Start Level reached 100 (complete)"
+    end
+
+    it "generates a useful name given an at_level symbol" do
+      r = rules.build { on_start(at_level: :rules) { nil } }
+      expect(r.name).to eql "System Start Level reached 40 (rules)"
+    end
+
+    it "generates a useful name given an at_level number" do
+      r = rules.build { on_start(at_level: 30) { nil } }
+      expect(r.name).to eql "System Start Level reached 30 (states)"
+    end
+
+    it "generates a useful name given multiple at_levels" do
+      r = rules.build { on_start(at_levels: [30, 40]) { nil } }
+      expect(r.name).to eql "System Start Level reached 30 (states) or 40 (rules)"
     end
   end
 end

@@ -138,7 +138,7 @@ module OpenHAB
             klass.declared_fields
                  .select { |field| field.type == start_level_type && field.name.start_with?("STARTLEVEL_") }
                  .find { |field| field.get_int(klass) == level }
-                 .name.split("_", 2).last.downcase.to_sym.inspect
+                 .name.split("_", 2).last.downcase
           end
 
           # format an array of words that will be the beginning of a sentence
