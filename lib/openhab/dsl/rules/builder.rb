@@ -797,10 +797,10 @@ module OpenHAB
           # for is a reserved word in ruby, so use local_variable_get :for
           duration = binding.local_variable_get(:for)
 
+          @ruby_triggers << [:changed, items, { to: to, from: from, duration: duration }]
+
           from = [nil] if from.nil?
           to = [nil] if to.nil?
-
-          @ruby_triggers << [:changed, items, { to: to, from: from, duration: duration }]
           items.each do |item|
             case item
             when Core::Things::Thing,
