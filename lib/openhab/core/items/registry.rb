@@ -49,7 +49,7 @@ module OpenHAB
         # @return [Object] The return value of the block.
         #
         def build(preferred_provider = nil, &block)
-          DSL::Items::BaseBuilderDSL.new(preferred_provider).instance_eval(&block)
+          DSL::Items::BaseBuilderDSL.new(preferred_provider).instance_eval_with_dummy_items(&block)
         end
 
         #

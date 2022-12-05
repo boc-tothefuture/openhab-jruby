@@ -12,19 +12,22 @@ module OpenHAB
       #
       # @example
       #   items.build do
-      #     switch_item "MySwitch", "My Switch"
-      #     switch_item "NotAutoupdating", autoupdate: false, channel: "mqtt:topic:1#light"
-      #     group_item "MyGroup" do
-      #       contact_item "ItemInGroup", channel: "binding:thing#channel"
+      #     switch_item MySwitch, "My Switch"
+      #     switch_item NotAutoupdating, autoupdate: false, channel: "mqtt:topic:1#light"
+      #     group_item MyGroup do
+      #       contact_item ItemInGroup, channel: "binding:thing#channel"
       #     end
       #     # passing `thing` to a group item will automatically use it as the base
       #     # for item channels
-      #     group_item "Equipment", tags: Semantics::HVAC, thing: "binding:thing"
-      #       string_item "Mode", tags: Semantics::Control, channel: "mode"
+      #     group_item Equipment, tags: Semantics::HVAC, thing: "binding:thing"
+      #       string_item Mode, tags: Semantics::Control, channel: "mode"
       #     end
       #   end
+      #
       module Builder
         include Core::EntityLookup
+
+        self.create_dummy_items = true
 
         class << self
           private
@@ -32,7 +35,8 @@ module OpenHAB
           # @!macro def_item_method
           #   @!method $1_item(name, label = nil, **kwargs)
           #   Create a new $1 item
-          #   @param name [String] The name for the new item
+          #   @param name [String, Symbol, Core::Items::Proxy] The name for the new item.
+          #     Note that you can use a string, a symbol, or even a literal constant name
           #   @param label [String] The item label
           #   @yieldparam [ItemBuilder] builder Item for further customization
           #   @see ItemBuilder#initialize ItemBuilder#initialize for additional arguments.
@@ -233,6 +237,7 @@ module OpenHAB
           raise ArgumentError, "`name` cannot be nil" if name.nil?
           raise ArgumentError, "`dimension` can only be specified with NumberItem" if dimension && type != :number
 
+          name = name.name if name.respond_to?(:name)
           if provider.is_a?(GroupItemBuilder)
             name = "#{provider.name_base}#{name}"
             label = "#{provider.label_base}#{label}".strip if label
@@ -365,7 +370,7 @@ module OpenHAB
         #
         # @example
         #   items.build do
-        #     date_time_item "Bedroom_Light_Updated" do
+        #     date_time_item Bedroom_Light_Updated do
         #       channel "hue:0210:1:bulb1:color", profile: "system:timestamp-update"
         #     end
         #   end

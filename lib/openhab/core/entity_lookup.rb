@@ -38,11 +38,32 @@ module OpenHAB
         def create_dummy_items?
           @create_dummy_items
         end
+
+        # @!visibility private
+        def inherited(klass)
+          super
+
+          EntityLookup.included(klass)
+        end
+
+        # @!visibility private
+        def included(klass)
+          super
+
+          EntityLookup.included(klass)
+        end
       end
 
       # @!visibility private
       def self.included(klass)
-        klass.singleton_class.include(ClassMethods)
+        klass.singleton_class.prepend(ClassMethods)
+        klass.ancestors.each do |ancestor|
+          next unless ancestor.singleton_class.ancestors.include?(ClassMethods)
+          next if ancestor.create_dummy_items?.nil?
+
+          klass.create_dummy_items = ancestor.create_dummy_items?
+          break
+        end
       end
 
       #

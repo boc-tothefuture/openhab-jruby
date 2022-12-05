@@ -40,8 +40,11 @@ module OpenHAB
           __getobj__.class
         end
 
+        # @return [true, false]
         def is_a?(klass)
-          klass == Item || __getobj__.is_a?(klass)
+          obj = __getobj__
+          # only claim to be a Delegator if we're backed by an actual item at the moment
+          klass == Item || obj.is_a?(klass) || klass == Proxy || (!obj.nil? && super)
         end
         alias_method :kind_of?, :is_a?
 
@@ -88,6 +91,24 @@ module OpenHAB
           return super unless __getobj__.nil?
 
           GroupItem::Members.new(self)
+        end
+
+        # @return [String]
+        def inspect
+          return super unless __getobj__.nil?
+
+          "#<OpenHAB::Core::Items::Proxy #{name}>"
+        end
+
+        #
+        # Supports inspect from IRB when we're a dummy item.
+        #
+        # @return [void]
+        # @!visibility private
+        def pretty_print(printer)
+          return super unless __getobj__.nil?
+
+          printer.text(inspect)
         end
 
         # needs to return `false` if we know we're not a {GroupItem}

@@ -192,22 +192,56 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
     expect(DateTimeItem1.state).to eq Time.parse("1970-01-01T00:00:00+00:00")
   end
 
-  it "can reference a group item directly" do
-    items.build do
-      group_item "group1"
-      group_item "group2", group: group1
-    end
-    expect(group2.groups).to eql [group1]
-  end
-
-  it "can reference a group item within another group_item" do
-    items.build do
-      group_item "group1"
-      group_item "group2" do
-        switch_item "switch1", group: group1
+  describe "entity lookup" do
+    it "can reference a group item directly" do
+      items.build do
+        group_item "group1"
+        group_item "group2", group: group1
       end
+      expect(group2.groups).to eql [group1]
     end
-    expect(switch1.groups).to match_array([group1, group2])
+
+    it "can reference a group item within another group_item" do
+      items.build do
+        group_item "group1"
+        group_item "group2" do
+          switch_item "switch1", group: group1
+        end
+      end
+      expect(switch1.groups).to match_array([group1, group2])
+    end
+
+    it "can reference an item (constant) that doesn't exist yet" do
+      items.build do
+        switch_item Switch1
+      end
+      expect(Switch1).to be_a(SwitchItem)
+    end
+
+    it "can reference an item (method) that doesn't exist yet" do
+      items.build do
+        group_item gMyGroup
+      end
+      expect(gMyGroup).to be_a(GroupItem)
+    end
+
+    it "can reference an item (constant) that doesn't exist yet inside a group" do
+      items.build do
+        group_item "gMyGroup" do
+          switch_item Switch1
+        end
+      end
+      expect(Switch1).to be_a(SwitchItem)
+    end
+
+    it "can reference an item (method) that doesn't exist yet inside a group" do
+      items.build do
+        group_item "gMyGroup" do
+          group_item gGroup2
+        end
+      end
+      expect(gGroup2).to be_a(GroupItem)
+    end
   end
 
   context "with a thing" do
