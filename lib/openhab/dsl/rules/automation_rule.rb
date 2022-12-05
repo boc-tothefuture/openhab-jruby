@@ -11,6 +11,17 @@ module OpenHAB
         # @!visibility private
         INPUT_KEY_PATTERN = /^[a-z_]+[a-zA-Z0-9_]*$/.freeze
 
+        class << self
+          #
+          # Caches dynamically generated Struct classes so that they don't have
+          # to be re-generated for every event, blowing the method cache.
+          #
+          # @!visibility private
+          # @return [java.util.Map<Array<Symbol>, Class>]
+          attr_reader :event_structs
+        end
+        @event_structs = java.util.concurrent.ConcurrentHashMap.new
+
         field_writer :uid
 
         #
@@ -112,9 +123,17 @@ module OpenHAB
         # @return [Object] event object
         #
         def extract_event(inputs)
-          event = inputs&.dig("event")
           attachment = @attachments[trigger_id(inputs)]
-          if event
+          if inputs&.key?("event")
+            event = inputs["event"]
+            unless event
+              if attachment
+                logger.warn("Unable to attach #{attachment.inspect} to event " \
+                            "object for rule #{uid} since the event is nil.")
+              end
+              return nil
+            end
+
             event.attachment = attachment
             return event
           end
@@ -123,7 +142,11 @@ module OpenHAB
                          .select { |key, _value| key != "module" && INPUT_KEY_PATTERN.match?(key) }
                          .transform_keys(&:to_sym)
           inputs[:attachment] = attachment
-          Struct.new(*inputs.keys, keyword_init: true).new(inputs)
+          keys = inputs.keys.sort
+          struct_class = self.class.event_structs.compute_if_absent(keys) do
+            Struct.new(*keys, keyword_init: true)
+          end
+          struct_class.new(**inputs)
         end
 
         #
