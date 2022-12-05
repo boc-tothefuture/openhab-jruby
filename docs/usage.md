@@ -13,8 +13,8 @@ and the {OpenHAB::Core::Events::AbstractEvent event} properties documented for t
 
 ## Creating File-Based Rules
 
-1. Place Ruby rules files in `ruby/personal/` subdirectory for OpenHAB scripted automation.  See [OpenHAB documentation](https://www.openhab.org/docs/configuration/jsr223.html#script-locations) for parent directory location.
-2. Put `require 'openhab/dsl'` at the top of any Ruby based rules file.
+1. Place Ruby script files in `${OPENHAB_CONF}/automation/ruby` directory.
+2. Put `require 'openhab/dsl'` at the top of any Ruby based scripts .
 
 For details on the rules syntax, see {OpenHAB::DSL::Rules::Builder}.
 
