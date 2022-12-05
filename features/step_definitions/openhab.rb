@@ -35,22 +35,6 @@ Then("It should not log {string} within {int} seconds") do |string, seconds|
   end
 end
 
-Given("OpenHAB is stopped") do
-  stop_openhab
-end
-
-When("I start OpenHAB") do
-  start_openhab
-end
-
-Given("GEM_HOME is empty") do
-  clear_gem_path
-end
-
-Given("a services template file named {string}") do |file, doc_string|
-  File.write(File.join(services_dir, file), ERB.new(doc_string).result)
-end
-
 def nil_if_blank(str)
   str = nil if str&.strip == ""
   str

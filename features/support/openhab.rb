@@ -102,11 +102,6 @@ def start_openhab
   system("rake openhab:start 1>/dev/null 2>/dev/null") || raise("Error Starting openHAB")
 end
 
-def clear_gem_path
-  FileUtils.rm_r gem_home
-  FileUtils.mkdir gem_home
-end
-
 def ensure_openhab_running
   cmd = TTY::Command.new(printer: :null)
   cmd.run(File.join(openhab_dir, "runtime/bin/status"), only_output_on_error: true)

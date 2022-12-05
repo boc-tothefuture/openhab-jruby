@@ -129,11 +129,10 @@ namespace :openhab do
     { "GEM_HOME" => gem_home }
   end
 
-  def state(task, args = nil)
+  def state(task)
     Rake::Task[@state_dir.to_s].execute
     task_file = File.join(@state_dir, task).tr(":", "_")
-    force = args&.key? :force
-    if File.exist?(task_file) && !force
+    if File.exist?(task_file)
       puts "Skipping task(#{task}), task already up to date"
     else
       yield
@@ -178,8 +177,8 @@ namespace :openhab do
   end
 
   desc "Setup services config"
-  task :services, [:force] => [:download] do |task, args|
-    state(task.name, args) do
+  task services: [:download] do |task|
+    state(task.name) do
       mkdir_p gem_home
       mkdir_p ruby_lib_dir
       services_config = ERB.new <<~SERVICES

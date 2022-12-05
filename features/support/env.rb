@@ -13,12 +13,4 @@ def prepare_openhab
   ensure_openhab_running
 end
 
-After("@reset_library") do
-  stop_openhab
-  clear_gem_path
-  openhab_deploy
-  system("rake openhab:services[force] 1>/dev/null 2>/dev/null") || raise("Error Updating Services")
-  start_openhab
-end
-
 prepare_openhab
