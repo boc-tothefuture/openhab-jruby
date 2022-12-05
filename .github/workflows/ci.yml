@@ -124,7 +124,7 @@ jobs:
           key: openHAB-setup-${{ matrix.openhab_version }}${{ endsWith(matrix.openhab_version, 'SNAPSHOT') && needs.openhab-matrix.outputs.snapshot_date || '' }}
       - name: RSpec
         run: bin/rspec --format progress --format html --out rspec.html
-        timeout-minutes: 4
+        timeout-minutes: 6
       - name: Upload openHAB Logs
         uses: actions/upload-artifact@v3
         if: failure()
@@ -168,7 +168,7 @@ jobs:
           key: openHAB-setup-${{ matrix.openhab_version }}${{ endsWith(matrix.openhab_version, 'SNAPSHOT') && needs.openhab-matrix.outputs.snapshot_date || '' }}
       - name: Cucumber
         run: bin/rake features
-        timeout-minutes: 8
+        timeout-minutes: 4
       - name: Upload openHAB Logs
         uses: actions/upload-artifact@v3
         if: success() || failure()
