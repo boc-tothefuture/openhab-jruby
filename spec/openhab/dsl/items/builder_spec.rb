@@ -11,6 +11,11 @@ RSpec.describe OpenHAB::DSL::Items::Builder do
     end
   end
 
+  it "complains if you try to add an item that already exists" do
+    items.build { switch_item "Switch1" }
+    expect { items.build { switch_item "Switch1" } }.to raise_error(ArgumentError)
+  end
+
   it "can remove an item" do
     items.build { switch_item "MySwitchItem" }
     items.remove(MySwitchItem)

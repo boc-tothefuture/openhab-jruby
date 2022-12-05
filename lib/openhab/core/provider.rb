@@ -154,7 +154,11 @@ module OpenHAB
 
       # @!visibility private
       def add(element)
-        @elements[element.uid] = element
+        @elements.compute(element.uid) do |_k, old_element|
+          raise ArgumentError, "Element #{element.uid} already exists, and cannot be added again" if old_element
+
+          element
+        end
         notify_listeners_about_added_element(element)
         element
       end
@@ -197,12 +201,15 @@ module OpenHAB
       # @!visibility private
       #
       def update(element)
-        old_element = @elements[element.uid]
-        if old_element
-          @elements[element.uid] = element
-          notify_listeners_about_updated_element(old_element, element)
+        old = nil
+        @elements.compute(element.uid) do |_k, old_element|
+          raise ArgumentError, "Element #{element.uid} does not exist to update" unless old_element
+
+          old = old_element
+          element
         end
-        old_element
+        notify_listeners_about_updated_element(old, element)
+        old
       end
 
       # @!visibility private
@@ -214,7 +221,7 @@ module OpenHAB
 
       def initialize(script_unloaded_before: nil)
         super()
-        @elements = {}
+        @elements = java.util.concurrent.ConcurrentHashMap.new
         self.class.registry.add_provider(self)
         ScriptHandling.script_unloaded(before: script_unloaded_before) { unregister }
       end
