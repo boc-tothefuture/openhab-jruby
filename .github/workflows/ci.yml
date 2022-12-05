@@ -122,14 +122,14 @@ jobs:
         uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: RSpec-logs-${{ matrix.openhab_version }}-#{{ matrix.jruby_version }}
+          name: RSpec-logs-${{ matrix.openhab_version }}-${{ matrix.jruby_version }}
           path: tmp/openhab/userdata/logs
           retention-days: 2
       - name: Upload RSpec results
         uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: RSpec-results-${{ matrix.openhab_version }}-#{{ matrix.jruby_version }}
+          name: RSpec-results-${{ matrix.openhab_version }}-${{ matrix.jruby_version }}
           path: rspec.html
 
   cucumber:
