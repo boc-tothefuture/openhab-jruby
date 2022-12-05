@@ -469,6 +469,8 @@ module OpenHAB
         include Builder
 
         Builder.public_instance_methods.each do |m|
+          next unless Builder.instance_method(m).owner == Builder
+
           class_eval <<~RUBY, __FILE__, __LINE__ + 1
             def #{m}(*args, groups: nil, **kwargs)  # def dimmer_item(*args, groups: nil, **kwargs)
               groups ||= []                         #   groups ||= []

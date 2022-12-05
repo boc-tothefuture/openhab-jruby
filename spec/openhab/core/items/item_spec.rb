@@ -163,4 +163,18 @@ RSpec.describe OpenHAB::Core::Items::Item do
     expect(Switch1).not_to eq Switch2
     expect(Switch1).not_to eq Switch3
   end
+
+  describe "entity lookup" do
+    it "doesn't confuse a method call with an item" do
+      items.build { group_item "gGroup" }
+
+      expect(gGroup).to be_a(GroupItem)
+      expect { gGroup(:argument) }.to raise_error(NoMethodError)
+      expect do
+        gGroup do
+          nil
+        end
+      end.to raise_error(NoMethodError)
+    end
+  end
 end

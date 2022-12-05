@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ruby2_keywords"
+
 module OpenHAB
   module Core
     #
@@ -48,7 +50,9 @@ module OpenHAB
       #
       # @return [Item, Things::Thing, nil]
       #
-      def method_missing(method, *)
+      ruby2_keywords def method_missing(method, *args)
+        return super unless args.empty? && !block_given?
+
         logger.trace("method missing, performing openHAB Lookup for: #{method}")
         EntityLookup.lookup_entity(method,
                                    create_dummy_items: self.class.respond_to?(:create_dummy_items?) &&
