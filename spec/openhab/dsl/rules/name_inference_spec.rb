@@ -23,7 +23,7 @@ RSpec.describe OpenHAB::DSL::Rules::NameInference do
     it "generates a useful name for three to: states" do
       trigger = self.trigger
       r = rules.build { send(trigger, SwitchItem1, to: [NULL, UNDEF, OFF]) { nil } }
-      expect(r.name).to eql "SwitchItem1 #{trigger} to any of NULL, UNDEF, or OFF"
+      expect(r.name).to eql "SwitchItem1 #{trigger} to NULL, UNDEF, or OFF"
     end
 
     it "generates a useful name for a range to:" do

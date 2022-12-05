@@ -165,7 +165,7 @@ module OpenHAB
             return array[0] if array.length == 1
             return "#{array[0]} or #{array[1]}" if array.length == 2
 
-            "any of #{array[0..-2].join(", ")}, or #{array[-1]}"
+            "#{array[0..-2].join(", ")}, or #{array[-1]}"
           end
         end
       end
