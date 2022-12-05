@@ -197,7 +197,7 @@ namespace :openhab do
   desc "Install JRuby Bundle"
   task bundle: [:download, :services, @deploy_dir] do |task|
     state(task.name) do
-      File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: "a")
+      File.write(@addons_config_file, "\nautomation=jrubyscripting,pidcontroller\n", mode: "a")
     end
   end
 
@@ -244,10 +244,10 @@ namespace :openhab do
   end
 
   def wait_till_running
-    wait_for(20, "openHAB to start") { running? }
+    wait_for(30, "openHAB to start") { running? }
     abort "Unable to start openHAB" unless running?(fail_on_error: true)
 
-    wait_for(20, "openHAB to become ready") { ready? }
+    wait_for(30, "openHAB to become ready") { ready? }
     abort "openHAB did not become ready" unless ready?(fail_on_error: true)
   end
 

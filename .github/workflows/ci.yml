@@ -56,12 +56,13 @@ jobs:
     outputs:
       matrix: |
         ["3.3.0", "3.4.0-SNAPSHOT"]
+      snapshot_date: |
+        ${{ steps.snapshot-date.outputs.SNAPSHOT_DATE }}
     steps:
-      # For some reason fromJson in matrix: can't use `env`, so you have to
-      # set a job output. But nothing actually has to run. But you have to have
-      # at least one step. Weird.
-      - name: No Op
-        run: true
+      - name: Calculate Date for Cache Key
+        id: snapshot-date
+        run: |
+          echo SNAPSHOT_DATE=$(date -u +-%Y%m%d) >> $GITHUB_OUTPUT
 
   openhab-setup:
     needs: openhab-matrix
@@ -72,16 +73,17 @@ jobs:
         openhab_version: ${{ fromJson(needs.openhab-matrix.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
       - name: Cache openHAB setup
         id: cache
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: openHAB-setup-${{ matrix.openhab_version }}
+          key: openHAB-setup-${{ matrix.openhab_version }}${{ endsWith(matrix.openhab_version, 'SNAPSHOT') && needs.openhab-matrix.outputs.snapshot_date || '' }}
+      - uses: ruby/setup-ruby@v1
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
       - name: Setup openHAB
         if: steps.cache.outputs.cache-hit != 'true'
         env:
@@ -114,7 +116,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: openHAB-setup-${{ matrix.openhab_version }}
+          key: openHAB-setup-${{ matrix.openhab_version }}${{ endsWith(matrix.openhab_version, 'SNAPSHOT') && needs.openhab-matrix.outputs.snapshot_date || '' }}
       - name: RSpec
         run: bin/rspec --format progress --format html --out rspec.html
         timeout-minutes: 4
@@ -154,14 +156,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: openHAB-setup-${{ matrix.openhab_version }}
+          key: openHAB-setup-${{ matrix.openhab_version }}${{ endsWith(matrix.openhab_version, 'SNAPSHOT') && needs.openhab-matrix.outputs.snapshot_date || '' }}
       - name: Cucumber
         run: bin/rake features
         timeout-minutes: 8
       - name: Upload openHAB Logs
         uses: actions/upload-artifact@v3
-        if: failure()
+        if: success() || failure()
         with:
           name: Cucumber-logs-${{ matrix.openhab_version }}
-          path: tmp/openhab/userdata/logs
+          path: |
+            tmp/openhab/userdata/logs
+            tmp/karaf.log
           retention-days: 2
