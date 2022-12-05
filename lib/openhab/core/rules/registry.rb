@@ -6,7 +6,7 @@ module OpenHAB
   module Core
     module Rules
       #
-      # Provides access to all OpenHAB {Rule rules}, and acts like an array.
+      # Provides access to all openHAB {Rule rules}, and acts like an array.
       #
       class Registry
         include LazyArray

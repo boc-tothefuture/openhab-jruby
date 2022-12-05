@@ -12,7 +12,7 @@ module OpenHAB
         #
         module CronHandler
           # Cron Trigger Handler that provides trigger IDs
-          # Unfortunatly because the CronTriggerHandler in OpenHAB core is marked internal
+          # Unfortunatly because the CronTriggerHandler in openHAB core is marked internal
           # the entire thing must be recreated here
           class CronTriggerHandler < org.openhab.core.automation.handler.BaseTriggerModuleHandler
             include org.openhab.core.scheduler.SchedulerRunnable
@@ -22,7 +22,7 @@ module OpenHAB
             field_accessor :callback
 
             # Creates a new CronTriggerHandler
-            # @param [Trigger] trigger OpenHAB trigger associated with handler
+            # @param [org.openhab.core.automation.Trigger] trigger openHAB trigger associated with handler
             #
             def initialize(trigger)
               @trigger = trigger
@@ -79,8 +79,8 @@ module OpenHAB
           class CronTriggerHandlerFactory
             include org.openhab.core.automation.module.script.rulesupport.shared.factories.ScriptedTriggerHandlerFactory
 
-            # Invoked by the OpenHAB core to get a trigger handler for the supllied trigger
-            # @param [Trigger] trigger OpenHAB trigger
+            # Invoked by openHAB core to get a trigger handler for the supllied trigger
+            # @param [org.openhab.core.automation.Trigger] trigger
             #
             # @return [WatchTriggerHandler] trigger handler for supplied trigger
             def get(trigger)
@@ -92,7 +92,7 @@ module OpenHAB
             private
 
             #
-            # Creates trigger types and trigger type factories for OpenHAB
+            # Creates trigger types and trigger type factories for openHAB
             #
             def add_script_cron_handler
               Core.automation_manager.add_trigger_handler(
@@ -105,7 +105,7 @@ module OpenHAB
             end
 
             #
-            # Creates trigger types and trigger type factories for OpenHAB
+            # Creates trigger types and trigger type factories for openHAB
             #
             def cron_trigger_type
               org.openhab.core.automation.type.TriggerType.new(

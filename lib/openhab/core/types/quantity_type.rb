@@ -12,7 +12,7 @@ module OpenHAB
       # {QuantityType} extends {DecimalType} to handle physical unit measurement.
       #
       # {QuantityType} is part of the [Units of Measurement](https://www.openhab.org/docs/concepts/units-of-measurement.html)
-      # framework in OpenHAB. It is represented as a decimal number with a unit.
+      # framework in openHAB. It is represented as a decimal number with a unit.
       # You can construct a {QuantityType} object by using the pipe operator with any Numeric.
       #
       # @see OpenHAB::DSL.unit unit: Implicit unit conversions

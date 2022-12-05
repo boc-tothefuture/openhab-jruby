@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-1. OpenHAB 3
+1. openHAB 3.3+
 2. The JRuby Scripting Language Addon
 3. This scripting library
 
@@ -20,7 +20,7 @@ insert the `require` statement at the beginning of your scripts (_optional_).
 
 ### Using files
 
-1. Configure JRuby OpenHAB services
+1. Configure JRuby openHAB services
    
    Create a file called `jruby.cfg` in `<OPENHAB_CONF>/services/` with the following content:
    ```
@@ -35,7 +35,7 @@ insert the `require` statement at the beginning of your scripts (_optional_).
 
 ## Upgrading
 
-Depending on the versioning selected in the `jruby.cfg` or the gems list in the user interface, file upgrading will either be automatic after a OpenHAB restart or manual.  For manual upgrades select the version of the gem exactly, for example:
+Depending on the versioning selected in the `jruby.cfg` or the gems list in the user interface, file upgrading will either be automatic after a openHAB restart or manual.  For manual upgrades select the version of the gem exactly, for example:
 `org.openhab.automation.jrubyscripting:gems=openhab-jrubyscripting=5.0.0`
 
 Will install and stay at version 5.0.0, to upgrade to version 5.0.1, change the configuration:

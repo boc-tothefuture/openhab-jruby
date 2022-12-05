@@ -6,7 +6,7 @@ module OpenHAB
   # rubocop:disable Layout/LineLength
 
   #
-  # Provides access to the OpenHAB logging facilities using Ruby logging methods
+  # Provides access to the openHAB logging facilities using Ruby logging methods
   #
   # Logging is available everywhere through the {#logger} object.
   #
@@ -122,7 +122,7 @@ module OpenHAB
   end
 
   #
-  # Ruby Logger that forwards messages at appropriate levels to OpenHAB Logger
+  # Ruby Logger that forwards messages at appropriate levels to openHAB Logger
   #
   class Logger
     # The base prefix for all loggers from this gem.
@@ -150,7 +150,7 @@ module OpenHAB
     private_constant :JAVA_INTERNAL_CALL_REGEX
 
     class << self
-      # The root logger (all of OpenHAB)
+      # The root logger (all of openHAB)
       # @return [Logger]
       def root
         Log.logger(org.slf4j.Logger::ROOT_LOGGER_NAME)
@@ -299,7 +299,7 @@ module OpenHAB
     end
 
     #
-    # Log a message to the OpenHAB Logger
+    # Log a message to the openHAB Logger
     #
     # @param [Symbol] severity Severity to log message at
     # @param [Object] msg to log, if no msg supplied and a block is provided,

@@ -1,4 +1,4 @@
-# JRuby OpenHAB Scripting Change Log
+# JRuby openHAB Scripting Change Log
 
 ## [5.0.0](https://github.com/ccutrer/openhab-jrubyscripting/compare/4.45.2...main)
 
@@ -44,7 +44,7 @@ here is a non-exhaustive list of significant departures from the original gem:
   rules, as well as the preferred way to write tests for this gem itself, when
   possible.
 * Major re-organization of class structures. {OpenHAB::Core} now contains any
-  classes that are mostly wrappers or extensions of OpenHAB::Core Java
+  classes that are mostly wrappers or extensions of org.openhab.core Java
   classes, while {OpenHAB::DSL} contains novel Ruby-only classes that implement
   a Ruby-first manner of creating rules, items, and things.
 * As part of the re-organization from above, the definition of a "DSL method"
@@ -59,10 +59,10 @@ here is a non-exhaustive list of significant departures from the original gem:
 
 ### Breaking Changes
 
-* Dropping support for OpenHAB < 3.3.
+* Dropping support for openHAB < 3.3.
 * The main require is now `require "openhab/dsl"` instead of just
   `require "openhab"`. The reason being to avoid conflicts if a gem gets
-  written to access OpenHAB via REST API. It's probably preferred that you
+  written to access openHAB via REST API. It's probably preferred that you
   [configure automatic requires](docs/installation.md) for this file anyway.
 * {GenericItem} and descendants can no longer be treated as the item's state.
   While convenient at times, it introduces many ambiguities on if the intention

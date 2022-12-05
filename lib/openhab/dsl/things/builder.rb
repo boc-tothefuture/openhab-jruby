@@ -6,7 +6,7 @@ module OpenHAB
     # Contains extensions to simplify working with {Core::Things::Thing Thing}s.
     #
     module Things
-      # A thing builder allows you to dynamically create OpenHAB thing at runtime.
+      # A thing builder allows you to dynamically create openHAB things at runtime.
       # This can be useful either to create things as soon as the script loads,
       # or even later based on a rule executing.
       #

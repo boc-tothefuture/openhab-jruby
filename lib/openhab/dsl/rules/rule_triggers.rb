@@ -10,7 +10,7 @@ module OpenHAB
   module DSL
     module Rules
       #
-      # Rule configuration for OpenHAB Rules engine
+      # Rule configuration for openHAB Rules engine
       #
       # @!visibility private
       class RuleTriggers
@@ -39,7 +39,7 @@ module OpenHAB
         # @param [Map] config map describing trigger configuration
         # @param [Object] attach object to be attached to the trigger
         #
-        # @return [Trigger] OpenHAB trigger
+        # @return [org.openhab.core.automation.Trigger] openHAB trigger
         #
         def append_trigger(type:, config:, attach: nil, conditions: nil)
           config.transform_keys!(&:to_s)
@@ -57,7 +57,7 @@ module OpenHAB
         # @param [String] type of trigger
         # @param [Map] config map
         #
-        # @return [OpenHAB Trigger] configured by type and supplied config
+        # @return [org.openhab.core.automation.Trigger] configured by type and supplied config
         #
         def self.trigger(type:, config:)
           logger.trace("Creating trigger of type '#{type}' config: #{config}")

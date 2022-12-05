@@ -12,7 +12,7 @@ Feature:  logging
         gem 'httparty'
       end
 
-      logger.info("OpenHAB Rules!")
+      logger.info("openHAB Rules!")
       """
     When I deploy the rules file
-    Then It should log 'OpenHAB Rules!' within 5 seconds
+    Then It should log 'openHAB Rules!' within 5 seconds

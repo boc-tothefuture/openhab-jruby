@@ -34,7 +34,7 @@ module OpenHAB
         #
         # Checks if a guard should run
         #
-        # @param [OpenHAB Trigger Event] event OpenHAB Trigger Event
+        # @param [Object] event openHAB Trigger Event
         #
         # @return [true,false] True if guard is satisfied, false otherwise
         #
@@ -51,7 +51,7 @@ module OpenHAB
         #
         # @param [Array] conditions to check
         # @param [Symbol] check_type type of check to perform (:only_if or :not_if)
-        # @param [Event] event OpenHAB event to see if it satisfies the guard
+        # @param [Event] event openHAB event to see if it satisfies the guard
         #
         # @return [true,false] True if guard is satisfied, false otherwise
         #
@@ -70,7 +70,7 @@ module OpenHAB
         # Execute the guard check
         #
         # @param [Symbol] check_type :only_if or :not_if to check
-        # @param [OpenHAB Event] event event to check if meets guard
+        # @param [Object] event event to check if meets guard
         # @param [Array<Item>] items to check if satisfy criteria
         # @param [Array] procs to check if satisfy criteria
         #
@@ -87,7 +87,7 @@ module OpenHAB
         #
         # Check not_if guard
         #
-        # @param [OpenHAB Event] event to check if meets guard
+        # @param [Object] event to check if meets guard
         # @param [Array<Item>] items to check if satisfy criteria
         # @param [Array] procs to check if satisfy criteria
         #
@@ -100,7 +100,7 @@ module OpenHAB
         #
         # Check only_if guard
         #
-        # @param [OpenHAB Event] event to check if meets guard
+        # @param [Object] event to check if meets guard
         # @param [Array<Item>] items to check if satisfy criteria
         # @param [Array] procs to check if satisfy criteria
         #

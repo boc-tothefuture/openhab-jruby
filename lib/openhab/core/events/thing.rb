@@ -7,7 +7,7 @@ module OpenHAB
 
       # Strictly speaking this class isn't an event, but it's accessed from an AbstractThingRegistryEvent
 
-      # Adds methods to core OpenHAB AbstractThingDTO to make it more natural in Ruby
+      # Adds methods to core openHAB AbstractThingDTO to make it more natural in Ruby
       class AbstractThingDTO
         # @!method uid
         #   The thing's UID

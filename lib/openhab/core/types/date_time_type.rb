@@ -33,8 +33,8 @@ module OpenHAB
 
         class << self
           #
-          # Parses a String representing a time into an OpenHAB DateTimeType. First tries to parse it
-          #   using java's DateTimeType's parser, then falls back to the Ruby Time.parse
+          # Parses a String representing a time into an {java.time.DateTimeType}. First tries to parse it
+          #   using Java's parser, then falls back to the Ruby `Time.parse`.
           #
           # @param [String] time_string
           #
@@ -44,9 +44,9 @@ module OpenHAB
             time_string = "#{time_string}Z" if TIME_ONLY_REGEX.match?(time_string)
             DateTimeType.new(time_string)
           rescue java.lang.StringIndexOutOfBoundsException, java.lang.IllegalArgumentException => e
-            # Try Ruby's Time.parse if OpenHAB's DateTimeType parser fails
+            # Try Ruby's Time.parse if DateTimeType parser fails
             begin
-              DateTimeType.new(::Time.parse(time_string))
+              ::Time.parse(time_string).to_zoned_date_time
             rescue ArgumentError
               raise ArgumentError, e.message
             end

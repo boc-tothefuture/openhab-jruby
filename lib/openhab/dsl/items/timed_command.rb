@@ -205,8 +205,8 @@ module OpenHAB
           #
           # Execute the rule
           #
-          # @param [Map] _mod map provided by OpenHAB rules engine
-          # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
+          # @param [java.util.Map] _mod map provided by openHAB rules engine
+          # @param [java.util.Map] inputs map provided by openHAB rules engine containing event and other information
           #
           def execute(_mod = nil, inputs = nil)
             ThreadLocal.thread_local(**@thread_locals) do

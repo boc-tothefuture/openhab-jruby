@@ -14,7 +14,7 @@ module OpenHAB
       class << self
         #
         # @!attribute [r] rule_manager
-        # @return [org.openhab.core.automation.RuleManager] The OpenHAB rule manager/engine
+        # @return [org.openhab.core.automation.RuleManager] The openHAB rule manager/engine
         #
         def manager
           @manager ||= OSGi.service("org.openhab.core.automation.RuleManager")

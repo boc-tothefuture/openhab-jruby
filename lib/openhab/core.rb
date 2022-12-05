@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module OpenHAB
-  # Contains classes and modules that wrap actual OpenHAB objects
+  # Contains classes and modules that wrap actual openHAB objects
   module Core
-    # The OpenHAB Version. >= 3.3.0 is required.
+    # The openHAB Version. >= 3.3.0 is required.
     # @return [String]
     VERSION = org.openhab.core.OpenHAB.version.freeze
 
     unless Gem::Version.new(VERSION) >= Gem::Version.new("3.3.0")
-      raise "`openhab-jrubyscripting` requires OpenHAB >= 3.3.0"
+      raise "`openhab-jrubyscripting` requires openHAB >= 3.3.0"
     end
 
     # @return [Integer] Number of seconds to wait between checks for automation manager
@@ -16,18 +16,18 @@ module OpenHAB
     private_constant :CHECK_DELAY
     class << self
       #
-      # Wait until OpenHAB engine ready to process
+      # Wait until openHAB engine ready to process
       #
       # @return [void]
       #
       # @!visibility private
       def wait_till_openhab_ready
-        logger.trace("Checking readiness of OpenHAB")
+        logger.trace("Checking readiness of openHAB")
         until automation_manager
           logger.trace("Automation manager not loaded, checking again in #{CHECK_DELAY} seconds.")
           sleep CHECK_DELAY
         end
-        logger.trace "Automation manager instantiated, OpenHAB ready for rule processing."
+        logger.trace "Automation manager instantiated, openHAB ready for rule processing."
       end
 
       #
@@ -41,7 +41,7 @@ module OpenHAB
       #
       # @!attribute [r] automation_manager
       # @return [org.openhab.core.automation.module.script.rulesupport.shared.ScriptedAutomationManager]
-      #   The OpenHAB Automation manager.
+      #   The openHAB Automation manager.
       #
       def automation_manager
         $se.get("automationManager")

@@ -95,11 +95,11 @@ end
 
 def stop_openhab
   OpenHABClient.instance.close
-  system("rake openhab:stop 1>/dev/null 2>/dev/null") || raise("Error Stopping OpenHAB")
+  system("rake openhab:stop 1>/dev/null 2>/dev/null") || raise("Error Stopping openHAB")
 end
 
 def start_openhab
-  system("rake openhab:start 1>/dev/null 2>/dev/null") || raise("Error Starting OpenHAB")
+  system("rake openhab:start 1>/dev/null 2>/dev/null") || raise("Error Starting openHAB")
 end
 
 def clear_gem_path

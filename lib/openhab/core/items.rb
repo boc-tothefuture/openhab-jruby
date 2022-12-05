@@ -9,7 +9,7 @@ end
 module OpenHAB
   module Core
     #
-    # Contains the core types that OpenHAB uses to represent items.
+    # Contains the core types that openHAB uses to represent items.
     # Items have states from the {Types} module.
     #
     # You may use an item or group name anywhere {DSL} (or just {Core::EntityLookup})

@@ -7,7 +7,7 @@ end
 module OpenHAB
   module Core
     #
-    # Contains the core types that OpenHAB uses as {State}s for items, and
+    # Contains the core types that openHAB uses as {State}s for items, and
     # {Command}s to be sent to control them.
     #
     # Types are the specific data types that commands and states are. They can be

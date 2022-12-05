@@ -3,7 +3,7 @@
 module OpenHAB
   #
   # This module contains helper methods, hooks, and infrastracture to
-  # boot OpenHAB inside of JRuby, and run RSpec (or other Ruby processes)
+  # boot openHAB inside of JRuby, and run RSpec (or other Ruby processes)
   # in that context.
   #
   # @see file:testing.md Testing Your Rules

@@ -6,7 +6,7 @@ module OpenHAB
       java_import org.openhab.core.items.events.ItemEvent
 
       #
-      # Adds methods to core OpenHAB ItemEvent to make it more natural in Ruby
+      # Adds methods to core openHAB ItemEvent to make it more natural in Ruby
       #
       class ItemEvent < AbstractEvent
         #

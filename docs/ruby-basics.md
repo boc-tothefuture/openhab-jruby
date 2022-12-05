@@ -2,7 +2,7 @@
 
 # Ruby Basics
 
-The OpenHAB JRuby scripting automation is based on the [JRuby](https://www.jruby.org/) implementation of the 
+The openHAB JRuby scripting automation is based on the [JRuby](https://www.jruby.org/) implementation of the 
 [Ruby](https://www.ruby-lang.org/) language. This page offers a quick overview of Ruby to help you get started
 writing rules. However, it is by no means comprehensive. A wealth of information can be found on 
 [Ruby's web site](https://www.ruby-lang.org/en/documentation/).

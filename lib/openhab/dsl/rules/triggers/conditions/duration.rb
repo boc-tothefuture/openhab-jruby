@@ -57,7 +57,7 @@ module OpenHAB
             #
             # Check if trigger guards prevent rule execution
             #
-            # @param [Map] inputs OpenHAB map object describing rule trigger
+            # @param [java.util.Map] inputs map object describing rule trigger
             #
             # @return [true,false] True if the rule should execute, false if trigger guard prevents execution
             #
@@ -70,7 +70,7 @@ module OpenHAB
             # Rerieve the newState and oldState, alternatively newStatus and oldStatus
             # from the input map
             #
-            # @param [Map] inputs OpenHAB map object describing rule trigger
+            # @param [java.util.Map] inputs map object describing rule trigger
             #
             # @return [Array] An array of the values for [newState, oldState] or [newStatus, oldStatus]
             #

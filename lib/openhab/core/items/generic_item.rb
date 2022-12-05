@@ -73,7 +73,7 @@ module OpenHAB
         #
         # @!attribute [r] state
         # @return [State, nil]
-        #   OpenHAB item state if state is not {UNDEF} or {NULL}, nil otherwise.
+        #   openHAB item state if state is not {UNDEF} or {NULL}, nil otherwise.
         #   This makes it easy to use with the
         #   [Ruby safe navigation operator `&.`](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html)
         #   Use {#undef?} or {#null?} to check for those states.

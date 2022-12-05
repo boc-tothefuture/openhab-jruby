@@ -81,7 +81,7 @@ module OpenHAB
         service = org.apache.karaf.instance.core.internal.InstanceServiceImpl.new
         settings = org.apache.karaf.instance.core.InstanceSettings.new(0, 0, 0, path, nil, nil, nil)
         root_instance = service.instances.find(&:root?)
-        raise ArgumentError "No root instance found to clone... has OpenHAB run yet?" unless root_instance
+        raise ArgumentError "No root instance found to clone... has openHAB run yet?" unless root_instance
 
         return if service.get_instance("rspec")
 
@@ -129,7 +129,7 @@ module OpenHAB
         launch_karaf
         at_exit do
           @main.destroy
-          # OSGi/OpenHAB leave a ton of threads around. Kill ourselves ASAP
+          # OSGi/openHAB leave a ton of threads around. Kill ourselves ASAP
           code = if $!.nil? || ($!.is_a?(SystemExit) && $!.success?)
                    0
                  elsif $!.is_a?(SystemExit)
@@ -724,7 +724,7 @@ module OpenHAB
         sls = OSGi.service("org.openhab.core.service.StartLevelService")
 
         unless sls
-          # try a different (hacky!) way to get it, since in OpenHAB 3.2.0 it's not exposed as a service
+          # try a different (hacky!) way to get it, since in openHAB 3.2.0 it's not exposed as a service
           scr = OSGi.service("org.osgi.service.component.runtime.ServiceComponentRuntime")
           scr.class.field_reader :componentRegistry
           cr = scr.componentRegistry
@@ -764,7 +764,7 @@ module OpenHAB
         File.write("#{oh_userdata}/etc/org.apache.karaf.features.xml", <<~XML)
           <?xml version="1.0" encoding="UTF-8"?>
           <featuresProcessing xmlns="http://karaf.apache.org/xmlns/features-processing/v1.0.0" xmlns:f="http://karaf.apache.org/xmlns/features/v1.6.0">
-              <!-- From OpenHAB 3.2.0 -->
+              <!-- From openHAB 3.2.0 -->
               <bundleReplacements>
                 <bundle originalUri="mvn:org.ops4j.pax.logging/pax-logging-api/[0,2.0.13)" replacement="mvn:org.ops4j.pax.logging/pax-logging-api/2.0.13" mode="maven" />
                 <bundle originalUri="mvn:org.ops4j.pax.logging/pax-logging-log4j2/[0,2.0.13)" replacement="mvn:org.ops4j.pax.logging/pax-logging-log4j2/2.0.13" mode="maven" />

@@ -10,7 +10,7 @@ module OpenHAB
   module Core
     module Items
       #
-      # Provides access to all OpenHAB {Item items}, and acts like an array.
+      # Provides access to all openHAB {Item items}, and acts like an array.
       #
       class Registry
         include LazyArray

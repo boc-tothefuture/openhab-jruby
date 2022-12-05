@@ -8,7 +8,7 @@ module OpenHAB
       java_import org.openhab.core.items.events.ItemStateChangedEvent
 
       #
-      # Adds methods to core OpenHAB ItemStateChangedEvent to make it more natural in Ruby
+      # Adds methods to core openHAB ItemStateChangedEvent to make it more natural in Ruby
       #
       class ItemStateChangedEvent < ItemEvent
         include ItemState

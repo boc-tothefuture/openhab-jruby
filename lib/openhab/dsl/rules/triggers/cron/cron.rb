@@ -33,7 +33,7 @@ module OpenHAB
             }.freeze
           private_constant :CRON_EXPRESSION_MAP
 
-          # @return [Hash] Map of days of the week from symbols to to OpenHAB cron strings
+          # @return [Hash] Map of days of the week from symbols to to openHAB cron strings
           DAY_OF_WEEK_MAP = {
             monday: "MON",
             tuesday: "TUE",
@@ -134,7 +134,7 @@ module OpenHAB
           #
           # @param [Map] map of cron expression
           #
-          # @return [String] OpenHAB cron string
+          # @return [String] openHAB cron string
           #
           def self.map_to_cron(map)
             %i[second minute hour dom month dow year].map { |field| map.fetch(field) }.join(" ")

@@ -55,8 +55,8 @@ module OpenHAB
         #
         # Execute the rule
         #
-        # @param [Map] mod map provided by OpenHAB rules engine
-        # @param [Map] inputs map provided by OpenHAB rules engine containing event and other information
+        # @param [java.util.Map] mod map provided by openHAB rules engine
+        # @param [java.util.Map] inputs map provided by openHAB rules engine containing event and other information
         #
         #
         def execute(mod = nil, inputs = nil)
@@ -161,7 +161,7 @@ module OpenHAB
         #
         # Returns trigger conditions from inputs if it exists
         #
-        # @param [Map] inputs map from OpenHAB containing UID
+        # @param [java.util.Map] inputs map from openHAB containing UID
         #
         # @return [Array] Array of trigger conditions that match rule UID
         #
@@ -172,7 +172,7 @@ module OpenHAB
         #
         # Check if any guards prevent execution
         #
-        # @param [Map] event OpenHAB rule trigger event
+        # @param [Object] event openHAB rule trigger event
         #
         # @return [true,false] True if guards says rule should execute, false otherwise
         #
@@ -198,8 +198,8 @@ module OpenHAB
         # Process the run queue
         #
         # @param [Array] run_queue array of procs of various types to execute
-        # @param [Map] mod OpenHAB map object describing rule trigger
-        # @param [Map] event OpenHAB map object describing rule trigger
+        # @param [java.util/Map] mod openHAB map object describing rule trigger
+        # @param [Object] event openHAB map object describing rule trigger
         #
         def process_queue(run_queue, mod, event)
           while (task = run_queue.shift)

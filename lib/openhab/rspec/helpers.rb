@@ -52,7 +52,7 @@ module OpenHAB
   module RSpec
     #
     # Provides helper methods for use in specs, to easily work with and adjust
-    # the OpenHAB environment.
+    # the openHAB environment.
     #
     # These methods are automatically available in RSpec spec blocks, as well
     # as other per-spec hooks like `before` and `after`. You can also call them
@@ -175,7 +175,7 @@ module OpenHAB
       end
 
       #
-      # Require all files configured to be autorequired with the jrubyscripting addon in OpenHAB.
+      # Require all files configured to be autorequired with the jrubyscripting addon in openHAB.
       #
       # This method is normally called by RSpec hooks.
       #
@@ -306,7 +306,7 @@ module OpenHAB
       end
 
       #
-      # Install an OpenHAB addon
+      # Install an openHAB addon
       #
       # @param [String] addon_id The addon id, such as "binding-mqtt"
       # @param [true,false] wait Wait until OSGi has confirmed the bundle is installed and running before returning.
@@ -348,7 +348,7 @@ module OpenHAB
         end
       end
 
-      # @return [String] The filename of the OpenHAB log.
+      # @return [String] The filename of the openHAB log.
       def log_file
         "#{java.lang.System.get_property("openhab.logdir", nil)}/openhab.log"
       end

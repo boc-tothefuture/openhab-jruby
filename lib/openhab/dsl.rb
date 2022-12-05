@@ -16,7 +16,7 @@ end
 require_relative "core_ext"
 
 #
-# Main OpenHAB Module
+# Main openHAB Module
 #
 module OpenHAB
   #
@@ -166,9 +166,9 @@ module OpenHAB
     end
 
     #
-    # Get all things known to OpenHAB
+    # Get all things known to openHAB
     #
-    # @return [Core::Things::Registry] all Thing objects known to OpenHAB
+    # @return [Core::Things::Registry] all Thing objects known to openHAB
     #
     # @example
     #   things.each { |thing| logger.info("Thing: #{thing.uid}")}
@@ -235,7 +235,7 @@ module OpenHAB
     #     logger.info("Timer Fired")
     #   end
     #
-    # @example Timers delegate methods to OpenHAB timer objects
+    # @example Timers delegate methods to openHAB timer objects
     #   after 1.second do |timer|
     #     logger.info("Timer is active? #{timer.active?}")
     #   end
@@ -339,7 +339,7 @@ module OpenHAB
     # Store states of supplied items
     #
     # Takes one or more items and returns a map `{Item => State}` with the
-    # current state of each item. It is implemented by calling OpenHAB's
+    # current state of each item. It is implemented by calling openHAB's
     # [events.storeStates()](https://www.openhab.org/docs/configuration/actions.html#event-bus-actions).
     #
     # @param [Item] items Items to store states of.
@@ -728,4 +728,4 @@ OpenHAB::Core::Items.import_into_global_namespace
 # Extend `main` with DSL methods
 singleton_class.include(OpenHAB::DSL)
 
-logger.debug "OpenHAB JRuby Scripting Library Version #{OpenHAB::DSL::VERSION} Loaded"
+logger.debug "openHAB JRuby Scripting Library Version #{OpenHAB::DSL::VERSION} Loaded"

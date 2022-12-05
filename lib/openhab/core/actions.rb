@@ -5,7 +5,7 @@ module OpenHAB
     #
     # Access to global actions.
     #
-    # All OpenHAB's actions including those provided by add-ons are available, notably:
+    # All openHAB's actions including those provided by add-ons are available, notably:
     # * Audio
     # * Voice
     # * Things
@@ -17,7 +17,7 @@ module OpenHAB
     # From add-ons, e.g.:
     # * Transformation
     # * PersistenceExtensions (see {Items::Persistence})
-    # * NotificationAction (from [OpenHAB Cloud Connector](https://www.openhab.org/addons/integrations/openhabcloud/))
+    # * NotificationAction (from [openHAB Cloud Connector](https://www.openhab.org/addons/integrations/openhabcloud/))
     #
     # Global actions are available as "global" methods on {OpenHAB::DSL}, or
     # explicitly from this {Actions} module, or you can explicitly reference a
@@ -39,7 +39,7 @@ module OpenHAB
     #
     #   play_stream 'example.com'
     #
-    # @example Send a broadcast notification via the OpenHAB Cloud
+    # @example Send a broadcast notification via the openHAB Cloud
     #   rule 'Send an alert' do
     #     changed Alarm_Triggered, to: ON
     #     run { notify 'Red Alert!' }
@@ -102,7 +102,7 @@ module OpenHAB
       #
       def notify(msg, email: nil, icon: nil, severity: nil)
         unless Actions.const_defined?(:NotificationAction)
-          raise NoMethodError, "NotificationAction is not available. Please install the OpenHAB cloud addon"
+          raise NoMethodError, "NotificationAction is not available. Please install the openHAB cloud addon"
         end
 
         if email
@@ -113,7 +113,7 @@ module OpenHAB
       end
 
       #
-      # Say text via OpenHAB Text-To-Speech service, Voice.say()
+      # Say text via openHAB Text-To-Speech service, Voice.say()
       #
       # @param text [String] The text to say
       # @param voice [String] Specify a particular voice to use
@@ -128,7 +128,7 @@ module OpenHAB
       end
 
       #
-      # Play an audio file via OpenHAB sound service, Audio.playSound()
+      # Play an audio file via openHAB sound service, Audio.playSound()
       #
       # @param filename [String] The sound file to play
       # @param sink [String] Specify a particular sink to output the speech

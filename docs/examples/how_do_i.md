@@ -81,7 +81,7 @@ logger.info("Turning off the light") if My_Item.ensure.off
 
 ### Send a Timed Command
 
-A {OpenHAB::DSL::Items::TimedCommand Timed Command} is similar to the OpenHAB Item's 
+A {OpenHAB::DSL::Items::TimedCommand Timed Command} is similar to the openHAB Item's 
 [expire parameter](https://www.openhab.org/docs/configuration/items.html#parameter-expire)
 but it offers more flexibility. It removes the need to manually create a timer.
 

@@ -7,7 +7,7 @@ module OpenHAB
 
       # Strictly speaking this class isn't an event, but it's accessed from an AbstractItemChannelLinkEvent
 
-      # Adds methods to core OpenHAB ItemChannelLinkDTO to make it more natural in Ruby
+      # Adds methods to core openHAB ItemChannelLinkDTO to make it more natural in Ruby
       class ItemChannelLinkDTO
         #
         # @!attribute [r] item_name

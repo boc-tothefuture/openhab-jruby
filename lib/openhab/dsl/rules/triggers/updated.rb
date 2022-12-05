@@ -18,7 +18,7 @@ module OpenHAB
           # @param [Item State] to state to restrict trigger to
           # @param [Object] attach object to be attached to the trigger
           #
-          # @return [Trigger] OpenHAB triggers
+          # @return [org.openhab.core.automation.Trigger]
           #
           def trigger(item:, to:, attach:)
             case to
@@ -44,7 +44,7 @@ module OpenHAB
           # @param [Object] item to create changed trigger on
           # @param [Object] to state restrict trigger to
           # @param [Object] attach object to be attached to the trigger
-          # @return [Trigger] OpenHAB trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def range_trigger(item:, to:, attach:)
             to, * = Conditions::Proc.range_procs(to)
@@ -56,7 +56,7 @@ module OpenHAB
           # @param [Object] item to create changed trigger on
           # @param [Object] to state restrict trigger to
           # @param [Object] attach object to be attached to the trigger
-          # @return [Trigger] OpenHAB trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def proc_trigger(item:, to:, attach:)
             conditions = Conditions::Proc.new(to: to)
@@ -70,7 +70,7 @@ module OpenHAB
           # @param [State] to state restriction on trigger
           # @param [Object] attach object to be attached to the trigger
           #
-          # @return [Trigger] OpenHAB triggers
+          # @return [org.openhab.core.automation.Trigger]
           #
           def update_trigger(item:, to:, attach: nil, conditions: nil)
             type, config = case item
@@ -103,7 +103,7 @@ module OpenHAB
           #
           # Create an update trigger for a group
           #
-          # @param [Item] item to create trigger for
+          # @param [GroupItem::Members] item to create trigger for
           # @param [State] to optional state restriction for target
           #
           # @return [Array<Hash,String>] first element is a String specifying trigger type

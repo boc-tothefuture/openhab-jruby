@@ -134,7 +134,7 @@ module OpenHAB
         end
 
         #
-        # Lookup OpenHAB items in item registry
+        # Lookup openHAB items in item registry
         #
         # @!visibility private
         #

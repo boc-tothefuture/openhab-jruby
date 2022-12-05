@@ -8,7 +8,7 @@ Contributions, issues and pull requests are welcome.  Please visit the [GitHub h
 This code is under the [Eclipse v2 license](https://www.eclipse.org/legal/epl-2.0/)
 
 # Source
-JRuby Scripting OpenHAB is hosted on [GitHub](https://github.com/ccutrer/openhab-jrubyscripting). 
+JRuby Scripting openHAB is hosted on [GitHub](https://github.com/ccutrer/openhab-jrubyscripting). 
 
 # Development Environment Setup
 The development process has been tested on MacOS, and Ubuntu. Other operating systems may work. 
@@ -17,12 +17,12 @@ The development process has been tested on MacOS, and Ubuntu. Other operating sy
 2. Fork [the repo](https://github.com/ccutrer/openhab-jrubyscripting) and clone it
 3. Install [bundler](https://bundler.io/)
 4. Run `bundler install` from inside of the repo directory
-5. To avoid conflicts, the OpenHAB development instance can use custom ports by defining these environment variables:
+5. To avoid conflicts, the openHAB development instance can use custom ports by defining these environment variables:
    * `OPENHAB_HTTP_PORT` 
    * `OPENHAB_HTTPS_PORT`
    * `OPENHAB_SSH_PORT`
    * `OPENHAB_LSP_PORT`
-6. Run `bundle exec rake openhab:setup` from inside of the repo directory.  This will download a copy of OpenHAB local in your development environment, start it and prepare it for JRuby OpenHAB Scripting Development
+6. Run `bundle exec rake openhab:setup` from inside of the repo directory.  This will download a copy of openHAB local in your development environment, start it and prepare it for JRuby openHAB Scripting Development
 7. Install [pre-commit](https://pre-commit.com) and then run `pre-commit install` if you would like to install a git pre-commit hook to automatically run rubocop.
 
 # Code Documentation

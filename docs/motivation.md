@@ -3,8 +3,8 @@
 ## Design points
 - Create an intuitive method of defining rules and automation
 	- Rule language should "flow" in a way that you can read the rules out loud
-- Abstract away complexities of OpenHAB (Timers, Item.state vs Item)
-- Enable all the power of Ruby and OpenHAB
+- Abstract away complexities of openHAB (Timers, Item.state vs Item)
+- Enable all the power of Ruby and openHAB
 - Create a Frictionless experience for building automation
 - The common, yet tricky tasks are abstracted and made easy. e.g. Running a rule between only certain hours of the day
 - Tested

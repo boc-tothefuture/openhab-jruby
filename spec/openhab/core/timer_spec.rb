@@ -3,8 +3,6 @@
 RSpec.describe OpenHAB::Core::Timer do
   before { Timecop.freeze }
 
-  # #to_i is used when checking execution time because OpenHAB's timer not only
-  # loses sub-millisecond precision, but replaces it with (real) now's value.
   shared_examples_for "Timer interface" do
     it "works" do
       fired = false

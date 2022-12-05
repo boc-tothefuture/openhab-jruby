@@ -7,7 +7,7 @@ module OpenHAB
     module Events
       java_import org.openhab.core.items.events.ItemCommandEvent
 
-      # Adds methods to core OpenHAB ItemCommandEvent to make it more natural in Ruby
+      # Adds methods to core openHAB ItemCommandEvent to make it more natural in Ruby
       class ItemCommandEvent < ItemEvent
         # @!attribute [r] command
         # @return [Type] The command sent to the item.

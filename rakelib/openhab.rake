@@ -69,7 +69,7 @@ namespace :openhab do
     end
   end
 
-  # There can be a delay between when OpenHAB is running and ready to process commands
+  # There can be a delay between when openHAB is running and ready to process commands
   def ready?(fail_on_error: false)
     return unless running?
 
@@ -78,13 +78,13 @@ namespace :openhab do
     cmd = TTY::Command.new(printer: :null)
     ready = cmd.run!(command).out.chomp.casecmp?("Level 100")
     ready &&= http_ready?
-    raise "OpenHAB is not ready" if !ready && fail_on_error
+    raise "openHAB is not ready" if !ready && fail_on_error
 
     ready
   end
 
   def ensure_openhab_running
-    abort("Openhab not running") unless running?
+    abort("openHAB not running") unless running?
   end
 
   def print_and_flush(string)
@@ -237,18 +237,18 @@ namespace :openhab do
   end
 
   def restart
-    puts "Restarting OpenHAB"
+    puts "Restarting openHAB"
     stop
     start
-    puts "OpenHAB Restarted"
+    puts "openHAB Restarted"
   end
 
   def wait_till_running
-    wait_for(20, "OpenHAB to start") { running? }
-    abort "Unable to start OpenHAB" unless running?(fail_on_error: true)
+    wait_for(20, "openHAB to start") { running? }
+    abort "Unable to start openHAB" unless running?(fail_on_error: true)
 
-    wait_for(20, "OpenHAB to become ready") { ready? }
-    abort "OpenHAB did not become ready" unless ready?(fail_on_error: true)
+    wait_for(20, "openHAB to become ready") { ready? }
+    abort "openHAB did not become ready" unless ready?(fail_on_error: true)
   end
 
   def openhab_env
@@ -263,25 +263,25 @@ namespace :openhab do
   end
 
   def start
-    return puts "OpenHAB already running" if running?
+    return puts "openHAB already running" if running?
 
     Dir.chdir(OPENHAB_DIR) do
-      puts "Starting OpenHAB"
+      puts "Starting openHAB"
       # Running inside of bundler breaks GEM_HOME, so we run with a clean environment passing through
       # only specific variables
       pid = spawn(openhab_env, "runtime/bin/start", unsetenv_others: true)
       Process.detach(pid)
     end
     wait_till_running
-    puts "OpenHAB started and ready"
+    puts "openHAB started and ready"
   end
 
-  desc "Start OpenHAB"
+  desc "Start openHAB"
   task start: %i[download] do
     start
   end
 
-  desc "Start OpenHAB Karaf Client"
+  desc "Start openHAB Karaf Client"
   task :client do
     exec(@karaf_client)
   end
@@ -292,14 +292,14 @@ namespace :openhab do
       Dir.chdir(OPENHAB_DIR) do
         fail_on_error("runtime/bin/stop")
       end
-      stopped = wait_for(60, "OpenHAB to stop") { Process.exists?(pid) == false }
-      abort "Unable to stop OpenHAB" unless stopped
+      stopped = wait_for(60, "openHAB to stop") { Process.exists?(pid) == false }
+      abort "Unable to stop openHAB" unless stopped
     end
 
-    puts "OpenHAB Stopped"
+    puts "openHAB Stopped"
   end
 
-  desc "Stop OpenHAB"
+  desc "Stop openHAB"
   task :stop do
     stop
   end
@@ -319,8 +319,8 @@ namespace :openhab do
     file = File.join("openhab_rules", "warmup.rb")
     dest_file = File.join(@deploy_dir, "#{File.basename(file, ".rb")}_#{Time.now.to_i}.rb")
     cp file, dest_file
-    wait_for(20, "OpenHAB to warmup") do
-      File.foreach(openhab_log).grep(/OpenHAB warmup complete/).any?
+    wait_for(20, "openHAB to warmup") do
+      File.foreach(openhab_log).grep(/openHAB warmup complete/).any?
     end
     rm dest_file
   end

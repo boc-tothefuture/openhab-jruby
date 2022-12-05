@@ -6,7 +6,7 @@ module OpenHAB
   module Core
     module Things
       #
-      # Provides access to all OpenHAB {Thing things}, and acts like an array.
+      # Provides access to all openHAB {Thing things}, and acts like an array.
       #
       class Registry
         include LazyArray

@@ -76,13 +76,13 @@ jobs:
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
-      - name: Cache OpenHAB setup
+      - name: Cache openHAB setup
         id: cache
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: OpenHAB-setup-${{ matrix.openhab_version }}
-      - name: Setup OpenHAB
+          key: openHAB-setup-${{ matrix.openhab_version }}
+      - name: Setup openHAB
         if: steps.cache.outputs.cache-hit != 'true'
         env:
           OPENHAB_VERSION: ${{ matrix.openhab_version }}
@@ -110,15 +110,15 @@ jobs:
           distribution: zulu
           java-version: "11"
           java-package: jre
-      - name: Restore OpenHAB setup
+      - name: Restore openHAB setup
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: OpenHAB-setup-${{ matrix.openhab_version }}
+          key: openHAB-setup-${{ matrix.openhab_version }}
       - name: RSpec
         run: bin/rspec --format progress --format html --out rspec.html
         timeout-minutes: 4
-      - name: Upload OpenHAB Logs
+      - name: Upload openHAB Logs
         uses: actions/upload-artifact@v3
         if: failure()
         with:
@@ -150,15 +150,15 @@ jobs:
           distribution: zulu
           java-version: "11"
           java-package: jre
-      - name: Restore OpenHAB setup
+      - name: Restore openHAB setup
         uses: actions/cache@v3
         with:
           path: tmp/
-          key: OpenHAB-setup-${{ matrix.openhab_version }}
+          key: openHAB-setup-${{ matrix.openhab_version }}
       - name: Cucumber
         run: bin/rake features
         timeout-minutes: 8
-      - name: Upload OpenHAB Logs
+      - name: Upload openHAB Logs
         uses: actions/upload-artifact@v3
         if: failure()
         with:

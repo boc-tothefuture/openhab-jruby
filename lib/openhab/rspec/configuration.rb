@@ -3,13 +3,13 @@
 module OpenHAB
   module RSpec
     #
-    # Contains configuration for how the OpenHAB instance should be set
+    # Contains configuration for how the openHAB instance should be set
     # up for the testing environment.
     #
     module Configuration
       class << self
         #
-        # Copy binding configuration from the root OpenHAB instance.
+        # Copy binding configuration from the root openHAB instance.
         #
         # Default `true`.
         # @return [true, false]
@@ -18,7 +18,7 @@ module OpenHAB
 
         #
         # Copy the JSONDB (managed thing and item configuration) from the root
-        # OpenHAB instance.
+        # openHAB instance.
         #
         # Default `true`.
         #
@@ -28,7 +28,7 @@ module OpenHAB
 
         #
         # Use a private (empty) confdir (scripts, rules, items, and things
-        # files), instead of sharing with the root OpenHAB instance.
+        # files), instead of sharing with the root openHAB instance.
         #
         # Default `false`.
         #
@@ -37,7 +37,7 @@ module OpenHAB
         attr_accessor :private_confdir
 
         #
-        # Use the root OpenHAB instance directly, rather than creating a
+        # Use the root openHAB instance directly, rather than creating a
         # private (but linked) instance.
         #
         # Default `false`.

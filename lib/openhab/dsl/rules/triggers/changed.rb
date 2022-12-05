@@ -16,13 +16,13 @@ module OpenHAB
           #
           # Create the trigger
           #
-          # @param [Object] item item to create trigger for
-          # @param [Item State] from state to restrict trigger to
-          # @param [Item State] to state to restrict trigger to
-          # @param [Duration, nil] duration ruration to delay trigger until to state is met
+          # @param [Core::Items::Item, Core::Items::GroupItem::Members] item item to create trigger for
+          # @param [Core::Types::State, Array<Core::Types::State>, Range, Proc] from state to restrict trigger to
+          # @param [Core::Types::State, Array<Core::Types::State>, Range, Proc] to state to restrict trigger to
+          # @param [Duration, nil] duration duration to delay trigger until to state is met
           # @param [Object] attach object to be attached to the trigger
           #
-          # @return [Trigger] OpenHAB triggers
+          # @return [org.openhab.core.automation.Trigger] openHAB triggers
           #
           def trigger(item:, from:, to:, duration:, attach:)
             if duration
@@ -50,13 +50,15 @@ module OpenHAB
           #
           # Create a TriggerDelay for for an item or group that is changed for a specific duration
           #
-          # @param [Object] item to create trigger delay for
+          # @param [Core::Items::Item, Core::Items::GroupItem::Members] item to create trigger delay for
           # @param [Duration] duration to delay trigger for until condition is met
-          # @param [Item State] to OpenHAB Item State item or group needs to change to
-          # @param [Item State] from OpenHAB Item State item or group needs to be coming from
+          # @param [Core::Types::State, Array<Core::Types::State>, Range, Proc] to
+          #   State item or group needs to change to
+          # @param [Core::Types::State, Array<Core::Types::State>, Range, Proc] from
+          #   State item or group needs to be coming from
           # @param [Object] attach object to be attached to the trigger
           #
-          # @return [Trigger] OpenHAB trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def wait_trigger(item:, duration:, to: nil, from: nil, attach: nil)
             item_name = item.respond_to?(:name) ? item.name : item.to_s
@@ -68,11 +70,11 @@ module OpenHAB
 
           #
           # Creates a trigger with a range condition on either 'from' or 'to' field
-          # @param [Object] item to create changed trigger on
-          # @param [Object] from state to restrict trigger to
-          # @param [Object] to state restrict trigger to
+          # @param [Core::Items::Item, Core::Items::GroupItem::Members] item to create changed trigger on
+          # @param [Range] from state to restrict trigger to
+          # @param [Range] to state restrict trigger to
           # @param [Object] attach object to be attached to the trigger
-          # @return [Trigger] OpenHAB trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def range_trigger(item:, from:, to:, attach:)
             from, to = Conditions::Proc.range_procs(from, to)
@@ -81,11 +83,11 @@ module OpenHAB
 
           #
           # Creates a trigger with a proc condition on either 'from' or 'to' field
-          # @param [Object] item to create changed trigger on
-          # @param [Object] from state to restrict trigger to
-          # @param [Object] to state restrict trigger to
+          # @param [Core::Items::Item, Core::Items::GroupItem::Members] item to create changed trigger on
+          # @param [Proc] from state to restrict trigger to
+          # @param [Proc] to state restrict trigger to
           # @param [Object] attach object to be attached to the trigger
-          # @return [Trigger] OpenHAB trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def proc_trigger(item:, from:, to:, attach:)
             # swap from/to w/ nil if from/to is a proc
@@ -100,10 +102,11 @@ module OpenHAB
           #
           # Create a changed trigger
           #
-          # @param [Object] item to create changed trigger on
-          # @param [Object] from state to restrict trigger to
-          # @param [Object] to state restrict trigger to
+          # @param [Core::Items::Item, Core::Items::GroupItem::Members] item to create changed trigger on
+          # @param [Core::Items::State, Array<Core::Items::State>] from state to restrict trigger to
+          # @param [Core::Items::State, Array<Core::Items::State>] to state restrict trigger to
           # @param [Object] attach object to be attached to the trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def changed_trigger(item:, from:, to:, attach: nil, conditions: nil)
             type, config = case item
@@ -121,7 +124,7 @@ module OpenHAB
           #
           # Create a changed trigger for a thing
           #
-          # @param [Thing] thing to detected changed states on
+          # @param [Core::Things::Thing] thing to detected changed states on
           # @param [String] from state to restrict trigger to
           # @param [String] to state to restrict trigger to
           #
@@ -152,7 +155,7 @@ module OpenHAB
           #
           # Create a changed trigger for group items
           #
-          # @param [Group] group to detected changed states on
+          # @param [GroupItem] group to detected changed states on
           # @param [String] from state to restrict trigger to
           # @param [String] to to restrict trigger to
           #

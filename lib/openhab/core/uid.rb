@@ -4,7 +4,7 @@ module OpenHAB
   module Core
     java_import org.openhab.core.common.AbstractUID
 
-    # Adds methods to core OpenHAB AbstractUID to make it more natural in Ruby
+    # Adds methods to core openHAB AbstractUID to make it more natural in Ruby
     class AbstractUID
       # implicit conversion to string
       alias_method :to_str, :to_s

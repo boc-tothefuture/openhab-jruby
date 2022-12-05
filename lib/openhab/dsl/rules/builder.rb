@@ -14,10 +14,10 @@ end
 module OpenHAB
   module DSL
     #
-    # Creates and manages OpenHAB Rules
+    # Creates and manages openHAB Rules
     #
     module Rules
-      # A rules builder allows you to create OpenHAB rules.
+      # A rules builder allows you to create openHAB rules.
       #
       # Note that all methods on this module are also availabe directly on {OpenHAB::DSL}.
       #
@@ -114,7 +114,7 @@ module OpenHAB
       end
 
       #
-      # Rule configuration for OpenHAB Rules engine
+      # Rule configuration for openHAB Rules engine
       #
       class BuilderDSL
         include Core::EntityLookup
@@ -826,7 +826,7 @@ module OpenHAB
         # Create a cron trigger
         #
         # @overload cron(expression, attach: nil)
-        #   @param [String, nil] expression [OpenHAB style cron expression](https://www.openhab.org/docs/configuration/rules-dsl.html#time-based-triggers)
+        #   @param [String, nil] expression [openHAB style cron expression](https://www.openhab.org/docs/configuration/rules-dsl.html#time-based-triggers)
         #   @param [Object] attach object to be attached to the trigger
         #
         #   @example Using a cron expression
@@ -972,7 +972,7 @@ module OpenHAB
         #
         # Creates a trigger that executes when the script is loaded
         #
-        # Execute the rule whenever the script is first loaded, including on OpenHAB start up,
+        # Execute the rule whenever the script is first loaded, including on openHAB start up,
         # and on subsequent reloads on file modifications.
         # This is useful to perform initialization routines, especially when combined with other triggers.
         #
@@ -1002,9 +1002,9 @@ module OpenHAB
         end
 
         #
-        # Creates a trigger that executes when OpenHAB reaches a certain start level
+        # Creates a trigger that executes when openHAB reaches a certain start level
         #
-        # This will only trigger once during OpenHAB start up. It won't trigger on script reloads.
+        # This will only trigger once during openHAB start up. It won't trigger on script reloads.
         #
         # @param [Integer,:rules,:ruleengine,:ui,:things,:complete] at_level
         #   Zero or more start levels. Note that Startlevels less than 40 are not available as triggers
@@ -1396,7 +1396,7 @@ module OpenHAB
         # @param [Object] attach object to be attached to the trigger
         # @return [void]
         #
-        # @example Watch `items` directory inside of the OpenHAB configuration path and log any changes.
+        # @example Watch `items` directory inside of the openHAB configuration path and log any changes.
         #   rule 'watch directory' do
         #     watch OpenHAB::Core.config_folder / 'items'
         #     run { |event| logger.info("#{event.path.basename} - #{event.type}") }

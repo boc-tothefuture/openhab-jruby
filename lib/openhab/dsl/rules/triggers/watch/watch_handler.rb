@@ -10,7 +10,7 @@ module OpenHAB
         #
         module WatchHandler
           #
-          # Creates trigger types and trigger type factories for OpenHAB
+          # Creates trigger types and trigger type factories for openHAB
           #
           private_class_method def self.watch_trigger_type
             org.openhab.core.automation.type.TriggerType.new(
@@ -27,7 +27,7 @@ module OpenHAB
           # Trigger ID for Watch Triggers
           WATCH_TRIGGER_MODULE_ID = "jsr223.jruby.WatchTrigger"
 
-          # Extends the OpenHAB watch service to watch directories
+          # Extends the openHAB watch service to watch directories
           #
           # Must match java method name style
           # rubocop:disable Naming/MethodName
@@ -75,12 +75,12 @@ module OpenHAB
           end
           # rubocop:enable Naming/MethodName
 
-          # Implements the OpenHAB TriggerHandler interface to process Watch Triggers
+          # Implements the openHAB TriggerHandler interface to process Watch Triggers
           class WatchTriggerHandler
             include org.openhab.core.automation.handler.TriggerHandler
 
             # Creates a new WatchTriggerHandler
-            # @param [Trigger] trigger OpenHAB trigger associated with handler
+            # @param [org.openhab.core.automation.Trigger] trigger
             #
             def initialize(trigger)
               @trigger = trigger
@@ -94,21 +94,20 @@ module OpenHAB
             # Create a lambda to use to invoke rule engine when file watch notification happens
             # @param [String] glob to match for notification events
             #
-            # @return [Lambda] lambda to execute on notification events
+            # @return [Proc] lambda to execute on notification events
             #
             def watch_event_handler(glob)
-              lambda { |watch_event|
+              lambda do |watch_event|
                 if watch_event.path.fnmatch?(glob)
                   logger.trace("Received event(#{watch_event})")
                   @rule_engine_callback&.triggered(@trigger, { "event" => watch_event })
                 else
                   logger.trace("Event #{watch_event} did not match glob(#{glob})")
                 end
-              }
+              end
             end
 
-            # Called by OpenHAB to set the rule engine to invoke when triggered
-            # Must match java method name style
+            # Called by openHAB to set the rule engine to invoke when triggered
             def setCallback(callback) # rubocop:disable Naming/MethodName
               @rule_engine_callback = callback
             end
@@ -126,8 +125,8 @@ module OpenHAB
           class WatchTriggerHandlerFactory
             include org.openhab.core.automation.module.script.rulesupport.shared.factories.ScriptedTriggerHandlerFactory
 
-            # Invoked by the OpenHAB core to get a trigger handler for the supllied trigger
-            # @param [Trigger] trigger OpenHAB trigger
+            # Invoked by openHAB core to get a trigger handler for the supllied trigger
+            # @param [org.openhab.core.automation.Trigger] trigger
             #
             # @return [WatchTriggerHandler] trigger handler for supplied trigger
             def get(trigger)
@@ -136,7 +135,7 @@ module OpenHAB
           end
 
           #
-          # Creates trigger types and trigger type factories for OpenHAB
+          # Creates trigger types and trigger type factories for openHAB
           #
           def self.add_watch_handler
             Core.automation_manager.add_trigger_handler(

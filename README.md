@@ -1,13 +1,13 @@
-# JRuby OpenHAB Scripting Library
+# JRuby openHAB Scripting Library
 
 [![Gem Version](https://img.shields.io/gem/v/openhab-jrubyscripting)](https://rubygems.org/gems/openhab-jrubyscripting)
 [![Continous Integration](https://github.com/ccutrer/openhab-jrubyscripting/workflows/Continuous%20Integration/badge.svg)](https://github.com/ccutrer/openhab-jrubyscripting/actions/workflows/ci.yml)
 [![GitHub contributors](https://img.shields.io/github/contributors/ccutrer/openhab-jrubyscripting)](https://github.com/ccutrer/openhab-jrubyscripting/graphs/contributors)
 [![EPLv2 License](https://img.shields.io/badge/License-EPLv2-blue.svg)](https://www.eclipse.org/legal/epl-2.0/)
 
-The OpenHAB JRuby scripting helpers bring the power of the Ruby language to
-OpenHAB. Rather than being a pure pass-through to OpenHAB, they provide a
-Ruby-like experience when building automation rules within OpenHAB.
+The openHAB JRuby scripting helpers bring the power of the Ruby language to
+openHAB. Rather than being a pure pass-through to openHAB, they provide a
+Ruby-like experience when building automation rules within openHAB.
 
 Full documentation is available on
 [GitHub Pages](https://ccutrer.github.io/openhab-jrubyscripting/).
@@ -41,7 +41,7 @@ changes.
 
 Please see
 [this thread](https://community.openhab.org/t/jruby-openhab-rules-system/110598)
-on the OpenHAB forum for further discussion. Ideas and suggestions are welcome.
+on the openHAB forum for further discussion. Ideas and suggestions are welcome.
 
 ## Library Status
 

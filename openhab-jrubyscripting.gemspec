@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Cody Cutrer"]
   spec.email         = ["cody@cutrer.us"]
 
-  spec.summary       = "JRuby Helper Libraries for OpenHAB Scripting"
+  spec.summary       = "JRuby Helper Libraries for openHAB Scripting"
   spec.homepage      = "https://ccutrer.github.io/openhab-jrubyscripting/"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.6.0")
 

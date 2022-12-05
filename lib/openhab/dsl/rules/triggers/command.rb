@@ -18,7 +18,7 @@ module OpenHAB
           # @param [Object] command to check against
           # @param [Object] attach object to be attached to the trigger
           #
-          # @return [Trigger] OpenHAB triggers
+          # @return [org.openhab.core.automation.Trigger]
           #
           def trigger(item:, command:, attach:)
             case command
@@ -31,9 +31,9 @@ module OpenHAB
           #
           # Creates a trigger with a range condition on the 'command' field
           # @param [Object] item to create changed trigger on
-          # @param [Object] command to restrict trigger to
+          # @param [Range] command to restrict trigger to
           # @param [Object] attach object to be attached to the trigger
-          # @return [Trigger] OpenHAB trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def range_trigger(item:, command:, attach:)
             command_range, * = Conditions::Proc.range_procs(command)
@@ -45,7 +45,7 @@ module OpenHAB
           # @param [Object] item to create changed trigger on
           # @param [Object] command to restrict trigger to
           # @param [Object] attach object to be attached to the trigger
-          # @return [Trigger] OpenHAB trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def proc_trigger(item:, command:, attach:)
             conditions = Conditions::Proc.new(command: command)
@@ -58,6 +58,7 @@ module OpenHAB
           # @param [Object] item to create trigger for
           # @param [String] command to create trigger for
           # @param [Object] attach object to be attached to the trigger
+          # @return [org.openhab.core.automation.Trigger]
           #
           def command_trigger(item:, command:, attach: nil, conditions: nil)
             type, config = if item.is_a?(GroupItem::Members)
@@ -92,7 +93,7 @@ module OpenHAB
           #
           # Create trigger for group items
           #
-          # @param [Group] group to create trigger for
+          # @param [GroupItem::Members] group to create trigger for
           #
           # @return [Array<Hash,Trigger>] first element is hash of trigger config properties
           #   second element is trigger type

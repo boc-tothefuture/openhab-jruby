@@ -79,12 +79,12 @@ module OpenHAB
         private
 
         #
-        # Encode image information in the format required by OpenHAB
+        # Encode image information in the format required by openHAB
         #
         # @param [String] mime_type for image
         # @param [Object] bytes image data
         #
-        # @return [String] OpenHAB image format with image data Base64 encoded
+        # @return [String] openHAB image format with image data Base64 encoded
         #
         def encode_image(mime_type:, bytes:)
           "data:#{mime_type};base64,#{Base64.strict_encode64(bytes)}"

@@ -11,7 +11,7 @@ module OpenHAB
       #
       # Add a block of code to be executed once the rule script has finished loading.
       #
-      # This can occur on OpenHAB start up, when the script is first created, or updated.
+      # This can occur on openHAB start up, when the script is first created, or updated.
       #
       # Multiple hooks can be added by calling {#script_loaded} multiple times.
       # They can be used to perform final initializations.
@@ -37,7 +37,7 @@ module OpenHAB
       #
       # Add a block of code to be executed when the script is unloaded.
       #
-      # This can occur when OpenHAB shuts down, or when the script is being reloaded.
+      # This can occur when openHAB shuts down, or when the script is being reloaded.
       #
       # Multiple hooks can be added by calling {#script_unloaded} multiple times.
       # They can be used to perform final cleanup.
@@ -88,9 +88,9 @@ module OpenHAB
       self.script_loaded = false
 
       #
-      # Executed when OpenHAB unloads a script file
+      # Executed when openHAB unloads a script file
       #
-      def scriptUnloaded # rubocop:disable Naming/MethodName method name dictated by OpenHAB
+      def scriptUnloaded # rubocop:disable Naming/MethodName method name dictated by openHAB
         logger.trace("Script unloaded")
         ScriptHandlingCallbacks.script_unloaded_hooks.each do |hook|
           hook.call
@@ -116,9 +116,9 @@ module OpenHAB
       end
 
       #
-      # Executed when OpenHAB loads a script file
+      # Executed when openHAB loads a script file
       #
-      def scriptLoaded(filename) # rubocop:disable Naming/MethodName method name dictated by OpenHAB
+      def scriptLoaded(filename) # rubocop:disable Naming/MethodName method name dictated by openHAB
         logger.trace("Script loaded: #{filename}")
         ScriptHandlingCallbacks.script_loaded_hooks.each do |hook|
           hook.call

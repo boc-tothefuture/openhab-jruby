@@ -7,7 +7,7 @@ place it in `<OPENHAB_CONF>/automation/lib/ruby/personal`. Assuming `$RUBYLIB`
 is set up correctly in `jruby.conf` (see [Installation](../../installation.md)),
 you can then simply `require` the file from your rules files. Because the
 library files _aren't_ in the `jsr223` directory, they won't be automatically
-loaded individually by OpenHAB, only when you `require` them.
+loaded individually by openHAB, only when you `require` them.
 
 `automation/jsr223/ruby/personal/myrule.rb`
 ```ruby

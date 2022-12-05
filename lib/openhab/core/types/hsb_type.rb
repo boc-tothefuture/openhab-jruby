@@ -61,7 +61,7 @@ module OpenHAB
             if args.length == 1 && args.first.respond_to?(:to_str)
               value = args.first.to_str
 
-              # parse some formats OpenHAB doesn't understand
+              # parse some formats openHAB doesn't understand
               # in this case, HTML hex format for rgb
               if (match = value.match(/^#(\h{2})(\h{2})(\h{2})$/))
                 rgb = match.to_a[1..3].map { |v| v.to_i(16) }
@@ -77,7 +77,7 @@ module OpenHAB
             return super unless args.length == 3
 
             # convert from several numeric-like types to the exact types
-            # OpenHAB needs
+            # openHAB needs
             hue = args[0]
             args[0] = if hue.is_a?(DecimalType)
                         hue

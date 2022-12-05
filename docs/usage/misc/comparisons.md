@@ -2,7 +2,7 @@
 
 ## Type Comparisons
 
-Some OpenHAB item types can accept different command types. For example, a {DimmerItem} can accept a command 
+Some openHAB item types can accept different command types. For example, a {DimmerItem} can accept a command 
 with an {OnOffType}, {IncreaseDecreaseType} or a {PercentType}. However, ultimately an item only stores its 
 state in its native type, e.g. a {DimmerItem DimmerItems}'s native type is {PercentType}.
 

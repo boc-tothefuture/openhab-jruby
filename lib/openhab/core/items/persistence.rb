@@ -9,7 +9,7 @@ module OpenHAB
     module Items
       #
       # Items extensions to support
-      # {https://www.openhab.org/docs/configuration/persistence.html OpenHAB's Persistence} feature.
+      # {https://www.openhab.org/docs/configuration/persistence.html openHAB's Persistence} feature.
       #
       # @see OpenHAB::DSL.persistence Persistence Block
       #

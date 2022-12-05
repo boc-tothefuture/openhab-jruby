@@ -4,7 +4,7 @@ require "httparty"
 require "persistent_httparty"
 
 #
-# Rest interface for OpenHAB
+# Rest interface for openHAB
 #
 class Rest
   include HTTParty

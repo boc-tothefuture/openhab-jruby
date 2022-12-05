@@ -6,7 +6,7 @@ module OpenHAB
     # Contains extensions to simplify working with {Item Items}.
     #
     module Items
-      # An item builder allows you to dynamically create OpenHAB items at runtime.
+      # An item builder allows you to dynamically create openHAB items at runtime.
       # This can be useful either to create items as soon as the script loads,
       # or even later based on a rule executing.
       #
