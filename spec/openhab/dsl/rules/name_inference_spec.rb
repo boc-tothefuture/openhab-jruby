@@ -68,4 +68,11 @@ RSpec.describe OpenHAB::DSL::Rules::NameInference do
       expect(r.name).to eql "SwitchItem1 received command ON"
     end
   end
+
+  context "with #on_start" do
+    it "generates a useful name" do
+      r = rules.build { on_start { nil } }
+      expect(r.name).to eql "System Start Level reached 100 (:complete)"
+    end
+  end
 end

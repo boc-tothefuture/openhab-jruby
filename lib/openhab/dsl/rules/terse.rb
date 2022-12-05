@@ -56,6 +56,7 @@ module OpenHAB
         def_terse_rule(:thing_updated)
         def_terse_rule(:thing_removed)
         def_terse_rule(:updated)
+        def_terse_rule(:on_start)
       end
     end
   end

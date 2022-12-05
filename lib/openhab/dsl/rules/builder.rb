@@ -1061,21 +1061,18 @@ module OpenHAB
             end
           end
 
+          @ruby_triggers << [:on_start, levels]
           levels.each do |level|
             logger.warn "Rule engine doesn't start until start level 40" if level < 40
-
+            config = { startlevel: level }
             logger.trace("Creating a SystemStartlevelTrigger with startlevel=#{level}")
             Triggers::Trigger.new(rule_triggers: @rule_triggers)
-                             .append_trigger(
-                               type: "core.SystemStartlevelTrigger",
-                               config: { startlevel: level },
-                               attach: attach
-                             )
+                             .append_trigger(type: "core.SystemStartlevelTrigger", config: config, attach: attach)
           end
         end
 
         #
-        # Creates a trigger for when an item or group receives a command
+        # Creates a trigger for when an item or group receives a command.
         #
         # The command/commands parameters are replicated for DSL fluency.
         #

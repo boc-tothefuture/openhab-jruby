@@ -18,6 +18,7 @@ module OpenHAB
           "core.ItemCommandTrigger",
           "core.ItemStateChangeTrigger",
           "core.ItemStateUpdateTrigger",
+          "core.SystemStartlevelTrigger",
           Triggers::Cron::CRON_TRIGGER_MODULE_ID
         ].freeze
         private_constant :KNOWN_TRIGGER_TYPES
@@ -61,6 +62,8 @@ module OpenHAB
               infer_rule_name_from_channel_link_trigger(trigger)
             when :thing_added, :thing_removed, :thing_updated
               infer_rule_name_from_thing_trigger(trigger)
+            when :on_start
+              infer_rule_name_from_on_start_trigger(items)
             end
           end
 
@@ -120,6 +123,22 @@ module OpenHAB
               thing_updated: "Thing updated",
               thing_removed: "Thing removed"
             }[trigger]
+          end
+
+          # formulate a readable rule name from an on_start trigger
+          def infer_rule_name_from_on_start_trigger(levels)
+            levels = levels.map { |level| "#{level} (#{start_level_description(level)})" }
+            levels = format_array(levels)
+            "System Start Level reached #{levels}"
+          end
+
+          def start_level_description(level)
+            klass = org.openhab.core.service.StartLevelService.java_class
+            start_level_type = klass.declared_field("STARTLEVEL_OSGI").type
+            klass.declared_fields
+                 .select { |field| field.type == start_level_type && field.name.start_with?("STARTLEVEL_") }
+                 .find { |field| field.get_int(klass) == level }
+                 .name.split("_", 2).last.downcase.to_sym.inspect
           end
 
           # format an array of words that will be the beginning of a sentence
