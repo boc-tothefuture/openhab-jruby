@@ -8,9 +8,11 @@
 --exclude lib/openhab/rspec/openhab/
 --exclude lib/openhab/rspec/suspend_rules.rb
 --load openhab/yard.rb
+--asset docs/images
 --output-dir docs/yard
 --plugin coderay
 --protected
 --markup markdown
 --markup-provider commonmarker
-- CHANGELOG.md docs/**/*.md
+--readme USAGE.md
+- CHANGELOG.md README.md docs/**/*.md

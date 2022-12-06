@@ -5,12 +5,18 @@ module OpenHAB
     # @!visibility private
     module HtmlHelper
       def html_markup_markdown(text)
-        result = super
-
+        result = super(text)
         # re-link files in docs/*.md. They're written so they work on github without any
         # processing
         result.gsub!(%r{<a href="(?:[A-Za-z0-9_/-]+/)*([A-Za-z0-9_-]+).md(#[A-Za-z0-9_/-]+)?"},
                      "<a href=\"file.\\1.html\\2\"")
+
+        # wtf commonmarker, you don't generate anchors?!
+        result.gsub!(%r{<h(\d)>([A-Za-z0-9 -]+)</h\1>}) do
+          id = $2.downcase.tr(" ", "-")
+          "<h#{$1} id=\"#{id}\">#{$2}</h#{$1}>"
+        end
+
         result
       end
 
@@ -28,17 +34,6 @@ module OpenHAB
         list.empty? ? "" : (brackets ? "(#{list.join(", ")})" : list.join(", "))
       end
       # rubocop:enable Style/NestedTernaryOperator, Style/StringConcatenation, Style/TernaryParentheses
-
-      def link_object(obj, title = nil, *)
-        ::YARD::Handlers::JRuby::Base.infer_java_class(obj) if obj.is_a?(String)
-        obj = ::YARD::Registry.resolve(object, obj, true, true) if obj.is_a?(String)
-        if obj.is_a?(::YARD::CodeObjects::Java::Base) && (see = obj.docstring.tag(:see))
-          # link to the first see tag
-          return linkify(see.name, title&.to_s || see.text)
-        end
-
-        super
-      end
     end
   end
 end

@@ -1,17 +1,10 @@
 # @title Examples
 
-## Detailed Examples
+# Examples
 
-* [Rule Conversions](examples/conversions.md)
-* [Gem Cleanup](examples/gem_cleanup.md)
-* [Generated Rules](examples/generated_rule.md)
-* [How Do I...?](examples/how_do_i.md)
+The following examples are for file-based rules but most of them are applicable to [GUI rules](USAGE.md#ui-based-scripts) as well.
 
-## File-based Rules
-
-The following examples are for file-based rules but most of them are applicable to [GUI rules](usage.md#creating-rules-in-main-ui) as well.
-
-### Trigger when an item changed state
+## Trigger when an item changed state
 
 ```ruby
 rule 'Turn on light when sensor changed to open' do
@@ -45,7 +38,7 @@ rule 'Control light based on door state' do
 end
 ```
 
-### Trigger when a group member changed state:
+## Trigger when a group member changed state:
 
 ```ruby
 # Assumption: Motion sensor items are named using the pattern RoomName_Motion
@@ -61,7 +54,7 @@ end
 
 See also: {group::OpenHAB::DSL::Rules::BuilderDSL::Triggers Triggers}
 
-### Various ways of sending a command to an item
+## Various ways of sending a command to an item
 
 ```ruby
 # Using the shovel operator
@@ -89,7 +82,7 @@ Each item type supports command predicates relevant to the type. For example, a
 {SwitchItem} supports {SwitchItem#on on} and {SwitchItem#off off}. 
 See specific item types under {OpenHAB::Core::Items}
 
-### Dealing with Item States
+## Dealing with Item States
 
 ```ruby
 # Items:
@@ -115,91 +108,15 @@ rule 'Warn when garage door is open a long time' do
 end
 ```
 
-### Use timers
-
-Timers are created using {after after} with an easier way to specify when it should execute,
-based on [duration](docs/usage/misc/time.md#Durations) syntax, e.g. `10.minutes` instead of using ZonedDateTime.
-
-```ruby
-rule 'simple timer' do
-  changed Watering_System, to: ON
-  run do
-    after(5.minutes) { Watering_System.off }
-  end
-end
-```
-
-#### Rescheduling timers manually
-
-```ruby
-@timer = nil # variables starting with @ are instance variables
-
-rule 'reschedule timer' do
-  updated Motion_Sensor, to: OPEN
-  run do
-    Light_Item.on
-    if (@timer.nil?)
-      @timer = after(5.minutes) { Light_Item.off } # This is the equivalent of createTimer() in rulesdsl
-    else
-      @timer.reschedule # This automatically reschedules it for the original duration (5 minutes)
-      # To reschedule it a different duration, use @timer.reschedule 10.minutes
-    end
-  end
-end
-
-rule 'cancel timer' do
-  changed Light_Item, to: OFF
-  run { @timer&.cancel }
-end
-
-```
-
-#### Reentrant Timer
-
-Timers with `id` will automatically reschedule itself when executed again, 
-and can be managed through {OpenHAB::DSL.timers timers} object.
-
-```ruby
-rule 'automatic reentrant timer' do
-  updated Motion_Sensor, to: OPEN
-  run do
-    Light_Item.ensure.on # 'ensure' only sends the command if it's not already on
-    # Using a unique ID, this timer automatically reschedules when called again before 5 mins is up
-    after(5.minutes, id: Motion_Sensor) { Light_Item.off } 
-  end
-end
-
-# timers is a built-in object that keeps track of reentrant timer ids
-rule 'cancel timer' do
-  changed Light_Item, to: OFF
-  run { timers.cancel(Motion_Sensor) }
-end
-```
-
-#### Using Timed Command Feature
-
-The two timer examples above require an extra rule to keep track of the Light_Item state, so when it's turned off,
-the timer is cancelled. However, the {OpenHAB::DSL::Items::TimedCommand timed command} 
-feature in the next example handles that automatically for you.
-
-```ruby
-rule 'timed command' do
-  updated Motion_Sensor, to: OPEN
-  run { Light_Item.on for: 5.minutes } # it will turn it off after 5 minutes
-end
-```
-
 ### Automatic activation of exhaust fan based on humidity sensor
 
-This uses the `evolution_rate` {OpenHAB::Core::Items::Persistence persistence}
-feature,  coupled with an easy way to specify
-[duration](docs/usage/misc/time.md#Durations).
+This uses the `evolution_rate` {OpenHAB::Core::Items::Persistence persistence} feature,  coupled with an easy way to specify [duration](docs/usage/misc/time.md#Durations).
 It is accessed simply through `ItemName.persistence_function`.
 
 ```ruby
 # Note: don't activate the exhaust fan if the bathroom light is off at night
 # Sun_Elevation is an Astro item. Its state is positive during daylight
-rule 'Humidity: Control ExhaustFan' do
+rule "Humidity: Control ExhaustFan" do
   updated BathRoom_Humidity
   triggered do |humidity|
     evo_rate = humidity.evolution_rate(4.minutes.ago, :influxdb)
@@ -211,6 +128,28 @@ rule 'Humidity: Control ExhaustFan' do
       BathRoom_ExhaustFan.ensure.off
     end
   end
+end
+```
+
+## Gem Cleanup
+
+The openHAB JRuby add-on will automatically download and install the latest version of the library according to the [settings in jruby.cfg](README.md#installation).
+Over time, the older versions of the library will accumulate in the gem_home directory.
+The following code saved as `gem_cleanup.rb` or another name of your choice can be placed in the `automation/ruby` directory to perform uninstallation of the older gem versions every time openHAB starts up.
+
+```ruby
+require 'rubygems/commands/uninstall_command'
+
+cmd = Gem::Commands::UninstallCommand.new
+
+# uninstall all the older versions of the openhab-jrubyscripting gems
+Gem::Specification.find_all
+                  .select { |gem| gem.name == 'openhab-jrubyscripting' }
+                  .sort_by(&:version)
+                  .tap(&:pop) # don't include the latest version
+                  .each do |gem|
+  cmd.handle_options ['-x', '-I', gem.name, '--version', gem.version.to_s]
+  cmd.execute
 end
 ```
 
