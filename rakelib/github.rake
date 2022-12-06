@@ -3,7 +3,7 @@
 require 'json'
 require 'open3'
 
-OPENHAB_VERSIONS = ['3.3.0', '3.4.0.M5+3.4.0'].freeze
+OPENHAB_VERSIONS = ['3.3.0', '3.4.0-SNAPSHOT', '3.4.0.M6+3.4.0'].freeze
 
 # Get list
 # rubocop: disable Metrics/MethodLength
