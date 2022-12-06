@@ -184,7 +184,7 @@ module OpenHAB
       def autorequires
         ENV["RUBYLIB"] ||= ""
         ENV["RUBYLIB"] += ":" unless ENV["RUBYLIB"].empty?
-        ENV["RUBYLIB"] += rubylib_dir
+        ENV["RUBYLIB"] += rubylib_dirs.join(":")
 
         $LOAD_PATH.unshift(*ENV["RUBYLIB"]
           .split(File::PATH_SEPARATOR)
@@ -265,10 +265,15 @@ module OpenHAB
       # @return [void]
       #
       def load_rules
-        automation_path = "#{org.openhab.core.OpenHAB.config_folder}/automation/jsr223"
+        automation_path = "#{org.openhab.core.OpenHAB.config_folder}/automation/ruby"
+        lib_dirs = rubylib_dirs.map { |d| File.join(d, "") }
+        lib_dirs << File.join(gem_home, "")
 
         SuspendRules.suspend_rules do
           files = Dir["#{automation_path}/**/*.rb"]
+          files.reject! do |f|
+            lib_dirs.any? { |l| f.start_with?(l) }
+          end
           files.sort_by { |f| [get_start_level(f), f] }.each do |f|
             load f
           rescue Exception => e
@@ -376,8 +381,17 @@ module OpenHAB
         ca.get_configuration("org.openhab.automation.jrubyscripting", nil)&.properties
       end
 
-      def rubylib_dir
-        jrubyscripting_config&.get("rubylib") || "#{org.openhab.core.OpenHAB.config_folder}/automation/lib/ruby"
+      def gem_home
+        gem_home = jrubyscripting_config&.get("gem_home")
+        return "#{org.openhab.core.OpenHAB.config_folder}/automation/ruby/.gem" unless gem_home
+
+        # strip everything after the first {
+        gem_home.split("{", 2).first
+      end
+
+      def rubylib_dirs
+        jrubyscripting_config&.get("rubylib")&.split(File::PATH_SEPARATOR) ||
+          ["#{org.openhab.core.OpenHAB.config_folder}/automation/ruby/lib"]
       end
 
       def get_start_level(file)
