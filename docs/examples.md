@@ -2,7 +2,7 @@
 
 # Examples
 
-The following examples are for file-based rules but most of them are applicable to [GUI rules](USAGE.md#ui-based-scripts) as well.
+The following examples are for file-based rules but most of them are applicable to [GUI rules](../USAGE.md#ui-based-scripts) as well.
 
 ## Trigger when an item changed state
 
@@ -78,8 +78,8 @@ ColorItem1.command {r: 255, g: 0xFF, b: 0}
 [NumberItem1, NumberItem2, NumberItem3].command 100  
 ```
 
-Each item type supports command predicates relevant to the type. For example, a 
-{SwitchItem} supports {SwitchItem#on on} and {SwitchItem#off off}. 
+Each item type supports command helpers relevant to the type.
+For example, a {SwitchItem} supports {SwitchItem#on on} and {SwitchItem#off off}. 
 See specific item types under {OpenHAB::Core::Items}
 
 ## Dealing with Item States
@@ -110,7 +110,7 @@ end
 
 ### Automatic activation of exhaust fan based on humidity sensor
 
-This uses the `evolution_rate` {OpenHAB::Core::Items::Persistence persistence} feature,  coupled with an easy way to specify [duration](docs/usage/misc/time.md#Durations).
+This uses the `evolution_rate` {OpenHAB::Core::Items::Persistence persistence} feature,  coupled with an easy way to specify [duration](../USAGE.md#durations).
 It is accessed simply through `ItemName.persistence_function`.
 
 ```ruby
@@ -133,7 +133,7 @@ end
 
 ## Gem Cleanup
 
-The openHAB JRuby add-on will automatically download and install the latest version of the library according to the [settings in jruby.cfg](README.md#installation).
+The openHAB JRuby add-on will automatically download and install the latest version of the library according to the [settings in jruby.cfg](../USAGE.md#configuration).
 Over time, the older versions of the library will accumulate in the gem_home directory.
 The following code saved as `gem_cleanup.rb` or another name of your choice can be placed in the `automation/ruby` directory to perform uninstallation of the older gem versions every time openHAB starts up.
 

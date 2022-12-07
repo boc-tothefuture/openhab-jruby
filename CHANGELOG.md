@@ -125,7 +125,7 @@ here is a non-exhaustive list of significant departures from the original gem:
   * Date/time objects are no longer comparable to strings.
     Please use the correct type.
   * Comparisons among the varying date/time classes all work.
-  * See also [Working With Time](docs/usage/time.md)
+  * See also [Working With Time](USAGE.md#time)
   * Persistence methods no longer accept a {Duration}. Please use `Duration#ago`
     instead.
 * Thing actions are no longer available as a top level method. You must use the

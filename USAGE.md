@@ -4,7 +4,7 @@
 # JRuby Scripting
 
 This add-on provides [JRuby](https://www.jruby.org/) scripting language for automation rules.
-Also included is [openhab-jrubyscripting](https://ccutrer.github.com/openhab-jrubyscripting/), a fairly high-level Ruby gem to support automation in openHAB.
+Also included is [openhab-jrubyscripting](https://ccutrer.github.io/openhab-jrubyscripting/), a fairly high-level Ruby gem to support automation in openHAB.
 It provides native Ruby access to common openHAB functionality within rules including items, things, actions, logging and more.
 If you're new to Ruby, you may want to check out [Ruby Basics](docs/ruby-basics.md).
 
@@ -12,6 +12,7 @@ If you're new to Ruby, you may want to check out [Ruby Basics](docs/ruby-basics.
 * [Usage](#usage)
   * [UI Based Scripts](#ui-based-scripts)
   * [File Based Scripts](#file-based-scripts)
+  * [Transformations](#transformations)
 * [Library Details](#library-details)
   * [Gems](#gems)
   * [Shared Code](#shared-code)
@@ -36,7 +37,7 @@ Additional [example rules are available](docs/examples.md), as well as examples 
 ## Configuration
 
 After installing this add-on, you will find configuration options in the openHAB portal under _Settings -> Other Services -> JRuby Scripting_.
-By default this add-on include the [openhab-jrubyscripting](https://github.com/cutrer/openhab-jrubyscripting/) Ruby gem and automatically `require`s it.
+By default this add-on include the [openhab-jrubyscripting](https://github.com/ccutrer/openhab-jrubyscripting/) Ruby gem and automatically `require`s it.
 This allows the use of {OpenHAB::DSL.items items}, {OpenHAB::DSL.rules rules}, {OpenHAB::DSL.shared_cache shared_cache} and other objects in your scripts.
 This functionality can be disabled for users who prefer to manage their own gems and `require`s via the add-on configuration options.
 Simply change the `gems` and `require` configuration settings.
@@ -103,16 +104,15 @@ See [this](https://github.com/jruby/jruby/wiki/RedBridge#Context_Instance_Type) 
 ### local_variables
 
 Defines how variables are shared between Ruby and Java. Valid values are: `transient`, `persistent`, or `global`.
-See [this](https://github.com/jruby/jruby/wiki/RedBridge#local-variable-behavior-options) for options and details.
+See the [JRuby documentation](https://github.com/jruby/jruby/wiki/RedBridge#local-variable-behavior-options) for options and details.
 
 ## Usage
 
-### UI Based Script
+### UI Based Scripts
 
 The quickest way to add rules is through the openHAB Web UI.
 
-Advanced users, or users migrating scripts from existing systems may want to use [File Based Scripts](#file-based-scripts)
-for managing rules using files in the user configuration directory.
+Advanced users, or users migrating scripts from existing systems may want to use [File Based Scripts](#file-based-scripts) for managing rules using files in the user configuration directory.
 
 #### Adding Triggers
 
@@ -263,6 +263,37 @@ script_unloaded do
 end
 ```
 
+### Transformations
+
+This add-on also provides the necessary infrastructure to use Ruby for writing [transformations](https://www.openhab.org/docs/configuration/transformations.html).
+Once the addon is installed, you can create a Ruby file in the `$OPENHAB_CONF/transform` directory, with the extension `.script`.
+It's important that the extension is `.script` so that the core `SCRIPT` transform service will recognize it.
+When referencing the file, you need to specify the `SCRIPT` transform, with `rb` as the script type: `SCRIPT(rb:mytransform.script):%s`.
+You can also specify additional variables to be set in the script using a URI-like query syntax: `SCRIPT(rb:mytransform.script?a=1b=c):%s` in order to share a single script with slightly different parameters for different items.
+
+**Note**: Due to an [issue](https://github.com/jruby/jruby/issues/5876) in the current version of JRuby, you will need to begin your script with `input ||= nil` (and `a ||= nil` etc. for additional query variables) so that JRuby will recognize the variables as variables--rather than method calls--when it's parsing the script.
+Otherwise you will get errors like `(NameError) undefined local variable or method 'input' for main:Object`.
+
+`compass.script`
+```ruby
+input ||= nil
+DIRECTIONS = %w[N NE E SE S SW W NW N].freeze
+
+if input.nil? || input == "NULL" || input == "UNDEF"
+  "-"
+else
+  cardinal = DIRECTIONS[(input.to_f / 45).round]
+  "#{cardinal} (#{input.to_i}°)"
+end
+```
+
+`weather.items`
+```Xtend
+Number:Angle Exterior_WindDirection "Wind Direction [SCRIPT(rb:compass.script):%s]" <wind>
+```
+
+Given a state of `82 °`, this will produce a formatted state of `E (82°)`.
+
 ## Library Details
 
 The openHAB JRuby Scripting runtime attempts to provide a familiar environment to Ruby developers.
@@ -359,7 +390,7 @@ end
 ```
 
 Alternatively a timer can be used in either a file-based rule or in a UI based rule using {OpenHAB::DSL.after after}.
-After takes a [Duration](#duration), e.g. `10.minutes` instead of using ZonedDateTime.
+After takes a [Duration](#durations), e.g. `10.minutes` instead of using ZonedDateTime.
 
 ```ruby
 rule "simple timer" do

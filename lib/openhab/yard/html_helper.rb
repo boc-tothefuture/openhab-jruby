@@ -8,8 +8,10 @@ module OpenHAB
         result = super(text)
         # re-link files in docs/*.md. They're written so they work on github without any
         # processing
-        result.gsub!(%r{<a href="(?:[A-Za-z0-9_/-]+/)*([A-Za-z0-9_-]+).md(#[A-Za-z0-9_/-]+)?"},
-                     "<a href=\"file.\\1.html\\2\"")
+        unless serializer.is_a?(::YARD::Server::DocServerSerializer)
+          result.gsub!(%r{<a href="(?:[A-Za-z0-9_/-]+/)*([A-Za-z0-9_-]+).md(#[A-Za-z0-9_/-]+)?"},
+                       "<a href=\"file.\\1.html\\2\"")
+        end
 
         # wtf commonmarker, you don't generate anchors?!
         result.gsub!(%r{<h(\d)>([A-Za-z0-9 -]+)</h\1>}) do
