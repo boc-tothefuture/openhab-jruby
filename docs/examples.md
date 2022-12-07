@@ -2,7 +2,7 @@
 
 # Examples
 
-The following examples are for file-based rules but most of them are applicable to [GUI rules](../USAGE.md#ui-based-scripts) as well.
+The following examples are for file-based rules but most of them are applicable to [UI rules](../USAGE.md#ui-based-scripts) as well.
 
 ## Trigger when an item changed state
 
@@ -38,7 +38,7 @@ rule 'Control light based on door state' do
 end
 ```
 
-## Trigger when a group member changed state:
+## Trigger when a group member changed state
 
 ```ruby
 # Assumption: Motion sensor items are named using the pattern RoomName_Motion
@@ -79,7 +79,7 @@ ColorItem1.command {r: 255, g: 0xFF, b: 0}
 ```
 
 Each item type supports command helpers relevant to the type.
-For example, a {SwitchItem} supports {SwitchItem#on on} and {SwitchItem#off off}. 
+For example, a {SwitchItem} supports {SwitchItem#on on} and {SwitchItem#off off}.
 See specific item types under {OpenHAB::Core::Items}
 
 ## Dealing with Item States
