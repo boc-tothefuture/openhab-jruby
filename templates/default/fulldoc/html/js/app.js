@@ -163,112 +163,6 @@ function constantSummaryToggle() {
   } else { localStorage.summaryCollapsed = "expand"; }
 }
 
-function generateTOC() {
-  if ($('#filecontents').length === 0) return;
-  var _toc = $('<ol class="top"></ol>');
-  var show = false;
-  var toc = _toc;
-  var counter = 0;
-  var tags = ['h2', 'h3', 'h4', 'h5', 'h6'];
-  var i;
-  var curli;
-  if ($('#filecontents h1').length > 1) tags.unshift('h1');
-  for (i = 0; i < tags.length; i++) { tags[i] = '#filecontents ' + tags[i]; }
-  var lastTag = parseInt(tags[0][1], 10);
-  $(tags.join(', ')).each(function() {
-    if ($(this).parents('.method_details .docstring').length != 0) return;
-    if (this.id == "filecontents") return;
-    show = true;
-    var thisTag = parseInt(this.tagName[1], 10);
-    if (this.id.length === 0) return;
-    if (thisTag > lastTag) {
-      for (i = 0; i < thisTag - lastTag; i++) {
-        if ( typeof(curli) == "undefined" ) {
-          curli = $('<li/>');
-          toc.append(curli);
-        }
-        toc = $('<ol/>');
-        curli.append(toc);
-        curli = undefined;
-      }
-    }
-    if (thisTag < lastTag) {
-      for (i = 0; i < lastTag - thisTag; i++) {
-        toc = toc.parent();
-        toc = toc.parent();
-      }
-    }
-    var title = $(this).attr('toc-title');
-    if (typeof(title) == "undefined") title = $(this).text();
-    curli =$('<li><a href="#' + this.id + '">' + title + '</a></li>'); 
-    toc.append(curli);
-    lastTag = thisTag;
-  });
-  if (!show) return;
-  html = '<div id="toc"><p class="title hide_toc"><a href="#"><strong>Table of Contents</strong></a></p></div>';
-  $('#content').prepend(html);
-  $('#toc').append(_toc);
-  $('#toc .hide_toc').toggle(function() {
-    $('#toc .top').slideUp('fast');
-    $('#toc').toggleClass('hidden');
-    $('#toc .title small').toggle();
-  }, function() {
-    $('#toc .top').slideDown('fast');
-    $('#toc').toggleClass('hidden');
-    $('#toc .title small').toggle();
-  });
-}
-
-function navResizeFn(e) {
-  if (e.which !== 1) {
-    navResizeFnStop();
-    return;
-  }
-
-  sessionStorage.navWidth = e.pageX.toString();
-  $('.nav_wrap').css('width', e.pageX);
-  $('.nav_wrap').css('-ms-flex', 'inherit');
-}
-
-function navResizeFnStop() {
-  $(window).unbind('mousemove', navResizeFn);
-  window.removeEventListener('message', navMessageFn, false);
-}
-
-function navMessageFn(e) {
-  if (e.data.action === 'mousemove') navResizeFn(e.data.event);
-  if (e.data.action === 'mouseup') navResizeFnStop();
-}
-
-function navResizer() {
-  $('#resizer').mousedown(function(e) {
-    e.preventDefault();
-    $(window).mousemove(navResizeFn);
-    window.addEventListener('message', navMessageFn, false);
-  });
-  $(window).mouseup(navResizeFnStop);
-
-  if (sessionStorage.navWidth) {
-    navResizeFn({which: 1, pageX: parseInt(sessionStorage.navWidth, 10)});
-  }
-}
-
-function navExpander() {
-  var done = false, timer = setTimeout(postMessage, 500);
-  function postMessage() {
-    if (done) return;
-    clearTimeout(timer);
-    var opts = { action: 'expand', path: pathId };
-    document.getElementById('nav').contentWindow.postMessage(opts, '*');
-    done = true;
-  }
-
-  window.addEventListener('message', function(event) {
-    if (event.data === 'navReady') postMessage();
-    return false;
-  }, false);
-}
-
 function mainFocus() {
   var hash = window.location.hash;
   if (hash !== '' && $(hash)[0]) {
@@ -288,9 +182,39 @@ function navigationChange() {
   };
 }
 
+function enableToggles() {
+  // show/hide nested classes on toggle click
+  $('.sidebar-links a.toggle').on('click', function(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    $(this).parent().parent().toggleClass('collapsed');
+    $(this).toggleClass('down');
+    $(this).toggleClass('right');
+  });
+}
+
+function enableHovers() {
+  $('.dropdown-wrapper').hover(
+    function() {
+      $('.nav-dropdown').show();
+    },
+    function() {
+      $('.nav-dropdown').hide();
+    }
+  );
+}
+
+function selectVersion() {
+  if (document.location.pathname.startsWith("/5.0/")) {
+    $(".version-button.stable").toggleClass("current");
+  } else if (document.location.pathname.startsWith("/docs/") ||
+    document.location.pathname.startsWith("/main/") ||
+    document.location.protocol === "file:") {
+    $(".version-button.main").toggleClass("current");
+  }
+}
+
 $(document).ready(function() {
-  navResizer();
-  navExpander();
   createSourceLinks();
   createDefineLinks();
   createFullTreeLinks();
@@ -298,9 +222,11 @@ $(document).ready(function() {
   linkSummaries();
   summaryToggle();
   constantSummaryToggle();
-  generateTOC();
   mainFocus();
   navigationChange();
+  enableToggles();
+  enableHovers();
+  selectVersion();
 });
 
 })();

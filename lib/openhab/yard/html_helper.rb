@@ -16,10 +16,16 @@ module OpenHAB
         # wtf commonmarker, you don't generate anchors?!
         result.gsub!(%r{<h(\d)>([A-Za-z0-9 ?-]+)</h\1>}) do
           id = $2.downcase.tr(" ?", "--")
-          "<h#{$1} id=\"#{id}\">#{$2}</h#{$1}>"
+          "<h#{$1} id=\"#{id}\">#{$2}<a href=\"##{id}\" class=\"header-anchor\">#</a></h#{$1}>"
         end
 
         result
+      end
+
+      def link_url(url, title = nil, params = {})
+        params.merge!(@link_attrs) if defined?(@link_attrs) && @link_attrs
+        params[:class] = params.delete(:classes).join(" ") if params[:classes]
+        super
       end
 
       # have to completely replace this method. only change is the regex splitting

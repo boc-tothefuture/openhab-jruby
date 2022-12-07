@@ -1,0 +1,29 @@
+<% run_verifier(@root.children).sort_by(&:path).each do |child| %>
+  <%
+    next unless child.is_a?(CodeObjects::NamespaceObject)
+
+    has_children = run_verifier(child.children).any? {|o| o.is_a?(CodeObjects::NamespaceObject) }
+    open = child == object || object.path.start_with?("#{child.path}::")
+    classes = []    
+    classes << "deprecated" if child.has_tag?(:deprecated)
+    classes << "collapsed" if has_children && !open
+    @link_attrs = { classes: ["sidebar-link", "sidebar-link-depth-#{@depth}"] }
+  %>
+  <li class="<%= classes.join(" ") %>">
+    <span class="sidebar-link<%= " active" if child == object %>">
+      <%= linkify child, child.name %>
+      <% if has_children %>
+        <a class="arrow toggle <%= open ? "down" : "right" %>"></a>
+      <% end %>
+    </span>
+    <% @link_attrs = nil %>
+    <% if has_children %>
+      
+      <ul>
+        <% @depth = @depth + 1 %>
+        <%= @root = child; erb(:full_list_class) %>
+        <% @depth = @depth - 1 %>
+      </ul>
+    <% end %>
+  </li>
+<% end %>

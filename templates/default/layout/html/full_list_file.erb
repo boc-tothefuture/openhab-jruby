@@ -1,0 +1,11 @@
+<% options.files&.each do |item| %>
+  <li>
+    <%
+      @link_attrs = { classes: ["sidebar-link"] }
+    %>
+    <span class="sidebar-link<%= " active" if defined?(@file) && @file.name == item.name %>">
+      <%= link_file item %>
+    </span>
+    <% @link_attrs = nil %>
+  </li>
+<% end %>

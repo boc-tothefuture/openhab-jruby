@@ -1,0 +1,23 @@
+<div class="page-versions">
+  <ul class="version-switcher">
+    <li><a href="/5.0" class="version-button stable">Stable <small>(5.0)</small></a></li>
+    <li><a href="/main" class="version-button main">Latest <small>(main)</small></a></li>
+  </ul>
+  <% archived_versions = %w[] %>
+  <% unless archived_versions.empty? %>
+    <div class="archived-versions">
+      <div class="dropdown-wrapper">
+        <a class="dropdown-title">
+          <span class="title">Archived</span>
+          <span class="arrow down"></span>
+        </a>
+        <ul class="nav-dropdown">
+          <% archived_versions.each do |version| %>
+            <li class="dropdown-item"><a href="/<%= version %>"><%= version %></a></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>
+

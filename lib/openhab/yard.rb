@@ -12,6 +12,8 @@ YARD::Templates::Template.extra_includes << ->(opts) { OpenHAB::YARD::MarkdownHe
 YARD::Templates::Engine.register_template_path File.expand_path("../../templates", __dir__)
 YARD::Tags::Library.define_tag "Java Interface", :interface
 
+YARD::Server.register_static_path(".")
+
 #
 # @!parse
 #   # @!visibility private
