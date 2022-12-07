@@ -14,8 +14,8 @@ module OpenHAB
         end
 
         # wtf commonmarker, you don't generate anchors?!
-        result.gsub!(%r{<h(\d)>([A-Za-z0-9 -]+)</h\1>}) do
-          id = $2.downcase.tr(" ", "-")
+        result.gsub!(%r{<h(\d)>([A-Za-z0-9 ?-]+)</h\1>}) do
+          id = $2.downcase.tr(" ?", "--")
           "<h#{$1} id=\"#{id}\">#{$2}</h#{$1}>"
         end
 

@@ -37,12 +37,12 @@ If you're new to Ruby, you may want to check out [Ruby Basics](docs/ruby-basics.
 * [File Based Rules](#file-based-rules)
   * [Basic Rule Structure](#basic-rule-structure)
   * [Rule Triggers](#rule-triggers)
-    * [When Item or Thing Changed](#when-item-or-thing-changed)
-    * [When Item Updated](#when-item-updated)
-    * [When Item Received a Command](#when-item-received-a-command)
+    * [Item or Thing Changed](#item-or-thing-changed)
+    * [Item Updated](#item-updated)
+    * [Item Received a Command](#item-received-a-command)
     * [Member-of-Group Trigger](#member-of-group-trigger)
-    * [When Script is Loaded](#when-script-is-loaded)
-    * [When openHAB System Started](#when-openhab-system-started)
+    * [Script is Loaded](#script-is-loaded)
+    * [openHAB System Started](#openhab-system-started)
     * [Cron Trigger](#cron-trigger)
     * [Other Triggers](#other-triggers)
     * [Combining Multiple Triggers](#combining-multiple-triggers)
@@ -170,7 +170,7 @@ org.openhab.automation.jrubyscripting:gems=library= >= 2.2.0; < 3.0, another-gem
 
 ### check_update <!-- omit from toc -->
 
-Check RubyGems for updates to the above gems when OpenHAB starts or JRuby settings are changed.
+Check RubyGems for updates to the above gems when openHAB starts or JRuby settings are changed.
 Otherwise it will try to fulfil the requirements with locally installed gems, and you can manage them yourself
 with an external Ruby by setting the same GEM_HOME.
 
@@ -454,7 +454,7 @@ My_Item << ON
 Note: all possible commands are supported on the corresponding item types, e.g. `on`, `off`, `up`, `down`, `play`, `pause`, `stop`, etc.
 For more details, see the individual item classes under {OpenHAB::Core::Items}.
 
-##### Sending Commands to an Item Only When Its State is Different
+##### Sending Commands to an Item Only When Its State is Different <!-- omit from toc -->
 
 ```ruby
 My_Item.ensure.on
@@ -465,7 +465,7 @@ My_Item.ensure << ON
 logger.info("Turning off the light") if My_Item.ensure.off
 ```
 
-##### Timed Commands
+##### Timed Commands <!-- omit from toc -->
 
 A {OpenHAB::DSL::Items::TimedCommand Timed Command} is similar to the openHAB Item's [expire parameter](https://www.openhab.org/docs/configuration/items.html#parameter-expire) but it offers more flexibility.
 It removes the need to manually create a timer.
@@ -514,7 +514,7 @@ if My_Item.state?
 end
 ```
 
-##### Compare Item's State
+##### Compare Item's State <!-- omit from toc -->
 
 ```ruby
 String_Item.state == 'test string'
@@ -530,7 +530,7 @@ Indoor_Temperature.state - Outdoor_Temperature.state > 5 | '°C'
 
 See {OpenHAB::DSL.unit unit block}
 
-##### Loose Type Comparisons
+##### Loose Type Comparisons <!-- omit from toc -->
 
 Some openHAB item types can accept different command types.
 For example, a {DimmerItem} can accept a command with an {OnOffType}, {IncreaseDecreaseType} or a {PercentType}.
@@ -565,7 +565,7 @@ end
 DimmerItem1 << 100 # => This will trigger the logger.info above
 ```
 
-##### Bypassing Loose Type-Comparisons
+##### Bypassing Loose Type-Comparisons <!-- omit from toc -->
 
 If at any point you want to bypass loose type conversions, use `eql?`.
 
@@ -579,7 +579,7 @@ logger.error DimmerItem1.state.eql?(10) # => false
 logger.error DimmerItem1.state.eql?(PercentType.new(10)) # => true
 ```
 
-##### Strict Type-Comparisons
+##### Strict Type-Comparisons <!-- omit from toc -->
 
 Sometimes it is critical to know the exact command being sent.
 For example, a rule may need to distinguish between {ON} vs. a {PercentType} command.
@@ -1162,7 +1162,7 @@ logger.info("The nap gem is at version #{REST::VERSION}")
 
 ### Shared Code
 
-If you would like to easily share code among multiple script, you can place it in `<OPENHAB_CONF>/automation/ruby/lib`.
+If you would like to easily share code among multiple scripts, you can place it in `<OPENHAB_CONF>/automation/ruby/lib`.
 You can then simply `require` the file from your rules files.
 Files located in `$RUBYLIB` won't be automatically loaded individually by openHAB, only when you `require` them.
 
@@ -1200,7 +1200,7 @@ Jump to: [Rule Triggers](#rule-triggers), [Rule Executions](#rule-executions), [
 
 ### Rule Triggers
 
-#### When Item or Thing Changed
+#### Item or Thing Changed
 
 ```ruby
 rule "Log (or notify) when the secret door is open" do
@@ -1218,7 +1218,7 @@ end
 
 See {OpenHAB::DSL::Rules::BuilderDSL.changed #changed}
 
-##### Detecting Change Duration
+##### Detecting Change Duration <!-- omit from toc -->
 
 Only execute a rule when an item state changed and stayed the same for a period of time. This method
 can only be done using a file-based rule.
@@ -1230,7 +1230,7 @@ rule "Garage Door Alert" do
 end
 ```
 
-#### When Item Updated
+#### Item Updated
 
 ```ruby
 rule "Calculate" do
@@ -1243,7 +1243,7 @@ end
 
 See {OpenHAB::DSL::Rules::BuilderDSL#updated #updated}
 
-#### When Item Received a Command
+#### Item Received a Command
 
 ```ruby
 rule "Received a command" do
@@ -1270,7 +1270,7 @@ rule "Trigger by Member of" do
 end
 ```
 
-#### When Script is Loaded
+#### Script is Loaded
 
 ```ruby
 rule "initialize things" do
@@ -1281,7 +1281,7 @@ end
 
 See {OpenHAB::DSL::Rules::BuilderDSL#on_load #on_load}
 
-#### When openHAB System Started
+#### openHAB System Started
 
 ```ruby
 rule "System startup rule" do
@@ -1294,7 +1294,7 @@ See {OpenHAB::DSL::Rules::BuilderDSL#on_start #on_start}
 
 #### Cron Trigger
 
-##### Traditional Cron Trigger
+Traditional cron trigger:
 
 ```ruby
 rule "cron rule" do
@@ -1314,7 +1314,7 @@ end
 
 See {OpenHAB::DSL::Rules::BuilderDSL#cron #cron}
 
-##### Using `every` Trigger
+##### `every` Trigger
 
 ```ruby
 rule "run every day" do
@@ -1436,7 +1436,7 @@ trigger event without having to manually create a timer. Unlike `sleep`, a delay
 the current executing thread. It actually sets a timer for you behind the scenes.
 
 ```ruby
-rule "Check for offline things 15 minutes after OpenHAB had started" do
+rule "Check for offline things 15 minutes after openHAB had started" do
   on_start
   delay 15.minutes
   run do
