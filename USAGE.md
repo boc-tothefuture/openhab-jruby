@@ -8,27 +8,28 @@ Also included is [openhab-jrubyscripting](https://ccutrer.github.com/openhab-jru
 It provides native Ruby access to common openHAB functionality within rules including items, things, actions, logging and more.
 If you're new to Ruby, you may want to check out [Ruby Basics](docs/ruby-basics.md).
 
- * [Configuration](#configuration)
-   * [UI Based Scripts](#ui-based-scripts)
-   * [File Based Scripts](#file-based-scripts)
- * [Library Details](#library-details)
-   * [Gems](#gems)
-   * [Shared Code](#shared-code)
-   * [Logging](#logging)
-   * [Timers](#timers)
-   * [Items](#items)
-   * [Linked Things](#linked-things)
-   * [Metadata](#metadata)
-   * [Persistence](#persistence)
-   * [Semantic Model](#semantic-model)
-   * [Item Builder](#item-builder)
-   * [Things](#things)
-   * [Actions](#actions)
-   * [Cache](#cache)
-   * [Time](#time)
-   * [Rules](#rules)
-   * [Calling Java From JRuby](#calling-java-from-jruby)
-   * [Testing Your Rules](docs/testing.md)
+* [Configuration](#configuration)
+* [Usage](#usage)
+  * [UI Based Scripts](#ui-based-scripts)
+  * [File Based Scripts](#file-based-scripts)
+* [Library Details](#library-details)
+  * [Gems](#gems)
+  * [Shared Code](#shared-code)
+  * [Logging](#logging)
+  * [Timers](#timers)
+  * [Items](#items)
+  * [Linked Things](#linked-things)
+  * [Metadata](#metadata)
+  * [Persistence](#persistence)
+  * [Semantic Model](#semantic-model)
+  * [Item Builder](#item-builder)
+  * [Things](#things)
+  * [Actions](#actions)
+  * [Cache](#cache)
+  * [Time](#time)
+  * [Rules](#rules)
+  * [Calling Java From JRuby](#calling-java-from-jruby)
+  * [Testing Your Rules](docs/testing.md)
 
 Additional [example rules are available](docs/examples.md), as well as examples of [conversions from DSL and Python rules](docs/conversions.md).
 
@@ -42,21 +43,76 @@ Simply change the `gems` and `require` configuration settings.
 
 Alternatively, JRuby configuration parameters may be set by creating a `jruby.cfg` file in `conf/services/`
 
-| Parameter                                             | Default                                                    | Description                                                                                                                                                                                                                                                                                               |
-| ----------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| org.openhab.automation.jrubyscripting:gem_home        | `$OPENHAB_CONF/automation/ruby/.gem/{RUBY_ENGINE_VERSION}` | Location Ruby Gems will be installed to and loaded from. Directory will be created if necessary. You can use `{RUBY_ENGINE_VERSION}`, `{RUBY_ENGINE}` and/or `{RUBY_VERSION}` replacements in this value to automatically point to a new directory when the addon is updated with a new version of JRuby. |
-| org.openhab.automation.jrubyscripting:rubylib         | `$OPENHAB_CONF/automation/ruby/lib`                        | Search path for user libraries. Separate each path with a colon (semicolon in Windows).                                                                                                                                                                                                                   |
-| org.openhab.automation.jrubyscripting:local_context   | `singlethread`                                             | The local context holds Ruby runtime, name-value pairs for sharing variables between Java and Ruby. See [this](https://github.com/jruby/jruby/wiki/RedBridge#Context_Instance_Type) for options and details                                                                                               |
-| org.openhab.automation.jrubyscripting:local_variables | `transient`                                                | Defines how variables are shared between Ruby and Java. See [this](https://github.com/jruby/jruby/wiki/RedBridge#local-variable-behavior-options) for options and details                                                                                                                                 |
-| org.openhab.automation.jrubyscripting:gems            | `openhab-jrubyscripting=~>5.0.0`                           | A comma separated list of [Ruby Gems](https://rubygems.org/) to install. The default installs the version of the helper for this version of openHAB.                                                                                                                                                      |
-| org.openhab.automation.jrubyscripting:require         | `openhab/dsl`                                              | A comma separated list of script names to be required by the JRuby Scripting Engine at the beginning of user scripts. The default is to require the helper library.                                                                                                                                       |
-| org.openhab.automation.jrubyscripting:check_update    | `true`                                                     | Check RubyGems for updates to the above gems when OpenHAB starts or JRuby settings are changed. Otherwise it will try to fulfil the requirements with locally installed gems, and you can manage them yourself with an external Ruby by setting the same GEM_HOME.                                        |
+| Parameter         | Default                                                    | Description                                                         |
+|-------------------|------------------------------------------------------------|---------------------------------------------------------------------|
+| `gem_home`        | `$OPENHAB_CONF/automation/ruby/.gem/{RUBY_ENGINE_VERSION}` | The path to store Ruby Gems.                                         |
+| `gems`            | `openhab-jrubyscripting=~>5.0.0`                           | A list of gems to install on start up or settings change.           |
+| `check_update`    | `true`                                                     | Check for updated version of `gems` on start up or settings change. |
+| `require`         | `openhab/dsl`                                              | List of scripts to be required automatically.                       |
+| `rubylib`         | `$OPENHAB_CONF/automation/ruby/lib`                        | Search path for user libraries.                                     |
+| `local_context`   | `singlethread`                                             | See notes below.                                                    |
+| `local_variables` | `transient`                                                | See notes below.                                                    |
+
+These parameters must be prefixed with `org.openhab.automation.jrubyscripting:`, for example:
+
+```text
+org.openhab.automation.jrubyscripting:gems=openhab-jrubyscripting=~>5.0
+org.openhab.automation.jrubyscripting:require=openhab/dsl
+```
+
+### gem_home
+
+Path to where Ruby Gems will be installed to and loaded from. The directory will be created if necessary.
+You can use `{RUBY_ENGINE_VERSION}`, `{RUBY_ENGINE}` and/or `{RUBY_VERSION}` replacements in this value
+to automatically point to a new directory when the addon is updated with a new version of JRuby.
+
+### gems
+
+A comma separated list of [Ruby Gems](https://rubygems.org/) to install.
+The default installs the version of the helper for this version of openHAB.
+
+Multiple version specifiers can be added by separating them with a semicolon.
+
+Example with multiple version specifiers:
+
+```text
+org.openhab.automation.jrubyscripting:gems=library= >= 2.2.0; < 3.0, another-gem= > 4.0.0.a; < 5
+```
+
+### check_update
+
+Check RubyGems for updates to the above gems when OpenHAB starts or JRuby settings are changed.
+Otherwise it will try to fulfil the requirements with locally installed gems, and you can manage them yourself
+with an external Ruby by setting the same GEM_HOME.
+
+### require
+
+A comma separated list of script names to be required by the JRuby Scripting Engine at the beginning of user scripts.
+The default is to require the helper library.
+
+### rubylib
+
+Search path for user libraries. Separate each path with a colon (semicolon in Windows).
+
+### local_context
+
+The local context holds Ruby runtime, name-value pairs for sharing variables between Java and Ruby.
+Valid values are: `singleton`, `threadsafe`, `singlethread`, or `concurrent`.
+See [this](https://github.com/jruby/jruby/wiki/RedBridge#Context_Instance_Type) for options and details.
+
+### local_variables
+
+Defines how variables are shared between Ruby and Java. Valid values are: `transient`, `persistent`, or `global`.
+See [this](https://github.com/jruby/jruby/wiki/RedBridge#local-variable-behavior-options) for options and details.
+
+## Usage
 
 ### UI Based Script
 
 The quickest way to add rules is through the openHAB Web UI.
 
-Advanced users, or users migrating scripts from existing systems may want to use [File Based Scripts](#file-based-scripts) for managing rules using files in the user configuration directory.
+Advanced users, or users migrating scripts from existing systems may want to use [File Based Scripts](#file-based-scripts)
+for managing rules using files in the user configuration directory.
 
 #### Adding Triggers
 
@@ -215,7 +271,7 @@ The openHAB JRuby Scripting runtime attempts to provide a familiar environment t
 
 [Bundler](https://bundler.io/) is integrated, enabling any [Ruby gem](https://rubygems.org/) compatible with JRuby to be used within rules. This permits easy access to the vast ecosystem of libraries within the Ruby community.
 Gems are available using the [inline bundler syntax](https://bundler.io/guides/bundler_in_a_single_file_ruby_script.html).
-The require statement can be omitted. 
+The require statement can be omitted.
 
 ```ruby
 gemfile do
@@ -234,6 +290,7 @@ You can then simply `require` the file from your rules files.
 Files located in `$RUBYLIB` won't be automatically loaded individually by openHAB, only when you `require` them.
 
 `automation/ruby/myrule.rb` OR a UI Rule's script:
+
 ```ruby
 require "my_lib"
 
@@ -241,6 +298,7 @@ logger.info(my_lib_version)
 ```
 
 `automation/ruby/lib/my_lib.rb`
+
 ```ruby
 def my_lib_version
   "1.0"
@@ -269,12 +327,12 @@ logger = OpenHAB::Log.logger("org.openhab.custom")
 The {OpenHAB::Logger logger} is similar to a standard [Ruby Logger](https://ruby-doc.org/stdlib-3.1.2/libdoc/logger/rdoc/Logger.html).
 Supported logging functions include:
 
-- `logger.log(severity, obj)`
-- `logger.info(obj)`
-- `logger.warn(obj)`
-- `logger.error(obj)`
-- `logger.debug(obj)`
-- `logger.trace(obj)`
+* `logger.log(severity, obj)`
+* `logger.info(obj)`
+* `logger.warn(obj)`
+* `logger.error(obj)`
+* `logger.debug(obj)`
+* `logger.trace(obj)`
 
 `obj` is any Ruby (or Java) object.
 `#to_s` (or `toString()` if it's a Java object) is called on `obj`, and the result is output to the openHAB log.
@@ -468,7 +526,7 @@ gTest.members
 gTest.all_members
 ```
 
-Group members work like a [Ruby array](https://ruby-doc.org/core-2.6/Array.html) 
+Group members work like a [Ruby array](https://ruby-doc.org/core-2.6/Array.html)
 so you can use `&` for intersection, `|` for union, and `-` for difference.
 
 ```ruby
@@ -535,7 +593,7 @@ My_Item.command ON
 My_Item << ON
 ```
 
-Note: all possible commands are supported on the corresponding item types, e.g. `on`, `off`, `up`, `down`, `play`, `pause`, `stop`, etc. 
+Note: all possible commands are supported on the corresponding item types, e.g. `on`, `off`, `up`, `down`, `play`, `pause`, `stop`, etc.
 For more details, see the individual item classes under {OpenHAB::Core::Items}.
 
 ##### Sending Commands to an Item Only When Its State is Different
@@ -619,8 +677,8 @@ However, ultimately an item only stores its state in its native type, e.g. a {Di
 
 Comparisons between two compatible types will return true when applicable, for example:
 
-- 0 ({PercentType}) equals {OFF} and the `off?` predicate will return true
-- A positive {PercentType} equals {ON} and the `on?` predicate will return true
+* 0 ({PercentType}) equals {OFF} and the `off?` predicate will return true
+* A positive {PercentType} equals {ON} and the `on?` predicate will return true
 
 ```ruby
 DimmerItem1.update(10)
@@ -1068,7 +1126,7 @@ rule "my first rule" do
 end
 ```
 
-#### Get the UID of a Rule 
+#### Get the UID of a Rule
 
 ```ruby
 rule_obj = rule 'my rule name' do
@@ -1082,6 +1140,7 @@ rule_uid = rule_obj.uid
 ```
 
 #### Get the UID of a Rule by Name
+
 ```ruby
 rule_uid = rules.find { |rule| rule.name == 'This is the name of my rule' }.uid
 ```
@@ -1251,7 +1310,7 @@ play_sound "doorbell_chime.mp3"
 
 #### Suppress Item State Flapping
 
-Only execute a rule when an item state changed and stayed the same for a period of time. This method 
+Only execute a rule when an item state changed and stayed the same for a period of time. This method
 can only be done using a file-based rule.
 
 ```ruby
