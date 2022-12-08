@@ -1,4 +1,4 @@
-<% run_verifier(@root.children).sort_by(&:path).each do |child| %>
+<% run_verifier(@root.children).sort_by { |c| [c.name == :OpenHAB ? 0 : 1, c.name] }.each do |child| %>
   <%
     next unless child.is_a?(CodeObjects::NamespaceObject)
 
