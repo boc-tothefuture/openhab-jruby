@@ -1446,8 +1446,7 @@ rule "Check for offline things 15 minutes after openHAB had started" do
 end
 ```
 
-<!-- TODO This group linking is broken:
-See {group::OpenHAB::DSL::Rules::BuilderDSL::Execution-Blocks Execution Blocks} -->
+See {group::OpenHAB::DSL::Rules::BuilderDSL::Execution-Blocks Execution Blocks}
 
 ### Terse Rules
 
