@@ -36,7 +36,7 @@ module OpenHAB
 
         # @return [Boolean] if dummy items should be created in this context
         def create_dummy_items?
-          @create_dummy_items
+          defined?(@create_dummy_items) && @create_dummy_items
         end
 
         # @!visibility private
