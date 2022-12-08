@@ -6,7 +6,7 @@
   <body>
     <div id="app">
       <header class="navbar">
-        <a href="/">
+        <a href="<%= url_for_main %>">
           <img src="<%= url_for_file("docs/images/openhab-logo.png") %>" alt="openHAB" class="logo">
           <img src="<%= url_for_file("docs/images/jrubyscripting.png") %>" alt="openHAB" class="logo">
           <span class="site-name can-hide">openHAB</span>
@@ -29,17 +29,17 @@
         <ul class="sidebar-links">
           <li>
             <section class="sidebar-group<%= " collapsed" unless file_open %>">
-              <p class="sidebar-heading"><span>Getting Started</span><a class="arrow toggle <%= file_open ? "down" : "right" %>"></a></p>
+              <p class="sidebar-heading"><span><a href="<%= url_for_main %>">Getting Started</a></span><a class="arrow toggle <%= file_open ? "down" : "right" %>"></a></p>
               <ul class="sidebar-links sidebar-group-items">
-                <%= @root = Registry.root; erb(:full_list_file) %>
+                <%= erb(:full_list_file) %>
               </ul>
             </section>
           </li>
           
           <li>
             <section class="sidebar-group<%= " collapsed" if file_open %>">              
-              <p class="sidebar-heading"><span>Classes</span><a class="arrow toggle <%= file_open ? "right" : "down" %>"></a></p>
-              <ul class="sidebar-links sidebar-group-items">
+              <p class="sidebar-heading"><span><%= linkify(Registry.root, "Classes") %></span><a class="arrow toggle <%= file_open ? "right" : "down" %>"></a></p>
+              <ul class="sidebar-links sidebar-group-items class-list">
                 <%= @root = Registry.root; @depth = 0; erb(:full_list_class) %>
               </ul>
             </section>
