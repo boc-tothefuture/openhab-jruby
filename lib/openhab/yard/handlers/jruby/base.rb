@@ -7,9 +7,18 @@ module YARD
         class << self
           def infer_java_class(klass, inferred_type = nil, comments = nil, statement = nil)
             components = klass.split(".")
+            components.pop if components.last == "freeze"
+
             class_first_char = components.last[0]
             is_field = components.last == components.last.upcase
-            is_package = !is_field && class_first_char != class_first_char.upcase
+            container_first_char = components[-2]&.[](0)
+            is_method = container_first_char &&
+                        class_first_char != class_first_char.upcase &&
+                        container_first_char == container_first_char.upcase
+            is_package = !is_method && !is_field && class_first_char != class_first_char.upcase
+
+            # methods aren't supported right now
+            return if is_method
 
             javadocs = YARD::Config.options.dig(:jruby, "javadocs") || {}
 

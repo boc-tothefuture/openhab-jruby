@@ -8,7 +8,7 @@ module OpenHAB
       #
       # The abstract base class for all items.
       #
-      # @see https://www.openhab.org/javadoc/latest/org/openhab/core/items/genericitem
+      # @see org.openhab.core.items.GenericItem
       #
       class GenericItem
         # @!parse include Item

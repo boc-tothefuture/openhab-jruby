@@ -187,7 +187,7 @@ Search path for user libraries. Separate each path with a colon (semicolon in Wi
 
 The local context holds Ruby runtime, name-value pairs for sharing variables between Java and Ruby.
 Valid values are: `singleton`, `threadsafe`, `singlethread`, or `concurrent`.
-See [this](https://github.com/jruby/jruby/wiki/RedBridge#Context_Instance_Type) for options and details.
+See [this](https://github.com/jruby/jruby/wiki/RedBridge#context-instance-type) for options and details.
 
 ### local_variables <!-- omit from toc -->
 
@@ -239,14 +239,14 @@ Querying the status of a thing:
 logger.info("Thing status: #{things["zwave:serial_zstick:512"].status}")"
 ```
 
-Theoretically you could even use a system start trigger with a UI rule, and then use the [syntax](#rules) mostly developed for file based rules to create multiple rules.
+Theoretically you could even use a system start trigger with a UI rule, and then use the [syntax](#file-based-rules) mostly developed for file based rules to create multiple rules.
 
 ### File Based Scripts
 
 The JRuby Scripting addon will load scripts from `automation/ruby` in the user configuration directory.
 The system will automatically reload scripts when changes are detected to files.
 Local variable state is not persisted among reloads, see using the [cache](#cache) for a convenient way to persist objects.
-See [Rules](#rules) for examples of creating rules withing your scripts.
+See [File Based Rules](#file-based-rules) for examples of creating rules within your scripts.
 
 ### Event Object
 
@@ -965,7 +965,7 @@ Several options are available for time related code, including but not limited t
 * Java {Period}
 * Ruby [Date](https://ruby-doc.org/stdlib-2.6.8/libdoc/date/rdoc/Date.html) - represents a date with no time
 * Ruby [Time](https://ruby-doc.org/core/Time.html) - represents a specific instant with a date and time
-* Ruby [DateTime](https://ruby-doc.org/core/DateTime.html) - represents a specific instant with a date and time
+* Ruby [DateTime](https://ruby-doc.org/stdlib-2.6.8/libdoc/date/rdoc/DateTime.html) - represents a specific instant with a date and time
 
 #### Durations <!-- omit from toc -->
 

@@ -26,7 +26,7 @@ module OpenHAB
     #
     # @note Only the {OpenHAB::DSL.shared_cache sharedCache} is exposed in Ruby.
     #   For a private cache, simply use an instance variable. See
-    #   {file:docs/ruby-basics.md#Variables Instance Variables}.
+    #   {file:docs/ruby-basics.md#variables Instance Variables}.
     #
     # @note Because every script or UI rule gets it own JRuby engine instance,
     #   you cannot rely on being able to access Ruby objects between them. Only

@@ -17,7 +17,7 @@ module OpenHAB
             #
             # The ItemChannelLink registry
             #
-            # @return [org.openhab.core.thing.link.ItemChanneLinkRegistry]
+            # @return [org.openhab.core.thing.link.ItemChannelLinkRegistry]
             #
             def registry
               @registry ||= OSGi.service("org.openhab.core.thing.link.ItemChannelLinkRegistry")

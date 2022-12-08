@@ -37,7 +37,7 @@ module OpenHAB
       # @see Items::Builder
       #
       class Builder
-        # @return [org.openhab.core.things.ManagedThingProvider]
+        # @return [org.openhab.core.thing.ManagedThingProvider]
         attr_reader :provider
 
         def initialize(provider)

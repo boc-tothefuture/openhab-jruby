@@ -624,7 +624,7 @@ module OpenHAB
     #
     # @overload provider!(things: nil, items: nil, metadata: nil, links: nil, **metadata_items)
     #
-    # @param [Core::Provider, org.openhab.core.registry.common.ManagedProvider, :persistent, :transient, Proc] providers
+    # @param [Core::Provider, org.openhab.core.common.registry.ManagedProvider, :persistent, :transient, Proc] providers
     #   An explicit provider to use. If it's a {Core::Provider}, the type will be inferred automatically.
     #   Otherwise it's applied to all types.
     # @param [Hash] providers_by_type

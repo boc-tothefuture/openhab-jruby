@@ -33,7 +33,7 @@ module OpenHAB
 
         class << self
           #
-          # Parses a String representing a time into an {java.time.DateTimeType}. First tries to parse it
+          # Parses a String representing a time into a {DateTimeType}. First tries to parse it
           #   using Java's parser, then falls back to the Ruby `Time.parse`.
           #
           # @param [String] time_string

@@ -63,7 +63,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 * The main require is now `require "openhab/dsl"` instead of just
   `require "openhab"`. The reason being to avoid conflicts if a gem gets
   written to access openHAB via REST API. It's probably preferred that you
-  [configure automatic requires](docs/installation.md) for this file anyway.
+  [configure automatic requires](USAGE.md#configuration) for this file anyway.
 * {GenericItem} and descendants can no longer be treated as the item's state.
   While convenient at times, it introduces many ambiguities on if the intention
   is to interact with the item or its state, and contortionist code attempting
@@ -71,7 +71,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 * Semi-related to the above, the `#truthy?` method has been removed from any
   items the previously implemented it. Instead, be more explicit on what you
   mean - for example `Item.on?`. If you would like to use a similar structure
-  with {StringItem}s, just [include the ActiveSupport gem](docs/gems.md)
+  with {StringItem}s, just [include the ActiveSupport gem](USAGE.md#gems)
   in your rules to get `#blank?` and `#present?` methods, and then you can
   use `Item.state.present?`.
 * Semi-related to the above, the
@@ -367,7 +367,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 ### Tests
 
 * **ensure_states:** change logging from trace to info ([7686d32](https://github.com/boc-tothefuture/openhab-jruby/commit/7686d32ef13f14eb5528cea9b9e7b349d3779c9b))
-* **rule_language:** [@log](https://github.com/log)_level_changed was missing ([fe61b04](https://github.com/boc-tothefuture/openhab-jruby/commit/fe61b040019142ba9525685f742b13d0eb54e233))
+* **rule_language:** [@log_level_changed was missing ([fe61b04](https://github.com/boc-tothefuture/openhab-jruby/commit/fe61b040019142ba9525685f742b13d0eb54e233))
 
 # [4.41.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.40.0...4.41.0) (2022-04-28)
 
@@ -927,7 +927,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 
 ### Bug Fixes
 
-* **type:** allow comparison against incompatible types ([4ef6b2d](https://github.com/boc-tothefuture/openhab-jruby/commit/4ef6b2d0017c82c74f4d0ce82a7fb7e91681770c)), closes [#328](https://github.com/boc-tothefuture/openhab-jruby/issues/328) [/github.com/jruby/jruby/blob/9.2.19.0/core/src/main/java/org/jruby/RubyRange.java#L755](https://github.com//github.com/jruby/jruby/blob/9.2.19.0/core/src/main/java/org/jruby/RubyRange.java/issues/L755) [/github.com/jruby/jruby/blob/a309a88614916621de4cc5dc3693f279dae58d0c/core/src/main/java/org/jruby/RubyNumeric.java#L640](https://github.com//github.com/jruby/jruby/blob/a309a88614916621de4cc5dc3693f279dae58d0c/core/src/main/java/org/jruby/RubyNumeric.java/issues/L640) [/github.com/ruby/ruby/blob/4fb71575e270092770951e6a69bf006c71fadb55/numeric.c#L477](https://github.com//github.com/ruby/ruby/blob/4fb71575e270092770951e6a69bf006c71fadb55/numeric.c/issues/L477)
+* **type:** allow comparison against incompatible types ([4ef6b2d](https://github.com/boc-tothefuture/openhab-jruby/commit/4ef6b2d0017c82c74f4d0ce82a7fb7e91681770c)), closes [#328](https://github.com/boc-tothefuture/openhab-jruby/issues/328)
 
 # [4.10.0](https://github.com/boc-tothefuture/openhab-jruby/compare/4.9.0...4.10.0) (2021-11-02)
 

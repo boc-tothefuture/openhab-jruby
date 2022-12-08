@@ -11,7 +11,7 @@ module OpenHAB
       DecimalType = org.openhab.core.library.types.DecimalType
 
       #
-      # {DecimalType} uses a {java.lang.BigDecimal} internally and thus can be
+      # {DecimalType} uses a {java.math.BigDecimal} internally and thus can be
       # used for integers, longs and floating point numbers alike.
       #
       # @example DecimalType can be used in case statements with ranges

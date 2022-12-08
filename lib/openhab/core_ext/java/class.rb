@@ -21,7 +21,7 @@ module OpenHAB
         #
         # `self`, all superclasses and interfaces, recursively.
         #
-        # @return [Array<java.reflect.Type>]
+        # @return [Array<java.lang.reflect.Type>]
         #
         def generic_ancestors
           ancestors.flat_map do |klass|

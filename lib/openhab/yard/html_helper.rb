@@ -1,25 +1,38 @@
 # frozen_string_literal: true
 
+require "nokogiri"
+
 module OpenHAB
   module YARD
     # @!visibility private
     module HtmlHelper
       def html_markup_markdown(text)
         result = super(text)
+
+        html = Nokogiri::HTML5.fragment(result)
         # re-link files in docs/*.md. They're written so they work on github without any
         # processing
         unless serializer.is_a?(::YARD::Server::DocServerSerializer)
-          result.gsub!(%r{<a href="(?:[A-Za-z0-9_/-]+/)*([A-Za-z0-9_-]+).md(#[A-Za-z0-9_/-]+)?"},
-                       "<a href=\"file.\\1.html\\2\"")
+          html.css("a[href!='']").each do |link|
+            uri = URI.parse(link["href"])
+            next unless uri.relative? && File.extname(uri.path) == ".md"
+
+            basename = File.basename(uri.path, ".md")
+            uri.path = "file.#{basename}.html"
+            link["href"] = uri.to_s
+          end
         end
 
         # wtf commonmarker, you don't generate anchors?!
-        result.gsub!(%r{<h(\d)>([A-Za-z0-9 ?-]+)</h\1>}) do
-          id = $2.downcase.tr(" ?", "--")
-          "<h#{$1} id=\"#{id}\">#{$2}<a href=\"##{id}\" class=\"header-anchor\">#</a></h#{$1}>"
+        html.css("h1, h2, h3, h4, h5, h6").each do |header|
+          next if header["id"]
+
+          id = header.text.strip.downcase.delete(%(.?"')).tr(" ", "-")
+          header["id"] = id
+          header.prepend_child(%(<a href="##{id}" class="header-anchor">#</a>))
         end
 
-        result
+        html.to_s
       end
 
       def link_url(url, title = nil, params = {})

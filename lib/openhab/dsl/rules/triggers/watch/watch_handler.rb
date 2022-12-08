@@ -68,7 +68,7 @@ module OpenHAB
             # Invoked by java super class when an watch event occurs
             # @param [String] _event ignored
             # @param [StandardWatchEventKind] kind NIO watch event kind
-            # @param [java.nio.Path] path that had an event
+            # @param [java.nio.file.Path] path that had an event
             def processWatchEvent(_event, kind, path)
               @block.call(Events::WatchEvent.new(EVENT_TO_SYMBOL[kind], Pathname.new(path.to_s)))
             end

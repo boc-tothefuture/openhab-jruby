@@ -15,4 +15,4 @@
 --markup markdown
 --markup-provider commonmarker
 --readme USAGE.md
-- CHANGELOG.md README.md docs/**/*.md
+- CHANGELOG.md CONTRIBUTING.md README.md docs/**/*.md

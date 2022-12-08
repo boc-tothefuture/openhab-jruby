@@ -52,7 +52,8 @@ jobs:
         run: |
           bin/yardoc -c --no-cache --private --fail-on-warning
           bin/yard stats -c --list-undoc
-          bin/yard stats -c | grep "100.00% documented"
+          (bin/yard stats -c | grep "100.00% documented")
+          bin/validate_yard_links
 
   openhab-matrix:
     runs-on: ubuntu-latest

@@ -1,0 +1,92 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "rubygems"
+require "bundler/setup"
+
+require "cgi"
+require "nokogiri"
+require "open-uri"
+
+KNOWN_BADLY_ESCAPED_FRAGMENTS = ["[]", "<", ">"].freeze
+REFERENCES_FILE = ".known_good_references"
+
+BADLY_ESCAPED_FRAGMENTS_REGEX = Regexp.new(KNOWN_BADLY_ESCAPED_FRAGMENTS.map { |f| Regexp.escape(f) }.join("|")).freeze
+
+known_good_references = (File.exist?(REFERENCES_FILE) ? File.readlines(REFERENCES_FILE).map(&:strip) : []).to_set
+original_known_good_references = known_good_references.dup
+
+anchors = {}
+references = {}
+warnings = false
+
+base_dir = Pathname.new("docs/yard")
+base_dir.glob("**/*.html").each do |file|
+  html = Nokogiri::HTML5(File.read(file))
+
+  file = file.relative_path_from(base_dir)
+  references[file] = html.css("a[href!='']").map { |e| [e["href"], e.line] }
+  anchors[file] = (html.css("[id!='']").map { |e| e["id"] } + html.css("a[name!='']").map { |e| e["name"] }).to_set
+end
+
+references.each do |file, file_references|
+  file_references.each do |(ref, line)|
+    next if known_good_references.include?(ref)
+
+    # YARD doesn't escape these in its links
+    ref = ref.gsub(BADLY_ESCAPED_FRAGMENTS_REGEX) { |m| CGI.escape(m) }
+
+    uri = begin
+      URI.parse(ref)
+    rescue URI::InvalidURIError
+      warnings = true
+      warn("Invalid reference #{ref}; referenced from #{file}:#{line}")
+
+      next
+    end
+
+    fragment = uri.fragment
+    uri.fragment = nil
+    fragment = nil if fragment&.empty?
+    if fragment
+      fragment = CGI.unescape(fragment)
+      fragment.tr!(" ", "+")
+    end
+
+    ref_anchors = if uri.absolute?
+                    anchors[uri] ||= begin
+                      puts "Requesting #{uri}..."
+                      html = uri.open { |io| Nokogiri::HTML5(io) }
+                      (html.css("[id!='']").map { |e| e["id"] } + html.css("a[name!='']").map { |e| e["name"] }).to_set
+                    rescue OpenURI::HTTPError => e
+                      warnings = true
+                      warn("Unable to access #{ref}: #{e}; referenced from #{file}:#{line}")
+                      next
+                    end
+                  elsif uri.path.empty?
+                    anchors[file]
+                  elsif (as = anchors[file.join("..", uri.path)])
+                    as
+                  else
+                    warnings = true
+                    warn("Link to non-existent file #{ref}; referenced from #{file}:#{line}")
+                    Set.new
+                  end
+
+    if !fragment || ref_anchors.include?(fragment)
+      known_good_references << ref if uri.absolute?
+      next
+    end
+
+    warnings = true
+    warn("Link to non-existent target #{ref}; referenced from #{file}:#{line}")
+  end
+end
+
+if known_good_references != original_known_good_references
+  File.write(REFERENCES_FILE, "#{known_good_references.sort.join("\n")}\n")
+end
+
+exit(1) if warnings
+
+puts "All links are valid" unless warnings

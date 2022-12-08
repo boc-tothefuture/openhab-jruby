@@ -161,7 +161,7 @@ end
 
 ## Ruby's Safe Navigation Operator
 
-Ruby has a [safe navigation operator](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html#label-Safe+navigation+operator) 
+Ruby has a [safe navigation operator](https://ruby-doc.org/core-2.6/doc/syntax/calling_methods_rdoc.html#label-Safe+navigation+operator)
 `&.` which is similar to `?.` in C#, Groovy, Kotlin, etc.
 
 ```ruby
