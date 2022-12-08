@@ -2,9 +2,9 @@
 
 ## Conversion Examples
 
-DSL
+### DSL
 
-```xtend
+```java
 rule 'Snap Fan to preset percentages'
 when Member of CeilingFans changed
 then
@@ -12,26 +12,27 @@ then
   val name = String.join(" ", fan.name.replace("LoadLevelStatus","").split("(?<!^)(?=[A-Z])"))
   logInfo("Fan", "Ceiling fan group rule triggered for {}, value {}", name,fan.state)
   switch fan {
-  	case fan.state >0 && fan.state < 25 : {
-  		logInfo("Fan", "Snapping {} to 25%", name)
-  		sendCommand(fan, 25)
-  	}
-  	case fan.state > 25 && fan.state < 66 : {
-  		logInfo("Fan", "Snapping {} to 66%", name)
-  		sendCommand(fan, 66)
-  	}
-  	case fan.state > 66 && fan.state < 100 : {
-  		logInfo("Fan", "Snapping {} to 100%", name)
-  		sendCommand(fan, 100)
-  	}
-	default: {
-  		logInfo("Fan", "{} set to snapped percentage, no action taken", name)
-	}
+    case fan.state >0 && fan.state < 25 : {
+      logInfo("Fan", "Snapping {} to 25%", name)
+      sendCommand(fan, 25)
+    }
+    case fan.state > 25 && fan.state < 66 : {
+      logInfo("Fan", "Snapping {} to 66%", name)
+      sendCommand(fan, 66)
+    }
+    case fan.state > 66 && fan.state < 100 : {
+      logInfo("Fan", "Snapping {} to 100%", name)
+      sendCommand(fan, 100)
+    }
+    default: {
+      logInfo("Fan", "{} set to snapped percentage, no action taken", name)
+    }
   }
 end
 ```
 
 Ruby
+
 ```ruby
 rule 'Snap Fan to preset percentages' do
   changed CeilingFans.members
@@ -51,7 +52,8 @@ rule 'Snap Fan to preset percentages' do
 end
 ```
 
-Python
+### Python
+
 ```python
 @rule("Use Supplemental Heat In Office")
 @when("Item Office_Temperature changed")
@@ -66,51 +68,26 @@ def office_heater(event):
   occupied = items["Office_Occupied"]
   door = items["OfficeDoor"]
   difference = hall_temp - office_temp
-  logging.warn("Office Temperature: {} Upstairs Hallway Temperature: {} Differnce: {}".format(office_temp,hall_temp,difference))
-  logging.warn("Themostat Status: {} Heat Set: {}".format(therm_status,heat_set))
-  logging.warn("Office Occupied: {}".format(occupied))
-  logging.warn("Office Door: {}".format(door))
   degree_difference = 2.0
-  trigger = False
-  if heat_set > office_temp:
-    if difference > degree_difference:
-     if occupied == ON:
-      if True:
-          if therm_status == 0:
-            if door == CLOSED:
-                trigger = True
-            else:
-               logging.warn("Door Open, no action taken")
-          else:
-            logging.warn("HVAC on, no action taken")
-      else:
-        logging.warn("Office unoccupied, no action taken")
-    else:
-      logging.warn("Thermstat and office temperature difference {} is less than {} degrees, no action taken".format(difference, degree_difference))
-  else:
-    logging.warn("Heat set lower than office temp, no action taken".format(difference, degree_difference))
-
+  trigger = occupied == ON && door == CLOSED && heat_set > office_temp && difference > degree_difference 
 
   if trigger:
-    logging.warn("Turning on heater")
     events.sendCommand("Lights_Office_Outlet","ON")
   else:
-    logging.warn("Turning off heater")
     events.sendCommand("Lights_Office_Outlet","OFF")
 ```
 
-
 Ruby
+
 ```ruby
-rule 'Use supplemental heat in office' do
+rule "Use supplemental heat in office" do
   changed Office_Temperature, Thermostats_Upstairs_Temp, Office_Occupied, OfficeDoor
-  run { Lights_Office_Outlet << ON }
-  only_if { Office_Occupied.on? }
-  only_if { OfficeDoor.closed? }
-  only_if { Thermostate_Upstairs_Heat_Set.state > Office_Temperature.state }
-  only_if { Thermostat_Upstairs_Temp.state - Office_Temperature.state > 2 | '°F' }
-  otherwise { Lights_Office_Outlet << OFF if Lights_Office_Outlet.on? }
+  run do
+    trigger = Office_Occupied.on? &&
+              OfficeDoor.closed? &&
+              Thermostate_Upstairs_Heat_Set.state > Office_Temperature.state &&
+              Thermostat_Upstairs_Temp.state - Office_Temperature.state > 2 | "°F"
+    Lights_Office_Outlet.ensure << trigger # send a boolean command to a SwitchItem, but only if it's different
+  end
 end
 ```
-
-
