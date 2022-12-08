@@ -1,14 +1,6 @@
-<form class="search-box" role="search">
+<form class="search-box" role="search" style="display: none">
   <input id="search-input" class="search-query ds-input" placeholder autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-label="search input" style="position: relative, vertical-align: top;">
   <div class="search-results" role="listbox">
-    <ul>
-      <%= erb(:search_class) %>
-    </ul>
-    <ul>
-      <%= erb(:search_method) %>
-    </ul>
-    <ul class="noresults">
-      <li>No Results</li>
-    </ul>
+    <ul></ul>
   </div>
 </form>

@@ -6,6 +6,14 @@ module OpenHAB
   module YARD
     # @!visibility private
     module HtmlHelper
+      def url_for_search_index
+        if serializer.is_a?(::YARD::Server::DocServerSerializer)
+          url_for_list("index")
+        else
+          url_for("index.json")
+        end
+      end
+
       def html_markup_markdown(text)
         result = super(text)
 
