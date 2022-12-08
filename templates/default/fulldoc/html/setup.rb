@@ -19,8 +19,12 @@ def init
   end
 end
 
-def serialize(object)
-  return if object == "_index.html"
+def generate_assets
+  @object = Registry.root
 
-  super
+  layout = Object.new.extend(T("layout"))
+  (layout.javascripts + javascripts_full_list +
+      layout.stylesheets + stylesheets_full_list).uniq.each do |file|
+    asset(file, file(file, true))
+  end
 end
