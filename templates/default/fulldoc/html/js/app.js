@@ -214,6 +214,122 @@ function selectVersion() {
   }
 }
 
+var searchTimeout = null;
+var searchCache = [];
+var caseSensitiveMatch = false;
+var ignoreKeyCodeMin = 8;
+var ignoreKeyCodeMax = 46;
+var commandKey = 91;
+
+RegExp.escape = function(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+
+function populateSearchCache() {
+  $('.search-results li .item').each(function() {
+    var $node = $(this);
+    var $link = $node.find('.object_link a');
+    if ($link.length > 0) {
+      searchCache.push({
+        node: $node,
+        link: $link,
+        name: $link.text(),
+        fullName: $link.attr('title').split(' ')[0]
+      });
+    }
+  });
+}
+
+function enableSearch() {
+  $('#search-input').keyup(function(event) {
+    if (ignoredKeyPress(event)) return;
+    if (this.value === "") {
+      clearSearch();
+    } else {
+      performSearch(this.value);
+    }
+  });
+}
+
+function ignoredKeyPress(event) {
+  if (
+    (event.keyCode > ignoreKeyCodeMin && event.keyCode < ignoreKeyCodeMax) ||
+    (event.keyCode == commandKey)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function escapeShortcut() {
+  $(document).keydown(function(evt) {
+    if (evt.which == 27) {
+      clearSearch();
+    }
+  });
+}
+
+
+function clearSearchTimeout() {
+  clearTimeout(searchTimeout);
+  searchTimeout = null;
+}
+
+function clearSearch() {
+  clearSearchTimeout();
+  $('.search-results .found').removeClass('found')
+  $('.search-results').hide();
+}
+
+function performSearch(searchString) {
+  clearSearchTimeout();
+  $('.noresults li').removeClass('found');
+  $('.search-results').show();
+  partialSearch(searchString, 0);
+}
+
+function partialSearch(searchString, offset) {
+  var i = null;
+  for (i = offset; i < Math.min(offset + 50, searchCache.length); i++) {
+    var item = searchCache[i];
+    var searchName = (searchString.indexOf('::') != -1 ? item.fullName : item.name);
+    var matchString = buildMatchString(searchString);
+    var matchRegexp = new RegExp(matchString, caseSensitiveMatch ? "" : "i");
+    if (searchName.match(matchRegexp) == null) {
+      item.node.parent().removeClass('found');
+    }
+    else {
+      item.node.parent().addClass('found');
+    }
+  }
+  if(i == searchCache.length) {
+    searchDone();
+  } else {
+    searchTimeout = setTimeout(function() {
+      partialSearch(searchString, i);
+    }, 0);
+  }
+}
+
+function searchDone() {
+  searchTimeout = null;
+  if ($('.search-results li:visible').size() === 0) {
+    $('.noresults li').addClass('found');
+  }
+}
+
+function buildMatchString(searchString, event) {
+  caseSensitiveMatch = searchString.match(/[A-Z]/) != null;
+  var regexSearchString = RegExp.escape(searchString);
+  if (caseSensitiveMatch) {
+    regexSearchString += "|" +
+      $.map(searchString.split(''), function(e) { return RegExp.escape(e); }).
+      join('.+?');
+  }
+  return regexSearchString;
+}
+
 $(document).ready(function() {
   createSourceLinks();
   createDefineLinks();
@@ -227,6 +343,9 @@ $(document).ready(function() {
   enableToggles();
   enableHovers();
   selectVersion();
+  populateSearchCache();
+  enableSearch();
+  escapeShortcut();
 });
 
 })();

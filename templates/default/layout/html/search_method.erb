@@ -1,0 +1,19 @@
+<%
+  all_methods = prune_method_listing(Registry.all(:method), false)
+    .reject { |m| m.name.to_s.end_with?("=") && m.is_attribute? }
+    .sort_by { |m| [m.name, m.path] }
+%>
+<% all_methods.each do |item| %>
+  <%
+    classes = []    
+    classes << "deprecated" if item.has_tag?(:deprecated)
+  %>
+  <li class="<%= classes.join(" ") %>">
+    <div class="item">
+      <%= linkify item, item.name(true) %>
+      <small class="search_info">
+        <%= item.namespace.title %>
+      </small>
+    </div>
+  </li>
+<% end %>

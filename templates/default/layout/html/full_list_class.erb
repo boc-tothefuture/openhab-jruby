@@ -12,6 +12,9 @@
   <li class="<%= classes.join(" ") %>">
     <span class="sidebar-link<%= " active" if child == object %>">
       <%= linkify child, child.name %>
+      <% if child.is_a?(CodeObjects::ClassObject) && child.superclass %>
+        &lt; <%= child.superclass.name %>
+      <% end %>
       <% if has_children %>
         <a class="arrow toggle <%= open ? "down" : "right" %>"></a>
       <% end %>
