@@ -8,26 +8,26 @@ module OpenHAB
       # Helpers common to {ItemStateEvent} and {ItemStateChangedEvent}.
       module ItemState
         #
-        # Check if the state == UNDEF
+        # Check if the state == {UNDEF}
         #
-        # @return [true,false] True if the state is UNDEF, false otherwise
+        # @return [true,false] True if the state is {UNDEF}, false otherwise
         #
         def undef?
           item_state == UNDEF
         end
 
         #
-        # Check if the state == NULL
+        # Check if the state == {NULL}
         #
-        # @return [true,false] True if the state is NULL, false otherwise
+        # @return [true,false] True if the state is {NULL}, false otherwise
         def null?
           item_state == NULL
         end
 
         #
-        # Check if the state is defined (not UNDEF or NULL)
+        # Check if the state is defined (not {UNDEF} or {NULL})
         #
-        # @return [true,false] True if state is not UNDEF or NULL
+        # @return [true,false] True if state is not {UNDEF} or {NULL}
         #
         def state?
           !item_state.is_a?(UnDefType)

@@ -21,11 +21,11 @@ module OpenHAB
         #   Undef State
 
         # @!method null?
-        #   Check if `self == NULL`
+        #   Check if `self` == {NULL}
         #   @return [true,false]
 
         # @!method undef?
-        #   Check if `self == UNDEF`
+        #   Check if `self` == {UNDEF}
         #   @return [true,false]
       end
     end

@@ -14,26 +14,26 @@ module OpenHAB
         include ItemState
 
         #
-        # Check if state was == UNDEF
+        # Check if state was == {UNDEF}
         #
-        # @return [true,false] True if the state is UNDEF, false otherwise
+        # @return [true,false] True if the state is {UNDEF}, false otherwise
         #
         def was_undef?
           old_item_state == UNDEF
         end
 
         #
-        # Check if state was == NULL
+        # Check if state was == {NULL}
         #
-        # @return [true,false] True if the state is NULL, false otherwise
+        # @return [true,false] True if the state is {NULL}, false otherwise
         def was_null?
           old_item_state == NULL
         end
 
         #
-        # Check if state was defined (not UNDEF or NULL)
+        # Check if state was defined (not {UNDEF} or {NULL})
         #
-        # @return [true,false] True if state is not UNDEF or NULL
+        # @return [true,false] True if state is not {UNDEF} or {NULL}
         #
         def was?
           !old_item_state.is_a?(UnDefType)
