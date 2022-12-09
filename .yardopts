@@ -10,7 +10,6 @@
 --load openhab/yard.rb
 --asset docs/images
 --output-dir docs/yard
---plugin coderay
 --protected
 --markup markdown
 --markup-provider commonmarker

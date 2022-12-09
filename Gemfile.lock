@@ -193,9 +193,6 @@ GEM
     unicode-display_width (2.3.0)
     webrick (1.7.0)
     yaml-lint (0.0.10)
-    yard-coderay (0.1.0)
-      coderay
-      yard
 
 PLATFORMS
   arm64-darwin-21
@@ -206,6 +203,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  coderay (~> 1.1.3)
   commonmarker
   cucumber (~> 8.0)
   cuke_linter (~> 1.2)
@@ -229,7 +227,6 @@ DEPENDENCIES
   tty-command (~> 0.10)
   yaml-lint (~> 0.0)
   yard!
-  yard-coderay
 
 BUNDLED WITH
    2.3.26
