@@ -34,6 +34,10 @@ a {
     text-decoration: none;
 }
 
+ol, p, ul {
+    line-height: 1.7;
+}
+
 a.header-anchor {
     font-size: .85em;
     float: left;
