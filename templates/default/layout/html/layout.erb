@@ -2,6 +2,10 @@
 <html>
   <head>
     <%= erb(:headers) %>
+    <script type="text/javascript">
+      indexpath = '<%= url_for_search_index %>';
+      base_url = '<%= base_url %>';
+    </script>
   </head>
   <body>
     <div id="app">

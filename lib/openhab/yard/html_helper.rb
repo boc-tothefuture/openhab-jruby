@@ -6,6 +6,16 @@ module OpenHAB
   module YARD
     # @!visibility private
     module HtmlHelper
+      def base_url
+        if serializer.is_a?(::YARD::Server::DocServerSerializer)
+          abs_url(base_path(router.docs_prefix), "")
+        else
+          u = url_for("")
+          u = "#{u}/" if !u.empty? && u[-1] != "/"
+          u
+        end
+      end
+
       def url_for_search_index
         if serializer.is_a?(::YARD::Server::DocServerSerializer)
           url_for_list("index")

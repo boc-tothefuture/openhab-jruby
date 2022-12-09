@@ -45,7 +45,7 @@ def jsonify_classes(klass)
 
   children.map do |child|
     {
-      u: url_for(child),
+      u: url_for(child)[base_url.length..],
       n: child.name,
       s: (child.superclass&.name if child.is_a?(CodeObjects::ClassObject)),
       d: (1 if child.has_tag?(:deprecated)),
@@ -67,7 +67,7 @@ def generate_index
             .sort_by { |m| m.path.split("::") }
             .map do |method|
     {
-      u: url_for(method),
+      u: url_for(method)[base_url.length..],
       n: method.name(true),
       p: method.namespace.title,
       d: (1 if method.has_tag?(:deprecated))
