@@ -205,6 +205,19 @@ img {
         background: #111;
         color: #ccc;
     }
+
+    .note {
+        color: #ddd;
+        border-color: #333;
+    }
+
+    .docstring .note {
+        border-left-color: #333;
+    }
+
+    .note.returns_void {
+        background-color: #333;
+    }
 }
 
 pre.code {
