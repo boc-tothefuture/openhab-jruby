@@ -5,27 +5,25 @@
 ### DSL
 
 ```java
-rule 'Snap Fan to preset percentages'
+rule "Snap Fan to preset percentages"
 when Member of CeilingFans changed
 then
   val fan = triggeringItem
-  val name = String.join(" ", fan.name.replace("LoadLevelStatus","").split("(?<!^)(?=[A-Z])"))
-  logInfo("Fan", "Ceiling fan group rule triggered for {}, value {}", name,fan.state)
   switch fan {
-    case fan.state >0 && fan.state < 25 : {
-      logInfo("Fan", "Snapping {} to 25%", name)
+    case fan.state > 0 && fan.state < 25 : {
+      logInfo("Fan", "Snapping {} to 25%", fan.name)
       sendCommand(fan, 25)
     }
     case fan.state > 25 && fan.state < 66 : {
-      logInfo("Fan", "Snapping {} to 66%", name)
+      logInfo("Fan", "Snapping {} to 66%", fan.name)
       sendCommand(fan, 66)
     }
     case fan.state > 66 && fan.state < 100 : {
-      logInfo("Fan", "Snapping {} to 100%", name)
+      logInfo("Fan", "Snapping {} to 100%", fan.name)
       sendCommand(fan, 100)
     }
     default: {
-      logInfo("Fan", "{} set to snapped percentage, no action taken", name)
+      logInfo("Fan", "{} set to snapped percentage, no action taken", fan.name)
     }
   }
 end
@@ -36,17 +34,18 @@ Ruby
 ```ruby
 rule 'Snap Fan to preset percentages' do
   changed CeilingFans.members
-  triggered do |item|
-    snapped = case item.state
-              when 0...25 then 25
-              when 26...66 then 66
-              when 67...100 then 100
+  run do |event|
+    snapped = case event.state
+              when 0..25 then 25
+              when 25..66 then 66
+              when 66..100 then 100
+              else next # perhaps it changed to NULL/UNDEF
               end
-    if snapped
-      logger.info("Snapping fan #{item.name} to #{snapped}")
-      item << snapped
+
+    if event.item.ensure.command(snapped) # returns false if already in the same state
+      logger.info("Snapping #{event.item.name} to #{snapped}") 
     else
-      logger.info("#{item.name} set to snapped percentage, no action taken.")
+      logger.info("#{event.item.name} set to snapped percentage, no action taken.")
     end
   end
 end
