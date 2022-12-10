@@ -16,7 +16,7 @@ module OpenHAB
       # @example Start playing on a player item
       #   Chromecast.play
       # @example Check if a player is paused
-      #   logger.warn("#{item.name} is paused) if Chromecast.paused?
+      #   logger.warn("#{item.name} is paused") if Chromecast.paused?
       #
       class PlayerItem < GenericItem
         # @!method play?
