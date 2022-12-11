@@ -388,8 +388,8 @@ module OpenHAB
         #
         #   ### Guard Combination
         #
-        #   {#only_if} and {#not_if} can be used on the same rule. Both must be
-        #   satisfied for a rule to execute.
+        #   Multiple guards can be used on the same rule. All must be satisfied
+        #   for a rule to execute.
         #
         #   @example
         #     rule "Set OutsideDimmer to 50% if LightSwitch turned on and OtherSwitch is OFF and Door is CLOSED" do
