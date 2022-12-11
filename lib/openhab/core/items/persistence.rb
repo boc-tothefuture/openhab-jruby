@@ -74,6 +74,7 @@ module OpenHAB
         PERSISTENCE_METHODS = (QUANTITY_METHODS +
                               %i[changed_since?
                                  count_since
+                                 count_state_changes_since
                                  evolution_rate
                                  historic_state
                                  maximum_since
@@ -244,6 +245,19 @@ module OpenHAB
 
         # @!method count_between(start, finish, service = nil)
         #   Returns the number of available historic data points between two points in time.
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
+        #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
+        #   @return [Integer] The number of values persisted for this item.
+
+        # @!method count_state_changes_since(timestamp, service = nil)
+        #   Returns the number of changes in historic data points from a point in time until now.
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
+        #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
+        #   @return [Integer] The number of values persisted for this item.
+
+        # @!method count_state_changes_between(start, finish, service = nil)
+        #   Returns the number of changes in historic data points between two points in time.
         #   @param [#to_zoned_date_time] start The point in time from which to search
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
