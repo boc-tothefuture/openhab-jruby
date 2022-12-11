@@ -70,8 +70,10 @@ module OpenHAB
                               variance_since].freeze
 
         # All persistence methods that require a timestamp
+        # Note the _between methods are automatically created from the _since methods
         PERSISTENCE_METHODS = (QUANTITY_METHODS +
                               %i[changed_since?
+                                 count_since
                                  evolution_rate
                                  historic_state
                                  maximum_since
@@ -80,24 +82,24 @@ module OpenHAB
         private_constant :QUANTITY_METHODS, :PERSISTENCE_METHODS
 
         # @!method persist(service = nil)
-        #   Persist the state of the item
+        #   Persists the state of the item
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [void]
 
         # @!method last_update(service = nil)
-        #   Return the time the item was last updated.
+        #   Returns the time the item was last updated.
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [ZonedDateTime, nil] The timestamp of the last update
 
         # @!method average_since(timestamp, service = nil)
-        #   Return the average value of the item's state since the given time
+        #   Returns the average value of the item's state since the given time
         #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The average value since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method average_between(start, finish, service = nil)
-        #   Return the average value of the item's state between two points in time
+        #   Returns the average value of the item's state between two points in time
         #   @param [#to_zoned_date_time] start The point in time from which to search
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
@@ -105,14 +107,14 @@ module OpenHAB
         #     or nil if no previous state could be found.
 
         # @!method delta_since(timestamp, service = nil)
-        #   Return the difference value of the item's state since the given time
+        #   Returns the difference value of the item's state since the given time
         #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The difference value since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method delta_between(start, finish, service = nil)
-        #   Return the difference value of the item's state between two points in time
+        #   Returns the difference value of the item's state between two points in time
         #   @param [#to_zoned_date_time] start The point in time from which to search
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
@@ -120,14 +122,14 @@ module OpenHAB
         #     or nil if no previous state could be found.
 
         # @!method deviation_since(timestamp, service = nil)
-        #   Return the standard deviation of the item's state since the given time
+        #   Returns the standard deviation of the item's state since the given time
         #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The standard deviation since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method deviation_between(start, finish, service = nil)
-        #   Return the standard deviation of the item's state between two points in time
+        #   Returns the standard deviation of the item's state between two points in time
         #   @param [#to_zoned_date_time] start The point in time from which to search
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
@@ -135,14 +137,14 @@ module OpenHAB
         #     or nil if no previous state could be found.
 
         # @!method sum_since(timestamp, service = nil)
-        #   Return the sum of the item's state since the given time
+        #   Returns the sum of the item's state since the given time
         #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The sum since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method sum_between(start, finish, service = nil)
-        #   Return the sum of the item's state between two points in time
+        #   Returns the sum of the item's state between two points in time
         #   @param [#to_zoned_date_time] start The point in time from which to search
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
@@ -150,14 +152,14 @@ module OpenHAB
         #     or nil if no previous state could be found.
 
         # @!method variance_since(timestamp, service = nil)
-        #   Return the variance of the item's state since the given time
+        #   Returns the variance of the item's state since the given time
         #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The variance since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method variance_between(start, finish, service = nil)
-        #   Return the variance of the item's state between two points in time
+        #   Returns the variance of the item's state between two points in time
         #   @param [#to_zoned_date_time] start The point in time from which to search
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
@@ -178,28 +180,28 @@ module OpenHAB
         #   @return [true,false] True if the item's state changed between `start` and `finish`, False otherwise.
 
         # @!method evolution_rate(timestamp, service = nil)
-        #   Return the evolution rate of the item's state since the given time
+        #   Returns the evolution rate of the item's state since the given time
         #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [DecimalType, QuantityType, nil] The evolution rate since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method historic_state(timestamp, service = nil)
-        #   Return the the item's state at the given time
+        #   Returns the the item's state at the given time
         #   @param [#to_zoned_date_time] timestamp The point in time at which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [HistoricState, nil] The item's state at `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method maximum_since(timestamp, service = nil)
-        #   Return the maximum value of the item's state since the given time
+        #   Returns the maximum value of the item's state since the given time
         #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [HistoricState, nil] The maximum value since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method maximum_between(start, finish, service = nil)
-        #   Return the maximum value of the item's state between two points in time
+        #   Returns the maximum value of the item's state between two points in time
         #   @param [#to_zoned_date_time] start The point in time from which to search
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
@@ -207,14 +209,14 @@ module OpenHAB
         #     or nil if no previous state could be found.
 
         # @!method minimum_since(timestamp, service = nil)
-        #   Return the minimum value of the item's state since the given time
+        #   Returns the minimum value of the item's state since the given time
         #   @param [#to_zoned_date_time] timestamp The point in time from which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [HistoricState, nil] The minimum value since `timestamp`,
         #     or nil if no previous state could be found.
 
         # @!method minimum_between(start, finish, service = nil)
-        #   Return the minimum value of the item's state between two points in time
+        #   Returns the minimum value of the item's state between two points in time
         #   @param [#to_zoned_date_time] start The point in time from which to search
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
@@ -233,6 +235,19 @@ module OpenHAB
         #   @param [#to_zoned_date_time] finish The point in time to which to search
         #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
         #   @return [true,false] True if the item's state was updated between `start` and `finish`, False otherwise.
+
+        # @!method count_since(timestamp, service = nil)
+        #   Returns the number of available historic data points from a point in time until now.
+        #   @param [#to_zoned_date_time] timestamp The point in time from which to search
+        #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
+        #   @return [Integer] The number of values persisted for this item.
+
+        # @!method count_between(start, finish, service = nil)
+        #   Returns the number of available historic data points between two points in time.
+        #   @param [#to_zoned_date_time] start The point in time from which to search
+        #   @param [#to_zoned_date_time] finish The point in time to which to search
+        #   @param [Symbol, String] service An optional persistence id instead of the default persistence service.
+        #   @return [Integer] The number of values persisted for this item.
 
         %i[persist last_update].each do |method|
           define_method(method) do |service = nil|
