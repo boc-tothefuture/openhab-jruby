@@ -17,7 +17,10 @@ module OpenHAB
           #   @return [ZonedDateTime]
         end
 
+        # @return [LocalTime]
         alias_method :to_local_time, :toLocalTime
+
+        # @return [Month]
         alias_method :to_month, :month
 
         # @param [TemporalAmount, #to_zoned_date_time, Numeric] other

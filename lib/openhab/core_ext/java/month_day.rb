@@ -76,6 +76,7 @@ module OpenHAB
           year.at_month_day(self)
         end
 
+        # @return [Month]
         alias_method :to_month, :month
 
         # @param [Date, nil] context

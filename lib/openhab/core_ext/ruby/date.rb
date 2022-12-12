@@ -90,5 +90,6 @@ class Date
   end
 
   remove_method :inspect
+  # @return [String]
   alias_method :inspect, :to_s
 end

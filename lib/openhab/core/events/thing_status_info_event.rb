@@ -6,16 +6,18 @@ module OpenHAB
       java_import org.openhab.core.thing.events.ThingStatusInfoChangedEvent,
                   org.openhab.core.thing.events.ThingStatusInfoEvent
 
-      # The {AbstractEvent} sent when a {Things::Thing}'s status has changed.
+      #
+      # The {AbstractEvent} sent when a {Things::Thing Thing's} status has changed.
+      #
       class ThingStatusInfoChangedEvent < AbstractEvent
         # @!attribute [r] uid
-        # @return [Things::ThingUID] The UID of the [Things::Thing] that triggered this event.
+        # @return [Things::ThingUID] The UID of the {Things::Thing Thing} that triggered this event.
         alias_method :uid, :get_thing_uid
         # @!attribute [r] was
-        # @return [Things::ThingStatusInfo] The thing's prior status.
+        # @return [org.openhab.core.thing.ThingStatusInfo] The thing's prior status.
         alias_method :was, :get_old_status_info
         # @!attribute [r] status
-        # @return [Things::ThingStatusInfo] The thing's status.
+        # @return [org.openhab.core.thing.ThingStatusInfo] The thing's status.
         alias_method :status, :status_info
 
         #
@@ -31,12 +33,12 @@ module OpenHAB
       class ThingStatusInfoEvent < AbstractEvent
         #
         # @!attribute [r] uid
-        # @return [Things::ThingUID] The UID of the [Things::Thing] that triggered this event.
+        # @return [Things::ThingUID] The UID of the {Things::Thing Thing} that triggered this event.
         #
         alias_method :uid, :get_thing_uid
         #
         # @!attribute [r] status
-        # @return [Things::ThingStatusInfo] The thing's status.
+        # @return [org.openhab.core.thing.ThingStatusInfo] The thing's status.
         #
         alias_method :status, :status_info
 

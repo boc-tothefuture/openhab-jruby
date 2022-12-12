@@ -10,7 +10,7 @@ module OpenHAB
       # Adds methods to core openHAB ItemCommandEvent to make it more natural in Ruby
       class ItemCommandEvent < ItemEvent
         # @!attribute [r] command
-        # @return [Type] The command sent to the item.
+        # @return [Command] The command sent to the item.
         alias_method :command, :item_command
 
         # @!method refresh?

@@ -71,6 +71,7 @@ module OpenHAB
         def_delegator :zoned_date_time, :to_epoch_second, :to_i
         def_delegator :zoned_date_time, :to_time
 
+        # @!visibility private
         alias_method :day, :mday
 
         #

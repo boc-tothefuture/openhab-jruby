@@ -49,6 +49,7 @@ module OpenHAB
         #   The item's descriptive label.
         #   @return [String, nil]
 
+        # @!visibility private
         alias_method :hash, :hash_code
 
         # @!attribute [r] raw_state

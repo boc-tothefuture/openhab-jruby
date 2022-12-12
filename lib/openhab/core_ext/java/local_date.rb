@@ -66,6 +66,7 @@ module OpenHAB
           Date.new(year, month_value, day_of_month)
         end
 
+        # @return [Month]
         alias_method :to_month, :month
 
         # @return [MonthDay]

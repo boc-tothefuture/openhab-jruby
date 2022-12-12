@@ -48,6 +48,8 @@ module OpenHAB
         # that state into a {QuantityType} as necessary.
         #
         class HistoricState < SimpleDelegator
+          # @!attribute [r] state
+          # @return [Types::State]
           alias_method :state, :__getobj__
 
           def initialize(state, historic_item)

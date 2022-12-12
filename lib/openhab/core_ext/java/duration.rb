@@ -10,6 +10,11 @@ module OpenHAB
         include Between
         # @!parse include TemporalAmount
 
+        #
+        # Convert to integer number of seconds
+        #
+        # @return [Integer]
+        #
         alias_method :to_i, :seconds
 
         #

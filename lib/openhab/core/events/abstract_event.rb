@@ -10,6 +10,7 @@ module OpenHAB
         # @return [Object]
         attr_accessor :attachment
 
+        # @return [String]
         alias_method :inspect, :to_s
       end
     end

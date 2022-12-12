@@ -9,19 +9,19 @@ module OpenHAB
 
       # Adds methods to core openHAB AbstractThingDTO to make it more natural in Ruby
       class AbstractThingDTO
-        # @!method uid
-        #   The thing's UID
-        #   @return [String]
+        # @!attribute [r] uid
+        # The thing's UID
+        # @return [String]
         alias_method :uid, :UID
 
-        # @!method thing_type_uid
-        #   The thing type's UID
-        #   @return [String]
+        # @!attribute [r] thing_type_uid
+        # The thing type's UID
+        # @return [String]
         alias_method :thing_type_uid, :thingTypeUID
 
-        # @!method bridge_uid
-        #   The bridge's UID
-        #   @return [String]
+        # @!attribute [r] bridge_uid
+        # The Bridge's UID
+        # @return [String]
         alias_method :bridge_uid, :bridgeUID
       end
     end
