@@ -315,6 +315,9 @@ module OpenHAB
           end
         end
 
+        alias_method :state_changes_since, :count_state_changes_since
+        alias_method :state_changes_between, :count_state_changes_between
+
         private
 
         #
