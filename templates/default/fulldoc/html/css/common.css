@@ -1,7 +1,3 @@
-html {
-    scroll-padding-top: 70px;
-}
-
 @media (min-width: 860px) {
     html {
         font-size: .938em;
