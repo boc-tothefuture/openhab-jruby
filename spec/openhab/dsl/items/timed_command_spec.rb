@@ -71,8 +71,36 @@ RSpec.describe OpenHAB::DSL::Items::TimedCommand do
   it "cancels implicit timers when item state changes before timer expires" do
     item.command(5, for: 5.seconds)
     expect(item.state).to eq 5
-    item << 6
+    item.update(6)
     expect(item.state).to eq 6
+    time_travel_and_execute_timers(10.seconds)
+    # didn't revert
+    expect(item.state).to eq 6
+  end
+
+  it "doesn't cancel implicit timers when item receives update of the same state" do
+    item.command(5, for: 5.seconds)
+    expect(item.state).to eq 5
+    item.update(5)
+    time_travel_and_execute_timers(10.seconds)
+    expect(item.state).to eq 0
+  end
+
+  it "cancels implicit timers when item receives another command of the same value" do
+    expect(item.state).to eq 0
+    item.command(5, for: 5.seconds)
+    expect(item.state).to eq 5
+    item << 5
+    time_travel_and_execute_timers(10.seconds)
+    # didn't revert
+    expect(item.state).to eq 5
+  end
+
+  it "cancels implicit timers when item receives another command of a different value" do
+    expect(item.state).to eq 0
+    item.command(5, for: 5.seconds)
+    expect(item.state).to eq 5
+    item << 6
     time_travel_and_execute_timers(10.seconds)
     # didn't revert
     expect(item.state).to eq 6
@@ -129,5 +157,15 @@ RSpec.describe OpenHAB::DSL::Items::TimedCommand do
     expect(item.state).to eq 5
     time_travel_and_execute_timers(5.seconds)
     expect(item).to be_null
+  end
+
+  it "works with non-auto-updated items" do
+    manualitem = items.build { switch_item "Switch1", autoupdate: false }
+    manualitem.update(OFF)
+    manualitem.command(ON, for: 3.seconds)
+    manualitem.update(ON)
+    autoupdate_all_items
+    time_travel_and_execute_timers(5.seconds)
+    expect(manualitem.state).to eq OFF
   end
 end

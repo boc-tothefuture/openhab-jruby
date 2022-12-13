@@ -17,10 +17,17 @@ module OpenHAB
       # command. This is available on both the 'command' method and any
       # command-specific methods, e.g. {SwitchItem#on}.
       #
-      # Any update to the timed command state will result in the timer being
-      # cancelled. For example, if you have a Switch on a timer and another
-      # rule sends OFF or ON to that item the timer will be automatically
-      # canceled. Sending a different duration (for:) value for the timed
+      # The timer will be cancelled, and the item's state will not be changed
+      # to the on_expire state if:
+      # - The item receives any command within the timed command duration.
+      # - The item is updated to a different state, even if it is then updated
+      #   back to the same state.
+      #
+      # For example, if you have a Switch on a timer and another rule sends
+      # a command to that item, even when it's commanded to the same state,
+      # the timer will be automatically canceled.
+      #
+      # Sending a different duration (for:) value for the timed
       # command will reschedule the timed command for that new duration.
       #
       module TimedCommand
@@ -107,7 +114,7 @@ module OpenHAB
               # no prior timed command
               on_expire ||= default_on_expire(command)
               super(command)
-              create_timed_command(duration: duration, on_expire: on_expire)
+              create_timed_command(command, duration: duration, on_expire: on_expire)
             else
               timed_command_details.mutex.synchronize do
                 if timed_command_details.resolution
@@ -116,7 +123,7 @@ module OpenHAB
                   # just create a new one
                   on_expire ||= default_on_expire(command)
                   super(command)
-                  create_timed_command(duration: duration, on_expire: on_expire)
+                  create_timed_command(command, duration: duration, on_expire: on_expire)
                 else
                   # timed command still pending; reset it
                   logger.trace "Outstanding Timed Command #{timed_command_details} encountered - rescheduling"
@@ -138,13 +145,13 @@ module OpenHAB
         private
 
         # Creates a new timed command and places it in the TimedCommand hash
-        def create_timed_command(duration:, on_expire:)
+        def create_timed_command(command, duration:, on_expire:)
           timed_command_details = TimedCommandDetails.new(item: self,
                                                           on_expire: on_expire,
                                                           mutex: Mutex.new)
 
           timed_command_details.timer = timed_command_timer(timed_command_details, duration)
-          cancel_rule = TimedCommandCancelRule.new(timed_command_details)
+          cancel_rule = TimedCommandCancelRule.new(command, timed_command_details)
           unmanaged_rule = Core.automation_manager.add_unmanaged_rule(cancel_rule)
           timed_command_details.rule_uid = unmanaged_rule.uid
           Core::Rules::Provider.current.add(unmanaged_rule)
@@ -189,16 +196,27 @@ module OpenHAB
         #
         # @!visibility private
         class TimedCommandCancelRule < org.openhab.core.automation.module.script.rulesupport.shared.simple.SimpleRule
-          def initialize(timed_command_details)
+          def initialize(command, timed_command_details)
             super()
             @timed_command_details = timed_command_details
             # Capture rule name if known
             @thread_locals = ThreadLocal.persist
             self.name = "Cancel implicit timer for #{timed_command_details.item.name}"
-            self.triggers = [Rules::RuleTriggers.trigger(
-              type: Rules::Triggers::Changed::ITEM_STATE_CHANGE,
-              config: { "itemName" => timed_command_details.item.name }
-            )]
+            self.triggers = [
+              Rules::RuleTriggers.trigger(
+                type: Rules::Triggers::Changed::ITEM_STATE_CHANGE,
+                config: {
+                  "itemName" => timed_command_details.item.name,
+                  "previousState" => timed_command_details.item.format_command(command).to_s
+                }
+              ),
+              Rules::RuleTriggers.trigger(
+                type: Rules::Triggers::Command::ITEM_COMMAND,
+                config: {
+                  "itemName" => timed_command_details.item.name
+                }
+              )
+            ]
             self.visibility = Core::Rules::Visibility::HIDDEN
           end
 

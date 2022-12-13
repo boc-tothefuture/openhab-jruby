@@ -191,6 +191,7 @@ here is a non-exhaustive list of significant departures from the original gem:
 * {OpenHAB::DSL::Items::TimedCommand#command Timed command} now resets the on_expire setting when called again
 * {OpenHAB::DSL::Items::TimedCommand#command Timed command} still sends the command even the previous timed command is still pending
 * {OpenHAB::DSL::Items::TimedCommand#command Timed command} works with resetting to {NULL}/{UNDEF}
+* {OpenHAB::DSL::Items::TimedCommand#command Timed command} works on items with autoupdate=false
 * {OpenHAB::Core::Items::Metadata} hashes are indifferent (converts symbol keys to string keys).
 * Fix {OpenHAB::DSL::Items::Ensure ensure} to work with conversions-from-string that are handled by openhab-core.
 * Avoid stack overflow issues when all of ActiveSupport is required.
