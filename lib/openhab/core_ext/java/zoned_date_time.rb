@@ -90,6 +90,88 @@ module OpenHAB
           self
         end
 
+        # @group Ephemeris Methods
+        #   (see CoreExt::Ephemeris)
+
+        #
+        # Name of the holiday for this date.
+        #
+        # @param [String, nil] holiday_file Optional path to XML file to use for holiday definitions.
+        # @return [Symbol, nil]
+        #
+        # @example
+        #   MonthDay.parse("12-25").holiday # => :christmas
+        #
+        def holiday(holiday_file = nil)
+          ::Ephemeris.get_bank_holiday_name(*[self, holiday_file || DSL.holiday_file].compact)&.downcase&.to_sym
+        end
+
+        #
+        # Determines if this date is on a holiday.
+        #
+        # @param [String, nil] holiday_file Optional path to XML file to use for holiday definitions.
+        # @return [true, false]
+        #
+        def holiday?(holiday_file = nil)
+          ::Ephemeris.bank_holiday?(*[self, holiday_file || DSL.holiday_file].compact)
+        end
+
+        #
+        # Name of the closest holiday on or after this date.
+        #
+        # @param [String, nil] holiday_file Optional path to XML file to use for holiday definitions.
+        # @return [Symbol]
+        #
+        def next_holiday(holiday_file = nil)
+          ::Ephemeris.get_next_bank_holiday(*[self, holiday_file || DSL.holiday_file].compact).downcase.to_sym
+        end
+
+        #
+        # Determines if this time is during a weekend.
+        #
+        # @return [true, false]
+        #
+        # @example
+        #   Time.now.weekend?
+        #
+        def weekend?
+          ::Ephemeris.weekend?(self)
+        end
+
+        #
+        # Determines if this time is during a specific dayset
+        #
+        # @param [String, Symbol] set
+        # @return [true, false]
+        #
+        # @example
+        #   Time.now.in_dayset?("school")
+        #
+        def in_dayset?(set)
+          ::Ephemeris.in_dayset?(set.to_s, self)
+        end
+
+        #
+        # Calculate the number of days until a specific holiday
+        #
+        # @param [String, Symbol] holiday
+        # @param [String, nil] holiday_file Optional path to XML file to use for holiday definitions.
+        # @return [Integer]
+        # @raise [ArgumentError] if the holiday isn't valid
+        #
+        # @example
+        #   Time.now.days_until(:christmas) # => 2
+        #
+        def days_until(holiday, holiday_file = nil)
+          holiday = holiday.to_s.upcase
+          r = ::Ephemeris.get_days_until(*[self, holiday, holiday_file || DSL.holiday_file].compact)
+          raise ArgumentError, "#{holiday.inspect} isn't a recognized holiday" if r == -1
+
+          r
+        end
+
+        # @endgroup
+
         # @return [Integer, nil]
         def <=>(other)
           # compare instants, otherwise it will differ by timezone, which we don't want

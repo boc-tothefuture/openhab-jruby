@@ -5,6 +5,7 @@ require "date"
 # Extensions to Date
 class Date
   include OpenHAB::CoreExt::Between
+  include OpenHAB::CoreExt::Ephemeris
 
   #
   # Extends {#+} to allow adding a {java.time.temporal.TemporalAmount TemporalAmount}

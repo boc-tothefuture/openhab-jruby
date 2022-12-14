@@ -11,6 +11,7 @@ require "forwardable"
 class DateTime < Date
   extend Forwardable
   include OpenHAB::CoreExt::Between
+  include OpenHAB::CoreExt::Ephemeris
 
   # (see Time#plus_with_temporal)
   def plus_with_temporal(other)

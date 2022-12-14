@@ -177,7 +177,9 @@ here is a non-exhaustive list of significant departures from the original gem:
   openHAB will log a warning that the item is missing, and the trigger will not work. When the item is eventually created, the trigger will begin to work.
   This matches the behavior of DSL rules.
   Note that this only works for {OpenHAB::DSL::Rules::Terse terse rules} if they're created within a {OpenHAB::DSL::Rules::Builder rules.build} block.
-* {OpenHAB::DSL::Rules::BuilderDSL#on_start #on_start} supports creating a `core.SystemStartlevelTrigger`. Also see {OpenHAB::DSL::Rules::BuilderDSL#on_load #on_load}
+* {OpenHAB::DSL::Rules::BuilderDSL#on_start #on_start} supports creating a `core.SystemStartlevelTrigger`.
+  Also see {OpenHAB::DSL::Rules::BuilderDSL#on_load #on_load}.
+* Various Ephemeris methods on {ZonedDateTime}.
 
 ### Bug Fixes
 

@@ -11,6 +11,7 @@ module OpenHAB
       class LocalDate
         include Time
         include Between
+        include Ephemeris
 
         class << self # rubocop:disable Lint/EmptyClass
           # @!attribute [r] now

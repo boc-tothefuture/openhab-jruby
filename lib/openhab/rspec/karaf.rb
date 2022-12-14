@@ -280,6 +280,13 @@ module OpenHAB
             props = cfg.properties || java.util.Hashtable.new
             props.put("default", "default")
             cfg.update(props)
+
+            # configure ephemeris with basic values
+            cfg = ca.get_configuration("org.openhab.ephemeris", nil)
+            props = cfg.properties || java.util.Hashtable.new
+            props.put("country", "us")
+            props.put("dayset-weekend", %w[SATURDAY SUNDAY])
+            cfg.update(props)
           end
           wait_for_service("org.openhab.core.automation.RuleManager") do |re|
             require_relative "mocks/synchronous_executor"

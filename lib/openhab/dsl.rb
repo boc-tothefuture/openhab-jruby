@@ -703,6 +703,61 @@ module OpenHAB
       old_providers
     end
 
+    #
+    # @see CoreExt::Ephemeris
+    #
+    # @overload holiday_file(file)
+    #
+    #   Sets a thread local variable to use a specific holiday file
+    #   for {CoreExt::Ephemeris ephemeris calls} inside the block.
+    #
+    #   @param [String, nil] file Path to a file defining holidays;
+    #     `nil` to reset to default.
+    #   @yield [] Block executed in context of the supplied holiday file
+    #   @return [Object] The return value from the block.
+    #
+    #   @example Set a specific holiday configuration file temporarily
+    #     holiday_file("/home/cody/holidays.xml") do
+    #       Time.now.next_holiday
+    #     end
+    #
+    #   @see holiday_file!
+    #
+    # @overload holiday_file
+    #
+    #   Returns the current thread local value for the holiday file.
+    #
+    #   @return [String, nil] the current holiday file
+    #
+    def holiday_file(*args)
+      raise ArgumentError, "wrong number of arguments (given #{args.length}, expected 0..1)" if args.length > 1
+
+      old = Thread.current[:openhab_holiday_file]
+      return old if args.empty?
+
+      holiday_file!(args.first)
+      yield
+    ensure
+      holiday_file!(old)
+    end
+
+    #
+    # Sets a thread local variable to set the default holiday file.
+    #
+    # @see https://github.com/svendiedrichsen/jollyday/tree/master/src/main/resources/holidays Example data files from the source
+    #
+    # @example
+    #   holiday_file!("/home/cody/holidays.xml")
+    #   Time.now.next_holiday
+    #
+    # @param [String, nil] file Path to a file defining holidays;
+    #   `nil` to reset to default.
+    # @return [Symbol, nil] the new holiday file
+    #
+    def holiday_file!(file = nil)
+      Thread.current[:openhab_holiday_file] = file
+    end
+
     # @!visibility private
     def try_parse_time_like(string)
       return string unless string.is_a?(String)

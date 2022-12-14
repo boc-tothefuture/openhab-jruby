@@ -7,7 +7,7 @@ module OpenHAB
     #
     # All openHAB's actions including those provided by add-ons are available, notably:
     # * Audio
-    # * Ephemeris
+    # * Ephemeris (see {CoreExt::Ephemeris})
     # * Exec
     # * HTTP
     # * Ping

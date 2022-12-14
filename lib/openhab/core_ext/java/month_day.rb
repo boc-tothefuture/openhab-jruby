@@ -10,6 +10,7 @@ module OpenHAB
       # Extensions to MonthDay
       class MonthDay
         include Between
+        include Ephemeris
 
         class << self
           #

@@ -12,6 +12,7 @@ module OpenHAB
       # Keys to persist
       KNOWN_KEYS = %i[
         openhab_ensure_states
+        openhab_holiday_file
         openhab_persistence_service
         openhab_providers
         openhab_rule_uid
