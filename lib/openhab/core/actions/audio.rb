@@ -15,6 +15,12 @@ module OpenHAB
           #
           # @return [void]
           #
+          # @example Play an audio file
+          #   rule 'Play an audio file' do
+          #     every :hour
+          #     run { Audio.play_sound "beep.mp3", volume: 100 }
+          #   end
+          #
           def play_sound(filename, sink: nil, volume: nil)
             volume = PercentType.new(volume) unless volume.is_a?(PercentType) || volume.nil?
             playSound(sink&.to_s, filename.to_s, volume)
@@ -27,6 +33,9 @@ module OpenHAB
           # @param [String] sink The audio sink, or nil to use the default audio sink
           #
           # @return [void]
+          #
+          # @example Play an audio stream
+          #   Audio.play_stream 'example.com'
           #
           def play_stream(url, sink: nil)
             playStream(sink&.to_s, url)

@@ -19,6 +19,12 @@ module OpenHAB
           #
           # @return [void]
           #
+          # @example Run the TTS engine and output to the default audio sink.
+          #   rule 'Say the time every hour' do
+          #     every :hour
+          #     run { Voice.say "The time is #{TimeOfDay.now}" }
+          #   end
+          #
           def say(text, voice: nil, sink: nil, volume: nil)
             volume = PercentType.new(volume) unless volume.is_a?(PercentType) || volume.nil?
             raw_say(text.to_s, voice&.to_s, sink&.to_s, volume)

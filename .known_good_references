@@ -484,6 +484,7 @@ https://github.com/openhab/openhab-core/issues/3169
 https://github.com/pacive
 https://github.com/rails/rails/blob/main/activesupport/lib/active_support/core_ext/array/wrap.rb
 https://github.com/rubocop-hq/rubocop
+https://github.com/svendiedrichsen/jollyday/tree/master/src/main/resources/holidays
 https://javadoc.io/doc/javax.measure/unit-api/latest/javax/measure/Dimension.html
 https://javadoc.io/doc/javax.measure/unit-api/latest/javax/measure/Unit.html
 https://javadoc.io/doc/javax.measure/unit-api/latest/javax/measure/units/Unit.html
@@ -540,10 +541,15 @@ https://www.openhab.org/addons/integrations/openhabcloud/
 https://www.openhab.org/docs/concepts/things.html#thing-status
 https://www.openhab.org/docs/concepts/units-of-measurement.html
 https://www.openhab.org/docs/configuration/actions.html
+https://www.openhab.org/docs/configuration/actions.html#ephemeris
 https://www.openhab.org/docs/configuration/actions.html#event-bus-actions
+https://www.openhab.org/docs/configuration/actions.html#exec-actions
+https://www.openhab.org/docs/configuration/actions.html#http-actions
 https://www.openhab.org/docs/configuration/addons.html
 https://www.openhab.org/docs/configuration/items.html#parameter-expire
 https://www.openhab.org/docs/configuration/jsr223.html#cache-preset
+https://www.openhab.org/docs/configuration/multimedia.html#actions-2
+https://www.openhab.org/docs/configuration/multimedia.html#actions-3
 https://www.openhab.org/docs/configuration/multimedia.html#voice
 https://www.openhab.org/docs/configuration/persistence.html
 https://www.openhab.org/docs/configuration/rules-dsl.html#system-based-triggers
@@ -617,6 +623,7 @@ https://www.openhab.org/javadoc/latest/org/openhab/core/library/types/StopMoveTy
 https://www.openhab.org/javadoc/latest/org/openhab/core/library/types/StringType.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/library/types/UpDownType.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/library/unit/Units.html#ONE
+https://www.openhab.org/javadoc/latest/org/openhab/core/model/script/actions/Ping.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/model/script/actions/Semantics.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/persistence/HistoricItem.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/scheduler/SchedulerRunnable.html
@@ -634,6 +641,7 @@ https://www.openhab.org/javadoc/latest/org/openhab/core/thing/Thing.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/ThingProvider.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/ThingRegistry.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/ThingStatus.html
+https://www.openhab.org/javadoc/latest/org/openhab/core/thing/ThingStatusInfo.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/ThingTypeUID.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/ThingUID.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/dto/AbstractThingDTO.html
@@ -646,6 +654,7 @@ https://www.openhab.org/javadoc/latest/org/openhab/core/thing/link/dto/ItemChann
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/profiles/ProfileContext.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/profiles/ProfileFactory.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/thing/profiles/StateProfile.html
+https://www.openhab.org/javadoc/latest/org/openhab/core/transform/actions/Transformation.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/types/Command.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/types/RefreshType.html
 https://www.openhab.org/javadoc/latest/org/openhab/core/types/State.html
