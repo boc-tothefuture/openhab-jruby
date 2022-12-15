@@ -724,7 +724,8 @@ logger.info "TV enabled: #{thing.enabled?}"
 
 ### Actions
 
-[openHAB built-in actions](https://www.openhab.org/docs/configuration/actions.html) are available via the {OpenHAB::Core::Actions Actions} module, or they can be called directly.
+[openHAB built-in actions](https://www.openhab.org/docs/configuration/actions.html) are available as children of the {OpenHAB::Core::Actions Actions} module.
+Action classes are also imported into the top-level namespace.
 Thing actions can be called directly on the {OpenHAB::Core::Things::Thing Thing}.
 
 Publish an MQTT Message:
@@ -742,7 +743,7 @@ things['mail:smtp:mymailthing'].send_mail('me@example.com', 'Subject', 'message 
 Play Sound Through the Default Audio Sink:
 
 ```ruby
-play_sound 'sound_file.mp3'
+Audio.play_sound 'sound_file.mp3'
 ```
 
 Execute a Command:

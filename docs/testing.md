@@ -112,8 +112,8 @@ OpenHAB::Log.events.level = :info
    files. In particular, this applies to ids for reentrant timers will now share
    a single namespace among all files.
  * Some actions may not be available; you should stub them out if you use them.
-   Core actions like {OpenHAB::Core::Actions#notify}, {OpenHAB::Core::Actions#say},
-   and {OpenHAB::Core::Actions#play_sound} are stubbed to only log a message
+   Core actions like {OpenHAB::Core::Actions#notify}, {OpenHAB::Core::Actions::Voice#say},
+   and {OpenHAB::Core::Actions::Audio#play_sound} are stubbed to only log a message
    (at debug level).
  * You may want to avoid rules from firing while setting up the proper state for
    a test. In that case, use the {OpenHAB::RSpec::Helpers#suspend_rules} helper.

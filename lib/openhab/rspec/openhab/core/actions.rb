@@ -12,12 +12,24 @@ module OpenHAB
         logger.debug("notify: #{msg}")
       end
 
-      def say(text, voice: nil, sink: nil, volume: nil)
-        logger.debug("say: #{text}")
+      class Voice
+        class << self
+          def say(text, voice: nil, sink: nil, volume: nil)
+            logger.debug("say: #{text}")
+          end
+        end
       end
 
-      def play_sound(filename, sink: nil, volume: nil)
-        logger.debug("play_sound: #{filename}")
+      class Audio
+        class << self
+          def play_sound(filename, sink: nil, volume: nil)
+            logger.debug("play_sound: #{filename}")
+          end
+
+          def play_stream(url, sink: nil)
+            logger.debug("play_stream: #{url}")
+          end
+        end
       end
 
       # rubocop:enable Lint/UnusedMethodArgument
