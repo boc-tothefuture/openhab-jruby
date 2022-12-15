@@ -32,6 +32,11 @@ module OpenHAB
         config.include ExampleGroup
 
         config.before(:suite) do
+          if config.mock_framework.framework_name == :rspec
+            require_relative "mocks/instance_method_stasher"
+            require_relative "mocks/space"
+          end
+
           Helpers.autorequires unless Configuration.private_confdir
           Helpers.send(:set_up_autoupdates)
           Helpers.load_transforms

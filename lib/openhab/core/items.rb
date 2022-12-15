@@ -62,9 +62,9 @@ module OpenHAB
 
             logger.trace("Defining #{klass}##{command} for #{value}")
             klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-              def #{command}(for: nil, on_expire: nil, &block)                                          # def on(for: nil, on_expire: nil, &block )
-                command(#{value}, for: binding.local_variable_get(:for), on_expire: on_expire, &block)  #   command(ON, for: nil, expire: nil, &block)
-              end                                                                                       # end
+              ruby2_keywords def #{command}(*args, &block)  # ruby2_keywords def on(*args, &block)
+                command(#{value}, *args, &block)            #   command(ON, *args, &block)
+              end                                           # end
             RUBY
 
             logger.trace("Defining Enumerable##{command} for #{value}")
