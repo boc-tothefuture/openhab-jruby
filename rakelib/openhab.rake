@@ -11,7 +11,7 @@ require 'net/http'
 # Disabled due to part of buid / potentially refactor into classes
 # rubocop: disable Rake/MethodDefinitionInTask Legacy code
 namespace :openhab do
-  @snapshot_url = ENV['SNAPSHOT_URL'] || 'https://github.com/boc-tothefuture/openhab2-addons/releases/download/'
+  @snapshot_url ||= ENV['SNAPSHOT_URL'] || 'https://github.com/jimtng/openhab-addons/releases/download/openhab-3.4.1-jruby-9.3.10.0/'
 
   @openhab_version = ENV['OPENHAB_VERSION'] || '3.3.0'
   @openhab_version, @bundle_version = @openhab_version.split('+')
@@ -198,7 +198,7 @@ namespace :openhab do
       if @bundle_version
         snapshot_file = "org.openhab.automation.jrubyscripting-#{@bundle_version}-SNAPSHOT.jar"
         snapshot_path = File.join(OPENHAB_DIR, 'addons', snapshot_file)
-        download_url = URI.join(@snapshot_url, "#{@bundle_version}/", snapshot_file)
+        download_url = URI.join(@snapshot_url, snapshot_file)
         download_file(download_url, snapshot_path)
       else
         File.write(@addons_config_file, "\nautomation=jrubyscripting\n", mode: 'a')
