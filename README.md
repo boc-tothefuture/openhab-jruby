@@ -1,3 +1,13 @@
+# This project is now archived!
+[Active project](https://github.com/openhab/openhab-jruby) is available as part of the main OpenHAB project. 
+
+
+
+<br>
+<br>
+
+
+
 # JRuby OpenHAB Scripting Library
 
 <p align="center">
